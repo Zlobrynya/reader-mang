@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ProgectMangaRead</string>
+    <string name="Ranck">Рейтинг:  </string>
+    <string name="gange">Жанры</string>
+    <string name="description">Описание</string>
+    <string name="Volumes">Томов</string>
+    <string name="Translate">Перевод:</string>
+    <string name="Author">Автор:</string>
 </resources>
