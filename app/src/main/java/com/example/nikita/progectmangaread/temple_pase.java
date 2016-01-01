@@ -28,6 +28,7 @@ public class temple_pase extends AppCompatActivity {
     public String nameIMG;
     public String where;
     public int kol;
+    public Document doc;
 
     public ArrayList<MainClassTop> list;
     @Override
@@ -54,6 +55,7 @@ public class temple_pase extends AppCompatActivity {
         parssate();
     }
 
+    //метод парсим
     public void parssate(){
         //создается клас с описанием интерфейсв
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -67,12 +69,12 @@ public class temple_pase extends AppCompatActivity {
         past.execute();
     }
 
-
+    //обнова экрана
     public void loadimg(){
-        //обнова экрана
         GridView gr = (GridView)findViewById(R.id.gread_id);
         AdapterMainScreen myAdap = new AdapterMainScreen(this,R.layout.layout_from_graund_view,list);
         gr.setAdapter(myAdap);
+        //нажатие на
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -111,22 +113,14 @@ public class temple_pase extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Document doc;
+            //Document doc;
             try {
-                doc = Jsoup.connect(URL+where).get();
-               // doc = Jsoup.connect("http://mangafox.me/directory/").get();
-                //берем элемент класса tile col-sm-6
-                //class="list"
+                if (doc == null) doc = Jsoup.connect(URL+where).get();
                 Element el = doc.select(nameCell).first();
-              //  el = el.select("li").first();
-                //переходим на kol-ое элементов вперед
                 for (int i =0; i < kol; i++) el = el.nextElementSibling();
-               Elements el2 = el.select(nameURL);
-           //     Elements el2 = el.select("[class=manga_img]");
+                Elements el2 = el.select(nameURL);
                 URL2 =el2.attr("href");
-                //загрузка картинки (пример -> "[class = img] img[src]")
                 el2 = el.select(nameIMG);
-             //   el2 = el.select("[class=manga_img] img[src]");
                 String imgSrc = el2.attr("src");
                 //скачивания изображения
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
