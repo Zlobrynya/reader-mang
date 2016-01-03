@@ -21,4 +21,13 @@ public class MainClassTop {
     String getURL_characher(){
         return URL_characher;
     }
+
+    void setImg_characher(Bitmap img){
+        img_characher = img;
+    }
+
+    void setURL_characher(String url){
+        URL_characher = url;
+    }
+
 }

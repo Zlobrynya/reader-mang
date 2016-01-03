@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -23,21 +27,21 @@ import java.util.ArrayList;
 public class temple_pase extends AppCompatActivity {
 
     public String URL;
-    public String nameCell;
-    public String nameURL;
-    public String nameIMG;
-    public String where;
-    public int kol;
+    public String nameCell,nameURL,nameIMG,where;
+    public int kol,kolSum,poss;
     public Document doc;
-
     public ArrayList<MainClassTop> list;
+    private float moveY;
+    public GridView gr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_pase);
         kol = 0;
+        kolSum = 20;
+        list = new ArrayList<>();
+        poss = 0;
         //получение данных из главной активити
-    //    Intent intent = getIntent();
         URL = "";
         //получаем ссылку на адрес
         URL = getIntent().getExtras().getString("URL");
@@ -51,7 +55,6 @@ public class temple_pase extends AppCompatActivity {
         //получаем имя тега IMG манги
         nameIMG = getIntent().getExtras().getString("nameIMG");
         //грузим страницу html
-        list = new ArrayList<>();
         parssate();
     }
 
@@ -65,29 +68,55 @@ public class temple_pase extends AppCompatActivity {
             }
         };
         //парсим сайт
+
         Pars past = new Pars(addImg,kol,URL);
         past.execute();
+      //  gr.smoothScrollToPosition(poss);
     }
 
     //обнова экрана
     public void loadimg(){
-        GridView gr = (GridView)findViewById(R.id.gread_id);
+        gr = (GridView)findViewById(R.id.gread_id);
         AdapterMainScreen myAdap = new AdapterMainScreen(this,R.layout.layout_from_graund_view,list);
         gr.setAdapter(myAdap);
-        //нажатие на
+        gr.smoothScrollToPosition(poss);
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainClassTop Class;
                 Class = list.get(position);
+
                 Toast toast = Toast.makeText(getApplicationContext(),
                         Class.getURL_characher(), Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
-        kol++;
+
+        poss = gr.getFirstVisiblePosition();
+        gr.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                 System.out.println(view.getFirstVisiblePosition());
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
         //закгружается пока не загрузится 13 картинок
-        if (kol < 10) parssate();
+        if (kol < kolSum) {
+            //if (poss == 6) gr.smoothScrollToPosition(poss);
+            kol++;
+           // System.out.println("GG");
+            parssate();
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 
 

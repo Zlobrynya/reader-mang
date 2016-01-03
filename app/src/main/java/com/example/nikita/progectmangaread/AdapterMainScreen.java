@@ -23,17 +23,19 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
-
-        if (v == null) {
+        ImageView img;
+        if (v != null){
+            img = (ImageView) v.getTag();
+        }else {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.layout_from_graund_view, null);
+            img = (ImageView)v.findViewById(R.id.imageView1);
+            v.setTag(img);
         }
-
         //получаем класс из позиции
         MainClassTop m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
-            ImageView img = (ImageView)v.findViewById(R.id.imageView1);
             img.setImageBitmap(m1.getImg_characher());
         }
         return v;
