@@ -16,9 +16,19 @@ import java.util.ArrayList;
  */
 public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
 
+    ArrayList<MainClassTop> item;
+
     public AdapterMainScreen(temple_pase context, int resourse, ArrayList<MainClassTop> item) {
-        super(context, resourse, item);
+        super(context, resourse,item);
+        this.item = item;
     }
+
+    public void setItem(MainClassTop clas,int position)
+    {
+        //mImages[position] = android.R.drawable.star_on;
+        item.add(position,clas);
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -40,4 +50,7 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
         }
         return v;
     }
+
+
+
 }

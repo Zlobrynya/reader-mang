@@ -28,11 +28,13 @@ public class temple_pase extends AppCompatActivity {
 
     public String URL;
     public String nameCell,nameURL,nameIMG,where;
-    public int kol,kolSum,poss;
+    public int kol,kolSum,totalSum;
     public Document doc;
     public ArrayList<MainClassTop> list;
     private float moveY;
+    public AdapterMainScreen myAdap;
     public GridView gr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,6 @@ public class temple_pase extends AppCompatActivity {
         kol = 0;
         kolSum = 20;
         list = new ArrayList<>();
-        poss = 0;
         //получение данных из главной активити
         URL = "";
         //получаем ссылку на адрес
@@ -54,6 +55,10 @@ public class temple_pase extends AppCompatActivity {
         where = getIntent().getExtras().getString("Where");
         //получаем имя тега IMG манги
         nameIMG = getIntent().getExtras().getString("nameIMG");
+
+        gr = (GridView)findViewById(R.id.gread_id);
+        myAdap = new AdapterMainScreen(this,R.layout.layout_from_graund_view,list);
+        gr.setAdapter(myAdap);
         //грузим страницу html
         parssate();
     }
@@ -64,11 +69,11 @@ public class temple_pase extends AppCompatActivity {
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
             @Override
             public void onEnd() {
+
                 loadimg();
             }
         };
         //парсим сайт
-
         Pars past = new Pars(addImg,kol,URL);
         past.execute();
       //  gr.smoothScrollToPosition(poss);
@@ -76,10 +81,7 @@ public class temple_pase extends AppCompatActivity {
 
     //обнова экрана
     public void loadimg(){
-        gr = (GridView)findViewById(R.id.gread_id);
-        AdapterMainScreen myAdap = new AdapterMainScreen(this,R.layout.layout_from_graund_view,list);
-        gr.setAdapter(myAdap);
-        gr.smoothScrollToPosition(poss);
+      //  myAdap.setItem(kol,);
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,16 +94,25 @@ public class temple_pase extends AppCompatActivity {
             }
         });
 
-        poss = gr.getFirstVisiblePosition();
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                 System.out.println(view.getFirstVisiblePosition());
+                System.out.println(view.getFirstVisiblePosition() + 18);
+               // if (scrollState == 1)
+                    if (view.getFirstVisiblePosition() + 18 == totalSum) {
+                        kolSum += 6;
+                        if (kol < kolSum) {
+                            //if (poss == 6) gr.smoothScrollToPosition(poss);
+                            kol++;
+                            // System.out.println("GG");
+                            parssate();
+                        }
+                    }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                totalSum = totalItemCount;
             }
         });
 
@@ -157,14 +168,18 @@ public class temple_pase extends AppCompatActivity {
                 img = BitmapFactory.decodeStream(inPut);
             } catch (IOException e) {
                 e.printStackTrace();
+            }catch (Exception e) {
+                System.out.println("Произошло ещё какое-то исключение");
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result){
-            //добавляем в лист
-            list.add(new MainClassTop(img,URL2));
+            //добавляем в лист и обновление
+            MainClassTop a = new MainClassTop(img,URL2);
+            myAdap.setItem(a,kol);
+            myAdap.notifyDataSetChanged();
             //кричим интерфейсу что мы фсе
             if (lisens != null) lisens.onEnd();
         }

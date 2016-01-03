@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public void Click(View view) {
         Intent newInten = new Intent(MainActivity.this,temple_pase.class);
         newInten.putExtra("URL","http://readmanga.me");
-        newInten.putExtra("Where","/list");
+        newInten.putExtra("Where","/list?type=&sortType=rate&offset=0&max=70");
         newInten.putExtra("Cell","[class=tile col-sm-6]");
         newInten.putExtra("nameURL", "[class=img] a");
         newInten.putExtra("nameIMG", "[class=img] img[src]");
