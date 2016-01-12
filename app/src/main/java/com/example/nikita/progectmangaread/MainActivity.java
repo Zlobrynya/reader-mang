@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void Click(View view) {
         Intent newInten = new Intent(MainActivity.this,temple_pase.class);
+        //Сделать передачу класса в др.активити
         classMang readManga = new classMang("http://readmanga.me","[class=img] img[src]","[class=img] a","[class=tile col-sm-6]");
         readManga.setWhere("/list", "?type=&sortType=rate&offset=", "&max=70", 0);
+
+
         newInten.putExtra("URL", "http://readmanga.me");
         newInten.putExtra("Where","/list?type=&sortType=rate&offset=0&max=70");
         newInten.putExtra("Cell","[class=tile col-sm-6]");
@@ -51,4 +55,5 @@ public class MainActivity extends AppCompatActivity {
         newInten.putExtra("nameIMG", "[class=manga_img] img[src]");
         startActivity(newInten);
     }
+
 }
