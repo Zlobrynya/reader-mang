@@ -7,6 +7,5 @@ package com.example.nikita.progectmangaread;
 //Интерфейс для потока
 public interface AsyncTaskLisen {
    // void onBegin(); //Асинхронная операция началась
-
     void onEnd(); //Операция закончилась
 }

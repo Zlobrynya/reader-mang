@@ -9,20 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.nikita.progectmangaread.temple_pase">
 
-    <GridView
+    <FrameLayout
+        android:id="@+id/frgmCont"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gread_id"
-        android:numColumns="3"
-      />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_above="@+id/gread_id"
-        android:layout_alignRight="@+id/gread_id"
-        android:layout_alignEnd="@+id/gread_id"
-        android:layout_marginRight="252dp"
-        android:layout_marginEnd="252dp" />
+        android:layout_height="match_parent">
+    </FrameLayout>
 </RelativeLayout>

@@ -9,6 +9,8 @@ public class classMang {
     private String UML,imgUML,nameUML, nameCell;
     private String whereAll,where,putch,putch2;
 
+    classMang(){}
+
     classMang(String UML,String imgUML, String nameUML,String nameCell){
         this.UML = UML;
         this.imgUML = imgUML;

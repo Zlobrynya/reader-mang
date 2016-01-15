@@ -1,188 +1,42 @@
 package com.example.nikita.progectmangaread;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v4.view.GestureDetectorCompat;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import de.greenrobot.event.EventBus;
 
 public class temple_pase extends AppCompatActivity {
-
-    public String URL;
-    public String nameCell,nameURL,nameIMG,where;
-    public int kol,kolSum,totalSum;
-    public Document doc;
-    public ArrayList<MainClassTop> list;
-    private float moveY;
-    public AdapterMainScreen myAdap;
-    public GridView gr;
+    private classMang mang;
+    private fragmentTemplePase tFragment;
+    private FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_pase);
-        kol = 0;
-        kolSum = 20;
-        list = new ArrayList<>();
-        //получение данных из главной активити
-        URL = "";
-        //получаем ссылку на адрес
-        URL = getIntent().getExtras().getString("URL");
-        nameCell = "";
-        //получаем имя ячейки таблицы
-        nameCell = getIntent().getExtras().getString("Cell");
-        //получаем имя тега URL манги
-        nameURL = getIntent().getExtras().getString("nameURL");
-        //каталог
-        where = getIntent().getExtras().getString("Where");
-        //получаем имя тега IMG манги
-        nameIMG = getIntent().getExtras().getString("nameIMG");
-
-        gr = (GridView)findViewById(R.id.gread_id);
-        myAdap = new AdapterMainScreen(this,R.layout.layout_from_graund_view,list);
-        gr.setAdapter(myAdap);
-        //грузим страницу html
-        parssate();
-    }
-
-    //метод парсим
-    public void parssate(){
-        //создается клас с описанием интерфейсв
-        AsyncTaskLisen addImg = new AsyncTaskLisen() {
-            @Override
-            public void onEnd() {
-
-                loadimg();
-            }
-        };
-        //парсим сайт
-        Pars past = new Pars(addImg,kol,URL);
-        past.execute();
-      //  gr.smoothScrollToPosition(poss);
-    }
-
-    //обнова экрана
-    public void loadimg(){
-      //  myAdap.setItem(kol,);
-        gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainClassTop Class;
-                Class = list.get(position);
-
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        Class.getURL_characher(), Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-
-        gr.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                System.out.println(view.getFirstVisiblePosition() + 18);
-               // if (scrollState == 1)
-                    if (view.getFirstVisiblePosition() + 18 == totalSum) {
-                        kolSum += 6;
-                        if (kol < kolSum) {
-                            //if (poss == 6) gr.smoothScrollToPosition(poss);
-                            kol++;
-                            // System.out.println("GG");
-                            parssate();
-                        }
-                    }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                totalSum = totalItemCount;
-            }
-        });
-
-        //закгружается пока не загрузится 13 картинок
-        if (kol < kolSum) {
-            //if (poss == 6) gr.smoothScrollToPosition(poss);
-            kol++;
-           // System.out.println("GG");
-            parssate();
-        }
+        tFragment = new fragmentTemplePase();
+        ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.frgmCont, tFragment);
+        ft.commit();
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
     }
 
-
-
-    public class Pars extends AsyncTask<Void,Void,Void> {
-        private String URL,URL2;
-        private Bitmap img;
-        private AsyncTaskLisen lisens;
-        private int kol;
-
-        //конструктор потока
-        protected Pars(AsyncTaskLisen callback, int kol,String URL) {
-            this.lisens = callback;
-            this.kol = kol;
-            this.URL = URL;
-        }
-
-
-        @Override
-        protected  void  onPreExecute(){
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            //Document doc;
-            try {
-                if (doc == null) doc = Jsoup.connect(URL+where).get();
-                Element el = doc.select(nameCell).first();
-                for (int i =0; i < kol; i++) el = el.nextElementSibling();
-                Elements el2 = el.select(nameURL);
-                URL2 =el2.attr("href");
-                el2 = el.select(nameIMG);
-                String imgSrc = el2.attr("src");
-                //скачивания изображения
-                InputStream inPut = new java.net.URL(imgSrc).openStream();
-                //декод поток для загрузки изобр в Bitmap
-                img = BitmapFactory.decodeStream(inPut);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }catch (Exception e) {
-                System.out.println("Произошло ещё какое-то исключение");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            //добавляем в лист и обновление
-            MainClassTop a = new MainClassTop(img,URL2);
-            myAdap.setItem(a,kol);
-            myAdap.notifyDataSetChanged();
-            //кричим интерфейсу что мы фсе
-            if (lisens != null) lisens.onEnd();
-        }
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
+    public void onEvent(classMang event){
+        mang = new classMang();
+        mang = event;
+        tFragment.editTemplePase(mang);
+        ft.replace(0,tFragment);
+    }
 }

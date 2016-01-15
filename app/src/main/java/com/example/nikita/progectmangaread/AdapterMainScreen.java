@@ -18,7 +18,7 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
 
     ArrayList<MainClassTop> item;
 
-    public AdapterMainScreen(temple_pase context, int resourse, ArrayList<MainClassTop> item) {
+    public AdapterMainScreen(Context context, int resourse, ArrayList<MainClassTop> item) {
         super(context, resourse,item);
         this.item = item;
     }
