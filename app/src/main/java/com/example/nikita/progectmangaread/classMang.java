@@ -8,14 +8,15 @@ import android.widget.ImageView;
 public class classMang {
     private String UML,imgUML,nameUML, nameCell;
     private String whereAll,where,putch,putch2;
-
+    private int maxInPage;
     classMang(){}
 
-    classMang(String UML,String imgUML, String nameUML,String nameCell){
+    classMang(String UML,String imgUML, String nameUML,String nameCell,int maxInPage){
         this.UML = UML;
         this.imgUML = imgUML;
         this.nameCell = nameCell;
         this.nameUML = nameUML;
+        this.maxInPage = maxInPage;
     }
 
     String getUML(){ return UML; }
@@ -32,6 +33,10 @@ public class classMang {
         return nameCell;
     }
 
+    int getMaxInPage() {
+        return maxInPage;
+    }
+
     //установка пути листа топа
     void setWhere(String where,String putch,int amt){
         this.whereAll = where + amt + putch;
@@ -46,11 +51,12 @@ public class classMang {
         this.putch2 = putch2;
     }
 
+
     void editWhere(int amt){
         if (putch2 == null) {
             this.whereAll = where + amt + putch;
         }else {
-            this.whereAll = where + putch + amt + putch2;
+            this.whereAll = where + putch + (amt*maxInPage) + putch2;
         }
     }
 }

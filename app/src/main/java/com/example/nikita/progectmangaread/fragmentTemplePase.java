@@ -29,8 +29,8 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 13.01.2016.
  */
 public class fragmentTemplePase extends Fragment {
-    public String URL,nameCell,nameURL,nameIMG,where;
-    public int kol,kolSum,totalSum;
+    public classMang classMang;
+    public int kol,kolSum,totalSum,firstItem,itemCount;
     public Document doc;
     public ArrayList<MainClassTop> list;
     public AdapterMainScreen myAdap;
@@ -44,7 +44,7 @@ public class fragmentTemplePase extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         kol = 0;
-        kolSum = 20;
+        kolSum = 24;
         list = new ArrayList<>();
         View v = inflater.inflate(R.layout.fragment, null);
         gr = (GridView)v.findViewById(R.id.gread_id);
@@ -55,25 +55,21 @@ public class fragmentTemplePase extends Fragment {
 
 
     public void editTemplePase(classMang event){
-        URL = event.getUML();
-        where = event.getWhere();
-        nameURL = event.getNameUML();
-        nameCell = event.getNameCell();
-        nameIMG = event.getImgUML();
+        classMang = event;
         parssate();
     }
 
     //метод парсим
     public void parssate(){
         //создается клас с описанием интерфейсв
-        AsyncTaskLisen addImg = new AsyncTaskLisen() {
+      AsyncTaskLisen addImg = new AsyncTaskLisen() {
           @Override
             public void onEnd() {
-                loadimg();
+              loadimg();
             }
         };
         //парсим сайт
-        Pars past = new Pars(addImg,kol,URL);
+        Pars past = new Pars(addImg,kol,classMang);
         past.execute();
     }
 
@@ -86,7 +82,6 @@ public class fragmentTemplePase extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainClassTop Class;
                 Class = list.get(position);
-
                 Toast toast = Toast.makeText(getActivity(),
                         Class.getURL_characher(), Toast.LENGTH_SHORT);
                 toast.show();
@@ -96,10 +91,11 @@ public class fragmentTemplePase extends Fragment {
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                System.out.println(view.getFirstVisiblePosition() + 18);
+                //System.out.println(view.getFirstVisiblePosition() + 18);
                 // if (scrollState == 1)
-                if (view.getFirstVisiblePosition() + 18 == totalSum) {
-                    kolSum += 6;
+                //System.out.println(view.getFirstVisiblePosition() + 18+" / "+totalSum+" / "+ kol);
+                if (firstItem + itemCount >= totalSum && kol <= classMang.getMaxInPage()) {
+                    kolSum += 4;
                     kol++;
                     parssate();
                 }
@@ -108,25 +104,29 @@ public class fragmentTemplePase extends Fragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 totalSum = totalItemCount;
-                if (kol < kolSum) {
-                    kol++;
-                    parssate();
-                }
+                firstItem = firstVisibleItem;
+                itemCount = visibleItemCount;
+
             }
         });
+        if (kol < kolSum && kol <= classMang.getMaxInPage()) {
+                    kol++;
+                    parssate();
+        }
     }
 
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String URL,URL2;
+        private classMang classMang;
         private Bitmap img;
         private AsyncTaskLisen lisens;
         private int kol;
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback, int kol,String URL) {
+        protected Pars(AsyncTaskLisen callback, int kol,classMang classMang) {
             this.lisens = callback;
             this.kol = kol;
-            this.URL = URL;
+            this.classMang = classMang;
         }
 
         @Override
@@ -138,12 +138,12 @@ public class fragmentTemplePase extends Fragment {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                if (doc == null) doc = Jsoup.connect(URL + where).get();
-                Element el = doc.select(nameCell).first();
+                if (doc == null) doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                Element el = doc.select(classMang.getNameCell()).first();
                 for (int i =0; i < kol; i++) el = el.nextElementSibling();
-                Elements el2 = el.select(nameURL);
+                Elements el2 = el.select(classMang.getNameUML());
                 URL2 =el2.attr("href");
-                el2 = el.select(nameIMG);
+                el2 = el.select(classMang.getImgUML());
                 String imgSrc = el2.attr("src");
                 //скачивания изображения
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
@@ -160,11 +160,14 @@ public class fragmentTemplePase extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
-            MainClassTop a = new MainClassTop(img,URL2);
-            myAdap.setItem(a,kol);
-            myAdap.notifyDataSetChanged();
-            //кричим интерфейсу что мы фсе
-            if (lisens != null) lisens.onEnd();
+            if (img != null) {
+               // img = BitmapFactory.decodeResource(getResources(), R.drawable.launcher);
+                MainClassTop a = new MainClassTop(img, URL2);
+                myAdap.setItem(a, kol);
+                myAdap.notifyDataSetChanged();
+                //кричим интерфейсу что мы фсе
+                if (lisens != null) lisens.onEnd();
+            }
         }
     }
 
