@@ -1,6 +1,6 @@
 package com.example.nikita.progectmangaread;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -28,6 +28,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Nikita on 13.01.2016.
  */
+
 public class fragmentTemplePase extends Fragment {
     public classMang classMang;
     public int kol,kolSum,totalSum,firstItem,itemCount;
@@ -35,6 +36,7 @@ public class fragmentTemplePase extends Fragment {
     public ArrayList<MainClassTop> list;
     public AdapterMainScreen myAdap;
     public GridView gr;
+    private int pageNumber;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,19 @@ public class fragmentTemplePase extends Fragment {
 
 
     public void editTemplePase(classMang event){
-        classMang = event;
-        parssate();
+        if (classMang == null) {
+            classMang = event;
+            parssate();
+        }
+    }
+
+
+    public static fragmentTemplePase newInstance(int page) {
+        fragmentTemplePase fragment = new fragmentTemplePase();
+        Bundle args=new Bundle();
+        args.putInt("num", page);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     //метод парсим
@@ -73,9 +86,7 @@ public class fragmentTemplePase extends Fragment {
         past.execute();
     }
 
-    //обнова экрана
-    //Как нить завернуть отдельно?
-    //ПЕРЕСМОТРЕТЬ ПАРСИНГ!
+    //слушатели gridview
     public void loadimg(){
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
