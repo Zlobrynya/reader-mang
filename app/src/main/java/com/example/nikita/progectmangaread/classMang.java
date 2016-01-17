@@ -8,7 +8,7 @@ import android.widget.ImageView;
 public class classMang {
     private String UML,imgUML,nameUML, nameCell;
     private String whereAll,where,putch,putch2;
-    private int maxInPage;
+    private int maxInPage,numberPage;
     classMang(){}
 
     classMang(String UML,String imgUML, String nameUML,String nameCell,int maxInPage){
@@ -37,11 +37,14 @@ public class classMang {
         return maxInPage;
     }
 
+    int getNumberPage() {return numberPage;}
+
     //установка пути листа топа
     void setWhere(String where,String putch,int amt){
         this.whereAll = where + amt + putch;
         this.where = where;
         this.putch = putch;
+        numberPage = amt;
     }
 
     void setWhere(String where,String putch,String putch2,int amt){
@@ -49,10 +52,12 @@ public class classMang {
         this.where = where;
         this.putch = putch;
         this.putch2 = putch2;
+        numberPage = amt;
     }
 
 
     void editWhere(int amt){
+        numberPage = amt;
         if (putch2 == null) {
             this.whereAll = where + amt + putch;
         }else {

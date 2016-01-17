@@ -17,7 +17,6 @@ public class temple_pase extends AppCompatActivity {
     private fragmentTemplePase tFragment;
     private ViewPager pager;
     private AdapterPargerFragment gg;
-    //private FragmentTransaction ft;
     private ViewFlipper flipper;
 
     @Override
@@ -29,28 +28,18 @@ public class temple_pase extends AppCompatActivity {
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new AdapterPargerFragment(getSupportFragmentManager());
         pager.setAdapter(gg);
-        tFragment = (fragmentTemplePase) gg.getItem(0);
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                editPage(position);
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
-            }
-
-            @Override
             public void onPageScrollStateChanged(int state) {
             }
-        });
-    }
 
-    public void editPage(int position) {
-        tFragment = (fragmentTemplePase) gg.getItem(position);
-        tFragment.editTemplePase(mang);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            public void onPageSelected(int position) {
+                mang.editWhere(position);
+                EventBus.getDefault().post(mang);
+            }
+        });
     }
 
     @Override
@@ -68,7 +57,6 @@ public class temple_pase extends AppCompatActivity {
     public void onEvent(classMang event){
         mang = new classMang();
         mang = event;
-        tFragment = (fragmentTemplePase) gg.getItem(0);
-        tFragment.editTemplePase(mang);
     }
+
 }

@@ -45,6 +45,5 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         EventBus.getDefault().post(clManga);
         super.onStop();
-
     }
 }

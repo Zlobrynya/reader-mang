@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,34 +37,68 @@ public class fragmentTemplePase extends Fragment {
     public ArrayList<MainClassTop> list;
     public AdapterMainScreen myAdap;
     public GridView gr;
+    private boolean parse;
     private int pageNumber;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        list = new ArrayList<>();
+        myAdap = new AdapterMainScreen(getActivity(),R.layout.layout_from_graund_view,list);
+    }
+
+
+    //Разобраться с сохранением переменных при переключении
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         kol = 0;
         kolSum = 24;
-        list = new ArrayList<>();
+        parse = true;
         View v = inflater.inflate(R.layout.fragment, null);
-        gr = (GridView)v.findViewById(R.id.gread_id);
-        myAdap = new AdapterMainScreen(getActivity(),R.layout.layout_from_graund_view,list);
+        pageNumber = this.getArguments().getInt("num");
+        gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
         return v ;
     }
 
+    //создается клас с описанием интерфейсв
+    AsyncTaskLisen addImg = new AsyncTaskLisen() {
+        @Override
+        public void onEnd() {
+            loadimg();
+        }
+    };
 
-    public void editTemplePase(classMang event){
-        if (classMang == null) {
+    public void onEvent(classMang event){
+        if (event.getNumberPage() == pageNumber) {
             classMang = event;
             parssate();
         }
     }
 
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
 
+        @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    //фабричный метод для ViewPager
     public static fragmentTemplePase newInstance(int page) {
         fragmentTemplePase fragment = new fragmentTemplePase();
         Bundle args=new Bundle();
@@ -74,13 +109,6 @@ public class fragmentTemplePase extends Fragment {
 
     //метод парсим
     public void parssate(){
-        //создается клас с описанием интерфейсв
-      AsyncTaskLisen addImg = new AsyncTaskLisen() {
-          @Override
-            public void onEnd() {
-              loadimg();
-            }
-        };
         //парсим сайт
         Pars past = new Pars(addImg,kol,classMang);
         past.execute();
@@ -102,9 +130,6 @@ public class fragmentTemplePase extends Fragment {
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //System.out.println(view.getFirstVisiblePosition() + 18);
-                // if (scrollState == 1)
-                //System.out.println(view.getFirstVisiblePosition() + 18+" / "+totalSum+" / "+ kol);
                 if (firstItem + itemCount >= totalSum && kol <= classMang.getMaxInPage()) {
                     kolSum += 4;
                     kol++;
@@ -120,12 +145,15 @@ public class fragmentTemplePase extends Fragment {
 
             }
         });
-        if (kol < kolSum && kol <= classMang.getMaxInPage()) {
+        if (kol < kolSum && kol <= classMang.getMaxInPage() && parse) {
                     kol++;
                     parssate();
         }
     }
 
+
+    //Нужно сделать остановку парсера при перелистывании на другую страницу
+    //!!!!!!!!!!!!!!!!!!
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String URL,URL2;
         private classMang classMang;
@@ -172,10 +200,12 @@ public class fragmentTemplePase extends Fragment {
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
             if (img != null) {
-               // img = BitmapFactory.decodeResource(getResources(), R.drawable.launcher);
                 MainClassTop a = new MainClassTop(img, URL2);
-                myAdap.setItem(a, kol);
-                myAdap.notifyDataSetChanged();
+                if (kol > myAdap.getCount()){
+                    System.out.println("NumberPage: " + pageNumber + " kol: " + kol + " kolSum: " + kolSum + " sizeAdapter: " + myAdap.getCount());
+                    myAdap.add(a);
+                    myAdap.notifyDataSetChanged();
+                }
                 //кричим интерфейсу что мы фсе
                 if (lisens != null) lisens.onEnd();
             }
