@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".temple_pase"></activity>
+        <activity android:name=".DescriptionMang"></activity>
     </application>
 
 </manifest>

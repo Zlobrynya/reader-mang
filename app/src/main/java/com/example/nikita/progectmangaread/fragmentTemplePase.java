@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
@@ -36,6 +37,7 @@ import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 13.01.2016.
+ * Класс фрагмента где выводится таблицей топ манг, с возможностью тыканья в них
  */
 
 public class fragmentTemplePase extends Fragment {
@@ -135,11 +137,8 @@ public class fragmentTemplePase extends Fragment {
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainClassTop Class;
-                Class = list.get(position);
-                Toast toast = Toast.makeText(getActivity(),
-                        Class.getURL_characher(), Toast.LENGTH_SHORT);
-                toast.show();
+                MainClassTop Class = list.get(position);
+                EventBus.getDefault().post(Class);
             }
         });
 
@@ -168,8 +167,7 @@ public class fragmentTemplePase extends Fragment {
     }
 
 
-    //Нужно сделать остановку парсера при перелистывании на другую страницу
-    //!!!!!!!!!!!!!!!!!!
+    //Нужно сделать остановку парсера при перелистывании на другую страницу (???)
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
         private classMang classMang;
@@ -203,11 +201,14 @@ public class fragmentTemplePase extends Fragment {
             //Document doc;
             try {
                 if (doc == null) doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+
                 Element el = doc.select(classMang.getNameCell()).first();
                 for (int i =0; i < kol; i++) el = el.nextElementSibling();
                 Elements el2 = el.select(classMang.getNameUML());
+
                 URL2 = el2.attr("href");
                 el2 = el.select(classMang.getImgUML());
+
                 String imgSrc = el2.attr("src");
                 name_char = el2.attr("title");
                 //скачивания изображения

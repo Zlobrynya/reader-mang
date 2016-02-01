@@ -1,33 +1,35 @@
 package com.example.nikita.progectmangaread;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import de.greenrobot.event.EventBus;
+
+/**
+ * Класс для топа вывода манг, с помощью ViewPager,
+ * происходит пролитывания fragments
+ */
 
 public class temple_pase extends AppCompatActivity {
     private classMang mang;
     private fragmentTemplePase tFragment;
     private ViewPager pager;
     private AdapterPargerFragment gg;
-    private ViewFlipper flipper;
+    private int numberPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_pase);
-        //tFragment = new fragmentTemplePase();
         //установка слушателя
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new AdapterPargerFragment(getSupportFragmentManager());
+        gg = new AdapterPargerFragment(getSupportFragmentManager(),10);
         pager.setAdapter(gg);
+
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
             }
@@ -52,6 +54,14 @@ public class temple_pase extends AppCompatActivity {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    public void onEvent(MainClassTop event){
+        Toast toast = Toast.makeText(this,
+                event.getURL_characher(), Toast.LENGTH_SHORT);
+        toast.show();
+        Intent intent = new Intent(temple_pase.this,DescriptionMang.class);
+        startActivity(intent);
     }
 
     public void onEvent(classMang event){

@@ -55,7 +55,6 @@ public class classMang {
         numberPage = amt;
     }
 
-
     void editWhere(int amt){
         numberPage = amt;
         if (putch2 == null) {
