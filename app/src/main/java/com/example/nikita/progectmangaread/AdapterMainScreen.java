@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 
 /**
@@ -30,23 +32,31 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
     }
 
 
+    public class Holder
+    {
+        TextView tv;
+        ImageView img;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
-        ImageView img;
+        Holder holder=new Holder();
         if (v != null){
-            img = (ImageView) v.getTag();
+            holder = (Holder) v.getTag();
         }else {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.layout_from_graund_view, null);
-            img = (ImageView)v.findViewById(R.id.imageView1);
-            v.setTag(img);
+            holder.img = (ImageView)v.findViewById(R.id.imageView1);
+            holder.tv = (TextView) v.findViewById(R.id.textMang);
+            v.setTag(holder);
         }
         //получаем класс из позиции
         MainClassTop m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
-            img.setImageBitmap(m1.getImg_characher());
+            holder.img.setImageBitmap(m1.getImg_characher());
+            holder.tv.setText(m1.getName_characher());
         }
         return v;
     }

@@ -1,15 +1,22 @@
 package com.example.nikita.progectmangaread;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Point;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -22,6 +29,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
@@ -32,7 +40,7 @@ import de.greenrobot.event.EventBus;
 
 public class fragmentTemplePase extends Fragment {
     public classMang classMang;
-    public int kol,kolSum,totalSum,firstItem,itemCount;
+    public int kol,kolSum,totalSum,firstItem,itemCount,height,width;
     public Document doc;
     public ArrayList<MainClassTop> list;
     public AdapterMainScreen myAdap;
@@ -68,6 +76,14 @@ public class fragmentTemplePase extends Fragment {
         pageNumber = this.getArguments().getInt("num");
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
+
+        //для узнавания разрешения экрана
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        height = displaymetrics.heightPixels;
+        width = displaymetrics.widthPixels;
+
+        System.out.println("!! " + width + " " + height);
         return v ;
     }
 
@@ -110,7 +126,7 @@ public class fragmentTemplePase extends Fragment {
     //метод парсим
     public void parssate(){
         //парсим сайт
-        Pars past = new Pars(addImg,kol,classMang);
+        Pars past = new Pars(addImg,kol,classMang,getContext());
         past.execute();
     }
 
@@ -155,17 +171,26 @@ public class fragmentTemplePase extends Fragment {
     //Нужно сделать остановку парсера при перелистывании на другую страницу
     //!!!!!!!!!!!!!!!!!!
     public class Pars extends AsyncTask<Void,Void,Void> {
-        private String URL,URL2;
+        private String name_char,URL2;
         private classMang classMang;
+        public ProgressDialog dialog;
         private Bitmap img;
         private AsyncTaskLisen lisens;
         private int kol;
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback, int kol,classMang classMang) {
+        protected Pars(AsyncTaskLisen callback, int kol,classMang classMang,Context ctx) {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
+            //progressbar пождключаем если не парсили документ
+            if (doc == null) {
+                dialog = new ProgressDialog(ctx);
+                dialog.setMessage("Загрузка...");
+                dialog.setIndeterminate(true);
+                dialog.setCancelable(true);
+                dialog.show();
+            }
         }
 
         @Override
@@ -181,9 +206,10 @@ public class fragmentTemplePase extends Fragment {
                 Element el = doc.select(classMang.getNameCell()).first();
                 for (int i =0; i < kol; i++) el = el.nextElementSibling();
                 Elements el2 = el.select(classMang.getNameUML());
-                URL2 =el2.attr("href");
+                URL2 = el2.attr("href");
                 el2 = el.select(classMang.getImgUML());
                 String imgSrc = el2.attr("src");
+                name_char = el2.attr("title");
                 //скачивания изображения
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
                 //декод поток для загрузки изобр в Bitmap
@@ -198,11 +224,12 @@ public class fragmentTemplePase extends Fragment {
 
         @Override
         protected void onPostExecute(Void result){
+            if (dialog != null) dialog.dismiss();
             //добавляем в лист и обновление
             if (img != null) {
-                MainClassTop a = new MainClassTop(img, URL2);
+                MainClassTop a = new MainClassTop(img, classMang.getUML()+URL2,name_char);
                 if (kol > myAdap.getCount()){
-                    System.out.println("NumberPage: " + pageNumber + " kol: " + kol + " kolSum: " + kolSum + " sizeAdapter: " + myAdap.getCount());
+                    a.editClass(width,height);
                     myAdap.add(a);
                     myAdap.notifyDataSetChanged();
                 }

@@ -8,19 +8,29 @@ import android.graphics.Bitmap;
 public class MainClassTop {
     Bitmap img_characher;
     String URL_characher;
+    String name_characher;
 
-    MainClassTop(Bitmap img, String URL){
+    MainClassTop(Bitmap img, String URL,String name){
         img_characher = img;
         URL_characher = URL;
+        name_characher = name;
     }
 
-    Bitmap getImg_characher(){
-        return  img_characher;
+
+    void editClass(int wScr, int hScr){
+        int w = wScr / 4;
+        int h = hScr / 5;
+        img_characher = Bitmap.createScaledBitmap(img_characher,w,h,true);
     }
+
+
+    Bitmap getImg_characher(){return  img_characher;}
 
     String getURL_characher(){
         return URL_characher;
     }
+
+    String getName_characher() { return  name_characher; }
 
     void setImg_characher(Bitmap img){
         img_characher = img;
