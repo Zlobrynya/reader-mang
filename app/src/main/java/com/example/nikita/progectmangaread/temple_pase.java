@@ -1,6 +1,9 @@
 package com.example.nikita.progectmangaread;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +22,7 @@ public class temple_pase extends AppCompatActivity {
     private fragmentTemplePase tFragment;
     private ViewPager pager;
     private AdapterPargerFragment gg;
-    private int numberPage;
+    private MainClassTop classTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class temple_pase extends AppCompatActivity {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        if (classTop != null) EventBus.getDefault().post(classTop);
         super.onStop();
     }
 
@@ -60,6 +64,7 @@ public class temple_pase extends AppCompatActivity {
         Toast toast = Toast.makeText(this,
                 event.getURL_characher(), Toast.LENGTH_SHORT);
         toast.show();
+        classTop = event;
         Intent intent = new Intent(temple_pase.this,DescriptionMang.class);
         startActivity(intent);
     }
@@ -67,6 +72,24 @@ public class temple_pase extends AppCompatActivity {
     public void onEvent(classMang event){
         mang = new classMang();
         mang = event;
+    }
+
+
+    public class AdapterPargerFragment extends FragmentStatePagerAdapter {
+        int kol;
+        public AdapterPargerFragment(FragmentManager mgr, int kol) {
+            super(mgr);
+            this.kol = kol;
+
+        }
+        @Override
+        public int getCount() {
+            return(kol);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentTemplePase.newInstance(position);
+        }
     }
 
 }

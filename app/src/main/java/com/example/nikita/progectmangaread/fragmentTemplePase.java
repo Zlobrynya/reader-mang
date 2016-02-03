@@ -166,7 +166,6 @@ public class fragmentTemplePase extends Fragment {
         }
     }
 
-
     //Нужно сделать остановку парсера при перелистывании на другую страницу (???)
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
@@ -203,7 +202,8 @@ public class fragmentTemplePase extends Fragment {
                 if (doc == null) doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
 
                 Element el = doc.select(classMang.getNameCell()).first();
-                for (int i =0; i < kol; i++) el = el.nextElementSibling();
+                for (int i = 0; i < kol; i++)
+                    el = el.nextElementSibling();
                 Elements el2 = el.select(classMang.getNameUML());
 
                 URL2 = el2.attr("href");
@@ -229,7 +229,7 @@ public class fragmentTemplePase extends Fragment {
             //добавляем в лист и обновление
             if (img != null) {
                 MainClassTop a = new MainClassTop(img, classMang.getUML()+URL2,name_char);
-                if (kol > myAdap.getCount()){
+                if ((kol >= myAdap.getCount())){
                     a.editClass(width,height);
                     myAdap.add(a);
                     myAdap.notifyDataSetChanged();

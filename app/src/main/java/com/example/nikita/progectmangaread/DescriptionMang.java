@@ -6,6 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -29,16 +33,17 @@ public class DescriptionMang extends AppCompatActivity {
     public Document doc;
     private MainClassTop mang;
     private ViewPager pager;
-    private AdapterPargerFragment gg;
+    private adapterFragment gg;
+    private Pars pars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_pase);
-        //установка фрагментов
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new AdapterPargerFragment(getSupportFragmentManager(),2);
+        gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
+
     }
 
     @Override
@@ -55,25 +60,47 @@ public class DescriptionMang extends AppCompatActivity {
 
     public void onEvent(MainClassTop event){
         mang = event;
+        pars = new Pars(this,mang);
+        pars.execute();
     }
 
+    public class adapterFragment  extends FragmentPagerAdapter {
+        int kol;
+        public adapterFragment(FragmentManager mgr, int kol) {
+            super(mgr);
+            this.kol = kol;
+        }
+        @Override
+        public int getCount() {
+            return(kol);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentDescriptionMang.newInstance(position);
+        }
+    }
+
+
     public class Pars extends AsyncTask<Void,Void,Void> {
-        private String name_char,URL2;
-        public ProgressDialog dialog;
+        private ProgressDialog dialog;
+        private MainClassTop mang;
         private Bitmap img;
-        private AsyncTaskLisen lisens;
+        private classDescriptionMang classDescriptionMang;
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback, classMang classMang,Context ctx) {
-            this.lisens = callback;
+        protected Pars(Context ctx,MainClassTop mang) {
+            this.mang = mang;
+            classDescriptionMang = new classDescriptionMang();
+            classDescriptionMang.setImgMang(mang.getImg_characher());
+            classDescriptionMang.setNameMang(mang.getName_characher());
             //progressbar пождключаем если не парсили документ
-       /*     if (doc == null) {
+            if (doc == null) {
                 dialog = new ProgressDialog(ctx);
                 dialog.setMessage("Загрузка...");
                 dialog.setIndeterminate(true);
                 dialog.setCancelable(true);
                 dialog.show();
-            }*/
+            }
         }
 
         @Override
@@ -84,30 +111,49 @@ public class DescriptionMang extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             //Document doc;
-       /*     try {
-                if (doc == null) doc = Jsoup.connect().get();
-                Element el = doc.select().first();
-                for (int i =0; i < kol; i++) el = el.nextElementSibling();
-                Elements el2 = el.select();
-                URL2 = el2.attr("href");
-                el2 = el.select();
-                String imgSrc = el2.attr("src");
-                name_char = el2.attr("title");
-                //скачивания изображения
-                InputStream inPut = new java.net.URL(imgSrc).openStream();
-                //декод поток для загрузки изобр в Bitmap
-                img = BitmapFactory.decodeStream(inPut);
+            try {
+                //Потом как нить переделать этот парсер
+                if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).get();
+
+                Element el = doc.select("[class = small smallText rate_info]").first();
+                classDescriptionMang.setRank(el.select("b").first().text());
+
+                el = doc.select("[class = subject-meta col-sm-7]").first();
+                el = el.select("p").first();
+                classDescriptionMang.setToms(el.select("p").first().text());
+                el = el.nextElementSibling();
+                el = el.nextElementSibling();
+         //       translate = el.select("p").text();
+
+                el = doc.select("[class = elementList]").first();
+                Elements el4 = el.select("span");
+                el4 = el4.select("a");
+                classDescriptionMang.addGenre(el4.text());
+                el = el.nextElementSibling();
+                el = el.nextElementSibling();
+                classDescriptionMang.setNameAuthor(el.text());
+
+                Elements el2 = doc.select("[class = leftContent]");
+                //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
+                el2 = doc.select("[itemprop = description]");
+                classDescriptionMang.setDescription(el2.attr("content"));
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
                 System.out.println("Не грузит страницу либо больше нечего грузить");
-            }*/
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result){
+            if (dialog != null) dialog.dismiss();
+            EventBus.getDefault().post(classDescriptionMang);
 
         }
     }
+
+
 }
