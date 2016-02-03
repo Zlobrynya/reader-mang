@@ -18,11 +18,9 @@ public class classDescriptionMang {
     }
     void setDescription(String des) {description = des;}
     void setNameAuthor(String author){ nameAuthor = author;}
-    void setRank(String rank){
-        Rank = rank;
-    }
+    void setRank(String rank){ Rank = rank; }
     void addGenre(String genre){
-        this.genre += genre;
+        this.genre = genre;
     }
     void setImgMang(Bitmap imgMang){
         this.imgMang = imgMang;
@@ -31,11 +29,11 @@ public class classDescriptionMang {
         this.toms = toms;
     }
 
-    String getGenre(){return genre;}
-    String getNameMang() {return  nameMang;}
-    Bitmap getImgMang() {return imgMang;}
-    String getRank() {return Rank;}
-    String getNameAuthor() {return nameAuthor;}
-    String getToms() {return toms;}
-    String getDescription() {return description;}
+    public String getGenre(){return genre;}
+    public String getNameMang() {return  nameMang;}
+    public Bitmap getImgMang() {return imgMang;}
+    public String getRank() {return Rank;}
+    public String getNameAuthor() {return nameAuthor;}
+    public String getToms() {return toms;}
+    public String getDescription() {return description;}
 }

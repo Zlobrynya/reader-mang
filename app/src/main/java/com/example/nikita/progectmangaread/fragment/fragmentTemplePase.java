@@ -1,27 +1,25 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Point;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+
+import com.example.nikita.progectmangaread.AdapterMainScreen;
+import com.example.nikita.progectmangaread.AsyncTaskLisen;
+import com.example.nikita.progectmangaread.MainClassTop;
+import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.classMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,7 +28,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
@@ -41,7 +38,7 @@ import de.greenrobot.event.EventBus;
  */
 
 public class fragmentTemplePase extends Fragment {
-    public classMang classMang;
+    public com.example.nikita.progectmangaread.classMang classMang;
     public int kol,kolSum,totalSum,firstItem,itemCount,height,width;
     public Document doc;
     public ArrayList<MainClassTop> list;
@@ -54,7 +51,7 @@ public class fragmentTemplePase extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
-        myAdap = new AdapterMainScreen(getActivity(),R.layout.layout_from_graund_view,list);
+        myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list);
     }
 
 

@@ -8,7 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
+
+import com.example.nikita.progectmangaread.fragment.fragmentTemplePase;
 
 import de.greenrobot.event.EventBus;
 

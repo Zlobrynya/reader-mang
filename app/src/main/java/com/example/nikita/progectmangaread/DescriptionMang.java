@@ -3,15 +3,15 @@ package com.example.nikita.progectmangaread;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +19,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import de.greenrobot.event.EventBus;
 

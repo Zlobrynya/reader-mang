@@ -10,14 +10,14 @@ public class MainClassTop {
     String URL_characher;
     String name_characher;
 
-    MainClassTop(Bitmap img, String URL,String name){
+    public MainClassTop(Bitmap img, String URL, String name){
         img_characher = img;
         URL_characher = URL;
         name_characher = name;
     }
 
 
-    void editClass(int wScr, int hScr){
+    public void editClass(int wScr, int hScr){
         int w = wScr / 4;
         int h = hScr / 5;
         img_characher = Bitmap.createScaledBitmap(img_characher,w,h,true);

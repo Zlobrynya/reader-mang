@@ -19,25 +19,13 @@ public class classMang {
         this.maxInPage = maxInPage;
     }
 
-    String getUML(){ return UML; }
-
-    String getImgUML(){ return imgUML; }
-
-    String getNameUML(){ return nameUML; }
-
-    String getWhere(){
-        return whereAll;
-    }
-
-    String getNameCell(){
-        return nameCell;
-    }
-
-    int getMaxInPage() {
-        return maxInPage;
-    }
-
-    int getNumberPage() {return numberPage;}
+    public String getUML(){ return UML; }
+    public String getImgUML(){ return imgUML; }
+    public String getNameUML(){ return nameUML; }
+    public String getWhere(){ return whereAll; }
+    public String getNameCell(){ return nameCell; }
+    public int getMaxInPage() { return maxInPage; }
+    public int getNumberPage() {return numberPage;}
 
     //установка пути листа топа
     void setWhere(String where,String putch,int amt){
