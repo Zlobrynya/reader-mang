@@ -1,8 +1,5 @@
 package com.example.nikita.progectmangaread;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
+import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 
 import org.jsoup.Jsoup;
@@ -44,7 +42,6 @@ public class DescriptionMang extends AppCompatActivity {
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
-
     }
 
     @Override
@@ -61,7 +58,7 @@ public class DescriptionMang extends AppCompatActivity {
 
     public void onEvent(MainClassTop event){
         mang = event;
-        pars = new Pars(this,mang);
+        pars = new Pars(mang);
         pars.execute();
     }
 
@@ -77,37 +74,26 @@ public class DescriptionMang extends AppCompatActivity {
         }
         @Override
         public Fragment getItem(int position) {
-            return fragmentDescriptionMang.newInstance(position);
+           if (position == 0) return fragmentDescriptionMang.newInstance(position);
+            else return fragmentDescriptionList.newInstance(position);
         }
     }
 
 
     public class Pars extends AsyncTask<Void,Void,Void> {
-        private ProgressDialog dialog;
         private MainClassTop mang;
-        private Bitmap img;
         private com.example.nikita.progectmangaread.classPMR.classDescriptionMang classDescriptionMang;
 
         //конструктор потока
-        protected Pars(Context ctx,MainClassTop mang) {
+        protected Pars(MainClassTop mang) {
             this.mang = mang;
             classDescriptionMang = new classDescriptionMang();
             classDescriptionMang.setImgMang(mang.getImg_characher());
             classDescriptionMang.setNameMang(mang.getName_characher());
-            //progressbar пождключаем если не парсили документ
-            if (doc == null) {
-                dialog = new ProgressDialog(ctx);
-                dialog.setMessage("Загрузка...");
-                dialog.setIndeterminate(true);
-                dialog.setCancelable(true);
-                dialog.show();
-            }
         }
 
         @Override
-        protected  void  onPreExecute(){
-            super.onPreExecute();
-        }
+        protected  void  onPreExecute(){ super.onPreExecute(); }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -124,12 +110,12 @@ public class DescriptionMang extends AppCompatActivity {
                 classDescriptionMang.setToms(el.select("p").first().text());
                 el = el.nextElementSibling();
                 el = el.nextElementSibling();
-         //       translate = el.select("p").text();
+                classDescriptionMang.setTranslate(el.select("p").text());
 
                 el = doc.select("[class = elementList]").first();
                 Elements el4 = el.select("span");
                 el4 = el4.select("a");
-                classDescriptionMang.addGenre(el4.text());
+                classDescriptionMang.setGenre(el4.text());
                 el = el.nextElementSibling();
                 el = el.nextElementSibling();
                 classDescriptionMang.setNameAuthor(el.text());
@@ -138,8 +124,6 @@ public class DescriptionMang extends AppCompatActivity {
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
                 el2 = doc.select("[itemprop = description]");
                 classDescriptionMang.setDescription(el2.attr("content"));
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
@@ -150,7 +134,6 @@ public class DescriptionMang extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            if (dialog != null) dialog.dismiss();
             EventBus.getDefault().post(classDescriptionMang);
 
         }

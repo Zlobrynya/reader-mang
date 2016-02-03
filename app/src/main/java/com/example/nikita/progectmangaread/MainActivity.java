@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(newInten);
     }
 
-
     @Override
     public void onStop() {
         EventBus.getDefault().post(clManga);

@@ -18,6 +18,8 @@ import de.greenrobot.event.EventBus;
 /**
  * Класс для топа вывода манг, с помощью ViewPager,
  * происходит пролитывания fragments
+ * перед прогрузкой замменять на прогресс бар фрагмент
+ * как только спарсит и вставить меняем на норм фразмент ( как провернуть?)
  */
 
 public class temple_pase extends AppCompatActivity {

@@ -6,21 +6,23 @@ import android.graphics.Bitmap;
  * Created by Nikita on 03.02.2016.
  */
 public class classDescriptionMang {
-    private String nameMang,nameAuthor,Rank,toms,genre,description;
+    private String nameMang,nameAuthor,Rank,toms,genre,description,translate;
     private Bitmap imgMang;
 
     public classDescriptionMang() {
-        nameAuthor = nameMang = nameMang = Rank = toms = genre = description = " ";
+        nameAuthor = nameMang = Rank = toms = genre = description = translate = " ";
     }
 
     public void setNameMang(String nameMang){ this.nameMang = nameMang; }
     public void setDescription(String des) {description = des;}
     public void setNameAuthor(String author){ nameAuthor = author;}
     public void setRank(String rank){ Rank = rank; }
-    public void addGenre(String genre){ this.genre = genre; }
+    public void setGenre(String genre){ this.genre = genre; }
     public void setImgMang(Bitmap imgMang){ this.imgMang = imgMang; }
     public void setToms(String toms){ this.toms = toms; }
+    public void setTranslate(String translate) { this.translate = translate; }
 
+    public String getTranslate() {return translate;}
     public String getGenre(){return genre;}
     public String getNameMang() {return  nameMang;}
     public Bitmap getImgMang() {return imgMang;}

@@ -34,22 +34,11 @@ public class fragmentDescriptionMang extends Fragment {
                              Bundle savedInstanceState) {
         v = null ;
         System.out.println("!!!!!!!!!!!!!!!! I am create !!!!!!!!!!!!!!!!!!!!!");
-        switch (this.getArguments().getInt("num")){
-            case 0:
-                v = inflater.inflate(R.layout.glav_screen_mang, null);
-                break;
-            case 1:
-                //тут заменить на layout со списком
-                v = inflater.inflate(R.layout.activity_main, null);
-                break;
-            default:
-                v = inflater.inflate(R.layout.fragment, null);
-        }
+        v = inflater.inflate(R.layout.glav_screen_mang, null);
         return v ;
     }
 
     public void onEvent(classDescriptionMang event){
-        System.out.println("!!!!!!!!!!!!!!!! Event !!!!!!!!!!!!!!!!!!!!!");
         if (this.getArguments().getInt("num") == 0){
             if (v != null) {
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);
