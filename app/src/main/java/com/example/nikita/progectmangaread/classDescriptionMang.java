@@ -33,6 +33,7 @@ public class classDescriptionMang {
 
     String getGenre(){return genre;}
     String getNameMang() {return  nameMang;}
+    Bitmap getImgMang() {return imgMang;}
     String getRank() {return Rank;}
     String getNameAuthor() {return nameAuthor;}
     String getToms() {return toms;}

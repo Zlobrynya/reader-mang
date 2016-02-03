@@ -10,117 +10,123 @@
     tools:context="com.example.nikita.testadapter.glav_screen"
     >
 
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/gridLayout"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <ImageView
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView2"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_rowSpan="4"/>
+            android:id="@+id/gridLayout"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/Ranck"
-            android:id="@+id/textRanckName"
-            android:layout_row="0"
-            android:layout_column="1" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView2"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_rowSpan="4"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text=""
-            android:id="@+id/textRanck"
-            android:layout_row="0"
-            android:layout_column="2" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/Ranck"
+                android:id="@+id/textRanckName"
+                android:layout_row="0"
+                android:layout_column="1" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text=""
-            android:id="@+id/textGanres"
-            android:layout_row="5"
-            android:layout_column="0"
-            android:layout_columnSpan="4"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/textRanck"
+                android:layout_row="0"
+                android:layout_column="2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textVolumes"
-            android:layout_row="1"
-            android:layout_column="1"
-            android:layout_columnSpan="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/textGanres"
+                android:layout_row="5"
+                android:layout_column="0"
+                android:layout_columnSpan="4"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textTranslate"
-            android:layout_row="2"
-            android:layout_column="1"
-            android:layout_columnSpan="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/textVolumes"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_columnSpan="2"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textAuthor"
-            android:layout_row="3"
-            android:layout_column="1"
-            android:layout_columnSpan="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/textTranslate"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:layout_columnSpan="2"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/gange"
-            android:id="@+id/textGanresName"
-            android:layout_row="4"
-            android:layout_column="0" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/textAuthor"
+                android:layout_row="3"
+                android:layout_column="1"
+                android:layout_columnSpan="2"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/description"
-            android:id="@+id/textDescriptionName"
-            android:layout_row="6"
-            android:layout_column="0" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/gange"
+                android:id="@+id/textGanresName"
+                android:layout_row="4"
+                android:layout_column="0" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text=""
-            android:id="@+id/textDescription"
-            android:layout_row="7"
-            android:layout_column="0"
-            android:layout_columnSpan="4"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/description"
+                android:id="@+id/textDescriptionName"
+                android:layout_row="6"
+                android:layout_column="0" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
-            android:layout_row="23"
-            android:layout_column="0"
-            android:onClick="Click"/>
-    </GridLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/textDescription"
+                android:layout_row="7"
+                android:layout_column="0"
+                android:layout_columnSpan="4"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button"
+                android:layout_row="23"
+                android:layout_column="0"
+                android:onClick="Click"/>
+        </GridLayout>
+
+    </ScrollView>
+
 
 </RelativeLayout>

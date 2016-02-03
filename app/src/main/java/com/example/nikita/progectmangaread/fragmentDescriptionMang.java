@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
@@ -46,25 +47,19 @@ public class fragmentDescriptionMang extends Fragment {
     public void onEvent(classDescriptionMang event){
         System.out.println("!!!!!!!!!!!!!!!! Event !!!!!!!!!!!!!!!!!!!!!");
         if (this.getArguments().getInt("num") == 0){
-            if (v != null) {
-                TextView textView = (TextView) v.findViewById(R.id.textMang);
-                textView.setText("G");
-            }
-            //TextView textView = (TextView) .findViewById(R.id.textMang);
-
+            TextView textView = (TextView) v.findViewById(R.id.textAuthor);
+            textView.setText(event.getNameAuthor());
+            textView = (TextView) v.findViewById(R.id.textDescription);
+            textView.setText(event.getDescription());
+            textView = (TextView) v.findViewById(R.id.textGanres);
+            textView.setText(event.getGenre());
+            textView = (TextView) v.findViewById(R.id.textVolumes);
+            textView.setText(event.getToms());
+            textView = (TextView) v.findViewById(R.id.textRanck);
+            textView.setText(event.getRank());
+            ImageView img = (ImageView) v.findViewById(R.id.imageView2);
+            img.setImageBitmap(event.getImgMang());
         }
-     /*   TextView textView = (TextView) v.findViewById(R.id.textMang);
-        textView.setText(event.getNameMang());
-        textView = (TextView) v.findViewById(R.id.textAuthor);
-        textView.setText(event.getNameAuthor());
-        textView = (TextView) v.findViewById(R.id.textDescription);
-        textView.setText(event.getDescription());
-        textView = (TextView) v.findViewById(R.id.textGanres);
-        textView.setText(event.getGenre());
-        textView = (TextView) v.findViewById(R.id.textVolumes);
-        textView.setText(event.getToms());
-        textView = (TextView) v.findViewById(R.id.textRanck);
-        textView.setText(event.getRank());*/
     }
 
     @Override
