@@ -26,7 +26,11 @@ public class AdapterList extends ArrayAdapter<classForList> {
         this.item = item;
     }
 
-    public void setItem(classForList clas,int position) { item.add(position,clas); }
+    public void setItem(int pos){
+        item.get(pos).setCheck(true);
+        //classForList.setCheck(true);
+    //    item.add(pos,classForList);
+    }
 
     public class Holder
     {
@@ -49,12 +53,14 @@ public class AdapterList extends ArrayAdapter<classForList> {
             v.setTag(holder);
         }
         //получаем класс из позиции
-        classForList m1 = getItem(position);
+        classForList m1 = item.get(position);
         //если он есть то получаеи и устанавливаем
         if (m1 != null){
-            holder.checkBox.isChecked();
+            if (m1.getCheck())
+                holder.checkBox.setChecked(true);
             holder.tv.setText(m1.getName_chapter());
         }
+
         return v;
     }
 

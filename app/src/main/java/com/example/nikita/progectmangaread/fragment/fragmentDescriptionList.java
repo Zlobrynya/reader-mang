@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.R;
@@ -23,6 +25,7 @@ public class fragmentDescriptionList extends Fragment {
     View v;
     ArrayList<classForList> list;
     public AdapterList myAdap;
+    private ListView gr;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,19 +37,29 @@ public class fragmentDescriptionList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.list_heads, null);
-        ListView gr = (ListView) v.findViewById(R.id.listView);
+        gr = (ListView) v.findViewById(R.id.listView);
         gr.setAdapter(myAdap);
-        classForList classForList = new classForList();
+        final classForList classForList = new classForList();
         classForList.setName_chapter("GG");
-        for (int i = 0 ; i < 150; i++){
-            list.add(classForList);
-        }
+
+        gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                //Разобраться с багом при check
+                classForList classForList1 = list.get(position);
+                myAdap.setItem(position);
+                myAdap.notifyDataSetChanged();
+            }
+        });
+
         return v ;
     }
 
 
-    public void onEvent(ArrayList<String> event){
-
+    public void onEvent(classForList event){
+        myAdap.add(event);
+        myAdap.notifyDataSetChanged();
     }
 
     @Override

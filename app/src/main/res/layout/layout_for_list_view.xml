@@ -9,7 +9,10 @@
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/checkBoxList"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"/>
 
     <TextView
         android:layout_width="wrap_content"

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
+import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 
@@ -19,6 +20,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
@@ -31,17 +34,23 @@ import de.greenrobot.event.EventBus;
 public class DescriptionMang extends AppCompatActivity {
     public Document doc;
     private MainClassTop mang;
+    public ArrayList<classForList> arList;
+    public int kol;
     private ViewPager pager;
     private adapterFragment gg;
     private Pars pars;
+    private Element el;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        kol = 0;
         setContentView(R.layout.activity_temple_pase);
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
+        arList = new ArrayList<classForList>();
     }
 
     @Override
@@ -55,10 +64,33 @@ public class DescriptionMang extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+    AsyncTaskLisen addImg = new AsyncTaskLisen() {
+        @Override
+        public void onEnd() {
+            el = doc.select("[class = table table-hover]").first();
+            el = el.select("tbody").first();
+            el = el.select("tr").first();
+            do {
+                parsList();
+            }while (el != null);
+        }
+    };
+
+    void parsList(){
+        classForList classForList = new classForList();
+        Elements el2 = el.select("a");
+        String URL = el2.attr("href");
+        classForList.setURL_chapter(URL);
+        URL = el2.select("a").text();
+        classForList.setName_chapter(URL);
+        EventBus.getDefault().post(classForList);
+        el = el.nextElementSibling();
+    }
+
 
     public void onEvent(MainClassTop event){
         mang = event;
-        pars = new Pars(mang);
+        pars = new Pars(addImg,mang);
         pars.execute();
     }
 
@@ -79,14 +111,15 @@ public class DescriptionMang extends AppCompatActivity {
         }
     }
 
-
     public class Pars extends AsyncTask<Void,Void,Void> {
         private MainClassTop mang;
+        private AsyncTaskLisen lisens;
         private com.example.nikita.progectmangaread.classPMR.classDescriptionMang classDescriptionMang;
 
         //конструктор потока
-        protected Pars(MainClassTop mang) {
+        protected Pars(AsyncTaskLisen callback,MainClassTop mang) {
             this.mang = mang;
+            this.lisens = callback;
             classDescriptionMang = new classDescriptionMang();
             classDescriptionMang.setImgMang(mang.getImg_characher());
             classDescriptionMang.setNameMang(mang.getName_characher());
@@ -135,9 +168,44 @@ public class DescriptionMang extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result){
             EventBus.getDefault().post(classDescriptionMang);
-
+            if (lisens != null) lisens.onEnd();
         }
     }
 
+    {
+/*    public class ParsList extends AsyncTask<Void,Void,Void> {
+        private String URL,name;
+        private AsyncTaskLisen lisens;
+        //конструктор потока
+        protected ParsList(AsyncTaskLisen callback) {
+            this.lisens = callback;
+        }
 
+        @Override
+        protected  void  onPreExecute(){ super.onPreExecute(); }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            //Document doc;
+            Element el = doc.select("[class = table table-hover]").first();
+            el = el.select("tbody").first();
+            el = el.select("tr").first();
+            for(int i = 0; i < kol; i++)
+                el = el.nextElementSibling();
+            Elements el2 = el.select("a");
+            URL = el2.attr("href");
+            name = el2.select("a").text();
+            kol++;
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            classForList classForList = new classForList(URL,name);
+            EventBus.getDefault().post(classForList);
+            if (lisens != null) lisens.onEnd();
+        }
+    }*/
+    }
 }
