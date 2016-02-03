@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.awt.font.TextAttribute;
+import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+
 import java.util.ArrayList;
 
 /**

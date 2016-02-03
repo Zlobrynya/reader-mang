@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.nikita.progectmangaread.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classDescriptionMang;
+import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 
 import de.greenrobot.event.EventBus;
 

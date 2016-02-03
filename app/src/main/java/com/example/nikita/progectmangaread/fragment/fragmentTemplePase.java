@@ -15,11 +15,11 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.nikita.progectmangaread.AdapterMainScreen;
+import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
-import com.example.nikita.progectmangaread.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classMang;
+import com.example.nikita.progectmangaread.classPMR.classMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,7 +38,7 @@ import de.greenrobot.event.EventBus;
  */
 
 public class fragmentTemplePase extends Fragment {
-    public com.example.nikita.progectmangaread.classMang classMang;
+    public com.example.nikita.progectmangaread.classPMR.classMang classMang;
     public int kol,kolSum,totalSum,firstItem,itemCount,height,width;
     public Document doc;
     public ArrayList<MainClassTop> list;

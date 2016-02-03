@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.fragment.fragmentTemplePase;
 
 import de.greenrobot.event.EventBus;

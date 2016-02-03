@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.classPMR;
 
 import android.graphics.Bitmap;
 
@@ -24,13 +24,13 @@ public class MainClassTop {
     }
 
 
-    Bitmap getImg_characher(){return  img_characher;}
+    public Bitmap getImg_characher(){return  img_characher;}
 
-    String getURL_characher(){
+    public String getURL_characher(){
         return URL_characher;
     }
 
-    String getName_characher() { return  name_characher; }
+    public String getName_characher() { return  name_characher; }
 
     void setImg_characher(Bitmap img){
         img_characher = img;

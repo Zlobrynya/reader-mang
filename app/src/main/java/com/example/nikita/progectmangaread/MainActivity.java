@@ -1,11 +1,11 @@
 package com.example.nikita.progectmangaread;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+
+import com.example.nikita.progectmangaread.classPMR.classMang;
 
 import de.greenrobot.event.EventBus;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void mangafox(View view) {
         clManga = new classMang("http://mangafox.me","[class=manga_img] img[src]","[class=manga_img] ", "[class=list] li",44);
-        clManga.setWhere("/directory/", ".html",1);
+        clManga.setWhere("/directory/", ".html", 1);
         startActivity(newInten);
     }
 

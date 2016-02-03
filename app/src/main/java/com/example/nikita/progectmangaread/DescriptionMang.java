@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 
 import org.jsoup.Jsoup;
@@ -84,7 +86,7 @@ public class DescriptionMang extends AppCompatActivity {
         private ProgressDialog dialog;
         private MainClassTop mang;
         private Bitmap img;
-        private classDescriptionMang classDescriptionMang;
+        private com.example.nikita.progectmangaread.classPMR.classDescriptionMang classDescriptionMang;
 
         //конструктор потока
         protected Pars(Context ctx,MainClassTop mang) {

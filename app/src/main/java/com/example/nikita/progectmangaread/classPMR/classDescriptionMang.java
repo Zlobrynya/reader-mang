@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.classPMR;
 
 import android.graphics.Bitmap;
 
@@ -9,25 +9,17 @@ public class classDescriptionMang {
     private String nameMang,nameAuthor,Rank,toms,genre,description;
     private Bitmap imgMang;
 
-    classDescriptionMang() {
+    public classDescriptionMang() {
         nameAuthor = nameMang = nameMang = Rank = toms = genre = description = " ";
     }
 
-    void setNameMang(String nameMang){
-        this.nameMang = nameMang;
-    }
-    void setDescription(String des) {description = des;}
-    void setNameAuthor(String author){ nameAuthor = author;}
-    void setRank(String rank){ Rank = rank; }
-    void addGenre(String genre){
-        this.genre = genre;
-    }
-    void setImgMang(Bitmap imgMang){
-        this.imgMang = imgMang;
-    }
-    void setToms(String toms){
-        this.toms = toms;
-    }
+    public void setNameMang(String nameMang){ this.nameMang = nameMang; }
+    public void setDescription(String des) {description = des;}
+    public void setNameAuthor(String author){ nameAuthor = author;}
+    public void setRank(String rank){ Rank = rank; }
+    public void addGenre(String genre){ this.genre = genre; }
+    public void setImgMang(Bitmap imgMang){ this.imgMang = imgMang; }
+    public void setToms(String toms){ this.toms = toms; }
 
     public String getGenre(){return genre;}
     public String getNameMang() {return  nameMang;}
