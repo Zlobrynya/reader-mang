@@ -35,6 +35,9 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Nikita on 13.01.2016.
  * Класс фрагмента где выводится таблицей топ манг, с возможностью тыканья в них
+ * ---
+ * Сделать: запросы на вывод след страницы и добавление дальше в list классов
+ * ---
  */
 
 public class fragmentTemplePase extends Fragment {

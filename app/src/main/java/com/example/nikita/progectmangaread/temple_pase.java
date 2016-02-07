@@ -35,21 +35,8 @@ public class temple_pase extends AppCompatActivity {
         setContentView(R.layout.activity_temple_pase);
         //установка слушателя
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new AdapterPargerFragment(getSupportFragmentManager(),10);
+        gg = new AdapterPargerFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
-
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {
-            }
-
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            public void onPageSelected(int position) {
-                mang.editWhere(position);
-                EventBus.getDefault().post(mang);
-            }
-        });
     }
 
     @Override
