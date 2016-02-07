@@ -36,13 +36,15 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 13.01.2016.
  * Класс фрагмента где выводится таблицей топ манг, с возможностью тыканья в них
  * ---
- * Сделать: запросы на вывод след страницы и добавление дальше в list классов
+ * Сделать:
+ * Все же продумать вывод топа + ошибка памяти после 3тьей страницы
+ * (как вариант подчищать за собой (?) )
  * ---
  */
 
 public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
-    public int kol,kolSum,totalSum,firstItem,itemCount,height,width;
+    public int kol,kolSum,totalSum,firstItem,itemCount,height,width,page;
     public Document doc;
     public ArrayList<MainClassTop> list;
     public AdapterMainScreen myAdap;
@@ -71,7 +73,7 @@ public class fragmentTemplePase extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        kol = 0;
+        kol = page = 0;
         kolSum = 24;
         parse = true;
         View v = inflater.inflate(R.layout.fragment, null);
@@ -160,7 +162,7 @@ public class fragmentTemplePase extends Fragment {
 
             }
         });
-        if (kol < kolSum && kol <= classMang.getMaxInPage() && parse) {
+        if (kol < kolSum) {
                     kol++;
                     parssate();
         }
@@ -173,7 +175,7 @@ public class fragmentTemplePase extends Fragment {
         public ProgressDialog dialog;
         private Bitmap img;
         private AsyncTaskLisen lisens;
-        private int kol;
+        private int kol,l;
 
         //конструктор потока
         protected Pars(AsyncTaskLisen callback, int kol,classMang classMang,Context ctx) {
@@ -200,6 +202,13 @@ public class fragmentTemplePase extends Fragment {
             //Document doc;
             try {
                 if (doc == null) doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                l = classMang.getMaxInPage();
+                if (kol == l){
+                    page++;
+                    classMang.editWhere(page);
+                    doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                    kol = 0;
+                }
 
                 Element el = doc.select(classMang.getNameCell()).first();
                 for (int i = 0; i < kol; i++)
@@ -215,6 +224,8 @@ public class fragmentTemplePase extends Fragment {
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
                 //декод поток для загрузки изобр в Bitmap
                 img = BitmapFactory.decodeStream(inPut);
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
@@ -226,10 +237,11 @@ public class fragmentTemplePase extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             if (dialog != null) dialog.dismiss();
+            if (this.kol == 0)  fragmentTemplePase.this.kol = 0;
             //добавляем в лист и обновление
             if (img != null) {
                 MainClassTop a = new MainClassTop(img, classMang.getUML()+URL2,name_char);
-                if ((kol >= myAdap.getCount())){
+                if (((kol+(page*classMang.getMaxInPage())) >= myAdap.getCount())){
                     a.editClass(width,height);
                     myAdap.add(a);
                     myAdap.notifyDataSetChanged();
