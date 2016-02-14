@@ -171,41 +171,4 @@ public class DescriptionMang extends AppCompatActivity {
             if (lisens != null) lisens.onEnd();
         }
     }
-
-    {
-/*    public class ParsList extends AsyncTask<Void,Void,Void> {
-        private String URL,name;
-        private AsyncTaskLisen lisens;
-        //конструктор потока
-        protected ParsList(AsyncTaskLisen callback) {
-            this.lisens = callback;
-        }
-
-        @Override
-        protected  void  onPreExecute(){ super.onPreExecute(); }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            //Document doc;
-            Element el = doc.select("[class = table table-hover]").first();
-            el = el.select("tbody").first();
-            el = el.select("tr").first();
-            for(int i = 0; i < kol; i++)
-                el = el.nextElementSibling();
-            Elements el2 = el.select("a");
-            URL = el2.attr("href");
-            name = el2.select("a").text();
-            kol++;
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            classForList classForList = new classForList(URL,name);
-            EventBus.getDefault().post(classForList);
-            if (lisens != null) lisens.onEnd();
-        }
-    }*/
-    }
 }

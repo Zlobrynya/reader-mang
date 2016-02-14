@@ -9,6 +9,11 @@ public class MainClassTop {
     Bitmap img_characher;
     String URL_characher;
     String name_characher;
+    String URL_img;
+
+    public MainClassTop(){
+
+    }
 
     public MainClassTop(Bitmap img, String URL, String name){
         img_characher = img;
@@ -32,12 +37,17 @@ public class MainClassTop {
 
     public String getName_characher() { return  name_characher; }
 
-    void setImg_characher(Bitmap img){
+    public String getURL_img() {return URL_img; }
+
+    public void setImg_characher(Bitmap img){
         img_characher = img;
     }
 
-    void setURL_characher(String url){
+    public void setURL_characher(String url){
         URL_characher = url;
     }
 
+    public void setURL_img(String url) { URL_img = url; }
+
+    public void setName_characher(String name) {name_characher = name; }
 }

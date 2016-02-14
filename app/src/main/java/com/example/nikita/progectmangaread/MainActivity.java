@@ -1,10 +1,12 @@
 package com.example.nikita.progectmangaread;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 
 import de.greenrobot.event.EventBus;

@@ -1,13 +1,17 @@
 package com.example.nikita.progectmangaread.fragment;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,7 @@ import android.widget.GridView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
+import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classMang;
@@ -38,10 +43,8 @@ import de.greenrobot.event.EventBus;
  * Класс фрагмента где выводится таблицей топ манг, с возможностью тыканья в них
  * ---
  * Сделать:
- * Все же продумать вывод топа + ошибка памяти после 3тьей страницы
- * (как вариант подчищать за собой (?) )
- * Как вариант сохранять ссылки (максимум план: жанры,перевод,и на выбор картинку или кач ее с инета)
- *              на скачку изображений на телефоне (разобраться с этим)
+ * Сделать что бы для разных сайтов были разные БД
+ * Сделать что бы файлы (картинки обложки) сохранялись в кеш приложения
  * и с помощью сервиса обновлять из раз в неделю (пункт долеко идущего плана)
  * ---
  */
@@ -49,20 +52,24 @@ import de.greenrobot.event.EventBus;
 public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
     public int kol,kolSum,totalSum,firstItem,itemCount,height,width,page;
-    public Document doc[];
+    public boolean scrolList; //true = UP; false = DOWN
+    public Document doc;
     public LinkedList<MainClassTop> list;
     public AdapterMainScreen myAdap;
     public GridView gr;
-    public byte numberArrDocument;
     private int pageNumber;
-    public int MAX_SIZE_LINKED_LIST = 60;
+    DatabaseHelper mDatabaseHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list);
-        doc = new Document[2];
+
+        //создание базы данных
+        mDatabaseHelper = new DatabaseHelper(getActivity(), "BasePMR.db", null, 1);
+        SQLiteDatabase sdb;
+        sdb = mDatabaseHelper.getReadableDatabase();
     }
 
 
@@ -85,6 +92,7 @@ public class fragmentTemplePase extends Fragment {
         pageNumber = this.getArguments().getInt("num");
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
+        scrolList = false;
 
         //для узнавания разрешения экрана
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -162,9 +170,21 @@ public class fragmentTemplePase extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // Log.i("Scroll 1:", "firstItem: " + firstItem + " itemCount " + itemCount);
+                if (firstItem != firstVisibleItem) {
+                    if (firstItem > firstVisibleItem) {
+                        if (totalItemCount > 60) myAdap.deleteFist(3);
+                    }
+                    if (firstItem < firstVisibleItem) {
+                        if (totalItemCount > 60) myAdap.deleteLast(3);
+                    }
+                }
+
                 totalSum = totalItemCount;
                 firstItem = firstVisibleItem;
                 itemCount = visibleItemCount;
+                // Log.i("Scroll 2:", "firstItem: " + firstItem + " itemCount " + itemCount);
+
             }
         });
         if (kol < kolSum && kol <= classMang.getMaxInPage()) {
@@ -173,27 +193,33 @@ public class fragmentTemplePase extends Fragment {
         }
     }
 
+    //Нужно сделать остановку парсера при перелистывании на другую страницу (???)
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
         private classMang classMang;
         public ProgressDialog dialog;
         private Bitmap img;
         private AsyncTaskLisen lisens;
+        private String imgSrc;
         private int kol,l;
+        private SQLiteDatabase mSqLiteDatabase;
+        private Boolean down;
 
         //конструктор потока
         protected Pars(AsyncTaskLisen callback, int kol,classMang classMang,Context ctx) {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
+            mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
+            down = false;
             //progressbar пождключаем если не парсили документ
-            if (doc == null) {
+         /*   if (doc == null) {
                 dialog = new ProgressDialog(ctx);
                 dialog.setMessage("Загрузка...");
                 dialog.setIndeterminate(true);
                 dialog.setCancelable(true);
                 dialog.show();
-            }
+            }*/
         }
 
         @Override
@@ -205,42 +231,40 @@ public class fragmentTemplePase extends Fragment {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                if (numberArrDocument == 0) {
-                    doc[0] = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
-                }
-                //Загрузка след html стр
-                //ПРОДУМАТЬ переключение когда проскроливаем
                 if (kol == classMang.getMaxInPage()){
                     page++;
-                    classMang.editWhere(page);
-                    if (page > 1){
-                        doc[0] = doc[1];
-                        doc[1] = doc[2];
-                        doc[2] = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
-                        numberArrDocument = 3;
-                    }else {
-                        doc[2] = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
-                        numberArrDocument = 2;
-                    }
                     kol = 0;
+                    down = true;
+                }
+                if (download_the_html()){
+                    if (doc == null) down = true;
+                    if (down) {
+                        classMang.editWhere(page);
+                        doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                        down = false;
+                    }
+
+                    Element el = doc.select(classMang.getNameCell()).first();
+                    for (int i = 0; i < kol; i++)
+                        el = el.nextElementSibling();
+                    Elements el2 = el.select(classMang.getNameUML());
+
+                    URL2 = classMang.getUML() + el2.attr("href");
+                    el2 = el.select(classMang.getImgUML());
+
+                    imgSrc = el2.attr("src");
+                    name_char = el2.attr("title");
+                }else {
+                    MainClassTop a = getMainClassTop();
+                    URL2 = a.getURL_characher();
+                    imgSrc = a.getURL_img();
+                    name_char = a.getName_characher();
                 }
 
-                Element el = doc[numberArrDocument].select(classMang.getNameCell()).first();
-                for (int i = 0; i < kol; i++)
-                    el = el.nextElementSibling();
-                Elements el2 = el.select(classMang.getNameUML());
-
-                URL2 = el2.attr("href");
-                el2 = el.select(classMang.getImgUML());
-
-                String imgSrc = el2.attr("src");
-                name_char = el2.attr("title");
                 //скачивания изображения
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
                 //декод поток для загрузки изобр в Bitmap
                 img = BitmapFactory.decodeStream(inPut);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
@@ -258,19 +282,71 @@ public class fragmentTemplePase extends Fragment {
             }
             //добавляем в лист и обновление
             if (img != null) {
-                MainClassTop a = new MainClassTop(img, classMang.getUML()+URL2,name_char);
-              /* if (((kol+(page*classMang.getMaxInPage())) >= myAdap.getCount())){
+                MainClassTop a = new MainClassTop(img, URL2,name_char);
+                if (((kol+(page*classMang.getMaxInPage())) >= myAdap.getCount())){
+                 /*  if (itemCount > 60 && itemCount < 63){
+                       if (scrolList) myAdap.deleteFist(3);
+                        else myAdap.deleteLast(3);
+                    }*/
                     a.editClass(width,height);
                     myAdap.add(a);
                     myAdap.notifyDataSetChanged();
-                }*/
-                if ((kol+(page*classMang.getMaxInPage())) > MAX_SIZE_LINKED_LIST){
-
+                    addBasaData(a);
                 }
                 //кричим интерфейсу что мы фсе
-
+                if (lisens != null) lisens.onEnd();
             }
-            if (lisens != null) lisens.onEnd();
         }
+
+        //добавление в базу данных
+        void addBasaData(MainClassTop a){
+            String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
+                    (kol+(page*classMang.getMaxInPage())+1);
+            Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+
+            if (cursor.getCount() == 0){
+                ContentValues newValues = new ContentValues();
+                // Задайте значения для каждого столбца
+                newValues.put(DatabaseHelper.NAME_MANG, a.getName_characher());
+                newValues.put(DatabaseHelper.URL_CHAPTER, a.getURL_characher());
+                newValues.put(DatabaseHelper.URL_IMG, imgSrc);
+                // Вставляем данные в таблицу
+                mSqLiteDatabase.insert("Mang", null, newValues);
+            }
+            cursor.close();
+        }
+
+        //получаем структуру с именем и сылками
+        MainClassTop getMainClassTop(){
+            String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
+                    (kol+(page*classMang.getMaxInPage())+1);
+            Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+            if (cursor.getCount() != 0){
+                MainClassTop a = new MainClassTop();
+                cursor.moveToFirst();
+                a.setURL_img(cursor.getString(cursor.getColumnIndex(DatabaseHelper.URL_IMG)));
+                a.setName_characher(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME_MANG)));
+                a.setURL_characher(cursor.getString(cursor.getColumnIndex(DatabaseHelper.URL_CHAPTER)));
+                cursor.close();
+                return a;
+            }
+            cursor.close();
+            return null;
+        }
+
+        //проверяем в бд есть ли в такой элемент
+        Boolean download_the_html(){
+            String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
+                    (kol+(page*classMang.getMaxInPage())+1);
+            Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+            Log.i("LOG_TAG", "download_the_html " + cursor.getCount());
+            if (cursor.getCount() == 0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+            return false;
+        }
+
     }
 }

@@ -28,10 +28,16 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
         this.item = item;
     }
 
-    public void setItem(MainClassTop clas,int position)
-    {
-        //mImages[position] = android.R.drawable.star_on;
-        item.add(position,clas);
+    public void deleteFist(int kol){
+        for (int i = 0; i < kol; i++){
+            item.removeFirst();
+        }
+    }
+
+    public void deleteLast(int kol){
+        for (int i = 0; i < kol; i++){
+            item.removeLast();
+        }
     }
 
 
