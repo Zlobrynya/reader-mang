@@ -12,6 +12,7 @@ import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by Nikita on 01.01.2016.
@@ -20,9 +21,9 @@ import java.util.ArrayList;
  */
 public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
 
-    ArrayList<MainClassTop> item;
+    LinkedList<MainClassTop> item;
 
-    public AdapterMainScreen(Context context, int resourse, ArrayList<MainClassTop> item) {
+    public AdapterMainScreen(Context context, int resourse, LinkedList<MainClassTop> item) {
         super(context, resourse,item);
         this.item = item;
     }

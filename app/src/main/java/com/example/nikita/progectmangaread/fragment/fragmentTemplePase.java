@@ -29,6 +29,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import de.greenrobot.event.EventBus;
 
@@ -39,7 +40,8 @@ import de.greenrobot.event.EventBus;
  * Сделать:
  * Все же продумать вывод топа + ошибка памяти после 3тьей страницы
  * (как вариант подчищать за собой (?) )
- * Как вариант сохранять ссылки на скачку изображений на телефоне (разобраться с этим)
+ * Как вариант сохранять ссылки (максимум план: жанры,перевод,и на выбор картинку или кач ее с инета)
+ *              на скачку изображений на телефоне (разобраться с этим)
  * и с помощью сервиса обновлять из раз в неделю (пункт долеко идущего плана)
  * ---
  */
@@ -47,18 +49,20 @@ import de.greenrobot.event.EventBus;
 public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
     public int kol,kolSum,totalSum,firstItem,itemCount,height,width,page;
-    public Document doc;
-    public ArrayList<MainClassTop> list;
+    public Document doc[];
+    public LinkedList<MainClassTop> list;
     public AdapterMainScreen myAdap;
     public GridView gr;
-    private boolean parse;
+    public byte numberArrDocument;
     private int pageNumber;
+    public int MAX_SIZE_LINKED_LIST = 60;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        list = new ArrayList<>();
+        list = new LinkedList<>();
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list);
+        doc = new Document[2];
     }
 
 
@@ -77,7 +81,6 @@ public class fragmentTemplePase extends Fragment {
                              Bundle savedInstanceState) {
         kol = page = 0;
         kolSum = 24;
-        parse = true;
         View v = inflater.inflate(R.layout.fragment, null);
         pageNumber = this.getArguments().getInt("num");
         gr = (GridView) v.findViewById(R.id.gread_id);
@@ -148,6 +151,7 @@ public class fragmentTemplePase extends Fragment {
 
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
+            //непомню как работает
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (firstItem + itemCount >= totalSum && kol <= classMang.getMaxInPage()) {
                     kolSum += 4;
@@ -161,16 +165,14 @@ public class fragmentTemplePase extends Fragment {
                 totalSum = totalItemCount;
                 firstItem = firstVisibleItem;
                 itemCount = visibleItemCount;
-
             }
         });
-        if (kol < kolSum) {
+        if (kol < kolSum && kol <= classMang.getMaxInPage()) {
                     kol++;
                     parssate();
         }
     }
 
-    //Нужно сделать остановку парсера при перелистывании на другую страницу (???)
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
         private classMang classMang;
@@ -203,16 +205,27 @@ public class fragmentTemplePase extends Fragment {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                if (doc == null) doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
-                l = classMang.getMaxInPage();
-                if (kol == l){
+                if (numberArrDocument == 0) {
+                    doc[0] = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                }
+                //Загрузка след html стр
+                //ПРОДУМАТЬ переключение когда проскроливаем
+                if (kol == classMang.getMaxInPage()){
                     page++;
                     classMang.editWhere(page);
-                    doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                    if (page > 1){
+                        doc[0] = doc[1];
+                        doc[1] = doc[2];
+                        doc[2] = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                        numberArrDocument = 3;
+                    }else {
+                        doc[2] = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                        numberArrDocument = 2;
+                    }
                     kol = 0;
                 }
 
-                Element el = doc.select(classMang.getNameCell()).first();
+                Element el = doc[numberArrDocument].select(classMang.getNameCell()).first();
                 for (int i = 0; i < kol; i++)
                     el = el.nextElementSibling();
                 Elements el2 = el.select(classMang.getNameUML());
@@ -239,20 +252,25 @@ public class fragmentTemplePase extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             if (dialog != null) dialog.dismiss();
-            if (this.kol == 0)  fragmentTemplePase.this.kol = 0;
+            if (this.kol == 0) {
+                fragmentTemplePase.this.kol = 0;
+                fragmentTemplePase.this.kolSum = 24;
+            }
             //добавляем в лист и обновление
             if (img != null) {
                 MainClassTop a = new MainClassTop(img, classMang.getUML()+URL2,name_char);
-                if (((kol+(page*classMang.getMaxInPage())) >= myAdap.getCount())){
+              /* if (((kol+(page*classMang.getMaxInPage())) >= myAdap.getCount())){
                     a.editClass(width,height);
                     myAdap.add(a);
                     myAdap.notifyDataSetChanged();
+                }*/
+                if ((kol+(page*classMang.getMaxInPage())) > MAX_SIZE_LINKED_LIST){
+
                 }
                 //кричим интерфейсу что мы фсе
-                if (lisens != null) lisens.onEnd();
+
             }
+            if (lisens != null) lisens.onEnd();
         }
     }
-
-
 }
