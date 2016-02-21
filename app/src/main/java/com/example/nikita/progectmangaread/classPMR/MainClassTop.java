@@ -50,4 +50,8 @@ public class MainClassTop {
     public void setURL_img(String url) { URL_img = url; }
 
     public void setName_characher(String name) {name_characher = name; }
+
+    public void deleteImg(){
+        img_characher = null;
+    }
 }
