@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
@@ -34,7 +33,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import de.greenrobot.event.EventBus;
@@ -61,13 +59,12 @@ public class fragmentTemplePase extends Fragment {
     private int pageNumber;
     public DatabaseHelper mDatabaseHelper;
     public SQLiteDatabase mSqLiteDatabase;
-    public boolean mIsScrollingUp;
-
+    public boolean mIsScrollingUp,search_and_genres;
+    public String URL_Search;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
-
         //для узнавания разрешения экрана
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -80,12 +77,13 @@ public class fragmentTemplePase extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         kol = page = lastItem = firstItem = 0;
-        mIsScrollingUp = false;
+        mIsScrollingUp = search_and_genres = false;
         kolSum = 28;
         kolSum_previous = 0;
         kol_previous = kolImage = 0;
         View v = inflater.inflate(R.layout.fragment, null);
         pageNumber = this.getArguments().getInt("num");
+
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
 
@@ -112,7 +110,7 @@ public class fragmentTemplePase extends Fragment {
                         kolSum_previous = lastVisibleItem - 22;
                         if (kol_previous < 0) kolSum_previous = 0;
                         //переползаем через класс если там есть картинка
-                        for (;kol > kolSum_previous && kol > 0;kol--){
+                        for (; kol > kolSum_previous && kol > 0; kol--) {
                             Log.i("kol:", "Up" + kol);
                             MainClassTop a = list.get(kol);
                             if (a.getImg_characher() == null) break;
@@ -123,7 +121,7 @@ public class fragmentTemplePase extends Fragment {
                         mIsScrollingUp = false; //DOWN \/
                         kol = firstVisibleItem;
                         kolSum = firstVisibleItem + 22;
-                        for (;kol < kolSum && kol < list.size();kol++){
+                        for (; kol < kolSum && kol < list.size(); kol++) {
                             Log.i("kol:", "Down" + kol);
                             MainClassTop a = list.get(kol);
                             if (a.getImg_characher() == null) break;
@@ -138,7 +136,7 @@ public class fragmentTemplePase extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            // Log.i("Scroll 2", String.valueOf(helpVasr));
+                // Log.i("Scroll 2", String.valueOf(helpVasr));
             }
         });
 
@@ -160,7 +158,6 @@ public class fragmentTemplePase extends Fragment {
         myAdap.notifyDataSetChanged();
         parssate(kol);
     }
-
 
     //создается клас с описанием интерфейсв
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -195,6 +192,10 @@ public class fragmentTemplePase extends Fragment {
             mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
             initializationArray();
         }
+    }
+
+    public void onEvent(String event){
+
     }
 
     @Override
@@ -236,7 +237,7 @@ public class fragmentTemplePase extends Fragment {
         if (cursor.getCount() == 0){
             ContentValues newValues = new ContentValues();
             // Задайте значения для каждого столбца
-            newValues.put(DatabaseHelper.NAME_MANG, a.getName_characher().replace('"',' '));
+            newValues.put(DatabaseHelper.NAME_MANG, a.getName_characher().replace('"', ' '));
             newValues.put(DatabaseHelper.URL_CHAPTER, a.getURL_characher());
             newValues.put(DatabaseHelper.URL_IMG, imgSrc);
             // Вставляем данные в таблицу
@@ -309,13 +310,14 @@ public class fragmentTemplePase extends Fragment {
             try {
                 page = kol / classMang.getMaxInPage();
                 if (download_the_html(kol,page)){
-//                    page = kol / classMang.getMaxInPage();
-                    int kol_mang = kol - (classMang.getMaxInPage()*page);
+//                   page = kol / classMang.getMaxInPage();
+                        int kol_mang = kol - (classMang.getMaxInPage()*page);
                     if (doc == null) {
                         classMang.editWhere(page);
                         doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
                         down = false;
                     }
+
 
                     Element el = doc.select(classMang.getNameCell()).first();
                     for (int i = 0; i < kol_mang; i++)

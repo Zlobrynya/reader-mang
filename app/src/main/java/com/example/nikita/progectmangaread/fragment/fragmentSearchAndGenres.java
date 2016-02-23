@@ -2,16 +2,20 @@ package com.example.nikita.progectmangaread.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classForList;
+import com.example.nikita.progectmangaread.classPMR.classMang;
+import com.example.nikita.progectmangaread.classPMR.classTransport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,6 +30,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 21.02.2016.
@@ -48,6 +54,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     ArrayList<classForList> list;
     public AdapterList myAdap;
     private ListView gr;
+    public classTransport classMang;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +65,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+        //открываем файл и считываем от туда инфу
         byte buf[] = new byte[1024];
         int len;
         try {
@@ -69,15 +77,14 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         } catch (IOException e) {
 
         }
-
         //Парсим то что скачали с файла
         Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
         for (Element e : doc.select("genres")) {
-          //  System.out.println(e.text() + " - " + e.attr("name"));
             classForList a = new classForList(e.text(),e.attr("name"));
             list.add(a);
         }
 
+        classMang = new classTransport();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
     }
 
@@ -86,7 +93,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         v = inflater.inflate(R.layout.search_and_genres_fragment, null);
         gr = (ListView) v.findViewById(R.id.listSearch);
         gr.setAdapter(myAdap);
-        //final classForList classForList = new classForList();
+
         Button b = (Button) v.findViewById(R.id.buttonSearch);
         b.setOnClickListener(this);
 
@@ -105,6 +112,23 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         return v ;
     }
 
+    public void onEvent(classMang event){
+        this.classMang.setClassMang(event);
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
     //фабричный метод для ViewPage
     public static fragmentSearchAndGenres newInstance(int page) {
         fragmentSearchAndGenres fragment = new fragmentSearchAndGenres();
@@ -114,12 +138,18 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         return fragment;
     }
 
-    public void myClickMethod(View v) {
-
-    }
-
     @Override
     public void onClick(View v) {
-
+        EditText text = (EditText) this.v.findViewById(R.id.editText);
+        String request = classMang.getClassMang().getUML() + "/search?q=" + text.getText().toString();
+        for (classForList a : list){
+            String in;
+            if (a.getCheck()) in = "in";
+                else in="";
+            request += "&"+ a.getURL_chapter() + "="+in;
+        }
+        Log.i("POST", request);
+        classMang.setURL_Search(request);
+        EventBus.getDefault().post(classMang);
     }
 }
