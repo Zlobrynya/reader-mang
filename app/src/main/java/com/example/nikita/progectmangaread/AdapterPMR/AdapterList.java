@@ -19,17 +19,9 @@ import java.util.ArrayList;
  * Created by Nikita on 03.02.2016.
  */
 public class AdapterList extends ArrayAdapter<classForList> {
-    ArrayList<classForList> item;
 
     public AdapterList(Context context, int resourse, ArrayList<classForList> item) {
         super(context, resourse,item);
-        this.item = item;
-    }
-
-    public void setItem(int pos){
-        item.get(pos).setCheck(true);
-        //classForList.setCheck(true);
-    //    item.add(pos,classForList);
     }
 
     public class Holder
@@ -53,11 +45,12 @@ public class AdapterList extends ArrayAdapter<classForList> {
             v.setTag(holder);
         }
         //получаем класс из позиции
-        classForList m1 = item.get(position);
+        classForList m1 = this.getItem(position);
         //если он есть то получаеи и устанавливаем
         if (m1 != null){
             if (m1.getCheck())
                 holder.checkBox.setChecked(true);
+            else holder.checkBox.setChecked(false);
             holder.tv.setText(m1.getName_chapter());
         }
 

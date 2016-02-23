@@ -48,7 +48,8 @@ public class fragmentDescriptionList extends Fragment {
                                     long id) {
                 //Разобраться с багом при check
                 classForList classForList1 = list.get(position);
-                myAdap.setItem(position);
+                classForList1.setCheck(true);
+                list.set(position,classForList1);
                 myAdap.notifyDataSetChanged();
             }
         });

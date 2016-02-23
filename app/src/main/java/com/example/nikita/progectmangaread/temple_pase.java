@@ -7,11 +7,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.fragment.fragmentTemplePase;
+import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
 
 import de.greenrobot.event.EventBus;
 
@@ -66,6 +68,10 @@ public class temple_pase extends AppCompatActivity {
         mang = event;
     }
 
+    public void onClick(View view) {
+        
+    }
+
 
     public class AdapterPargerFragment extends FragmentStatePagerAdapter {
         int kol;
@@ -80,7 +86,13 @@ public class temple_pase extends AppCompatActivity {
         }
         @Override
         public Fragment getItem(int position) {
-            return fragmentTemplePase.newInstance(position);
+            switch (position){
+                case 0:
+                    return fragmentTemplePase.newInstance(position);
+                case 1:
+                    return fragmentSearchAndGenres.newInstance(position);
+            }
+            return null;
         }
     }
 
