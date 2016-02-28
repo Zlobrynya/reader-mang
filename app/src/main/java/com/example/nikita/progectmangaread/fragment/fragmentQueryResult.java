@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
@@ -33,6 +34,10 @@ import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 23.02.2016.
+ *
+ *
+ * Сделать соощение если ничего не найдено
+ *
  */
 public class fragmentQueryResult extends Fragment{
 
@@ -44,6 +49,8 @@ public class fragmentQueryResult extends Fragment{
     public GridView gr;
     public boolean mIsScrollingUp;
     public classTransport classTransport;
+    public Pars past;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,8 +85,9 @@ public class fragmentQueryResult extends Fragment{
             }
         });
 
+
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
+          @Override
             //непомню как работает
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
@@ -123,6 +131,7 @@ public class fragmentQueryResult extends Fragment{
             }
         });
 
+        parssate(kol);
         System.out.println("!! " + width + " " + height);
         return v ;
     }
@@ -146,19 +155,23 @@ public class fragmentQueryResult extends Fragment{
         }
     };
 
-    public void onEvent(classTransport event){
+   /* public void onEvent(classTransport event){
         classTransport = event;
-    }
+        parssate(0);
+    }*/
 
-    @Override
+    public void add(classTransport ev){
+        classTransport = ev;
+    }
+   /* @Override
     public void onStart() {
         EventBus.getDefault().register(this);
         super.onStart();
-    }
+    }*/
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        past.cancel(false);
         super.onStop();
     }
 
@@ -174,7 +187,7 @@ public class fragmentQueryResult extends Fragment{
     //метод парсим
     public void parssate(int kol){
         //парсим сайт
-        Pars past = new Pars(addImg,kol);
+        past = new Pars(addImg,kol);
         past.execute();
     }
 
@@ -183,7 +196,7 @@ public class fragmentQueryResult extends Fragment{
         private String name_char,URL2;
         private Bitmap img;
         private AsyncTaskLisen lisens;
-        private String imgSrc;
+        private String imgSrc,a;
         private int kol;
 
         //конструктор потока
@@ -204,9 +217,8 @@ public class fragmentQueryResult extends Fragment{
                 if (doc == null) {
                     doc = Jsoup.connect(classTransport.getURL_Search()).get();
                 }
-
                 Element el = doc.select(classTransport.getClassMang().getNameCell()).first();
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i <= kol; i++)
                     el = el.nextElementSibling();
                 Elements el2 = el.select(classTransport.getClassMang().getNameUML());
                 URL2 = classTransport.getClassMang().getUML() + el2.attr("href");
@@ -218,7 +230,10 @@ public class fragmentQueryResult extends Fragment{
                 //скачивания изображения
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
                 //декод поток для загрузки изобр в Bitmap
-                img = BitmapFactory.decodeStream(inPut);
+                BitmapFactory.Options op = new BitmapFactory.Options();
+                op.inPreferredConfig = Bitmap.Config.RGB_565; //без альфа-канала.
+                op.inSampleSize = 1;
+                img = BitmapFactory.decodeStream(inPut, null, op);
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
@@ -232,7 +247,7 @@ public class fragmentQueryResult extends Fragment{
             //добавляем в лист и обновление
             if (img != null && kol >= 0) {
                 MainClassTop a = new MainClassTop(img, URL2,name_char);
-                a.editClass(width, height);
+                //a.editClass(width, height);
                 Log.i("Kol parse: ", String.valueOf(kol));
                 if (list.size() <= kol) list.add(kol,a);
                 else list.set(kol, a);

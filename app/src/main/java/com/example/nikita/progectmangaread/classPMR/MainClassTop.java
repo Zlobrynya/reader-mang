@@ -26,6 +26,7 @@ public class MainClassTop {
         int w = wScr / 4;
         int h = hScr / 5;
         img_characher = Bitmap.createScaledBitmap(img_characher,w,h,true);
+        //Разобраться с изображением: сылка в vk тег декодирование
     }
 
 

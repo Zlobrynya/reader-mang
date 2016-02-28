@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classMang;
+import com.example.nikita.progectmangaread.classPMR.classTransport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,17 +52,18 @@ import de.greenrobot.event.EventBus;
 
 public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
-    public int lastItem,firstItem,height,width,page;
-    public int kol,kolSum,kolSum_previous,kol_previous,kolImage;
+    private int firstItem,height,width,page;
+    private int kol,kolSum,kolSum_previous,kol_previous;
+    public int lastItem,kolImage;
     public Document doc;
     public LinkedList<MainClassTop> list;
     public AdapterMainScreen myAdap;
-    public GridView gr;
+    private GridView gr;
     private int pageNumber;
-    public DatabaseHelper mDatabaseHelper;
-    public SQLiteDatabase mSqLiteDatabase;
+    private DatabaseHelper mDatabaseHelper;
+    private SQLiteDatabase mSqLiteDatabase;
     public boolean mIsScrollingUp,search_and_genres;
-    public String URL_Search;
+    private Pars past;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,10 +82,10 @@ public class fragmentTemplePase extends Fragment {
         kol = page = lastItem = firstItem = 0;
         mIsScrollingUp = search_and_genres = false;
         kolSum = 28;
+       // kolSum = 8;
         kolSum_previous = 0;
         kol_previous = kolImage = 0;
         View v = inflater.inflate(R.layout.fragment, null);
-        pageNumber = this.getArguments().getInt("num");
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
@@ -194,18 +197,15 @@ public class fragmentTemplePase extends Fragment {
         }
     }
 
-    public void onEvent(String event){
-
-    }
-
     @Override
     public void onStart() {
         EventBus.getDefault().register(this);
         super.onStart();
     }
 
-        @Override
+    @Override
     public void onStop() {
+        past.cancel(false);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -222,7 +222,7 @@ public class fragmentTemplePase extends Fragment {
     //метод парсим
     public void parssate(int kol){
         //парсим сайт
-        Pars past = new Pars(addImg,kol,classMang,getContext());
+        past = new Pars(addImg,kol,classMang,getContext());
         past.execute();
     }
 
@@ -279,6 +279,7 @@ public class fragmentTemplePase extends Fragment {
         cursor.close();
         return false;
     }
+
 
     //Нужно сделать остановку парсера при перелистывании на другую страницу (???)
     public class Pars extends AsyncTask<Void,Void,Void> {
@@ -340,7 +341,10 @@ public class fragmentTemplePase extends Fragment {
                 //скачивания изображения
                 InputStream inPut = new java.net.URL(imgSrc).openStream();
                 //декод поток для загрузки изобр в Bitmap
-                img = BitmapFactory.decodeStream(inPut);
+                BitmapFactory.Options op = new BitmapFactory.Options();
+                op.inPreferredConfig = Bitmap.Config.RGB_565; //без альфа-канала.
+                op.inSampleSize = 1;
+                img = BitmapFactory.decodeStream(inPut, null, op);
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
@@ -378,8 +382,6 @@ public class fragmentTemplePase extends Fragment {
                             Log.i("Delete: ", "quantity: " + quantity + " KOL: " + kol + " name: " + a1.getName_characher() + " mIsScrollingUp " + mIsScrollingUp);
                         }
                     }
-               // }else kolImage++;
-
                 myAdap.notifyDataSetChanged();
                 //кричим интерфейсу что мы фсе
                 if (lisens != null) lisens.onEnd();

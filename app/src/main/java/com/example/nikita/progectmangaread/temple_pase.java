@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.classPMR.classTransport;
+import com.example.nikita.progectmangaread.fragment.fragmentLoad_page0;
 import com.example.nikita.progectmangaread.fragment.fragmentQueryResult;
 import com.example.nikita.progectmangaread.fragment.fragmentTemplePase;
 import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
@@ -40,7 +41,7 @@ public class temple_pase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_pase);
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new AdapterPargerFragment(getSupportFragmentManager(),3);
+        gg = new AdapterPargerFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
     }
 
@@ -71,35 +72,29 @@ public class temple_pase extends AppCompatActivity {
         mang = event;
     }
 
-    public void onEvent(classTransport view) {
-        gg.whatTheFragment(1);
-    }
 
 
     public class AdapterPargerFragment extends FragmentStatePagerAdapter {
-        int kol,fragment;
+        int kol;
+        private final FragmentManager mFragmentManager;
+        private Fragment mFragmentAtPos0;
         public AdapterPargerFragment(FragmentManager mgr, int kol) {
             super(mgr);
             this.kol = kol;
-            fragment = 0;
-        }
-
-        public void whatTheFragment(int fragment){
-            this.fragment = fragment;
+            mFragmentManager = mgr;
         }
 
         @Override
         public int getCount() {
             return(kol);
         }
+
         @Override
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return fragmentTemplePase.newInstance(position);
+                    return fragmentLoad_page0.newInstance(position);
                 case 1:
-                    return fragmentSearchAndGenres.newInstance(position);
-                case 2:
                     return fragmentSearchAndGenres.newInstance(position);
             }
             return null;

@@ -29,6 +29,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
@@ -44,9 +46,9 @@ import de.greenrobot.event.EventBus;
  * check - in/" " (на будущее сделать еще исключение (см. поиск readmanga.me))
  *
  * Сделать файлы для разных сайтом
- * Сделать отправку запроса (EventBus)
  * Сделать разделение на поиск (показывается только первые 200) и на жанры (тут как обычный топ,
  *         на раздумье: добавить в БД жанры и потом по ним сортировать в топ лист)
+ * Сделать что бы при нажатие в клавиатуре "enter" "нажималась" кнопка поиска
  *
  */
 public class fragmentSearchAndGenres extends Fragment implements View.OnClickListener {
@@ -124,11 +126,18 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
 
     @Override
     public void onStop() {
+        Log.i("POST", "!!STOP!!");
+        if (classMang.getClassMang() != null)
+            EventBus.getDefault().post(classMang);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
-
+    @Override
+    public void onPause() {
+        Log.i("POST", "!!PAUSE!!");
+        super.onPause();
+    }
     //фабричный метод для ViewPage
     public static fragmentSearchAndGenres newInstance(int page) {
         fragmentSearchAndGenres fragment = new fragmentSearchAndGenres();
@@ -141,7 +150,12 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         EditText text = (EditText) this.v.findViewById(R.id.editText);
-        String request = classMang.getClassMang().getUML() + "/search?q=" + text.getText().toString();
+        String request = null;
+        try {
+            request = classMang.getClassMang().getUML() + "/search?q=" + URLEncoder.encode(text.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         for (classForList a : list){
             String in;
             if (a.getCheck()) in = "in";

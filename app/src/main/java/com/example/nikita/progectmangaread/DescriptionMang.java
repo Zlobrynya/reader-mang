@@ -64,6 +64,7 @@ public class DescriptionMang extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
