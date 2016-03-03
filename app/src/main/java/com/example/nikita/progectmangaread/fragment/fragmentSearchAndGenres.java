@@ -1,15 +1,20 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.R;
@@ -51,7 +56,7 @@ import de.greenrobot.event.EventBus;
  * Сделать что бы при нажатие в клавиатуре "enter" "нажималась" кнопка поиска
  *
  */
-public class fragmentSearchAndGenres extends Fragment implements View.OnClickListener {
+public class fragmentSearchAndGenres extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener {
     View v;
     ArrayList<classForList> list;
     public AdapterList myAdap;
@@ -62,29 +67,6 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
-        //считываем с ресурсов
-        InputStream XmlFileInputStream = getResources().openRawResource(R.raw.search_read_manga); // getting XML
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        //открываем файл и считываем от туда инфу
-        byte buf[] = new byte[1024];
-        int len;
-        try {
-            while ((len = XmlFileInputStream.read(buf)) != -1) {
-                outputStream.write(buf, 0, len);
-            }
-            outputStream.close();
-            XmlFileInputStream.close();
-        } catch (IOException e) {
-
-        }
-        //Парсим то что скачали с файла
-        Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
-        for (Element e : doc.select("genres")) {
-            classForList a = new classForList(e.text(),e.attr("name"));
-            list.add(a);
-        }
 
         classMang = new classTransport();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
@@ -110,12 +92,42 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
                 myAdap.notifyDataSetChanged();
             }
         });
-
+        EditText editGo = (EditText) v.findViewById(R.id.editText);
+        editGo.setOnEditorActionListener(this);
         return v ;
     }
 
     public void onEvent(classMang event){
         this.classMang.setClassMang(event);
+        int id = 0;
+        if (classMang.getClassMang().getUML() == "http://readmanga.me") id = R.raw.search_read_manga;
+        else if (classMang.getClassMang().getUML() == "http://AdultManga.ru") id = R.raw.search_adultmanga;
+
+
+        //считываем с ресурсов
+        InputStream XmlFileInputStream = getResources().openRawResource(id); // getting XML
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        //открываем файл и считываем от туда инфу
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = XmlFileInputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.close();
+            XmlFileInputStream.close();
+        } catch (IOException e) {
+
+        }
+        //Парсим то что скачали с файла
+        Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
+        for (Element e : doc.select("genres")) {
+            classForList a = new classForList(e.text(),e.attr("name"));
+            list.add(a);
+        }
+
     }
 
     @Override
@@ -149,6 +161,10 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        postRequest();
+    }
+
+    private void postRequest(){
         EditText text = (EditText) this.v.findViewById(R.id.editText);
         String request = null;
         try {
@@ -159,11 +175,23 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         for (classForList a : list){
             String in;
             if (a.getCheck()) in = "in";
-                else in="";
+            else in="";
             request += "&"+ a.getURL_chapter() + "="+in;
         }
         Log.i("POST", request);
         classMang.setURL_Search(request);
         EventBus.getDefault().post(classMang);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            postRequest();
+            //закрытие клавиатуры
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            return true;
+        }
+        return false;
     }
 }

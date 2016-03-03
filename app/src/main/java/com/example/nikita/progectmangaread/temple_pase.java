@@ -72,7 +72,9 @@ public class temple_pase extends AppCompatActivity {
         mang = event;
     }
 
-
+    public void onEvent(classTransport event) {
+        pager.setCurrentItem(0);
+    }
 
     public class AdapterPargerFragment extends FragmentStatePagerAdapter {
         int kol;

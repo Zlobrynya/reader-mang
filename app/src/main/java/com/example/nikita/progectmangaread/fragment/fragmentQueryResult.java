@@ -37,6 +37,7 @@ import de.greenrobot.event.EventBus;
  *
  *
  * Сделать соощение если ничего не найдено
+ * Сделать что нить (что то типо подождите качается, програсс бар) при скачивании html дока
  *
  */
 public class fragmentQueryResult extends Fragment{
