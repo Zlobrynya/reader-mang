@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <recipe>
-    <genres name="арт">el_2220</genres>
-    <genres name="бара">el_1353</genres>
-    <genres name="боевик">el_1346</genres>
-    <genres name="боевые искусства">el_1334</genres>
-    <genres name="вампиры">el_1339</genres>
-    <genres name="гарем">el_1333</genres>
-    <genres name="гендерная интрига">el_1347</genres>
-    <genres name="героическое фэнтези">el_1337</genres>
-    <genres name="детектив">el_1343</genres>
-    <genres name="дзёсэй">el_1349</genres>
-    <genres name="додзинси">el_1332</genres>
-    <genres name="драма">el_1310</genres>
-    <genres name="игра">el_5229</genres>
-    <genres name="история">el_1311</genres>
-    <genres name="киберпанк">el_1351</genres>
-    <genres name="комедия">el_1328</genres>
-    <genres name="меха">el_1318</genres>
-    <genres name="мистика">el_1324</genres>
-    <genres name="научная фантастика">el_1325</genres>
-    <genres name="повседневность">el_1327</genres>
-    <genres name="постапокалиптика">el_1342</genres>
-    <genres name="приключения">el_1322</genres>
-    <genres name="психология">el_1335</genres>
-    <genres name="романтика">el_1313</genres>
-    <genres name="самурайский боевик">el_1316</genres>
-    <genres name="сверхъестественное">el_1350</genres>
-    <genres name="сёдзё">el_1314</genres>
-    <genres name="сёдзё-ай">el_1320</genres>
-    <genres name="сёнэн">el_1326</genres>
-    <genres name="сёнэн-ай">el_1330</genres>
-    <genres name="спорт">el_1321</genres>
-    <genres name="сэйнэн">el_1329</genres>
-    <genres name="трагедия">el_1344</genres>
-    <genres name="триллер">el_1341</genres>
-    <genres name="ужасы">el_1317</genres>
-    <genres name="фантастика">el_1331</genres>
-    <genres name="фэнтези">el_1323</genres>
-    <genres name="школа">el_1319</genres>
-    <genres name="эротика">el_1340</genres>
-    <genres name="этти">el_1354</genres>
-    <genres name="юри">el_1315</genres>
-    <genres name="яой">el_1336</genres>
-    <genres name="В цвете">el_4614</genres>
-    <genres name="Веб">el_1355</genres>
-    <genres name="Ёнкома">el_2741</genres>
-    <genres name="Комикс западный">el_1903</genres>
-    <genres name="Комикс русский">el_2173</genres>
-    <genres name="Манхва">el_1873</genres>
-    <genres name="Маньхуа">el_1875</genres>
-    <genres name="Не Яой">el_1874</genres>
-    <genres name="Сборник">el_1348</genres>
-    <genres name="NC-17">el_3969</genres>
-    <genres name="R">el_3968</genres>
-    <genres name="R18+">el_3990</genres>
-    <genres name="Высокий рейтинг">s_high_rate</genres>
-    <genres name="Сингл">s_single</genres>
-    <genres name="Для взрослых">s_mature</genres>
-    <genres name="Завершенная">s_completed</genres>
-    <genres name="Переведено">s_translated</genres>
-    <genres name="Длинная">s_many_chapters</genres>
+    <genres post="el_2220" list="art">арт</genres>
+    <genres post="el_1353" list="bara">бара</genres>
+    <genres post="el_1346" list="action">боевик</genres>
+    <genres post="el_1334" list="martial_arts">боевые искусства</genres>
+    <genres post="el_1339" list="vampires">вампиры</genres>
+    <genres post="el_1333" list="harem">гарем</genres>
+    <genres post="el_1347" list="gender_intriga">гендерная интрига</genres>
+    <genres post="el_1337" list="heroic_fantasy">героическое фэнтези</genres>
+    <genres post="el_1343" list="detective">детектив</genres>
+    <genres post="el_1349" list="josei">дзёсэй</genres>
+    <genres post="el_1332" list="doujinshi">додзинси</genres>
+    <genres post="el_1310" list="drama">драма</genres>
+    <genres post="el_5229" list="game">игра</genres>
+    <genres post="el_1311" list="historical">история</genres>
+    <genres post="el_1351" list="cyberpunk">киберпанк</genres>
+    <genres post="el_1328" list="comedy">комедия</genres>
+    <genres post="el_1318" list="mecha">меха</genres>
+    <genres post="el_1324" list="mystery">мистика</genres>
+    <genres post="el_1325" list="sci_fi">научная фантастика</genres>
+    <genres post="el_1327" list="natural">повседневность</genres>
+    <genres post="el_1342" list="postapocalypse">постапокалиптика</genres>
+    <genres post="el_1322" list="adventure">приключения</genres>
+    <genres post="el_1335" list="psychological">психология</genres>
+    <genres post="el_1313" list="romance">романтика</genres>
+    <genres post="el_1316" list="samurai">самурайский боевик</genres>
+    <genres post="el_1350" list="supernatural">сверхъестественное</genres>
+    <genres post="el_1314" list="shoujo">сёдзё</genres>
+    <genres post="el_1320" list="shoujo_ai">сёдзё-ай</genres>
+    <genres post="el_1326" list="shounen">сёнэн</genres>
+    <genres post="el_1330" list="shounen_ai">сёнэн-ай</genres>
+    <genres post="el_1321" list="sports">спорт</genres>
+    <genres post="el_1329" list="seinen">сэйнэн</genres>
+    <genres post="el_1344" list="tragedy">трагедия</genres>
+    <genres post="el_1341" list="thriller">триллер</genres>
+    <genres post="el_1317" list="horror">ужасы</genres>
+    <genres post="el_1331" list="fantastic">фантастика</genres>
+    <genres post="el_1323" list="fantasy">фэнтези</genres>
+    <genres post="el_1319" list="school">школа</genres>
+    <genres post="el_1340" list="erotica">эротика</genres>
+    <genres post="el_1354" list="ecchi">этти</genres>
+    <genres post="el_1315" list="yuri">юри</genres>
+    <genres post="el_1336" list="yaoi">яой</genres>
+    <genres post="el_4614">В цвете</genres>
+    <genres post="el_1355">Веб</genres>
+    <genres post="el_2741">Ёнкома</genres>
+    <genres post="el_1903">Комикс западный</genres>
+    <genres post="el_2173">Комикс русский</genres>
+    <genres post="el_1873">Манхва</genres>
+    <genres post="el_1875">Маньхуа</genres>
+    <genres post="el_1874">Не Яой</genres>
+    <genres post="el_1348">Сборник</genres>
+    <genres post="el_3969">NC-17</genres>
+    <genres post="el_3968">R</genres>
+    <genres post="el_3990">R18+</genres>
+    <genres post="s_high_rate">Высокий рейтинг</genres>
+    <genres post="s_single">Сингл</genres>
+    <genres post="s_mature">Для взрослых</genres>
+    <genres post="s_completed">Завершенная</genres>
+    <genres post="s_translated">Переведено</genres>
+    <genres post="s_many_chapters">Длинная</genres>
 </recipe>

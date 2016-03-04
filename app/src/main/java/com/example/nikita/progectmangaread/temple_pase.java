@@ -3,7 +3,7 @@ package com.example.nikita.progectmangaread;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,8 +14,7 @@ import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.classPMR.classTransport;
 import com.example.nikita.progectmangaread.fragment.fragmentLoad_page0;
-import com.example.nikita.progectmangaread.fragment.fragmentQueryResult;
-import com.example.nikita.progectmangaread.fragment.fragmentTemplePase;
+import com.example.nikita.progectmangaread.fragment.fragmentGenres;
 import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
 
 import de.greenrobot.event.EventBus;
@@ -41,8 +40,9 @@ public class temple_pase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_pase);
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new AdapterPargerFragment(getSupportFragmentManager(),2);
+        gg = new AdapterPargerFragment(getSupportFragmentManager(),3);
         pager.setAdapter(gg);
+        pager.setCurrentItem(1);
     }
 
     @Override
@@ -73,17 +73,14 @@ public class temple_pase extends AppCompatActivity {
     }
 
     public void onEvent(classTransport event) {
-        pager.setCurrentItem(0);
+        pager.setCurrentItem(1);
     }
 
-    public class AdapterPargerFragment extends FragmentStatePagerAdapter {
+    public class AdapterPargerFragment extends FragmentPagerAdapter  {
         int kol;
-        private final FragmentManager mFragmentManager;
-        private Fragment mFragmentAtPos0;
         public AdapterPargerFragment(FragmentManager mgr, int kol) {
             super(mgr);
             this.kol = kol;
-            mFragmentManager = mgr;
         }
 
         @Override
@@ -92,11 +89,27 @@ public class temple_pase extends AppCompatActivity {
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Жанры";
+                case 1:
+                    return "Манга";
+                case 2:
+                    return "Поиск";
+                default:
+                    return "Magic";
+            }
+        }
+
+        @Override
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return fragmentLoad_page0.newInstance(position);
+                    return fragmentGenres.newInstance(position);
                 case 1:
+                    return fragmentLoad_page0.newInstance(position);
+                case 2:
                     return fragmentSearchAndGenres.newInstance(position);
             }
             return null;

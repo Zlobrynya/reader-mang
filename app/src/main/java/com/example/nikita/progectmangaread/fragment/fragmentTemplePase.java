@@ -205,7 +205,7 @@ public class fragmentTemplePase extends Fragment {
 
     @Override
     public void onStop() {
-        past.cancel(false);
+        if (past != null) past.cancel(false);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }

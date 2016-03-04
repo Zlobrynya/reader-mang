@@ -74,6 +74,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("POST", "!!CREATE!!SEARCH");
         v = inflater.inflate(R.layout.search_and_genres_fragment, null);
         gr = (ListView) v.findViewById(R.id.listSearch);
         gr.setAdapter(myAdap);
@@ -124,30 +125,30 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         //Парсим то что скачали с файла
         Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
         for (Element e : doc.select("genres")) {
-            classForList a = new classForList(e.text(),e.attr("name"));
+            classForList a = new classForList(e.attr("post"),e.text());
             list.add(a);
         }
-
+        myAdap.notifyDataSetChanged();
     }
 
     @Override
     public void onStart() {
+        Log.i("POST", "!!START!!SEARCH");
         EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        Log.i("POST", "!!STOP!!");
-        if (classMang.getClassMang() != null)
-            EventBus.getDefault().post(classMang);
+     //   if (classMang.getClassMang() != null)
+     //       EventBus.getDefault().post(classMang);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     @Override
     public void onPause() {
-        Log.i("POST", "!!PAUSE!!");
+        Log.i("POST", "!!PAUSE!!SEARCH");
         super.onPause();
     }
     //фабричный метод для ViewPage
