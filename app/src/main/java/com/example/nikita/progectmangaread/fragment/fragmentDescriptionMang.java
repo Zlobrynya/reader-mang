@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,12 @@ public class fragmentDescriptionMang extends Fragment {
                 textView.setText(event.getToms());
                 textView = (TextView) v.findViewById(R.id.textRanck);
                 textView.setText(event.getRank());
+
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView2);
+                DisplayMetrics displaymetrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                imageView.setMinimumHeight(displaymetrics.heightPixels/4);
+                imageView.setMinimumWidth(displaymetrics.widthPixels/3);
                 imageView.setImageBitmap(event.getImgMang());
             }
         }

@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
@@ -93,6 +95,8 @@ public class DescriptionMang extends AppCompatActivity {
         mang = event;
         pars = new Pars(addImg,mang);
         pars.execute();
+        ActionBar actionBar = getSupportActionBar(); // or getActionBar();
+        getSupportActionBar().setTitle(event.getName_characher()); // set the top title
     }
 
     public class adapterFragment  extends FragmentPagerAdapter {
@@ -113,8 +117,6 @@ public class DescriptionMang extends AppCompatActivity {
                     return "Описание";
                 case 1:
                     return "Главы";
-                case 2:
-                    return "Поиск";
                 default:
                     return "Magic";
             }
@@ -154,11 +156,13 @@ public class DescriptionMang extends AppCompatActivity {
                 Element el = doc.select("[class = small smallText rate_info]").first();
                 classDescriptionMang.setRank(el.select("b").first().text());
 
+                //считываем тома
                 el = doc.select("[class = subject-meta col-sm-7]").first();
                 el = el.select("p").first();
                 classDescriptionMang.setToms(el.select("p").first().text());
                 el = el.nextElementSibling();
                 el = el.nextElementSibling();
+                //считываем
                 classDescriptionMang.setTranslate(el.select("p").text());
 
                 el = doc.select("[class = elementList]").first();
@@ -169,9 +173,9 @@ public class DescriptionMang extends AppCompatActivity {
                 el = el.nextElementSibling();
                 classDescriptionMang.setNameAuthor(el.text());
 
-                Elements el2 = doc.select("[class = leftContent]");
+               // Elements el2 = doc.select("[class = leftContent]");
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
-                el2 = doc.select("[itemprop = description]");
+                Elements el2 = doc.select("[itemprop = description]");
                 classDescriptionMang.setDescription(el2.attr("content"));
             } catch (IOException e) {
                 e.printStackTrace();
