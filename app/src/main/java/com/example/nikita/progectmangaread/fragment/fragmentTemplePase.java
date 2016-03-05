@@ -110,7 +110,7 @@ public class fragmentTemplePase extends Fragment {
                         //Берем последнюю видемою
                         kol = lastVisibleItem;
                         //считаем до куда будем скачивать (16 видем и 12 за кадром)
-                        kolSum_previous = lastVisibleItem - 22;
+                        kolSum_previous = lastVisibleItem - 30;
                         if (kol_previous < 0) kolSum_previous = 0;
                         //переползаем через класс если там есть картинка
                         for (; kol > kolSum_previous && kol > 0; kol--) {
@@ -123,7 +123,7 @@ public class fragmentTemplePase extends Fragment {
                     if (firstItem < firstVisibleItem) {
                         mIsScrollingUp = false; //DOWN \/
                         kol = firstVisibleItem;
-                        kolSum = firstVisibleItem + 22;
+                        kolSum = firstVisibleItem + 30;
                         for (; kol < kolSum && kol < list.size(); kol++) {
                             Log.i("kol:", "Down" + kol);
                             MainClassTop a = list.get(kol);

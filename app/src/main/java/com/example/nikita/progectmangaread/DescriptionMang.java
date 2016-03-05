@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
@@ -31,6 +32,10 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 01.02.2016.
  * Описание манги, нужно стьделать пролистывание фрагментов
  * 1 фрагмент описание, 2й фрагмент лист глав
+ *
+ * СДЕЛАТЬ: переделать парсер на более умный, ибо на сайте могут меняться все местами
+ * Пример: категория и жанры поменяться местами
+ *
  */
 
 public class DescriptionMang extends AppCompatActivity {
@@ -71,11 +76,14 @@ public class DescriptionMang extends AppCompatActivity {
         @Override
         public void onEnd() {
             el = doc.select("[class = table table-hover]").first();
-            el = el.select("tbody").first();
-            el = el.select("tr").first();
-            do {
-                parsList();
-            }while (el != null);
+            if (el != null){
+                el = el.select("tbody").first();
+                el = el.select("tr").first();
+                do {
+                    parsList();
+                }while (el != null);
+            }
+
         }
     };
 
@@ -154,7 +162,7 @@ public class DescriptionMang extends AppCompatActivity {
                 if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).get();
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
-                classDescriptionMang.setRank(el.select("b").first().text());
+                classDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
 
                 //считываем тома
                 el = doc.select("[class = subject-meta col-sm-7]").first();
@@ -165,15 +173,25 @@ public class DescriptionMang extends AppCompatActivity {
                 //считываем
                 classDescriptionMang.setTranslate(el.select("p").text());
 
+                //Жанры
                 el = doc.select("[class = elementList]").first();
                 Elements el4 = el.select("span");
                 el4 = el4.select("a");
                 classDescriptionMang.setGenre(el4.text());
                 el = el.nextElementSibling();
+                el4 = el.select("b");
+                String category;
+                if (mang.getURL_characher().contains("readmanga.me")){
+                    category = "Категории";
+                }else category = "Категория";
+                if (el4.text().contains(category)){
+                    classDescriptionMang.setCategory(el.text());
+                    el = el.nextElementSibling();
+                }
                 el = el.nextElementSibling();
+                //Имя автора
                 classDescriptionMang.setNameAuthor(el.text());
 
-               // Elements el2 = doc.select("[class = leftContent]");
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
                 Elements el2 = doc.select("[itemprop = description]");
                 classDescriptionMang.setDescription(el2.attr("content"));

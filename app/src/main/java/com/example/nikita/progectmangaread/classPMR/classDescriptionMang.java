@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * Created by Nikita on 03.02.2016.
  */
 public class classDescriptionMang {
-    private String nameMang,nameAuthor,Rank,toms,genre,description,translate;
+    private String nameMang,nameAuthor,Rank,toms,genre,description,translate,category;
     private Bitmap imgMang;
 
     public classDescriptionMang() {
@@ -21,6 +21,7 @@ public class classDescriptionMang {
     public void setImgMang(Bitmap imgMang){ this.imgMang = imgMang; }
     public void setToms(String toms){ this.toms = toms; }
     public void setTranslate(String translate) { this.translate = translate; }
+    public void setCategory(String category) { this.category = category; }
 
     public String getTranslate() {return translate;}
     public String getGenre(){return genre;}
@@ -30,4 +31,5 @@ public class classDescriptionMang {
     public String getNameAuthor() {return nameAuthor;}
     public String getToms() {return toms;}
     public String getDescription() {return description;}
+    public String getCategory() { return category; }
 }

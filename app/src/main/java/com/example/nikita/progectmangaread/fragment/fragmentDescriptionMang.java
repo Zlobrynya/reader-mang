@@ -44,14 +44,18 @@ public class fragmentDescriptionMang extends Fragment {
             if (v != null) {
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);
                 textView.setText(event.getNameAuthor());
+                textView = (TextView) v.findViewById(R.id.textRanck);
+                textView.setText(event.getRank());
                 textView = (TextView) v.findViewById(R.id.textDescription);
                 textView.setText(event.getDescription());
                 textView = (TextView) v.findViewById(R.id.textGanres);
                 textView.setText(event.getGenre());
                 textView = (TextView) v.findViewById(R.id.textVolumes);
                 textView.setText(event.getToms());
-                textView = (TextView) v.findViewById(R.id.textRanck);
-                textView.setText(event.getRank());
+                textView = (TextView) v.findViewById(R.id.textTranslate);
+                textView.setText(event.getTranslate());
+                textView = (TextView) v.findViewById(R.id.category);
+                textView.setText(event.getCategory());
 
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView2);
                 DisplayMetrics displaymetrics = new DisplayMetrics();
