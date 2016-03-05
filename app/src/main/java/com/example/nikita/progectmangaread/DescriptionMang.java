@@ -105,6 +105,21 @@ public class DescriptionMang extends AppCompatActivity {
         public int getCount() {
             return(kol);
         }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Описание";
+                case 1:
+                    return "Главы";
+                case 2:
+                    return "Поиск";
+                default:
+                    return "Magic";
+            }
+        }
+
         @Override
         public Fragment getItem(int position) {
            if (position == 0) return fragmentDescriptionMang.newInstance(position);

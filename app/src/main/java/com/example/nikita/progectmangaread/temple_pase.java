@@ -23,9 +23,6 @@ import de.greenrobot.event.EventBus;
  * Класс для топа вывода манг, с помощью ViewPager,
  * происходит пролитывания fragments
  *
- * Сделать замену в ViewPager
- * см: https://habrahabr.ru/company/mailru/blog/132406/
- *
  *
  */
 

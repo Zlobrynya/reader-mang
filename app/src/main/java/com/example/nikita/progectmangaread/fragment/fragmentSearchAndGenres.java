@@ -50,10 +50,7 @@ import de.greenrobot.event.EventBus;
  * Name_chapter - имя жанра или т.п.;
  * check - in/" " (на будущее сделать еще исключение (см. поиск readmanga.me))
  *
- * Сделать файлы для разных сайтом
- * Сделать разделение на поиск (показывается только первые 200) и на жанры (тут как обычный топ,
- *         на раздумье: добавить в БД жанры и потом по ним сортировать в топ лист)
- * Сделать что бы при нажатие в клавиатуре "enter" "нажималась" кнопка поиска
+ * на раздумье: добавить в БД жанры и потом по ним сортировать в топ лист
  *
  */
 public class fragmentSearchAndGenres extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener {
