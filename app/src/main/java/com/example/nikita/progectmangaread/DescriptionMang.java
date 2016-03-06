@@ -33,9 +33,6 @@ import de.greenrobot.event.EventBus;
  * Описание манги, нужно стьделать пролистывание фрагментов
  * 1 фрагмент описание, 2й фрагмент лист глав
  *
- * СДЕЛАТЬ: переделать парсер на более умный, ибо на сайте могут меняться все местами
- * Пример: категория и жанры поменяться местами
- *
  */
 
 public class DescriptionMang extends AppCompatActivity {
@@ -158,7 +155,6 @@ public class DescriptionMang extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                //Потом как нить переделать этот парсер
                 if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).get();
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
@@ -172,26 +168,25 @@ public class DescriptionMang extends AppCompatActivity {
                 el = el.nextElementSibling();
                 //считываем
                 classDescriptionMang.setTranslate(el.select("p").text());
-
-                //Жанры
-                el = doc.select("[class = elementList]").first();
-                Elements el4 = el.select("span");
-                el4 = el4.select("a");
-                classDescriptionMang.setGenre(el4.text());
-                el = el.nextElementSibling();
-                el4 = el.select("b");
-                String category;
-                if (mang.getURL_characher().contains("readmanga.me")){
-                    category = "Категории";
-                }else category = "Категория";
-                if (el4.text().contains(category)){
-                    classDescriptionMang.setCategory(el.text());
+                for (int i = 0; i < 4;i++){
                     el = el.nextElementSibling();
+                    String helpVar = el.text();
+                    Elements el4;
+                    if (helpVar.contains("Жанры")){
+                        classDescriptionMang.setGenre(helpVar);
+                    }else if (helpVar.contains("Автор")){
+                        classDescriptionMang.setNameAuthor(el.text());
+                    }else {
+                        el4 = el.select("b");
+                        String category;
+                        if (mang.getURL_characher().contains("readmanga.me")){
+                            category = "Категории";
+                        }else category = "Категория";
+                        if (el4.text().contains(category)){
+                            classDescriptionMang.setCategory(el.text());
+                        }
+                    }
                 }
-                el = el.nextElementSibling();
-                //Имя автора
-                classDescriptionMang.setNameAuthor(el.text());
-
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
                 Elements el2 = doc.select("[itemprop = description]");
                 classDescriptionMang.setDescription(el2.attr("content"));
