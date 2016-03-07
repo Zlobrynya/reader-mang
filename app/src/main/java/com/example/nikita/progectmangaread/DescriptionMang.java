@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -103,6 +104,14 @@ public class DescriptionMang extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(event.getName_characher()); // set the top title
     }
+
+    public void onEvent(String URL){
+        Intent intent = new Intent(this, pagesDownload.class);
+        intent.putExtra("URL",URL);
+        startActivity(intent);
+    }
+
+
 
     public class adapterFragment  extends FragmentPagerAdapter {
         int kol;

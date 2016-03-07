@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,11 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
+import com.example.nikita.progectmangaread.DescriptionMang;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classForList;
+import com.example.nikita.progectmangaread.pagesDownload;
 
 import java.util.ArrayList;
 
@@ -49,8 +51,9 @@ public class fragmentDescriptionList extends Fragment {
                 //Разобраться с багом при check
                 classForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
-                list.set(position,classForList1);
+                list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
+                EventBus.getDefault().post(classForList1.getURL_chapter());
             }
         });
 
