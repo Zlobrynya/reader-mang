@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.greenrobot.event.EventBus;
 
@@ -60,9 +61,12 @@ public class fragmentDescriptionMang extends Fragment {
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView2);
                 DisplayMetrics displaymetrics = new DisplayMetrics();
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-                imageView.setMinimumHeight(displaymetrics.heightPixels/4);
-                imageView.setMinimumWidth(displaymetrics.widthPixels/3);
+                imageView.setMinimumHeight(displaymetrics.heightPixels / 4);
+                imageView.setMinimumWidth(displaymetrics.widthPixels / 3);
                 imageView.setImageBitmap(event.getImgMang());
+                ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
+
+
             }
         }
     }

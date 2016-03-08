@@ -47,7 +47,7 @@ public class fragmentLoad_page0 extends Fragment{
 		 * When this container fragment is created, we fill it with our first
 		 * "real" fragment
 		 */
-            fragmentQueryResult frag = new fragmentQueryResult();
+            fragmentTemplePase frag = new fragmentTemplePase();
             frag.add(event);
             transaction.replace(R.id.fragment_load, frag);
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

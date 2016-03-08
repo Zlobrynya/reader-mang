@@ -153,8 +153,8 @@ public class DescriptionMang extends AppCompatActivity {
             this.mang = mang;
             this.lisens = callback;
             classDescriptionMang = new classDescriptionMang();
-            classDescriptionMang.setImgMang(mang.getImg_characher());
             classDescriptionMang.setNameMang(mang.getName_characher());
+            classDescriptionMang.setImg_url(mang.getURL_img());
         }
 
         @Override

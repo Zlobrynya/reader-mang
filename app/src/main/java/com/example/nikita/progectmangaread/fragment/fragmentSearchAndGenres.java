@@ -166,7 +166,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         EditText text = (EditText) this.v.findViewById(R.id.editText);
         String request = null;
         try {
-            request = classMang.getClassMang().getUML() + "/search?q=" + URLEncoder.encode(text.getText().toString(), "UTF-8");
+            request = "/search?q=" + URLEncoder.encode(text.getText().toString(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -176,7 +176,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
             else in="";
             request += "&"+ a.getURL_chapter() + "="+in;
         }
-        Log.i("POST", request);
+        Log.i("POST", classMang.getClassMang().getUML()+request);
         classMang.setURL_Search(request);
         EventBus.getDefault().post(classMang);
     }

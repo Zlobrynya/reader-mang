@@ -124,8 +124,8 @@ public class fragmentGenres extends Fragment {
     }
 
     private void postRequest(){
-        String request = classTransport.getClassMang().getUML() + "/list/genre/" + genres;
-        Log.i("POST", request);
+        String request = "/list/genre/" + genres;
+        Log.i("POST", classTransport.getClassMang().getUML()+request);
         classTransport.setURL_Search(request);
         EventBus.getDefault().post(classTransport);
     }

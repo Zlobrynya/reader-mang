@@ -43,6 +43,8 @@ public class classMang {
         numberPage = amt;
     }
 
+    public void setWhere(String request) {where = request;}
+
     public void editWhere(int amt){
         numberPage = amt;
         if (putch2 == null) {

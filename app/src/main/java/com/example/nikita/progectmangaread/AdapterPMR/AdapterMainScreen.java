@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,15 @@ import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -22,12 +31,37 @@ import java.util.LinkedList;
 public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
 
     int w,h;
+    private DisplayImageOptions options;
+    protected ImageLoader imageLoader;
 
     public AdapterMainScreen(Context context, int resourse, LinkedList<MainClassTop> item,int w, int h) {
         super(context, resourse,item);
         this.w = w;
         this.h = h;
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
+                .memoryCacheExtraOptions(480, 800) // width, height
+                .threadPoolSize(3)
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(new UsingFreqLimitedMemoryCache(8 * 1024 * 1024)) // 2 Mb
+                .diskCache(new LimitedAgeDiskCache(context.getApplicationContext().getCacheDir(), null, new HashCodeFileNameGenerator(), 60 * 60 * 30))
+                .imageDownloader(new BaseImageDownloader(context)) // connectTimeout (5 s), readTimeout (30 s)
+                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
+                .build();
+
+
+
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.launcher) // resource or drawable
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
+
 
 
     public class Holder
@@ -55,7 +89,7 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
         MainClassTop m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
-            holder.img.setImageBitmap(m1.getImg_characher());
+            ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img, options);
             holder.tv.setText(m1.getName_characher());
         }
         return v;
