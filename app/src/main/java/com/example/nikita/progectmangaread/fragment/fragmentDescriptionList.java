@@ -23,6 +23,7 @@ import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 03.02.2016.
+ *
  */
 public class fragmentDescriptionList extends Fragment {
     View v;

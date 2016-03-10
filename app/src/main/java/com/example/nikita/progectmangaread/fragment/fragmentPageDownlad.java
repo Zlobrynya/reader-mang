@@ -1,9 +1,12 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.classPMR.classTouchImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +39,12 @@ public class fragmentPageDownlad extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.layout_fullscreen_image, null);
-
-        final TouchImageView image = (TouchImageView) v.findViewById(R.id.my_image);
-        final int imageId = getArguments().getInt("imageId");
+        final classTouchImageView image = (classTouchImageView) v.findViewById(R.id.my_image);
+        Matrix m = image.getImageMatrix();
+        RectF drawableRect = new RectF(0, 0, image.getWidth(), image.getHeight());
+        RectF viewRect = new RectF(0, 0, image.getWidth(), image.getHeight());
+        m.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.FILL);
+        image.setImageMatrix(m);
         final String url = getArguments().getString("String");
         final ProgressBar progress = (ProgressBar) v.findViewById(R.id.loading);
         progress.setVisibility(View.VISIBLE);
