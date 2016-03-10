@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/imgDisplay"
+
+    <com.diegocarloslima.byakugallery.lib.TouchImageView
+        android:id="@+id/my_image"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scaleType="fitCenter" />
+        android:layout_height="fill_parent" />
     <ProgressBar
         android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 </LinearLayout>

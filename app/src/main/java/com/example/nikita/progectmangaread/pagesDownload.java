@@ -8,8 +8,12 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,78 +23,70 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
+import com.diegocarloslima.byakugallery.lib.TouchImageView;
+import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
+
 
 /**
  * Created by Nikita on 07.03.2016.
  *
  * Сделать работу с изображение(приближение отдаление и т.п.)
- * Разобраться с новой библиотекой UIL.
+ * Продумать норм загрузку стр (показать что качается)
  *
  */
-public class pagesDownload extends Activity {
+public class pagesDownload extends AppCompatActivity {
     public ArrayList<String> urlPage;
-    public ArrayList<Bitmap> image;
-    public int imageNumber;
-    private ImageAdapter adapter;
+    public ArrayList<InputStream> imageAe;
+    public Activity imageNumber;
     String URL;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pageview_image);
         urlPage = new ArrayList<>();
-        image = new ArrayList<>();
-        ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
-        adapter = new ImageAdapter(this);
-        pager.setAdapter(adapter);
+        imageAe = new ArrayList<>();
+        final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
 
+        AsyncTaskLisen addImg = new AsyncTaskLisen() {
+            @Override
+            public void onEnd() {
+                GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
+                pager.setAdapter(adapter);
+            }
 
+            @Override
+            public void onEnd(InputStream is) {
+
+            }
+        };
+        imageNumber = this;
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
 
-        ParsURLPage par = new ParsURLPage(URL);
+
+        ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
     }
 
-    class ImageAdapter extends PagerAdapter {
+    private final class GalleryAdapter extends FragmentStatePagerAdapter {
 
-        private LayoutInflater inflater;
-        private DisplayImageOptions options;
-        protected ImageLoader imageLoader;
-
-        ImageAdapter(Context context) {
-            inflater = LayoutInflater.from(context);
-            imageLoader = ImageLoader.getInstance();
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-            options = new DisplayImageOptions.Builder()
-                    .resetViewBeforeLoading(true)
-                    .cacheOnDisk(true)
-                    .imageScaleType(ImageScaleType.EXACTLY)
-                    .bitmapConfig(Bitmap.Config.RGB_565)
-                    .considerExifParams(true)
-                    .displayer(new FadeInBitmapDisplayer(300))
-                    .build();
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
+        GalleryAdapter(FragmentManager mgr) {
+            super(mgr);
         }
 
         @Override
@@ -99,77 +95,22 @@ public class pagesDownload extends Activity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup view, int position) {
-            View imageLayout = inflater.inflate(R.layout.layout_fullscreen_image, view, false);
-            assert imageLayout != null;
-            ImageView imageView = (ImageView) imageLayout.findViewById(R.id.imgDisplay);
-            final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
-
-            imageLoader.getInstance().displayImage(urlPage.get(position), imageView, options, new SimpleImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(String imageUri, View view) {
-                    spinner.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                    String message = null;
-                    switch (failReason.getType()) {
-                        case IO_ERROR:
-                            message = "Input/Output error";
-                            break;
-                        case DECODING_ERROR:
-                            message = "Image can't be decoded";
-                            break;
-                        case NETWORK_DENIED:
-                            message = "Downloads are denied";
-                            break;
-                        case OUT_OF_MEMORY:
-                            message = "Out Of Memory error";
-                            break;
-                        case UNKNOWN:
-                            message = "Unknown error";
-                            break;
-                    }
-                    Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
-
-                    spinner.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    spinner.setVisibility(View.GONE);
-                }
-            });
-
-            view.addView(imageLayout, 0);
-            return imageLayout;
+        public Fragment getItem(int position) {
+            return fragmentPageDownlad.getInstance(position,urlPage.get(position));
         }
 
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view.equals(object);
-        }
-
-        @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
-        }
-
-        @Override
-        public Parcelable saveState() {
-            return null;
-        }
     }
-
-    //поток для скачивания сылок для изображений
+        //поток для скачивания сылок для изображений
     public class ParsURLPage extends AsyncTask<Void,Void,Void> {
         String url;
         Document doc;
         Element script;
+        AsyncTaskLisen asyncTask;
         String html;
         //конструктор потока
-        protected ParsURLPage(String url) {
+        protected ParsURLPage(AsyncTaskLisen addImg,String url) {
             this.url = url;
+            asyncTask = addImg;
         }
 
         @Override
@@ -182,6 +123,7 @@ public class pagesDownload extends Activity {
             //Пост запрос
             try {
                 //Запрос на получение сылок для изображений вот он:
+                //Переделать что бы картинки искал не только на readmanga.me
                 if (doc == null) doc = Jsoup.connect("http://readmanga.me"+URL).get();
                 script = doc.select("body").select("script").first(); // Get the script part
                 for (int i =0 ;i < 100; i++){
@@ -232,7 +174,8 @@ public class pagesDownload extends Activity {
                     size++;
                 }
             }
-            adapter.notifyDataSetChanged();
+            asyncTask.onEnd();
         }
     }
+
 }

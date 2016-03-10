@@ -8,6 +8,12 @@ import android.view.View;
 
 import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
 import com.example.nikita.progectmangaread.classPMR.classMang;
+import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import de.greenrobot.event.EventBus;
 

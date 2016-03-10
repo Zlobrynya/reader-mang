@@ -40,7 +40,6 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
         this.h = h;
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
-                .memoryCacheExtraOptions(480, 800) // width, height
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(new UsingFreqLimitedMemoryCache(8 * 1024 * 1024)) // 2 Mb
@@ -52,7 +51,7 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
 
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.launcher) // resource or drawable
                 .cacheInMemory(true)

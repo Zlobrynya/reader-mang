@@ -4,6 +4,7 @@ package com.example.nikita.progectmangaread.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,10 @@ public class fragmentDescriptionList extends Fragment {
                 classForList1.setCheck(true);
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
-                EventBus.getDefault().post(classForList1.getURL_chapter());
+                //+"?mature=1"
+                String urlPic = classForList1.getURL_chapter()+"?mature=1";
+                Log.i("post",urlPic);
+                EventBus.getDefault().post(urlPic);
             }
         });
 

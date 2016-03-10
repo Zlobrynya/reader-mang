@@ -24,6 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -81,6 +82,11 @@ public class DescriptionMang extends AppCompatActivity {
                     parsList();
                 }while (el != null);
             }
+
+        }
+
+        @Override
+        public void onEnd(InputStream is) {
 
         }
     };

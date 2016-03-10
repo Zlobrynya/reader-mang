@@ -1,5 +1,7 @@
 package com.example.nikita.progectmangaread;
 
+import java.io.InputStream;
+
 /**
  * Created by Nikita on 19.11.2015.
  */
@@ -8,4 +10,6 @@ package com.example.nikita.progectmangaread;
 public interface AsyncTaskLisen {
    // void onBegin(); //Асинхронная операция началась
     void onEnd(); //Операция закончилась
+    void onEnd(InputStream is); //Операция закончилась
+
 }

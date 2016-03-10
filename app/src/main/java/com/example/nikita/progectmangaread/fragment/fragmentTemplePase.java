@@ -133,7 +133,7 @@ public class fragmentTemplePase extends Fragment {
             }
         });
         if (resultPost) parssate(kol);
-        System.out.println("!! " + width + " " + height);
+        System.out.println("!! " + width + " " + height + 5);
         return v ;
     }
 
@@ -154,6 +154,11 @@ public class fragmentTemplePase extends Fragment {
                 kol++;
                 parssate(kol);
             }
+        }
+
+        @Override
+        public void onEnd(InputStream is) {
+
         }
     };
 
