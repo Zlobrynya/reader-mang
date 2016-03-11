@@ -17,9 +17,7 @@
         </activity>
         <activity android:name=".temple_pase"></activity>
         <activity android:name=".DescriptionMang"></activity>
-        <activity android:name=".pagesDownload"
-            android:theme="@style/MyTheme.NoActionBar">
-        </activity>
+        <activity android:name=".pagesDownload"></activity>
     </application>
 
 </manifest>

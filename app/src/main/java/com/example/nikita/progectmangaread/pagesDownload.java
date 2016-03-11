@@ -1,44 +1,30 @@
 package com.example.nikita.progectmangaread;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
-import com.diegocarloslima.byakugallery.lib.TouchImageView;
 import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -54,14 +40,46 @@ public class pagesDownload extends AppCompatActivity {
     public Activity imageNumber;
     String URL;
 
+    //Для фрагментов
+    public void onEvent(String event){
+        if (event.contains("CkickImage")){
+            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+            assert actionBar != null;
+            if(actionBar.isShowing()){
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+                actionBar.hide();
+            }else{
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                actionBar.show();
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pageview_image);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.hide();
         urlPage = new ArrayList<>();
         imageAe = new ArrayList<>();
         final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
-
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
             @Override
             public void onEnd() {

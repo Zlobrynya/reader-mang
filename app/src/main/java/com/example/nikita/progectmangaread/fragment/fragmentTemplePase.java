@@ -266,8 +266,6 @@ public class fragmentTemplePase extends Fragment {
         return false;
     }
 
-
-    //Нужно сделать остановку парсера при перелистывании на другую страницу (???)
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
         private classMang classMang;

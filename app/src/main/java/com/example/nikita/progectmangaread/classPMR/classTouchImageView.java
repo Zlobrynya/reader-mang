@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import com.diegocarloslima.byakugallery.lib.FlingScroller;
 import com.diegocarloslima.byakugallery.lib.TouchGestureDetector;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
+import com.example.nikita.progectmangaread.AsyncTaskLisen;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -228,6 +230,7 @@ public class classTouchImageView extends ImageView {
 
         super.setScaleType(ScaleType.MATRIX);
     }
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
