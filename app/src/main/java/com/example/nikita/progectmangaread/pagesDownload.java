@@ -30,15 +30,63 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Nikita on 07.03.2016.
  *
- * Сделать работу с изображение(приближение отдаление и т.п.)
  * Продумать норм загрузку стр (показать что качается)
+ * ПРОБЛЕМА: При показе (кликаем на изображение) action bar, слетает маштаб
+ *      изображения.
  *
  */
+
 public class pagesDownload extends AppCompatActivity {
     public ArrayList<String> urlPage;
     public ArrayList<InputStream> imageAe;
     public Activity imageNumber;
+    public TextView textIdPage;
     String URL;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.pageview_image);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.hide();
+
+        urlPage = new ArrayList<>();
+        imageAe = new ArrayList<>();
+
+        final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
+        textIdPage = (TextView) findViewById(R.id.textNumberPage);
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageSelected(int position) {}
+
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                textIdPage.setText(position+"/"+urlPage.size());
+            }
+        });
+        AsyncTaskLisen addImg = new AsyncTaskLisen() {
+            @Override
+            public void onEnd() {
+                GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
+                pager.setAdapter(adapter);
+            }
+
+            @Override
+            public void onEnd(InputStream is) {
+
+            }
+        };
+        imageNumber = this;
+        Intent intent = getIntent();
+        URL = intent.getStringExtra("URL");
+
+
+        ParsURLPage par = new ParsURLPage(addImg,URL);
+        par.execute();
+    }
 
     //Для фрагментов
     public void onEvent(String event){
@@ -69,38 +117,8 @@ public class pagesDownload extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.pageview_image);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.hide();
-        urlPage = new ArrayList<>();
-        imageAe = new ArrayList<>();
-        final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
-        AsyncTaskLisen addImg = new AsyncTaskLisen() {
-            @Override
-            public void onEnd() {
-                GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
-                pager.setAdapter(adapter);
-            }
 
-            @Override
-            public void onEnd(InputStream is) {
-
-            }
-        };
-        imageNumber = this;
-        Intent intent = getIntent();
-        URL = intent.getStringExtra("URL");
-
-
-        ParsURLPage par = new ParsURLPage(addImg,URL);
-        par.execute();
-    }
-
+    //FragmentStatePagerAdapter
     private final class GalleryAdapter extends FragmentStatePagerAdapter {
 
         GalleryAdapter(FragmentManager mgr) {

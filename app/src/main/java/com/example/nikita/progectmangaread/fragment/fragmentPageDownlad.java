@@ -43,6 +43,11 @@ public class fragmentPageDownlad extends Fragment {
         return instance;
     }
 
+    @Override
+    public void onDestroy() {
+        Log.i("Destroy:", String.valueOf(getArguments().get("imageId")));
+        super.onDestroy();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,14 +61,14 @@ public class fragmentPageDownlad extends Fragment {
             }
         });
 
-        //установка изображение на весь экран
+    /*    //установка изображение на весь экран (Передалать, не на полный экран)
         Matrix m = image.getImageMatrix();
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        RectF drawableRect = new RectF(0, 0, displaymetrics.widthPixels, displaymetrics.heightPixels);
-        RectF viewRect = new RectF(0, 0, displaymetrics.widthPixels, displaymetrics.heightPixels);
-        m.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.FILL);
-        image.setImageMatrix(m);
+        RectF drawableRect = new RectF(0, 0,image.getWidth() , image.getHeight());
+        RectF viewRect = new RectF(0, 0, displaymetrics.widthPixels , displaymetrics.heightPixels);
+        m.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.START);
+        image.setImageMatrix(m);*/
 
         final String url = getArguments().getString("String");
         final ProgressBar progress = (ProgressBar) v.findViewById(R.id.loading);
@@ -89,11 +94,11 @@ public class fragmentPageDownlad extends Fragment {
                         image.setVisibility(View.VISIBLE);
                     }
                 });
-
             }
         };
         ParsPage pr = new ParsPage(addImg,url);
         pr.execute();
+
         return v;
     }
 

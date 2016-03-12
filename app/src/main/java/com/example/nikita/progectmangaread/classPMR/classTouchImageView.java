@@ -60,6 +60,7 @@ public class classTouchImageView extends ImageView {
 
     private final FlingScroller mFlingScroller = new FlingScroller();
     private boolean mIsAnimatingBack;
+    private boolean firstStart;
 
     public classTouchImageView(Context context) {
         this(context, null);
@@ -71,7 +72,7 @@ public class classTouchImageView extends ImageView {
 
     public classTouchImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        firstStart = true;
         final TouchGestureDetector.OnTouchGestureListener listener = new TouchGestureDetector.OnTouchGestureListener() {
 
             @Override
@@ -162,8 +163,8 @@ public class classTouchImageView extends ImageView {
 
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
-                mLastFocusX = null;
-                mLastFocusY = null;
+               // mLastFocusX = null;
+               // mLastFocusY = null;
 
                 return true;
             }
@@ -240,7 +241,11 @@ public class classTouchImageView extends ImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         if(oldMeasuredWidth != getMeasuredWidth() || oldMeasuredHeight != getMeasuredHeight()) {
-            resetToInitialState();
+            //Довести до ума,при появление Action Bar изоюражение чуток в низ уходит
+            if (firstStart){
+                firstStart = false;
+                resetToInitialState();
+            }
         }
     }
 
@@ -336,7 +341,7 @@ public class classTouchImageView extends ImageView {
         invalidate();
     }
 
-    private void loadMatrixValues() {
+    public void loadMatrixValues() {
         mMatrix.getValues(mMatrixValues);
         mScale = mMatrixValues[Matrix.MSCALE_X];
         mTranslationX = mMatrixValues[Matrix.MTRANS_X];
