@@ -25,6 +25,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -50,7 +51,6 @@ public class DescriptionMang extends AppCompatActivity {
     private Pars pars;
     private Element el;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,17 +60,22 @@ public class DescriptionMang extends AppCompatActivity {
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
         arList = new ArrayList<classForList>();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy(){
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
@@ -96,6 +101,7 @@ public class DescriptionMang extends AppCompatActivity {
 
     void parsList(){
         classForList classForList = new classForList();
+        classForList.setNumberChapter(-1);
         Elements el2 = el.select("a");
         String URL = el2.attr("href");
         classForList.setURL_chapter(URL);
@@ -114,10 +120,13 @@ public class DescriptionMang extends AppCompatActivity {
         getSupportActionBar().setTitle(event.getName_characher()); // set the top title
     }
 
-    public void onEvent(String URL){
-        Intent intent = new Intent(this, pagesDownload.class);
-        intent.putExtra("URL",URL);
-        startActivity(intent);
+    public void onEvent(classForList URL){
+        if (URL.getNumberChapter() >= 0){
+            Intent intent = new Intent(this, pagesDownload.class);
+            intent.putExtra("URL", URL.getURL_chapter());
+            intent.putExtra("Number", URL.getNumberChapter());
+            startActivity(intent);
+        }
     }
 
 

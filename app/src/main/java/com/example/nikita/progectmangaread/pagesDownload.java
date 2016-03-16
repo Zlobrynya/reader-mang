@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.example.nikita.progectmangaread.cacheImage.cacheFile;
+import com.example.nikita.progectmangaread.fragment.fragmentNextPrevChapter;
 import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
 
 import org.jsoup.Jsoup;
@@ -39,7 +41,7 @@ import de.greenrobot.event.EventBus;
 public class pagesDownload extends AppCompatActivity {
     public ArrayList<String> urlPage;
     public ArrayList<InputStream> imageAe;
-    public Activity imageNumber;
+    public int chapterNumber;
     public TextView textIdPage;
     String URL;
 
@@ -58,13 +60,28 @@ public class pagesDownload extends AppCompatActivity {
 
         final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
         textIdPage = (TextView) findViewById(R.id.textNumberPage);
+        final AppCompatActivity activity = this;
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
-            public void onPageSelected(int position) {}
+            public void onPageSelected(int position) {
+                if (urlPage.size() != 0){
+                    if (position == 0) {
+                        //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
+                        //      самую старую, (потом это переделать))
+                        EventBus.getDefault().post(chapterNumber+1);
+                        activity.finish();
+                    }
+                    if (position == urlPage.size()){
+                        EventBus.getDefault().post(chapterNumber-1);
+                        activity.finish();
+                    }
+                }
+            }
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                textIdPage.setText(position+"/"+urlPage.size());
+                if (position > 0 && position < urlPage.size())
+                        textIdPage.setText(position+"/"+urlPage.size());
             }
         });
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -72,6 +89,7 @@ public class pagesDownload extends AppCompatActivity {
             public void onEnd() {
                 GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
                 pager.setAdapter(adapter);
+                pager.setCurrentItem(1);
             }
 
             @Override
@@ -79,10 +97,9 @@ public class pagesDownload extends AppCompatActivity {
 
             }
         };
-        imageNumber = this;
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
-
+        chapterNumber = intent.getIntExtra("Number",0);
 
         ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
@@ -127,16 +144,27 @@ public class pagesDownload extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return urlPage.size();
+            return urlPage.size()+2;
         }
 
         @Override
         public Fragment getItem(int position) {
+            if (position == 0) return fragmentNextPrevChapter.getInstance(position,"Previous chapter");
+            if (position == urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
             return fragmentPageDownlad.getInstance(position,urlPage.get(position));
         }
 
     }
-        //поток для скачивания сылок для изображений
+
+    @Override
+    public void onDestroy() {
+        Log.i("Destroy:", String.valueOf("ff"));
+        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+        file.clearCache();
+        super.onDestroy();
+    }
+
+    //поток для скачивания сылок для изображений
     public class ParsURLPage extends AsyncTask<Void,Void,Void> {
         String url;
         Document doc;
@@ -213,5 +241,4 @@ public class pagesDownload extends AppCompatActivity {
             asyncTask.onEnd();
         }
     }
-
 }

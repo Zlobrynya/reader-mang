@@ -122,7 +122,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         //Парсим то что скачали с файла
         Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
         for (Element e : doc.select("genres")) {
-            classForList a = new classForList(e.attr("post"),e.text());
+            classForList a = new classForList(e.attr("post"),e.text(),-1);
             list.add(a);
         }
         myAdap.notifyDataSetChanged();

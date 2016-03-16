@@ -91,7 +91,7 @@ public class fragmentGenres extends Fragment {
         for (Element e : doc.select("genres")) {
             String str = e.attr("list");
             if (str == "") break;
-            classForList a = new classForList(str,e.text());
+            classForList a = new classForList(str,e.text(),list.size());
             list.add(a);
         }
         myAdap.notifyDataSetChanged();

@@ -36,6 +36,7 @@ public class fragmentDescriptionList extends Fragment {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
+        EventBus.getDefault().register(this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,12 +54,13 @@ public class fragmentDescriptionList extends Fragment {
                 //Разобраться с багом при check
                 classForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
+                classForList1.setNumberChapter(position);
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
                 //+"?mature=1"
                 String urlPic = classForList1.getURL_chapter()+"?mature=1";
                 Log.i("post",urlPic);
-                EventBus.getDefault().post(urlPic);
+                EventBus.getDefault().post(classForList1);
             }
         });
 
@@ -66,21 +68,38 @@ public class fragmentDescriptionList extends Fragment {
     }
 
 
-    public void onEvent(classForList event){
-        myAdap.add(event);
+    public void onEvent(java.lang.Integer event){
+        classForList classForList1 = list.get(event);
+        classForList1.setNumberChapter(event);
+        if (!classForList1.getCheck())
+            classForList1.setCheck(true);
+        list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
+        EventBus.getDefault().post(classForList1);
+    }
+
+    public void onEvent(classForList event){
+        //проверка на то что не отправили event с этого класса
+        if (event.getNumberChapter() <= 0){
+            myAdap.add(event);
+            myAdap.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy(){
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     //фабричный метод для ViewPage

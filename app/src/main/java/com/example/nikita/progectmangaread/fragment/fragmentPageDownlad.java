@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
+import java.io.FileInputStream;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,10 +21,15 @@ import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.cacheImage.cacheFile;
 import com.example.nikita.progectmangaread.classPMR.classTouchImageView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import de.greenrobot.event.EventBus;
 
@@ -32,6 +37,8 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 10.03.2016.
  */
 public class fragmentPageDownlad extends Fragment {
+    private int number;
+    private cacheFile file;
 
     public static fragmentPageDownlad getInstance(int imageId,String url) {
         final fragmentPageDownlad instance = new fragmentPageDownlad();
@@ -46,7 +53,14 @@ public class fragmentPageDownlad extends Fragment {
     @Override
     public void onDestroy() {
         Log.i("Destroy:", String.valueOf(getArguments().get("imageId")));
+     //   file.clearCache();
         super.onDestroy();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -60,71 +74,41 @@ public class fragmentPageDownlad extends Fragment {
                 EventBus.getDefault().post("CkickImage");
             }
         });
-
-    /*    //установка изображение на весь экран (Передалать, не на полный экран)
-        Matrix m = image.getImageMatrix();
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        RectF drawableRect = new RectF(0, 0,image.getWidth() , image.getHeight());
-        RectF viewRect = new RectF(0, 0, displaymetrics.widthPixels , displaymetrics.heightPixels);
-        m.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.START);
-        image.setImageMatrix(m);*/
-
+        number = getArguments().getInt("imageId");
         final String url = getArguments().getString("String");
         final ProgressBar progress = (ProgressBar) v.findViewById(R.id.loading);
-
         progress.setVisibility(View.VISIBLE);
         image.setVisibility(View.GONE);
 
-        AsyncTaskLisen addImg = new AsyncTaskLisen() {
+        AsyncTaskLisen as = new AsyncTaskLisen() {
             @Override
             public void onEnd() {
+                try {
+                    TileBitmapDrawable.attachTileBitmapDrawable(image, file.getFile(String.valueOf(number)), null, new TileBitmapDrawable.OnInitializeListener() {
+                        @Override
+                        public void onStartInitialization() {
+                        }
+
+                        @Override
+                        public void onEndInitialization() {
+                            progress.setVisibility(View.GONE);
+                            image.setVisibility(View.VISIBLE);
+                        }
+                    });
+                } catch (FileNotFoundException e) {
+
+                }
             }
 
             @Override
             public void onEnd(InputStream is) {
-                TileBitmapDrawable.attachTileBitmapDrawable(image, is, null, new TileBitmapDrawable.OnInitializeListener() {
-                    @Override
-                    public void onStartInitialization() {
-                    }
-
-                    @Override
-                    public void onEndInitialization() {
-                        progress.setVisibility(View.GONE);
-                        image.setVisibility(View.VISIBLE);
-                    }
-                });
             }
         };
-        ParsPage pr = new ParsPage(addImg,url);
-        pr.execute();
+
+        file = new cacheFile(getContext().getCacheDir(),"pageCache",as);
+        file.loadAndCache(url, number);
+       // file.clearCache();
 
         return v;
-    }
-
-    class ParsPage extends AsyncTask<Void,Void,Void> {
-        private AsyncTaskLisen asyncTaskLisen;
-        private String url;
-        private InputStream is;
-        protected ParsPage(AsyncTaskLisen addImg,String url){
-            asyncTaskLisen = addImg;
-            this.url = url;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                assert url != null;
-                is = new java.net.URL(url).openStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result){
-            asyncTaskLisen.onEnd(is);
-        }
-
     }
 }
