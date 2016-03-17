@@ -230,7 +230,6 @@ public class fragmentTemplePase extends Fragment {
             mSqLiteDatabase.insert("Mang", null, newValues);
         }
         cursor.close();
-
     }
 
     //получаем структуру с именем и сылками

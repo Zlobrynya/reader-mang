@@ -9,12 +9,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Window;
+import android.view.View;
 
+import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
+import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
+import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 
@@ -25,8 +27,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
@@ -82,15 +82,8 @@ public class DescriptionMang extends AppCompatActivity {
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
-            el = doc.select("[class = table table-hover]").first();
-            if (el != null){
-                el = el.select("tbody").first();
-                el = el.select("tr").first();
-                do {
-                    parsList();
-                }while (el != null);
-            }
-
+            ParsList parsList = new ParsList();
+            parsList.execute();
         }
 
         @Override
@@ -99,17 +92,7 @@ public class DescriptionMang extends AppCompatActivity {
         }
     };
 
-    void parsList(){
-        classForList classForList = new classForList();
-        classForList.setNumberChapter(-1);
-        Elements el2 = el.select("a");
-        String URL = el2.attr("href");
-        classForList.setURL_chapter(URL);
-        URL = el2.select("a").text();
-        classForList.setName_chapter(URL);
-        EventBus.getDefault().post(classForList);
-        el = el.nextElementSibling();
-    }
+
 
 
     public void onEvent(MainClassTop event){
@@ -121,14 +104,38 @@ public class DescriptionMang extends AppCompatActivity {
     }
 
     public void onEvent(classForList URL){
+        //узнаем нужно ли запускать активити
         if (URL.getNumberChapter() >= 0){
             Intent intent = new Intent(this, pagesDownload.class);
             intent.putExtra("URL", URL.getURL_chapter());
-            intent.putExtra("Number", URL.getNumberChapter());
+            intent.putExtra("NumberChapter", URL.getNumberChapter());
+          //  intent.putExtra("NumberPage", URL.getNumberChapter());
             startActivity(intent);
         }
     }
 
+    public void Click(View view) {
+    }
+
+
+    //сделать что бы при нажатии кнопки отмечалось галочкой + сделать отметку в БД про последнюю главу и страницу
+    public void StartRead(View view) {
+        classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
+        int numberPage = 0;
+        int numberChapter = arList.size()-1;
+        if (!string.contains("null")){
+            String[] strings = string.split(",");
+            numberChapter = Integer.parseInt(strings[0]);
+            numberPage = Integer.parseInt(strings[1]);
+        }
+        classForList classForList = arList.get(numberChapter);
+        Intent intent = new Intent(this, pagesDownload.class);
+        intent.putExtra("URL", classForList.getURL_chapter());
+        intent.putExtra("NumberChapter", numberChapter);
+        intent.putExtra("NumberPage", numberPage);
+        startActivity(intent);
+    }
 
 
     public class adapterFragment  extends FragmentPagerAdapter {
@@ -229,6 +236,41 @@ public class DescriptionMang extends AppCompatActivity {
         protected void onPostExecute(Void result){
             EventBus.getDefault().post(classDescriptionMang);
             if (lisens != null) lisens.onEnd();
+        }
+    }
+
+    public class ParsList extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            el = doc.select("[class = table table-hover]").first();
+            if (el != null){
+                el = el.select("tbody").first();
+                el = el.select("tr").first();
+                do {
+                    parsList();
+                }while (el != null);
+            }
+
+            return null;
+        }
+
+        void parsList(){
+            classForList classForList = new classForList();
+            classForList.setNumberChapter(-1);
+            Elements el2 = el.select("a");
+            String URL = el2.attr("href");
+            classForList.setURL_chapter(URL);
+            URL = el2.select("a").text();
+            classForList.setName_chapter(URL);
+            arList.add(classForList);
+            el = el.nextElementSibling();
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher());
+            EventBus.getDefault().post(classTransportForList);
         }
     }
 }

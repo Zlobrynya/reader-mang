@@ -41,7 +41,7 @@ import de.greenrobot.event.EventBus;
 public class pagesDownload extends AppCompatActivity {
     public ArrayList<String> urlPage;
     public ArrayList<InputStream> imageAe;
-    public int chapterNumber;
+    public int chapterNumber,pageNumber;
     public TextView textIdPage;
     String URL;
 
@@ -70,10 +70,14 @@ public class pagesDownload extends AppCompatActivity {
                         //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
                         //      самую старую, (потом это переделать))
                         EventBus.getDefault().post(chapterNumber+1);
+                        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                        file.clearCache();
                         activity.finish();
                     }
                     if (position == urlPage.size()){
                         EventBus.getDefault().post(chapterNumber-1);
+                        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                        file.clearCache();
                         activity.finish();
                     }
                 }
@@ -81,7 +85,7 @@ public class pagesDownload extends AppCompatActivity {
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position > 0 && position < urlPage.size())
-                        textIdPage.setText(position+"/"+urlPage.size());
+                        textIdPage.setText(position+"/"+(urlPage.size()-1));
             }
         });
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -99,8 +103,8 @@ public class pagesDownload extends AppCompatActivity {
         };
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
-        chapterNumber = intent.getIntExtra("Number",0);
-
+        chapterNumber = intent.getIntExtra("NumberChapter",0);
+        pageNumber = intent.getIntExtra("NumberPage",0);
         ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
     }
@@ -113,7 +117,6 @@ public class pagesDownload extends AppCompatActivity {
             if(actionBar.isShowing()){
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
                 actionBar.hide();
             }else{
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);

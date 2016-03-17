@@ -1,7 +1,10 @@
 package com.example.nikita.progectmangaread.fragment;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,10 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
-import com.example.nikita.progectmangaread.DescriptionMang;
+import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
+import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.pagesDownload;
+import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 
 import java.util.ArrayList;
 
@@ -30,6 +34,9 @@ public class fragmentDescriptionList extends Fragment {
     ArrayList<classForList> list;
     public AdapterList myAdap;
     private ListView gr;
+    private String nameMang;
+    private classDataBaseViewedHead classDataBaseViewedHead;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,17 +64,16 @@ public class fragmentDescriptionList extends Fragment {
                 classForList1.setNumberChapter(position);
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
+                classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(position));
                 //+"?mature=1"
-                String urlPic = classForList1.getURL_chapter()+"?mature=1";
-                Log.i("post",urlPic);
+                Log.i("post", classForList1.getURL_chapter() + "?mature=1");
                 EventBus.getDefault().post(classForList1);
             }
         });
 
-        return v ;
+        return v;
     }
-
-
+    //"Посылка" с fragmentPageDowland, что надо переключить главу
     public void onEvent(java.lang.Integer event){
         classForList classForList1 = list.get(event);
         classForList1.setNumberChapter(event);
@@ -75,15 +81,33 @@ public class fragmentDescriptionList extends Fragment {
             classForList1.setCheck(true);
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
+        classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(event));
         EventBus.getDefault().post(classForList1);
     }
-
-    public void onEvent(classForList event){
-        //проверка на то что не отправили event с этого класса
-        if (event.getNumberChapter() <= 0){
-            myAdap.add(event);
-            myAdap.notifyDataSetChanged();
+    public void onEvent(java.lang.Integer event,Boolean d) {
+        Log.d("onEvent: ","G");
+    }
+    //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
+    public void onEvent(classTransportForList event){
+        ArrayList<classForList> arrayList = event.getClassForList();
+        for (classForList b: arrayList){
+            list.add(b);
         }
+        nameMang = event.getName();
+        classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());
+        if (classDataBaseViewedHead.addBasaData(event.getName())){
+            String strings;
+            strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),DataBaseViewedHead.VIEWED_HEAD);
+            if (strings != null){
+                String string[] = strings.split(",");
+                for (String aString : string) {
+                    classForList classForList1 = list.get(Integer.parseInt(aString));
+                    classForList1.setCheck(true);
+                    list.set(Integer.parseInt(aString), classForList1);
+                }
+            }
+        }
+        myAdap.notifyDataSetChanged();
     }
 
     @Override
