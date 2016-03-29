@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.cacheImage.cacheFile;
 import com.example.nikita.progectmangaread.fragment.fragmentNextPrevChapter;
 import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
@@ -33,17 +34,17 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 07.03.2016.
  *
  * Продумать норм загрузку стр (показать что качается)
- * ПРОБЛЕМА: При показе (кликаем на изображение) action bar, слетает маштаб
- *      изображения.
+ * ПРОБЛЕМА: Не грузит 0 страницу после 2 перелистывания назад, разобраться.
+ *
  *
  */
 
 public class pagesDownload extends AppCompatActivity {
-    public ArrayList<String> urlPage;
-    public ArrayList<InputStream> imageAe;
-    public int chapterNumber,pageNumber;
-    public TextView textIdPage;
-    String URL;
+    private ArrayList<String> urlPage;
+    private int chapterNumber,pageNumber;
+    private TextView textIdPage;
+    private String URL,nameMang;
+    private classDataBaseViewedHead classDataBaseViewedHead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,6 @@ public class pagesDownload extends AppCompatActivity {
         actionBar.hide();
 
         urlPage = new ArrayList<>();
-        imageAe = new ArrayList<>();
 
         final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
         textIdPage = (TextView) findViewById(R.id.textNumberPage);
@@ -80,6 +80,8 @@ public class pagesDownload extends AppCompatActivity {
                         file.clearCache();
                         activity.finish();
                     }
+                    pageNumber = position;
+                    classDataBaseViewedHead.editPage(nameMang, String.valueOf(pageNumber));
                 }
             }
 
@@ -93,7 +95,7 @@ public class pagesDownload extends AppCompatActivity {
             public void onEnd() {
                 GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
                 pager.setAdapter(adapter);
-                pager.setCurrentItem(1);
+                pager.setCurrentItem(pageNumber);
             }
 
             @Override
@@ -103,8 +105,12 @@ public class pagesDownload extends AppCompatActivity {
         };
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
-        chapterNumber = intent.getIntExtra("NumberChapter",0);
-        pageNumber = intent.getIntExtra("NumberPage",0);
+        chapterNumber = intent.getIntExtra("NumberChapter", 0);
+        pageNumber = intent.getIntExtra("NumberPage", 1);
+        nameMang = intent.getStringExtra("Chapter");
+
+       classDataBaseViewedHead = new classDataBaseViewedHead(this);
+
         ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
     }
@@ -154,14 +160,15 @@ public class pagesDownload extends AppCompatActivity {
         public Fragment getItem(int position) {
             if (position == 0) return fragmentNextPrevChapter.getInstance(position,"Previous chapter");
             if (position == urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
-            return fragmentPageDownlad.getInstance(position,urlPage.get(position));
+            if (position < urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
+            else return null;
         }
 
     }
 
     @Override
     public void onDestroy() {
-        Log.i("Destroy:", String.valueOf("ff"));
+        Log.i("Destroy:", String.valueOf("PageDowland"));
         cacheFile file = new cacheFile(getCacheDir(),"pageCache");
         file.clearCache();
         super.onDestroy();

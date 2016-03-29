@@ -92,9 +92,6 @@ public class DescriptionMang extends AppCompatActivity {
         }
     };
 
-
-
-
     public void onEvent(MainClassTop event){
         mang = event;
         pars = new Pars(addImg,mang);
@@ -109,16 +106,26 @@ public class DescriptionMang extends AppCompatActivity {
             Intent intent = new Intent(this, pagesDownload.class);
             intent.putExtra("URL", URL.getURL_chapter());
             intent.putExtra("NumberChapter", URL.getNumberChapter());
-          //  intent.putExtra("NumberPage", URL.getNumberChapter());
+
+            classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+            String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
+            int numberPage = 0;
+            if (!string.contains("null")){
+                String[] strings = string.split(",");
+                String f = URL.getName_chapter();
+                if (strings[0].contains(String.valueOf(URL.getNumberChapter()))) {
+                    if (strings.length == 2) {
+                        numberPage = Integer.parseInt(strings[1]);
+                    }
+                }
+            }
+
+            intent.putExtra("NumberPage", numberPage);
+            intent.putExtra("Chapter", mang.getName_characher());
             startActivity(intent);
         }
     }
-
-    public void Click(View view) {
-    }
-
-
-    //сделать что бы при нажатии кнопки отмечалось галочкой + сделать отметку в БД про последнюю главу и страницу
+    //Процедура для кнопки
     public void StartRead(View view) {
         classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
@@ -127,13 +134,16 @@ public class DescriptionMang extends AppCompatActivity {
         if (!string.contains("null")){
             String[] strings = string.split(",");
             numberChapter = Integer.parseInt(strings[0]);
-            numberPage = Integer.parseInt(strings[1]);
+            if (strings.length == 2){
+                numberPage = Integer.parseInt(strings[1]);
+            }
         }
         classForList classForList = arList.get(numberChapter);
         Intent intent = new Intent(this, pagesDownload.class);
         intent.putExtra("URL", classForList.getURL_chapter());
         intent.putExtra("NumberChapter", numberChapter);
         intent.putExtra("NumberPage", numberPage);
+        intent.putExtra("Chapter", mang.getName_characher());
         startActivity(intent);
     }
 

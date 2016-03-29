@@ -65,7 +65,7 @@ public class classDataBaseViewedHead {
         return data;
     }
 
-    public void editBaseDate(String nameMang,String thisChap){
+    public void editPage(String nameMang, String numberPage){
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
@@ -74,8 +74,29 @@ public class classDataBaseViewedHead {
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() != 0){
             cursor.moveToFirst();
-            String viewedHead;
+            String viewedHead,lastChapter;
+            lastChapter =  cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.LAST_CHAPTER));
+            cursor.close();
+            String[] strings = lastChapter.split(",");
+            lastChapter = strings[0]+","+numberPage;
+            ContentValues cv = new ContentValues();
+            cv.put(DataBaseViewedHead.LAST_CHAPTER, lastChapter);
+            mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name, null);
+        }
+    }
+
+    public void editBaseDate(String nameMang, String thisChap){
+        String query,name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        query = "SELECT " + "*" + " FROM " + DataBaseViewedHead.DATABASE_TABLE + " WHERE " + DataBaseViewedHead.NAME_MANG + "=" +
+                name;
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        if (cursor.getCount() != 0){
+            cursor.moveToFirst();
+            String viewedHead,lastChapter;
             viewedHead = cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.VIEWED_HEAD));
+            lastChapter =  cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.LAST_CHAPTER));
             cursor.close();
             if (!viewedHead.contains(thisChap)){
                 if (viewedHead.contains("null")){
@@ -84,8 +105,13 @@ public class classDataBaseViewedHead {
                     viewedHead += ","+thisChap;
                 }
             }
+            if (!lastChapter.contains(thisChap)){
+                lastChapter = thisChap + ",1";
+            }
             ContentValues cv = new ContentValues();
-            cv.put(DataBaseViewedHead.VIEWED_HEAD,viewedHead);
+            cv.put(DataBaseViewedHead.VIEWED_HEAD, viewedHead);
+            mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name, null);
+            cv.put(DataBaseViewedHead.LAST_CHAPTER, lastChapter);
             mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name,null);
         }
     }

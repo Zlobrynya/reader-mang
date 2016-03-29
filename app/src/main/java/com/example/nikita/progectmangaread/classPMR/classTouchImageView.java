@@ -51,7 +51,7 @@ public class classTouchImageView extends ImageView {
     private final float[] mMatrixValues = new float[9];
 
     private float mScale;
-    private float mMaxScale = 1;
+    private float mMaxScale = (float) 1.5;
     private float mTranslationX;
     private float mTranslationY;
 

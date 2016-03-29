@@ -66,7 +66,7 @@ public class cacheFile {
             //Copy inputStream in OutputStream
             private void CopyStream(InputStream is, OutputStream os)
             {
-                final int buffer_size=1024;
+                final int buffer_size=1024*40;
                 try
                 {
                     byte[] bytes=new byte[buffer_size];

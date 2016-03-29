@@ -62,9 +62,10 @@ public class fragmentDescriptionList extends Fragment {
                 classForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
                 classForList1.setNumberChapter(position);
+                classForList1.setURL_chapter(classForList1.getURL_chapter() + "?mature=1");
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
-                classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(position));
+                classDataBaseViewedHead.editBaseDate(nameMang,String.valueOf(position));
                 //+"?mature=1"
                 Log.i("post", classForList1.getURL_chapter() + "?mature=1");
                 EventBus.getDefault().post(classForList1);
@@ -81,11 +82,8 @@ public class fragmentDescriptionList extends Fragment {
             classForList1.setCheck(true);
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
-        classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(event));
+        classDataBaseViewedHead.editBaseDate(nameMang,String.valueOf(event));
         EventBus.getDefault().post(classForList1);
-    }
-    public void onEvent(java.lang.Integer event,Boolean d) {
-        Log.d("onEvent: ","G");
     }
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
@@ -98,7 +96,7 @@ public class fragmentDescriptionList extends Fragment {
         if (classDataBaseViewedHead.addBasaData(event.getName())){
             String strings;
             strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),DataBaseViewedHead.VIEWED_HEAD);
-            if (strings != null){
+            if (!strings.contains("null")){
                 String string[] = strings.split(",");
                 for (String aString : string) {
                     classForList classForList1 = list.get(Integer.parseInt(aString));
