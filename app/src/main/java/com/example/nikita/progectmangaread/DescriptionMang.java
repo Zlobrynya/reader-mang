@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,8 +10,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.example.nikita.progectmangaread.AdapterPMR.AdapterSlidingMenu;
 import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
@@ -19,6 +25,7 @@ import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,6 +57,7 @@ public class DescriptionMang extends AppCompatActivity {
     private adapterFragment gg;
     private Pars pars;
     private Element el;
+    private SlidingMenu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +69,64 @@ public class DescriptionMang extends AppCompatActivity {
         pager.setAdapter(gg);
         arList = new ArrayList<classForList>();
         EventBus.getDefault().register(this);
+        // <------------------------------------------------------->
+        //      Sliding Menu
+        final Context context = this;
+        LayoutInflater inflater=(LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v=inflater.inflate(R.layout.sliding_menu, null, true);
+        final ListView lv=(ListView) v.findViewById(R.id.listView);
+
+        menu = new SlidingMenu(this);
+        AdapterSlidingMenu ma = new AdapterSlidingMenu(context);
+        lv.setAdapter(ma);
+
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.drawable.shadow);
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        menu.setFadeDegree(0.1f);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        menu.setMenu(v);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                      @Override
+                                      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                          SlidingMenuConstant constant = null;
+                                          switch (position){
+                                              case 0: constant = SlidingMenuConstant.LIST_MANG;
+                                                  break;
+                                              case 1: constant = SlidingMenuConstant.FAVORITES;
+                                                  break;
+                                              case 2: constant = SlidingMenuConstant.DOWLAND;
+                                                  break;
+                                              default:
+                                                  constant = SlidingMenuConstant.MAGIС;
+                                          }
+                                          EventBus.getDefault().post(constant);
+                                      }
+                                  }
+
+        );
+
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // <-------------------------------------------------------------------------->
+
     }
+
+    //Метод для открытия бокового меню
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {  // узнаем ID нажатой кнопки
+            case android.R.id.home: // если это кнопка-иконка ActionBar,
+                menu.toggle(true);        // открываем меню (или закрываем)
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onDestroy(){

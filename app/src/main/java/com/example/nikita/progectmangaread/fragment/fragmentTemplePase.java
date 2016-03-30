@@ -27,7 +27,7 @@ import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.classPMR.classTransport;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -46,8 +46,10 @@ import de.greenrobot.event.EventBus;
  * ---
  * Сделать:
  * и с помощью сервиса обновлять из раз в неделю (пункт дaлеко идущего плана)
- *
+ * СДЕЛАТЬ:
  * Переделать под новую библиотеку!
+ * Продумать обовление что бы не "моргало"
+ * Убрать лишнее 
  *
  * ---
  */
@@ -56,15 +58,16 @@ public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
     private int firstItem,height,width,page;
     private int kol,kolSum,kolSum_previous,kol_previous;
-    public int lastItem,kolImage;
+    public int lastItem,kolImage,summ;
     public Document doc;
     public LinkedList<MainClassTop> list;
     public AdapterMainScreen myAdap;
+    public classDataBaseListMang classDataBaseListMang;
     private GridView gr;
-    private DatabaseHelper mDatabaseHelper;
-    private SQLiteDatabase mSqLiteDatabase;
     public boolean mIsScrollingUp,search_and_genres,resultPost;
     private Pars past;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +88,7 @@ public class fragmentTemplePase extends Fragment {
         mIsScrollingUp = search_and_genres = false;
         kolSum = 28;
        // kolSum = 8;
-        kolSum_previous = 0;
+        kolSum_previous = summ = 0;
         kol_previous = kolImage = 0;
         View v = inflater.inflate(R.layout.fragment, null);
 
@@ -103,22 +106,21 @@ public class fragmentTemplePase extends Fragment {
 
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            //непомню как работает
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
                 int lastVisibleItem = gr.getLastVisiblePosition();
                 if (firstItem != firstVisibleItem) {
                     if (firstItem > firstVisibleItem) {
-                        mIsScrollingUp = true; //UP /\
+                       /* mIsScrollingUp = true; //UP /\
                         //     kol = lastVisibleItem;
                         kolSum_previous = lastVisibleItem - 30;
                         if (kol_previous < 0) kolSum_previous = 0;
-                        Log.i("Scroll 1:", "Up");
+                        Log.i("Scroll 1:", "Up");*/
                     }
                     if (firstItem < firstVisibleItem) {
                         mIsScrollingUp = false; //DOWN \/
                         // kol = firstVisibleItem;
-                        kolSum = firstVisibleItem + 30;
+                        kolSum = firstVisibleItem + 90;
                         if (kolSum > kol)
                             parssate(kol);
                         Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
@@ -139,8 +141,8 @@ public class fragmentTemplePase extends Fragment {
     }
 
     private void initializationArray(){
-        while (!download_the_html(kol,0)){
-            list.add(getMainClassTop(kol,0));
+        while (!classDataBaseListMang.download_the_html(kol, 0)){
+            list.add(classDataBaseListMang.getMainClassTop(kol, 0));
             kol++;
         }
         if (kol == 0) parssate(kol);
@@ -168,12 +170,7 @@ public class fragmentTemplePase extends Fragment {
         //parssate();
         //создание базы данных
         String nameBase = classMang.getUML().replace(".me", ".db");
-        nameBase = nameBase.replace("http://","");
-        nameBase = nameBase.replace(".ru",".db");
-        mDatabaseHelper = new DatabaseHelper(getActivity(),nameBase, null, 1);
-        SQLiteDatabase sdb;
-        sdb = mDatabaseHelper.getReadableDatabase();
-        mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        classDataBaseListMang = new classDataBaseListMang(getContext(),nameBase);
         initializationArray();
     }
 
@@ -187,7 +184,7 @@ public class fragmentTemplePase extends Fragment {
         @Override
     public void onStart() {
         EventBus.getDefault().register(this);
-        super.onStart();
+            super.onStart();
     }
 
     @Override
@@ -209,79 +206,22 @@ public class fragmentTemplePase extends Fragment {
     //метод парсим
     public void parssate(int kol){
         //парсим сайт
-        past = new Pars(addImg,kol,classMang,getContext());
+        past = new Pars(addImg,kol,classMang);
         past.execute();
-    }
-
-    //добавление в базу данных
-    void addBasaData(MainClassTop a, String imgSrc){
-        String query,name;
-        name = "\"";
-        name += a.getName_characher().replace('"',' ') + "\"";
-        query = "SELECT " + DatabaseHelper.NAME_MANG + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + DatabaseHelper.NAME_MANG + "=" +
-                name;
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-        if (cursor.getCount() == 0){
-            ContentValues newValues = new ContentValues();
-            // Задайте значения для каждого столбца
-            newValues.put(DatabaseHelper.NAME_MANG, a.getName_characher().replace('"', ' '));
-            newValues.put(DatabaseHelper.URL_CHAPTER, a.getURL_characher());
-            newValues.put(DatabaseHelper.URL_IMG, imgSrc);
-            // Вставляем данные в таблицу
-            mSqLiteDatabase.insert("Mang", null, newValues);
-        }
-        cursor.close();
-    }
-
-    //получаем структуру с именем и сылками
-    MainClassTop getMainClassTop(int kol,int page){
-        String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
-                (kol+1);
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-
-        if (cursor.getCount() != 0){
-            MainClassTop a = new MainClassTop();
-            cursor.moveToFirst();
-            a.setURL_img(cursor.getString(cursor.getColumnIndex(DatabaseHelper.URL_IMG)));
-            a.setName_characher(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME_MANG)));
-            a.setURL_characher(cursor.getString(cursor.getColumnIndex(DatabaseHelper.URL_CHAPTER)));
-            cursor.close();
-            return a;
-        }
-        cursor.close();
-        return null;
-    }
-
-    //проверяем в бд есть ли в такой элемент
-    Boolean download_the_html(int kol,int page){
-        String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
-                (kol+1);
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-        //Log.i("LOG_TAG", "download_the_html " + cursor.getCount());
-        if (cursor.getCount() == 0) {
-            cursor.close();
-            return true;
-        }
-        cursor.close();
-        return false;
     }
 
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
         private classMang classMang;
-        public ProgressDialog dialog;
-        private Bitmap img;
         private AsyncTaskLisen lisens;
         private String imgSrc;
-        private int kol,l;
-        private Boolean down;
+        private int kol;
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback, int kol,classMang classMang,Context ctx) {
+        protected Pars(AsyncTaskLisen callback, int kol,classMang classMang) {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
-            down = false;
         }
 
         @Override
@@ -299,7 +239,6 @@ public class fragmentTemplePase extends Fragment {
                 if (doc == null) {
                     classMang.editWhere(page);
                     doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
-                    down = false;
                 }
 
                 Element el = doc.select(classMang.getNameCell()).first();
@@ -312,6 +251,7 @@ public class fragmentTemplePase extends Fragment {
 
                 imgSrc = el2.attr("src");
                 name_char = el2.attr("title");
+                summ++;
                 if (kol_mang == 69) doc = null;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -323,14 +263,13 @@ public class fragmentTemplePase extends Fragment {
 
         @Override
         protected void onPostExecute(Void result){
-            if (dialog != null) dialog.dismiss();
             //добавляем в лист и обновление
             if (kol >= 0) {
                 MainClassTop a = new MainClassTop(URL2,name_char,imgSrc);
                 Log.i("Kol parse: ", String.valueOf(kol));
                 if (list.size() <= kol) list.add(kol,a);
                 if (!resultPost) {
-                    addBasaData(a, imgSrc);
+                    classDataBaseListMang.addBasaData(a, imgSrc);
                 }
                 myAdap.notifyDataSetChanged();
                 //кричим интерфейсу что мы фсе

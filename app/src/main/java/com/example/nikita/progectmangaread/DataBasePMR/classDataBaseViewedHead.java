@@ -18,6 +18,8 @@ public class classDataBaseViewedHead {
         mDatabaseHelper = new DataBaseViewedHead(context,nameBase, null, 1);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
     }
+
+
     public classDataBaseViewedHead(Context context,String name){
         String nameBase = "ViewedHead.db";
         mDatabaseHelper = new DataBaseViewedHead(context,nameBase, null, 1);
