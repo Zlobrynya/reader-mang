@@ -51,6 +51,8 @@ public class cacheFile {
                         conn.setConnectTimeout(30000);
                         conn.setReadTimeout(30000);
                         conn.setInstanceFollowRedirects(true);
+                        if (params[0].)
+
                         InputStream is=conn.getInputStream();
                         OutputStream os = new FileOutputStream(f);
                         CopyStream(is, os);
@@ -91,10 +93,10 @@ public class cacheFile {
         Task.execute(url, String.valueOf(number));
     }
 
-    public InputStream getFile(String nameCache) throws FileNotFoundException {
+    public String getFile(String nameCache) throws FileNotFoundException {
         File f = new File(dirFile, nameCache);
-        InputStream in = new FileInputStream(f);
-        return in;
+        //InputStream in = new FileInputStream(f);
+        return f.getPath();
     }
 
     public void clearCache(){

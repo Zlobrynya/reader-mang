@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.nikita.progectmangaread.classPMR.classTouchImageView
-        android:id="@+id/my_image"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        />
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="match_parent"
