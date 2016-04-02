@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().post(clManga);
+        if (clManga != null) EventBus.getDefault().post(clManga);
         super.onStop();
     }
 }

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -87,25 +88,27 @@ public class fragmentDescriptionList extends Fragment {
     }
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
-        ArrayList<classForList> arrayList = event.getClassForList();
-        for (classForList b: arrayList){
-            list.add(b);
-        }
-        nameMang = event.getName();
-        classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());
-        if (classDataBaseViewedHead.addBasaData(event.getName())){
-            String strings;
-            strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),DataBaseViewedHead.VIEWED_HEAD);
-            if (!strings.contains("null")){
-                String string[] = strings.split(",");
-                for (String aString : string) {
-                    classForList classForList1 = list.get(Integer.parseInt(aString));
-                    classForList1.setCheck(true);
-                    list.set(Integer.parseInt(aString), classForList1);
+        if (!event.getName().isEmpty()){
+            ArrayList<classForList> arrayList = event.getClassForList();
+            for (classForList b: arrayList){
+                        list.add(b);
+            }
+            nameMang = event.getName();
+            classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());
+            if (classDataBaseViewedHead.addBasaData(event.getName())){
+                String strings;
+                strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),DataBaseViewedHead.VIEWED_HEAD);
+                if (!strings.contains("null")){
+                    String string[] = strings.split(",");
+                    for (String aString : string) {
+                        classForList classForList1 = list.get(Integer.parseInt(aString));
+                        classForList1.setCheck(true);
+                        list.set(Integer.parseInt(aString), classForList1);
+                    }
                 }
             }
+            myAdap.notifyDataSetChanged();
         }
-        myAdap.notifyDataSetChanged();
     }
 
     @Override
@@ -132,4 +135,5 @@ public class fragmentDescriptionList extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 }

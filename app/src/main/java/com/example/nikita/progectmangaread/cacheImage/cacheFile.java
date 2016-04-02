@@ -1,9 +1,12 @@
 package com.example.nikita.progectmangaread.cacheImage;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,12 +54,17 @@ public class cacheFile {
                         conn.setConnectTimeout(30000);
                         conn.setReadTimeout(30000);
                         conn.setInstanceFollowRedirects(true);
-                        if (params[0].)
-
                         InputStream is=conn.getInputStream();
-                        OutputStream os = new FileOutputStream(f);
-                        CopyStream(is, os);
-                        os.close();
+
+                        if (params[0].contains("gif")){
+                            Bitmap bmp = BitmapFactory.decodeStream(is);
+                            FileOutputStream  out = new FileOutputStream(f);
+                            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        }else {
+                            OutputStream os = new FileOutputStream(f);
+                            CopyStream(is, os);
+                            os.close();
+                        }
                         conn.disconnect();
                     }
 

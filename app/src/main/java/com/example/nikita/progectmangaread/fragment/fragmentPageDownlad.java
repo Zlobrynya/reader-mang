@@ -1,12 +1,17 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -16,6 +21,7 @@ import com.example.nikita.progectmangaread.cacheImage.cacheFile;
 import com.example.nikita.progectmangaread.decode.MyImageDecoder;
 import com.example.nikita.progectmangaread.decode.MyImageRegionDecoder;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -27,7 +33,8 @@ import de.greenrobot.event.EventBus;
 public class fragmentPageDownlad extends Fragment {
     private int number;
     private cacheFile file;
-
+    SubsamplingScaleImageView image;
+    ProgressBar progress;
     public static fragmentPageDownlad getInstance(int imageId,String url) {
         final fragmentPageDownlad instance = new fragmentPageDownlad();
         final Bundle params = new Bundle();
@@ -50,16 +57,47 @@ public class fragmentPageDownlad extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
+    SubsamplingScaleImageView.OnImageEventListener d = new SubsamplingScaleImageView.OnImageEventListener() {
+        @Override
+        public void onReady() {
+           // Log.i("heR", String.valueOf(image.getSHeight()));
+        }
+
+        @Override
+        public void onImageLoaded() {
+            Log.i("heL", String.valueOf(image.getSHeight()));
+            if (image.getSHeight() < 3000){
+                image.setDoubleTapZoomDpi(80);
+            }else {
+
+            }
+        }
+
+        @Override
+        public void onPreviewLoadError(Exception e) {
+
+        }
+
+        @Override
+        public void onImageLoadError(Exception e) {
+
+        }
+
+        @Override
+        public void onTileLoadError(Exception e) {
+
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.layout_fullscreen_image, null);
 
-        final SubsamplingScaleImageView image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
+        image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
-
-        //слушатель для клика
+        progress = (ProgressBar) v.findViewById(R.id.loading);
+        image.setOnImageEventListener(d);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,15 +106,18 @@ public class fragmentPageDownlad extends Fragment {
         });
         number = getArguments().getInt("imageId");
         final String url = getArguments().getString("String");
-        final ProgressBar progress = (ProgressBar) v.findViewById(R.id.loading);
-      //  progress.setVisibility(View.VISIBLE);
-      //  image.setVisibility(View.GONE);
-
+        progress.setVisibility(View.VISIBLE);
+        image.setVisibility(View.GONE);
+      //  image.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+        image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+        image.setMinimumDpi(50);
         AsyncTaskLisen as = new AsyncTaskLisen() {
             @Override
             public void onEnd() {
                 try {
                     image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
+                    image.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.GONE);
                 } catch (FileNotFoundException e) {
 
                 }
@@ -89,8 +130,6 @@ public class fragmentPageDownlad extends Fragment {
 
         file = new cacheFile(getContext().getCacheDir(),"pageCache",as);
         file.loadAndCache(url, number);
-       // file.clearCache();
-
         return v;
     }
 }

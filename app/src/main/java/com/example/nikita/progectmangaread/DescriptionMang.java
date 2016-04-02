@@ -338,7 +338,7 @@ public class DescriptionMang extends AppCompatActivity {
             classForList.setURL_chapter(URL);
             URL = el2.select("a").text();
             classForList.setName_chapter(URL);
-            arList.add(classForList);
+            if (!classForList.getName_chapter().isEmpty()) arList.add(classForList);
             el = el.nextElementSibling();
         }
 
