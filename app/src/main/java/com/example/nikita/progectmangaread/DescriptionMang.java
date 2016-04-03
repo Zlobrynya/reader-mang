@@ -157,6 +157,7 @@ public class DescriptionMang extends AppCompatActivity {
         }
     };
 
+    //ПОЛУЧАЕМ с топлиста
     public void onEvent(MainClassTop event){
         mang = event;
         pars = new Pars(addImg,mang);
@@ -169,7 +170,7 @@ public class DescriptionMang extends AppCompatActivity {
         //узнаем нужно ли запускать активити
         if (URL.getNumberChapter() >= 0){
             Intent intent = new Intent(this, pagesDownload.class);
-            intent.putExtra("URL", URL.getURL_chapter());
+            intent.putExtra("URL", mang.getURL_site()+URL.getURL_chapter());
             intent.putExtra("NumberChapter", URL.getNumberChapter());
 
             classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
@@ -205,7 +206,7 @@ public class DescriptionMang extends AppCompatActivity {
         }
         classForList classForList = arList.get(numberChapter);
         Intent intent = new Intent(this, pagesDownload.class);
-        intent.putExtra("URL", classForList.getURL_chapter());
+        intent.putExtra("URL",mang.getURL_site()+classForList.getURL_chapter());
         intent.putExtra("NumberChapter", numberChapter);
         intent.putExtra("NumberPage", numberPage);
         intent.putExtra("Chapter", mang.getName_characher());

@@ -142,7 +142,9 @@ public class fragmentTemplePase extends Fragment {
 
     private void initializationArray(){
         while (!classDataBaseListMang.download_the_html(kol, 0)){
-            list.add(classDataBaseListMang.getMainClassTop(kol, 0));
+            MainClassTop classTop = classDataBaseListMang.getMainClassTop(kol, 0);
+            classTop.setURL_site(classMang.getUML());
+            list.add(classTop);
             kol++;
         }
         if (kol == 0) parssate(kol);
@@ -265,13 +267,19 @@ public class fragmentTemplePase extends Fragment {
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
             if (kol >= 0) {
-                MainClassTop a = new MainClassTop(URL2,name_char,imgSrc);
+                MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getUML());
                 Log.i("Kol parse: ", String.valueOf(kol));
-                if (list.size() <= kol) list.add(kol,a);
-                if (!resultPost) {
-                    classDataBaseListMang.addBasaData(a, imgSrc);
+                try {
+                    if (list.size() <= kol) list.add(kol,a);
+                    if (!resultPost) {
+                        classDataBaseListMang.addBasaData(a, imgSrc);
+                    }
+                    myAdap.notifyDataSetChanged();
+                }catch (IndexOutOfBoundsException e){
+                    Log.i("Error: ",e.toString());
+                    Log.i("Size list: ", String.valueOf(list.size()));
+                    Log.i("Kol: ", String.valueOf(kol));
                 }
-                myAdap.notifyDataSetChanged();
                 //кричим интерфейсу что мы фсе
                 if (lisens != null) lisens.onEnd();
             }

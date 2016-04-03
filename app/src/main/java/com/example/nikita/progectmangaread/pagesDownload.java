@@ -197,8 +197,7 @@ public class pagesDownload extends AppCompatActivity {
             //Пост запрос
             try {
                 //Запрос на получение сылок для изображений вот он:
-                //Переделать что бы картинки искал не только на readmanga.me
-                if (doc == null) doc = Jsoup.connect("http://readmanga.me"+URL).get();
+                if (doc == null) doc = Jsoup.connect(URL).get();
                 script = doc.select("body").select("script").first(); // Get the script part
                 for (int i =0 ;i < 100; i++){
                     html = script.data();
@@ -216,7 +215,7 @@ public class pagesDownload extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            TextView textView = (TextView) findViewById(R.id.text);
+ //           TextView textView = (TextView) findViewById(R.id.text);
             StringBuilder secondBuffer = new StringBuilder(html);
             Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
             Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
