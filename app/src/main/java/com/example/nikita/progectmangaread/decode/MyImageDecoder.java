@@ -22,11 +22,9 @@ public class MyImageDecoder implements ImageDecoder {
 
     @Override
     public Bitmap decode(Context context, Uri uri) throws Exception {
-        try{
-            return BitmapDecoder.from(context, uri).useBuiltInDecoder(true).config(Bitmap.Config.RGB_565).decode();
-        }catch (Exception  ignored){
-            return BitmapDecoder.from(context, uri).useBuiltInDecoder(true).config(Bitmap.Config.ARGB_8888).decode();
-        }
+        Bitmap bitmap;
+        bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(true).config(Bitmap.Config.ARGB_8888).decode();
+        return bitmap;
     }
 
 }

@@ -26,7 +26,12 @@ public class MyImageRegionDecoder  implements ImageRegionDecoder {
     @Override
     public synchronized Bitmap decodeRegion(Rect sRect, int sampleSize) {
         try {
-            return decoder.reset().region(sRect).scale(sRect.width()/sampleSize, sRect.height()/sampleSize).decode();
+           // return decoder.reset().region(sRect).scale(sRect.width()/sampleSize, sRect.height()/sampleSize).decode();
+            return decoder.region(sRect)
+                    .scaleBy(0.5f)
+                    .useBuiltInDecoder(true)
+                    .decode();
+
         } catch (Exception e) {
             return null;
         }
