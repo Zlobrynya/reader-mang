@@ -57,10 +57,9 @@ public class cacheFile {
                         InputStream is=conn.getInputStream();
 
                         if (params[0].contains("gif")){
-                            Bitmap bmp = BitmapFactory.decodeStream(is);
                             FileOutputStream  out = new FileOutputStream(f);
-                            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-                        }else {
+                            BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, out);
+                       }else {
                             OutputStream os = new FileOutputStream(f);
                             CopyStream(is, os);
                             os.close();
@@ -76,7 +75,7 @@ public class cacheFile {
             //Copy inputStream in OutputStream
             private void CopyStream(InputStream is, OutputStream os)
             {
-                final int buffer_size=1024*40;
+                final int buffer_size=1024*120;
                 try
                 {
                     byte[] bytes=new byte[buffer_size];

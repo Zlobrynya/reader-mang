@@ -44,6 +44,7 @@ public class fragmentGenres extends Fragment {
         list = new ArrayList<>();
         classTransport = new classTransport();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
+        setRetainInstance(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

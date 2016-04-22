@@ -64,7 +64,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
-
+        setRetainInstance(true);
         classMang = new classTransport();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
     }

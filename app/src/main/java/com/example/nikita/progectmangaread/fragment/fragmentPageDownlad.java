@@ -41,7 +41,6 @@ public class fragmentPageDownlad extends Fragment {
         params.putInt("imageId", imageId);
         params.putString("String", url);
         instance.setArguments(params);
-
         return instance;
     }
 
@@ -60,12 +59,13 @@ public class fragmentPageDownlad extends Fragment {
     SubsamplingScaleImageView.OnImageEventListener d = new SubsamplingScaleImageView.OnImageEventListener() {
         @Override
         public void onReady() {
-           // Log.i("heR", String.valueOf(image.getSHeight()));
+            progress.setVisibility(View.GONE);
+            Log.i("hRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRReR", String.valueOf(image.getSHeight()));
         }
 
         @Override
         public void onImageLoaded() {
-            Log.i("heL", String.valueOf(image.getSHeight()));
+            Log.i("heL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", String.valueOf(image.getSHeight()));
             if (image.getSHeight() < 3000){
                 image.setDoubleTapZoomDpi(80);
             }else {
@@ -108,7 +108,7 @@ public class fragmentPageDownlad extends Fragment {
         final String url = getArguments().getString("String");
         progress.setVisibility(View.VISIBLE);
         image.setVisibility(View.GONE);
-      //  image.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+        image.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         image.setMinimumDpi(50);
         AsyncTaskLisen as = new AsyncTaskLisen() {
@@ -117,7 +117,7 @@ public class fragmentPageDownlad extends Fragment {
                 try {
                     image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
                     image.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.GONE);
+
                 } catch (FileNotFoundException e) {
 
                 }

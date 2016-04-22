@@ -27,7 +27,6 @@ public class fragmentLoad_page0 extends Fragment{
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_load, new fragmentTemplePase());
         transaction.commit();
-
         return view;
     }
 

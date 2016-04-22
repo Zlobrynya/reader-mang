@@ -62,7 +62,6 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
     }
 
 
-
     public class Holder
     {
         TextView tv;

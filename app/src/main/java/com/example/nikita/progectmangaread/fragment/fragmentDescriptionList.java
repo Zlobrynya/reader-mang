@@ -45,6 +45,7 @@ public class fragmentDescriptionList extends Fragment {
         list = new ArrayList<>();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
         EventBus.getDefault().register(this);
+        setRetainInstance(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +64,7 @@ public class fragmentDescriptionList extends Fragment {
                 classForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
                 classForList1.setNumberChapter(position);
-                classForList1.setURL_chapter(classForList1.getURL_chapter() + "?mature=1");
+                classForList1.setURL_chapter(classForList1.getURL_chapter());
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
                 classDataBaseViewedHead.editBaseDate(nameMang,String.valueOf(position));
@@ -83,7 +84,7 @@ public class fragmentDescriptionList extends Fragment {
             classForList1.setCheck(true);
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
-        classDataBaseViewedHead.editBaseDate(nameMang,String.valueOf(event));
+        classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(event));
         EventBus.getDefault().post(classForList1);
     }
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
@@ -91,6 +92,7 @@ public class fragmentDescriptionList extends Fragment {
         if (!event.getName().isEmpty()){
             ArrayList<classForList> arrayList = event.getClassForList();
             for (classForList b: arrayList){
+                        b.setURL_chapter(b.getURL_chapter()+"?mature=1");
                         list.add(b);
             }
             nameMang = event.getName();

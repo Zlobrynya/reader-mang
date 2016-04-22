@@ -16,14 +16,14 @@ import rapid.decoder.BitmapDecoder;
  * give more reliable decoding and better performance. For JPGs, it is slower and can run out of
  * memory with large images, but has better support for grayscale and CMYK images.
  *
- * This is an incomplete and untested implementation provided as an example only.
  */
 public class MyImageDecoder implements ImageDecoder {
 
     @Override
     public Bitmap decode(Context context, Uri uri) throws Exception {
         Bitmap bitmap;
-        bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(true).config(Bitmap.Config.ARGB_8888).decode();
+        bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
+       // if (bitmap == null)  BitmapDecoder.from(context, uri).useBuiltInDecoder(true).config(Bitmap.Config.ARGB_8888).decode();
         return bitmap;
     }
 
