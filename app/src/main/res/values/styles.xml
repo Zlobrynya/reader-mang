@@ -10,9 +10,13 @@
     <style name="MyTheme" parent="Theme.AppCompat">
         ...
     </style>
-    <style name="MyTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar">
         <!-- Both of these are needed -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

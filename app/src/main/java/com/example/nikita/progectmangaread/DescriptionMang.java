@@ -47,7 +47,7 @@ import de.greenrobot.event.EventBus;
  *
  */
 
-public class DescriptionMang extends AppCompatActivity {
+public class DescriptionMang extends BaseActivity {
     public Document doc;
     private MainClassTop mang;
     public ArrayList<classForList> arList;
@@ -61,7 +61,7 @@ public class DescriptionMang extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         kol = 0;
-        setContentView(R.layout.activity_temple_pase);
+        getLayoutInflater().inflate(R.layout.activity_temple_pase, frameLayout);
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);

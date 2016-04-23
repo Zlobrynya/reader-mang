@@ -168,8 +168,13 @@ public class fragmentTemplePase extends Fragment {
     };
 
     public void onEvent(classMang event){
+        if (classMang != null){
+            if (!event.getUML().contains(classMang.getUML())){
+                list.clear();
+                kol = 0;
+            }
+        }
         classMang = event;
-        //parssate();
         //создание базы данных
         String nameBase = classMang.getUML().replace(".me", ".db");
         classDataBaseListMang = new classDataBaseListMang(getContext(),nameBase);
