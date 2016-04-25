@@ -6,51 +6,64 @@ import android.widget.ImageView;
  * Created by Nikita on 03.01.2016.
  */
 public class classMang {
-    private String UML,imgUML,nameUML, nameCell;
-    private String whereAll,where,putch,putch2;
+    private String URL,imgURL,nameURL, nameCell;
+    private String whereAll,where,path,path2;
     private int maxInPage,numberPage;
+
     public classMang(){}
 
-    public classMang(String UML, String imgUML, String nameUML, String nameCell, int maxInPage){
-        this.UML = UML;
-        this.imgUML = imgUML;
+    public classMang(String URL, String imgURL, String nameURL, String nameCell, int maxInPage){
+        this.URL = URL;
+        this.imgURL = imgURL;
         this.nameCell = nameCell;
-        this.nameUML = nameUML;
+        this.nameURL = nameURL;
         this.maxInPage = maxInPage;
     }
 
-    public String getUML(){ return UML; }
-    public String getImgUML(){ return imgUML; }
-    public String getNameUML(){ return nameUML; }
-    public String getWhere(){ return whereAll; }
+    public String getURL(){ return URL; }
+    public String getImgURL(){ return imgURL; }
+    public String getNameURL(){ return nameURL; }
+    public String getWhereAll(){ return whereAll; }
     public String getNameCell(){ return nameCell; }
+    public String getWhere() {return where;}
+    public String getPath() {return path;}
+    public String getPath2() {return path2;}
+
     public int getMaxInPage() { return maxInPage; }
-    public int getNumberPage() {return numberPage;}
+
 
     //установка пути листа топа
-    public void setWhere(String where,String putch,int amt){
-        this.whereAll = where + amt + putch;
+    public void setWhereAll(String where,String path,int amt){
+        this.whereAll = where + amt + path;
         this.where = where;
-        this.putch = putch;
+        this.path = path;
         numberPage = amt;
     }
 
-    public void setWhere(String where,String putch,String putch2,int amt){
-        this.whereAll = where + putch + amt + putch2;
+    public void setWhereAll(String where,String path,String path2,int amt){
+        this.whereAll = where + path + amt + path2;
         this.where = where;
-        this.putch = putch;
-        this.putch2 = putch2;
+        this.path = path;
+        this.path2 = path2;
         numberPage = amt;
     }
 
-    public void setWhere(String request) {where = request;}
+    public void setWhereAll(String request) {whereAll = request;}
+    public void setURL(String URL) { this.URL = URL; }
+    public void setImgURL(String imgURL) { this.imgURL = imgURL; }
+    public void setNameURL(String nameURL) { this.nameURL = nameURL; }
+    public void setNameCell(String nameCell) { this.nameCell = nameCell; }
+    public void setMaxInPage(int number) { maxInPage = number; }
+    public void setWhere(String where) {this.where = where; }
+    public void setPath(String path) {this.path = path; }
+    public void setPath2(String path) {path2 = path;}
 
     public void editWhere(int amt){
         numberPage = amt;
-        if (putch2 == null) {
-            this.whereAll = where + amt + putch;
+        if (path2.isEmpty()) {
+            this.whereAll = where + amt + path;
         }else {
-            this.whereAll = where + putch + (amt*maxInPage) + putch2;
+            this.whereAll = where + path + (amt*maxInPage) + path2;
         }
     }
 }

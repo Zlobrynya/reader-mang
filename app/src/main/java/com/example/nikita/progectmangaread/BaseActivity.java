@@ -58,7 +58,7 @@ public class BaseActivity extends AppCompatActivity
         return true;
     }
 
-    public void startActivity(int id){
+    private void startActivity(int id){
         if (id == R.id.list_Site) {
             Intent newInten = new Intent(BaseActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);

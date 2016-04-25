@@ -1,6 +1,8 @@
 package com.example.nikita.progectmangaread;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +25,10 @@ import com.example.nikita.progectmangaread.fragment.fragmentLoad_page0;
 import com.example.nikita.progectmangaread.fragment.fragmentGenres;
 import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
 
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.util.ErrorDialogManager;
 
@@ -39,16 +45,55 @@ public class temple_pase extends BaseActivity {
     private AdapterPargerFragment gg;
     private MainClassTop classTop;
     private boolean doublePressBack = false;
+    private static final String APP_PREFERENCES = "settingsListMang";
+    private static final String APP_PREFERENCES_URL = "URL";
+    private static final String APP_PREFERENCES_imgURL = "imgURL";
+    private static final String APP_PREFERENCES_where = "where";
+    private static final String APP_PREFERENCES_whereAll = "whereAll";
+    private static final String APP_PREFERENCES_path = "path";
+    private static final String APP_PREFERENCES_path2 = "path2";
+    private static final String APP_PREFERENCES_nameCell = "nameCell";
+    private static final String APP_PREFERENCES_nameURL = "nameURL";
+    private static final String APP_PREFERENCES_first = "first";
+    private static final String APP_PREFERENCES_maxInPage = "maxInPage";
+    private SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_temple_pase, frameLayout);
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new AdapterPargerFragment(getSupportFragmentManager(),3);
         pager.setAdapter(gg);
         pager.setCurrentItem(1);
+        boolean first = mSettings.getBoolean(APP_PREFERENCES_first,true);
+        //Разобраться для правильного внесение значений
+        if (!first){
+            mang = new classMang();
+            mang.setImgURL(mSettings.getString(APP_PREFERENCES_imgURL, ""));
+            mang.setWhereAll(mSettings.getString(APP_PREFERENCES_whereAll, ""));
+            mang.setNameURL(mSettings.getString(APP_PREFERENCES_nameURL, ""));
+            mang.setURL(mSettings.getString(APP_PREFERENCES_URL, ""));
+            mang.setNameCell(mSettings.getString(APP_PREFERENCES_nameCell, ""));
+            mang.setMaxInPage(mSettings.getInt(APP_PREFERENCES_maxInPage, 0));
+            mang.setWhere(mSettings.getString(APP_PREFERENCES_where, ""));
+            mang.setPath(mSettings.getString(APP_PREFERENCES_path, ""));
+            mang.setPath2(mSettings.getString(APP_PREFERENCES_path2, ""));
+        }else{
+            Intent newInten = new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(newInten);
+        }
+
+        //костыль для того что бы пославть EventBuss после создания фрагментов
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mang != null) EventBus.getDefault().post(mang);
+            }
+        }, 100);
+
     }
 
     protected void onNewIntent(Intent intent){
@@ -78,6 +123,21 @@ public class temple_pase extends BaseActivity {
     }
 
     public void onEvent(classMang event){
+
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(APP_PREFERENCES_URL,event.getURL());
+        editor.putString(APP_PREFERENCES_nameCell,event.getNameCell());
+        editor.putString(APP_PREFERENCES_imgURL,event.getImgURL());
+        editor.putString(APP_PREFERENCES_nameURL,event.getNameURL());
+        editor.putString(APP_PREFERENCES_where, event.getWhere());
+        editor.putString(APP_PREFERENCES_path,event.getPath());
+        editor.putString(APP_PREFERENCES_path2,event.getPath2());
+        editor.putString(APP_PREFERENCES_whereAll,event.getWhereAll());
+
+        editor.putBoolean(APP_PREFERENCES_first,false);
+        editor.putInt(APP_PREFERENCES_maxInPage, event.getMaxInPage());
+        editor.apply();
+
         mang = new classMang();
         mang = event;
     }
@@ -147,8 +207,9 @@ public class temple_pase extends BaseActivity {
                     return fragmentGenres.newInstance(position);
                 case 1:
                     return fragmentLoad_page0.newInstance(position);
-                case 2:
+                case 2:{
                     return fragmentSearchAndGenres.newInstance(position);
+                }
             }
             return null;
         }

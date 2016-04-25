@@ -3,6 +3,7 @@ package com.example.nikita.progectmangaread.fragment;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
@@ -36,7 +37,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import de.greenrobot.event.EventBus;
 
@@ -143,7 +146,7 @@ public class fragmentTemplePase extends Fragment {
     private void initializationArray(){
         while (!classDataBaseListMang.download_the_html(kol, 0)){
             MainClassTop classTop = classDataBaseListMang.getMainClassTop(kol, 0);
-            classTop.setURL_site(classMang.getUML());
+            classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
         }
@@ -169,14 +172,16 @@ public class fragmentTemplePase extends Fragment {
 
     public void onEvent(classMang event){
         if (classMang != null){
-            if (!event.getUML().contains(classMang.getUML())){
+            if (!event.getURL().contains(classMang.getURL())){
                 list.clear();
                 kol = 0;
+                page = 0;
+                doc = null;
             }
         }
         classMang = event;
         //создание базы данных
-        String nameBase = classMang.getUML().replace(".me", ".db");
+        String nameBase = classMang.getURL().replace(".me", ".db");
         classDataBaseListMang = new classDataBaseListMang(getContext(),nameBase);
         initializationArray();
     }
@@ -184,7 +189,7 @@ public class fragmentTemplePase extends Fragment {
     //Для фрагментов
     public void add(classTransport ev) {
         classMang = ev.getClassMang();
-        classMang.setWhere(ev.getURL_Search());
+        classMang.setWhereAll(ev.getURL_Search());
         resultPost = true;
     }
 
@@ -245,16 +250,16 @@ public class fragmentTemplePase extends Fragment {
                 int kol_mang = kol - (classMang.getMaxInPage()*page);
                 if (doc == null) {
                     classMang.editWhere(page);
-                    doc = Jsoup.connect(classMang.getUML() + classMang.getWhere()).get();
+                    doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll()).get();
                 }
 
                 Element el = doc.select(classMang.getNameCell()).first();
                 for (int i = 0; i < kol_mang; i++)
                     el = el.nextElementSibling();
-                Elements el2 = el.select(classMang.getNameUML());
+                Elements el2 = el.select(classMang.getNameURL());
 
-                URL2 = classMang.getUML() + el2.attr("href");
-                el2 = el.select(classMang.getImgUML());
+                URL2 = classMang.getURL() + el2.attr("href");
+                el2 = el.select(classMang.getImgURL());
 
                 imgSrc = el2.attr("src");
                 name_char = el2.attr("title");
@@ -272,7 +277,7 @@ public class fragmentTemplePase extends Fragment {
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
             if (kol >= 0) {
-                MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getUML());
+                MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getURL());
                 Log.i("Kol parse: ", String.valueOf(kol));
                 try {
                     if (list.size() <= kol) list.add(kol,a);

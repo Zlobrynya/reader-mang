@@ -68,8 +68,8 @@ public class fragmentGenres extends Fragment {
     public void onEvent(com.example.nikita.progectmangaread.classPMR.classMang event){
         this.classTransport.setClassMang(event);
         int id = 0;
-        if (classTransport.getClassMang().getUML() == "http://readmanga.me") id = R.raw.search_read_manga;
-        else if (classTransport.getClassMang().getUML() == "http://AdultManga.ru") id = R.raw.search_adultmanga;
+        if (classTransport.getClassMang().getURL().contains("readmanga.me")) id = R.raw.search_read_manga;
+        else if (classTransport.getClassMang().getURL().contains("AdultManga.ru")) id = R.raw.search_adultmanga;
 
         //считываем с ресурсов
         InputStream XmlFileInputStream = getResources().openRawResource(id); // getting XML
@@ -126,7 +126,7 @@ public class fragmentGenres extends Fragment {
 
     private void postRequest(){
         String request = "/list/genre/" + genres;
-        Log.i("POST", classTransport.getClassMang().getUML()+request);
+        Log.i("POST", classTransport.getClassMang().getURL()+request);
         classTransport.setURL_Search(request);
         EventBus.getDefault().post(classTransport);
     }
