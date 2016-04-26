@@ -269,7 +269,6 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public class ParsList extends AsyncTask<Void,Void,Void> {
-
         @Override
         protected Void doInBackground(Void... params) {
             el = doc.select("[class = table table-hover]").first();
