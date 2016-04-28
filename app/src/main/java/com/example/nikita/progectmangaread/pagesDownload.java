@@ -81,7 +81,7 @@ public class pagesDownload extends AppCompatActivity {
                         activity.finish();
                     }
                     pageNumber = position;
-                    classDataBaseViewedHead.editPage(nameMang, String.valueOf(pageNumber));
+                    classDataBaseViewedHead.editLastPage(nameMang, pageNumber);
                 }
             }
 

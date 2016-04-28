@@ -60,14 +60,14 @@ public class fragmentDescriptionList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                //Разобраться с багом при check
                 classForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
                 classForList1.setNumberChapter(position);
-                classForList1.setURL_chapter(classForList1.getURL_chapter());
+                //classForList1.setURL_chapter(classForList1.getURL_chapter());
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
                 classDataBaseViewedHead.editBaseDate(nameMang,String.valueOf(position));
+               // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
                 //+"?mature=1"
                 Log.i("post", classForList1.getURL_chapter() + "?mature=1");
                 EventBus.getDefault().post(classForList1);
@@ -87,6 +87,7 @@ public class fragmentDescriptionList extends Fragment {
         classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(event));
         EventBus.getDefault().post(classForList1);
     }
+
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
         if (!event.getName().isEmpty()){

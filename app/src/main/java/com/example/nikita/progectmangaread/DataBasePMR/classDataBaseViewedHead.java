@@ -15,14 +15,14 @@ public class classDataBaseViewedHead {
 
     public classDataBaseViewedHead(Context context){
         String nameBase = "ViewedHead.db";
-        mDatabaseHelper = new DataBaseViewedHead(context,nameBase, null, 1);
+        mDatabaseHelper = new DataBaseViewedHead(context,nameBase, null, mDatabaseHelper.DATABASE_VERSION);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
     }
 
 
     public classDataBaseViewedHead(Context context,String name){
         String nameBase = "ViewedHead.db";
-        mDatabaseHelper = new DataBaseViewedHead(context,nameBase, null, 1);
+        mDatabaseHelper = new DataBaseViewedHead(context,nameBase, null,mDatabaseHelper.DATABASE_VERSION);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         addBasaData(name);
     }
@@ -61,7 +61,7 @@ public class classDataBaseViewedHead {
             cursor.moveToFirst();
             data = cursor.getString(cursor.getColumnIndex(where));
             //data[1] = cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.LAST_CHAPTER));
-            cursor.close();
+            //cursor.close();
         }
         cursor.close();
         return data;
@@ -96,9 +96,9 @@ public class classDataBaseViewedHead {
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() != 0){
             cursor.moveToFirst();
-            String viewedHead,lastChapter;
+            String viewedHead,lastChapter,lastPage = "1";
             viewedHead = cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.VIEWED_HEAD));
-            lastChapter =  cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.LAST_CHAPTER));
+           // lastChapter =  cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.LAST_CHAPTER));
             cursor.close();
             if (!viewedHead.contains(thisChap)){
                 if (viewedHead.contains("null")){
@@ -107,14 +107,42 @@ public class classDataBaseViewedHead {
                     viewedHead += ","+thisChap;
                 }
             }
-            if (!lastChapter.contains(thisChap)){
-                lastChapter = thisChap + ",1";
-            }
             ContentValues cv = new ContentValues();
             cv.put(DataBaseViewedHead.VIEWED_HEAD, viewedHead);
             mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name, null);
-            cv.put(DataBaseViewedHead.LAST_CHAPTER, lastChapter);
+        }
+    }
+
+    public void  editLastChapter(String nameMang, String thisURL){
+        String query,name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        query = "SELECT " + "*" + " FROM " + DataBaseViewedHead.DATABASE_TABLE + " WHERE " + DataBaseViewedHead.NAME_MANG + "=" +
+                name;
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        if (cursor.getCount() != 0){
+            cursor.moveToFirst();
+            ContentValues cv = new ContentValues();
+            cv.put(DataBaseViewedHead.LAST_CHAPTER, thisURL);
+            mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name,null);
+            cv.put(DataBaseViewedHead.LAST_PAGE, "1");
             mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name,null);
         }
     }
+
+    public void  editLastPage(String nameMang, int page){
+        String query,name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        query = "SELECT " + "*" + " FROM " + DataBaseViewedHead.DATABASE_TABLE + " WHERE " + DataBaseViewedHead.NAME_MANG + "=" +
+                name;
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        if (cursor.getCount() != 0){
+            cursor.moveToFirst();
+            ContentValues cv = new ContentValues();
+            cv.put(DataBaseViewedHead.LAST_PAGE, page);
+            mSqLiteDatabase.update("ViewedHead", cv, DataBaseViewedHead.NAME_MANG + "=" + name,null);
+        }
+    }
+
 }

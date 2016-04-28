@@ -127,19 +127,8 @@ public class DescriptionMang extends BaseActivity {
             intent.putExtra("NumberChapter", URL.getNumberChapter());
 
             classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
-            String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
-            int numberPage = 0;
-            if (!string.contains("null")){
-                String[] strings = string.split(",");
-                String f = URL.getName_chapter();
-                if (strings[0].contains(String.valueOf(URL.getNumberChapter()))) {
-                    if (strings.length == 2) {
-                        numberPage = Integer.parseInt(strings[1]);
-                    }
-                }
-            }
-
-            intent.putExtra("NumberPage", numberPage);
+            classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + URL.getURL_chapter());
+            intent.putExtra("NumberPage", classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_PAGE));
             intent.putExtra("Chapter", mang.getName_characher());
             startActivity(intent);
         }
@@ -148,20 +137,18 @@ public class DescriptionMang extends BaseActivity {
     public void StartRead(View view) {
         classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
+
         int numberPage = 0;
         int numberChapter = arList.size()-1;
-        if (!string.contains("null")){
-            String[] strings = string.split(",");
-            numberChapter = Integer.parseInt(strings[0]);
-            if (strings.length == 2){
-                numberPage = Integer.parseInt(strings[1]);
-            }
+        if (string.contains("null")){
+            classForList classForList = arList.get(numberChapter);
+            string = mang.getURL_site()+classForList.getURL_chapter();
         }
-        classForList classForList = arList.get(numberChapter);
+      //  classForList classForList = arList.get(numberChapter);
         Intent intent = new Intent(this, pagesDownload.class);
-        intent.putExtra("URL",mang.getURL_site()+classForList.getURL_chapter());
+        intent.putExtra("URL",string);
         intent.putExtra("NumberChapter", numberChapter);
-        intent.putExtra("NumberPage", numberPage);
+        intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),DataBaseViewedHead.LAST_PAGE));
         intent.putExtra("Chapter", mang.getName_characher());
         startActivity(intent);
     }
