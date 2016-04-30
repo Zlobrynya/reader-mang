@@ -19,6 +19,7 @@ import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 
@@ -35,7 +36,7 @@ public class fragmentDescriptionList extends Fragment {
     ArrayList<classForList> list;
     public AdapterList myAdap;
     private ListView gr;
-    private String nameMang;
+    private String nameMang,imgURL;
     private classDataBaseViewedHead classDataBaseViewedHead;
 
 
@@ -66,8 +67,10 @@ public class fragmentDescriptionList extends Fragment {
                 //classForList1.setURL_chapter(classForList1.getURL_chapter());
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
-                classDataBaseViewedHead.editBaseDate(nameMang,String.valueOf(position));
-               // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
+                classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(position));
+                classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
+
+                // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
                 //+"?mature=1"
                 Log.i("post", classForList1.getURL_chapter() + "?mature=1");
                 EventBus.getDefault().post(classForList1);
@@ -108,13 +111,20 @@ public class fragmentDescriptionList extends Fragment {
                         classForList1.setCheck(true);
                         list.set(Integer.parseInt(aString), classForList1);
                     }
+                }else{
+                    classDataBaseViewedHead.editLastPage(event.getName(),1);
+                    classDataBaseViewedHead.editLastChapter(event.getName(),list.get(list.size()).getURL_chapter());
                 }
             }
             myAdap.notifyDataSetChanged();
         }
     }
 
-    @Override
+    public void onEvent(classDescriptionMang event) {
+        imgURL = event.getImg_url();
+    }
+
+        @Override
     public void onStart() {
         super.onStart();
     }

@@ -56,6 +56,7 @@ public class DescriptionMang extends BaseActivity {
     private adapterFragment gg;
     private Pars pars;
     private Element el;
+    private boolean read;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,9 @@ public class DescriptionMang extends BaseActivity {
         pager.setAdapter(gg);
         arList = new ArrayList<classForList>();
         EventBus.getDefault().register(this);
-     }
+        Intent intent = getIntent();
+        read = intent.getBooleanExtra("read", false);
+    }
 
     //Метод для открытия бокового меню
     @Override
@@ -135,6 +138,10 @@ public class DescriptionMang extends BaseActivity {
     }
     //Процедура для кнопки
     public void StartRead(View view) {
+        startLastChapter();
+    }
+
+    public void startLastChapter(){
         classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
 
@@ -144,7 +151,7 @@ public class DescriptionMang extends BaseActivity {
             classForList classForList = arList.get(numberChapter);
             string = mang.getURL_site()+classForList.getURL_chapter();
         }
-      //  classForList classForList = arList.get(numberChapter);
+        //  classForList classForList = arList.get(numberChapter);
         Intent intent = new Intent(this, pagesDownload.class);
         intent.putExtra("URL",string);
         intent.putExtra("NumberChapter", numberChapter);
@@ -152,7 +159,6 @@ public class DescriptionMang extends BaseActivity {
         intent.putExtra("Chapter", mang.getName_characher());
         startActivity(intent);
     }
-
 
     public class adapterFragment  extends FragmentPagerAdapter {
         int kol;
@@ -286,6 +292,9 @@ public class DescriptionMang extends BaseActivity {
         protected void onPostExecute(Void result){
             classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher());
             EventBus.getDefault().post(classTransportForList);
+            if (read){
+                startLastChapter();
+            }
         }
     }
 }

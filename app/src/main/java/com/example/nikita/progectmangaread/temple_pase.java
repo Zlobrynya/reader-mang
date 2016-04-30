@@ -123,7 +123,6 @@ public class temple_pase extends BaseActivity {
     }
 
     public void onEvent(classMang event){
-
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(APP_PREFERENCES_URL,event.getURL());
         editor.putString(APP_PREFERENCES_nameCell,event.getNameCell());
@@ -157,6 +156,10 @@ public class temple_pase extends BaseActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Log.i("Fragment", String.valueOf(fragmentManager.getBackStackEntryCount()));
+        if (fragmentManager.getBackStackEntryCount() > 0){
+            super.onBackPressed();
+            return;
+        }
         doublePressBack = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 

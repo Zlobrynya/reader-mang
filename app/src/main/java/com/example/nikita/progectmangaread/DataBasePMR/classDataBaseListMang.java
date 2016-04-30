@@ -76,6 +76,21 @@ public class classDataBaseListMang {
         return false;
     }
 
+    public String getDataFromDataBase(String nameMang,String where){
+        String query,name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + DatabaseHelper.NAME_MANG + "=" +
+                name;
+        String data = "null";
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        if (cursor.getCount() != 0){
+            cursor.moveToFirst();
+            data = cursor.getString(cursor.getColumnIndex(where));
+        }
+        cursor.close();
+        return data;
+    }
 
     public long fetchPlacesCount() {
         String sql = "SELECT COUNT(*) FROM " + DatabaseHelper.DATABASE_TABLE;

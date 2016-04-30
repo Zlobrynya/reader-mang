@@ -65,6 +65,7 @@ public class fragmentDescriptionMang extends Fragment {
                 imageView.setMinimumWidth(displaymetrics.widthPixels / 3);
                 imageView.setImageBitmap(event.getImgMang());
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
+
             }
         }
     }

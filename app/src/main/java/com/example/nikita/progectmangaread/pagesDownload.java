@@ -43,7 +43,7 @@ public class pagesDownload extends AppCompatActivity {
     private ArrayList<String> urlPage;
     private int chapterNumber,pageNumber;
     private TextView textIdPage;
-    private String URL,nameMang;
+    private String URL,nameMang,nameChapter;
     private classDataBaseViewedHead classDataBaseViewedHead;
 
     @Override
@@ -87,7 +87,7 @@ public class pagesDownload extends AppCompatActivity {
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position > 0 && position < urlPage.size())
-                        textIdPage.setText(position+"/"+(urlPage.size()-1));
+                        textIdPage.setText(position+"/"+(urlPage.size()-1)+"    "+nameChapter);
             }
         });
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -198,6 +198,9 @@ public class pagesDownload extends AppCompatActivity {
             try {
                 //Запрос на получение сылок для изображений вот он:
                 if (doc == null) doc = Jsoup.connect(URL).get();
+                nameChapter = doc.select("[class = pageBlock container]").select("h1").text();
+                //pageBlock container
+
                 script = doc.select("body").select("script").first(); // Get the script part
                 for (int i =0 ;i < 100; i++){
                     html = script.data();
@@ -247,6 +250,7 @@ public class pagesDownload extends AppCompatActivity {
                     size++;
                 }
             }
+            classDataBaseViewedHead.editNameLastChapter(nameMang,nameChapter);
             asyncTask.onEnd();
         }
     }

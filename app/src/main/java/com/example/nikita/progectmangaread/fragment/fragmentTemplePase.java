@@ -189,7 +189,7 @@ public class fragmentTemplePase extends Fragment {
     //Для фрагментов
     public void add(classTransport ev) {
         classMang = ev.getClassMang();
-        classMang.setWhereAll(ev.getURL_Search());
+        classMang.setWhere(ev.getURL_Search());
         resultPost = true;
     }
 

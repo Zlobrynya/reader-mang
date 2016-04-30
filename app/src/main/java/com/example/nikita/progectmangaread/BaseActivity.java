@@ -65,8 +65,9 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.top_Mang) {
             Intent newInten = new Intent(BaseActivity.this,temple_pase.class);
             startActivity(newInten);
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.recently_read) {
+            Intent newInten = new Intent(BaseActivity.this,RecentlyRead.class);
+            startActivity(newInten);
         }
     }
 }
