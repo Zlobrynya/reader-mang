@@ -6,7 +6,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
@@ -23,8 +25,10 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class fragmentDescriptionMang extends Fragment {
-    MainClassTop classDescription;
-    View v;
+    private MainClassTop classDescription;
+    private View v;
+    private ProgressBar progress;
+    private GridLayout gridLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,10 +41,13 @@ public class fragmentDescriptionMang extends Fragment {
         v = null ;
         System.out.println("!!!!!!!!!!!!!!!! I am create !!!!!!!!!!!!!!!!!!!!!");
         v = inflater.inflate(R.layout.glav_screen_mang, null);
+        progress = (ProgressBar) v.findViewById(R.id.loadingDescription);
+        gridLayout = (GridLayout) v.findViewById(R.id.gridLayoutDescription);
         return v ;
     }
 
     public void onEvent(classDescriptionMang event){
+
         if (this.getArguments().getInt("num") == 0){
             if (v != null) {
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);
@@ -66,6 +73,8 @@ public class fragmentDescriptionMang extends Fragment {
                 imageView.setImageBitmap(event.getImgMang());
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
 
+                progress.setVisibility(View.INVISIBLE);
+                gridLayout.setVisibility(View.VISIBLE);
             }
         }
     }

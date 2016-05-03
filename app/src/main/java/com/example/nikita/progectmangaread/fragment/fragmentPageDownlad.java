@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,8 +34,9 @@ import de.greenrobot.event.EventBus;
 public class fragmentPageDownlad extends Fragment {
     private int number;
     private cacheFile file;
-    SubsamplingScaleImageView image;
-    ProgressBar progress;
+    private SubsamplingScaleImageView image;
+    private ProgressBar progress;
+
     public static fragmentPageDownlad getInstance(int imageId,String url) {
         final fragmentPageDownlad instance = new fragmentPageDownlad();
         final Bundle params = new Bundle();
@@ -54,8 +56,8 @@ public class fragmentPageDownlad extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
+
     SubsamplingScaleImageView.OnImageEventListener d = new SubsamplingScaleImageView.OnImageEventListener() {
         @Override
         public void onReady() {
@@ -122,7 +124,6 @@ public class fragmentPageDownlad extends Fragment {
 
                 }
             }
-
             @Override
             public void onEnd(InputStream is) {
             }

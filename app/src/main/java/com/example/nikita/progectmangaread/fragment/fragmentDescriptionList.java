@@ -113,7 +113,7 @@ public class fragmentDescriptionList extends Fragment {
                     }
                 }else{
                     classDataBaseViewedHead.editLastPage(event.getName(),1);
-                    classDataBaseViewedHead.editLastChapter(event.getName(),list.get(list.size()).getURL_chapter());
+                    classDataBaseViewedHead.editLastChapter(event.getName(),list.get(list.size()-1).getURL_chapter());
                 }
             }
             myAdap.notifyDataSetChanged();

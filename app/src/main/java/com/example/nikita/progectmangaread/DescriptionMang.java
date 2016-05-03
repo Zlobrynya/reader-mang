@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,8 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.GridLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterSlidingMenu;
 import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
@@ -57,12 +62,16 @@ public class DescriptionMang extends BaseActivity {
     private Pars pars;
     private Element el;
     private boolean read;
+    private FloatingActionButton fab1,fab2,fab3;
+    private Animation show_fab_1;
+    private Animation hide_fab_1;
+    private boolean visF = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         kol = 0;
-        getLayoutInflater().inflate(R.layout.activity_temple_pase, frameLayout);
+        getLayoutInflater().inflate(R.layout.layout_description_mang, frameLayout);
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
@@ -70,6 +79,34 @@ public class DescriptionMang extends BaseActivity {
         EventBus.getDefault().register(this);
         Intent intent = getIntent();
         read = intent.getBooleanExtra("read", false);
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab_2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab_3);
+        show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
+        hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (visF){
+                    buttonINVisble();
+                    visF = !visF;
+                }else {
+                    buttonVisible();
+                    visF = !visF;
+
+                }
+            }
+        });
+
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startLastChapter();
+            }
+        });
     }
 
     //Метод для открытия бокового меню
@@ -112,6 +149,31 @@ public class DescriptionMang extends BaseActivity {
 
         }
     };
+
+
+    private void buttonVisible(){
+        fab1.startAnimation(show_fab_1);
+        fab1.setClickable(true);
+
+        fab2.startAnimation(show_fab_1);
+        fab2.setClickable(true);
+
+        fab3.startAnimation(show_fab_1);
+        fab3.setClickable(true);
+    }
+
+    private void buttonINVisble(){
+
+        fab1.startAnimation(hide_fab_1);
+        fab1.setClickable(false);
+
+        fab2.startAnimation(hide_fab_1);
+        fab2.setClickable(false);
+
+        fab3.startAnimation(hide_fab_1);
+        fab3.setClickable(false);
+
+    }
 
     //ПОЛУЧАЕМ с топлиста
     public void onEvent(MainClassTop event){
