@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView_notebook" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:layout_gravity="center"
+        android:id="@+id/textView_name_notebook" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:focusable="false"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton_delete_notebook"
+        android:layout_gravity="center_vertical"
+        android:src="@android:drawable/ic_menu_share"
+        />
+
+</LinearLayout>
