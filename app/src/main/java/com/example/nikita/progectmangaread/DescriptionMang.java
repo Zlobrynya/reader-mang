@@ -81,9 +81,9 @@ public class DescriptionMang extends BaseActivity {
         read = intent.getBooleanExtra("read", false);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab_2);
-        fab3 = (FloatingActionButton) findViewById(R.id.fab_3);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab_lastChapter);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab_notebook);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
 
@@ -107,6 +107,14 @@ public class DescriptionMang extends BaseActivity {
                 startLastChapter();
             }
         });
+
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post("notebook");
+            }
+        });
+
     }
 
     //Метод для открытия бокового меню

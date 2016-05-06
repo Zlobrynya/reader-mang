@@ -8,7 +8,7 @@
 
     <!--       -->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_1"
+        android:id="@+id/fab_lastChapter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -18,7 +18,7 @@
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_2"
+        android:id="@+id/fab_notebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -29,7 +29,7 @@
         app:fabSize="mini" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_3"
+        android:id="@+id/fab_download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"

@@ -91,6 +91,26 @@ public class fragmentDescriptionList extends Fragment {
         EventBus.getDefault().post(classForList1);
     }
 
+
+    public void onEvent(java.lang.String event){
+        if (event.contains("notebook")){
+            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, DataBaseViewedHead.NOTEBOOK));
+            if (notebook == 0){
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), DataBaseViewedHead.NOTEBOOK);
+                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang,DataBaseViewedHead.LAST_CHAPTER);
+                if (lastChapter.contains("null")){
+                    classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
+                    classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURL_chapter());
+                    classDataBaseViewedHead.setData(nameMang, list.get(list.size()-1).getName_chapter(),DataBaseViewedHead.NAME_LAST_CHAPTER);
+
+                }
+            }else {
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(0),DataBaseViewedHead.NOTEBOOK);
+            }
+
+        }
+    }
+
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
         if (!event.getName().isEmpty()){

@@ -21,6 +21,8 @@ public class DataBaseViewedHead extends SQLiteOpenHelper {
     public static final String LAST_PAGE= "Last_page";
     public static final String NAME_LAST_CHAPTER= "name_last_chapter";
     public static final String URL_IMG = "url_img";
+    public static final String NOTEBOOK  = "notebook";
+
 
 
 
@@ -28,7 +30,7 @@ public class DataBaseViewedHead extends SQLiteOpenHelper {
             + DATABASE_TABLE + " (" + BaseColumns._ID
             + " integer primary key autoincrement, " + NAME_MANG + " text not null, " + VIEWED_HEAD
             + " text not null, " + LAST_CHAPTER + " text, "+ NAME_LAST_CHAPTER + " text, " + URL_IMG
-            + " text, " + LAST_PAGE +  " integer);";
+            + " text, " + LAST_PAGE +" integer, "+ NOTEBOOK +  " integer);";
 /* " text not null, " + LAST_PAGE +
 " (" + BaseColumns._ID
             + " integer primary key autoincrement, " + NAME_MANG
@@ -55,34 +57,6 @@ public class DataBaseViewedHead extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1 && newVersion == 2){
-            db.beginTransaction();
-            db.execSQL("alter table ViewedHead add column name_last_chapter text;");
-            db.execSQL("alter table ViewedHead add column url_img text;");
-            db.execSQL("alter table ViewedHead add column Last_page integer;");
 
-
-           /* String query = "SELECT " + LAST_CHAPTER + " FROM " + DataBaseViewedHead.DATABASE_TABLE;
-            Cursor cursor = db.rawQuery(query, null);
-            if (cursor.getCount() != 0){
-                cursor.moveToFirst();
-                for (int i = 0; i < cursor.getCount();i++){
-                    String data = cursor.getString(cursor.getColumnIndex(LAST_CHAPTER));
-                    if (!data.contains("null")){
-                        String[] strings = data.split(",");
-                        ContentValues cv = new ContentValues();
-                        cv.put(DataBaseViewedHead.LAST_CHAPTER, strings[0]);
-                        db.update("ViewedHead", cv, BaseColumns._ID + "="+(i+1), null);
-                        cv.put(DataBaseViewedHead.LAST_PAGE, strings[1]);
-                        db.update("ViewedHead", cv,  BaseColumns._ID + "="+(i+1),null);
-                    }
-                    cursor.moveToNext();
-                }
-                //data[1] = cursor.getString(cursor.getColumnIndex(DataBaseViewedHead.LAST_CHAPTER));
-                cursor.close();
-            }*/
-            db.setTransactionSuccessful();
-            db.endTransaction();
-        }
     }
 }

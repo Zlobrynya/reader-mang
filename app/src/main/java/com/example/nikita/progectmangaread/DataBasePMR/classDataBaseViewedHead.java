@@ -43,6 +43,8 @@ public class classDataBaseViewedHead {
             newValues.put(DataBaseViewedHead.VIEWED_HEAD,"null");
             newValues.put(DataBaseViewedHead.NAME_LAST_CHAPTER,"null");
             newValues.put(DataBaseViewedHead.URL_IMG,"null");
+            newValues.put(DataBaseViewedHead.NOTEBOOK,0);
+
             // Вставляем данные в таблицу
             mSqLiteDatabase.insert("ViewedHead", null, newValues);
             cursor.close();
