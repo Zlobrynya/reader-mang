@@ -98,8 +98,8 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     public void onEvent(classMang event){
         this.classMang.setClassMang(event);
         int id = 0;
-        if (classMang.getClassMang().getURL().contains("http://readmanga.me")) id = R.raw.search_read_manga;
-        else if (classMang.getClassMang().getURL().contains("http://AdultManga.ru")) id = R.raw.search_adultmanga;
+        if (classMang.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
+        else if (classMang.getClassMang().getURL().contains("mintmanga")) id = R.raw.search_adultmanga;
 
 
         //считываем с ресурсов

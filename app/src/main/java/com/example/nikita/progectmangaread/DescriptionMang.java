@@ -20,10 +20,11 @@ import android.widget.AdapterView;
 import android.widget.GridLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterSlidingMenu;
-import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
+import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
@@ -66,6 +67,9 @@ public class DescriptionMang extends BaseActivity {
     private Animation show_fab_1;
     private Animation hide_fab_1;
     private boolean visF = false;
+    private boolean bookmark = false;
+    private classDataBaseViewedHead classDataBaseViewedHead;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,8 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +117,15 @@ public class DescriptionMang extends BaseActivity {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (bookmark){
+                    fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+                    Toast.makeText(view.getContext(), "Add bookmark", Toast.LENGTH_SHORT).show();
+                    bookmark = false;
+                }else {
+                    fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                    Toast.makeText(view.getContext(), "Delete bookmark", Toast.LENGTH_SHORT).show();
+                    bookmark = true;
+                }
                 EventBus.getDefault().post("notebook");
             }
         });
@@ -127,7 +142,6 @@ public class DescriptionMang extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onDestroy(){
@@ -158,7 +172,6 @@ public class DescriptionMang extends BaseActivity {
         }
     };
 
-
     private void buttonVisible(){
         fab1.startAnimation(show_fab_1);
         fab1.setClickable(true);
@@ -188,8 +201,16 @@ public class DescriptionMang extends BaseActivity {
         mang = event;
         pars = new Pars(addImg,mang);
         pars.execute();
-        ActionBar actionBar = getSupportActionBar(); // or getActionBar();
+        //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(event.getName_characher()); // set the top title
+        classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+        if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
+            fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+            bookmark = false;
+        }else {
+            bookmark = true;
+            fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+        }
     }
 
     public void onEvent(classForList URL){
@@ -199,9 +220,8 @@ public class DescriptionMang extends BaseActivity {
             intent.putExtra("URL", mang.getURL_site()+URL.getURL_chapter());
             intent.putExtra("NumberChapter", URL.getNumberChapter());
 
-            classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
             classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + URL.getURL_chapter());
-            intent.putExtra("NumberPage", classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_PAGE));
+            intent.putExtra("NumberPage", classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
             intent.putExtra("Chapter", mang.getName_characher());
             startActivity(intent);
         }
@@ -212,8 +232,7 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public void startLastChapter(){
-        classDataBaseViewedHead classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
-        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), DataBaseViewedHead.LAST_CHAPTER);
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
 
         int numberPage = 0;
         int numberChapter = arList.size()-1;
@@ -221,11 +240,14 @@ public class DescriptionMang extends BaseActivity {
             classForList classForList = arList.get(numberChapter);
             string = mang.getURL_site()+classForList.getURL_chapter();
         }
+        if (!string.contains(mang.getURL_site())){
+            string = mang.getURL_site() + string;
+        }
         //  classForList classForList = arList.get(numberChapter);
         Intent intent = new Intent(this, pagesDownload.class);
         intent.putExtra("URL",string);
         intent.putExtra("NumberChapter", numberChapter);
-        intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),DataBaseViewedHead.LAST_PAGE));
+        intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.LAST_PAGE));
         intent.putExtra("Chapter", mang.getName_characher());
         startActivity(intent);
     }
@@ -360,10 +382,11 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher());
+            classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
             EventBus.getDefault().post(classTransportForList);
             if (read){
                 startLastChapter();
+                read = false;
             }
         }
     }

@@ -1,17 +1,16 @@
 package com.example.nikita.progectmangaread;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterNotebook;
-import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
-import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
@@ -21,10 +20,13 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
-public class Notebook extends BaseActivity {
+/**
+ * Created by Nikita on 09.05.2016.
+ */
+public class Bookmark extends BaseActivity {
     private AdapterNotebook adapter;
     private ArrayList<classRecentlyRead> list;
-    private classDataBaseViewedHead classDataBaseViewedHead;
+    private com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead classDataBaseViewedHead;
     private ListView listView;
     private int pos;
 
@@ -35,7 +37,7 @@ public class Notebook extends BaseActivity {
         getLayoutInflater().inflate(R.layout.list_heads, frameLayout);
 
         list = new ArrayList<>();
-        classDataBaseViewedHead = new classDataBaseViewedHead(this,"ViewedHead.db");
+        classDataBaseViewedHead = new classDataBaseViewedHead(this);
 
         pos = - 1;
 
@@ -44,7 +46,6 @@ public class Notebook extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int position, long id) {
-
                 return true;
             }
         });
@@ -60,7 +61,7 @@ public class Notebook extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int position, long id) {
-                Intent intent = new Intent(Notebook.this,DescriptionMang.class);
+                Intent intent = new Intent(Bookmark.this, DescriptionMang.class);
                 startActivity(intent);
                 pos = position;
                 Log.v("long clicked", "pos: " + position);
@@ -71,37 +72,34 @@ public class Notebook extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Notebook.this,DescriptionMang.class);
-                intent.putExtra("read",true);
+                Intent intent = new Intent(Bookmark.this, DescriptionMang.class);
+                intent.putExtra("read", true);
                 startActivity(intent);
                 pos = position;
             }
         });
 
+        initializationNotebook();
 
-        initialization();
     }
 
-    private void initialization() {
-        for (int i =0; i < classDataBaseViewedHead.fetchPlacesCount();i++){
-            String nameChapter,nameMang,URLimg,URLchapter_last,URLchapter;
-            nameMang = classDataBaseViewedHead.getNameMang(i);
-            if (Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang,DataBaseViewedHead.NOTEBOOK)) == 1){
-                nameChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang, DataBaseViewedHead.NAME_LAST_CHAPTER);
-                if (!nameChapter.contains("null")){
-                    URLchapter_last = classDataBaseViewedHead.getDataFromDataBase(nameMang, DataBaseViewedHead.LAST_CHAPTER);
-                    URLimg = classDataBaseViewedHead.getDataFromDataBase(nameMang,DataBaseViewedHead.URL_IMG);
-                    String s[] = URLchapter_last.split("/");
-                    //еще один костыль, тут полюбому придется переделать когда надо будет добавлять др сайты
-                    Log.i("string", s[0] + s[1] + s[2] + s[3]);
-                            URLchapter = s[0]+"//"+s[2]+"/"+s[3]+"/";
-                            Log.i("string",URLchapter);
-                    classRecentlyRead RR = new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLchapter_last);
-                    list.add(RR);
-                }
-            }
+    private void initializationNotebook(){
+        Cursor cursor = classDataBaseViewedHead.getNotebook();
+        Log.i("Cursor: ", String.valueOf(cursor.getCount()));
+        cursor.moveToFirst();
+        for(int i = 0;i < cursor.getCount();i++){
+            String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter;
+            nameMang = cursor.getString(cursor.getColumnIndex(classDataBaseListMang.NAME_MANG));
+            URLchapter = cursor.getString(cursor.getColumnIndex(classDataBaseListMang.URL_CHAPTER));
+            URLlastChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.LAST_CHAPTER));
+            URLimg = cursor.getString(cursor.getColumnIndex(classDataBaseListMang.URL_IMG));
+            nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
+            list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
+            cursor.moveToNext();
         }
-        //для узнавания разрешения экрана
+        cursor.close();
+
+        //размер экрана
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int height = displaymetrics.heightPixels;
@@ -119,8 +117,8 @@ public class Notebook extends BaseActivity {
             if (list.get(pos).getURLchapter().contains("readmang")){
                 classTop.setURL_site("http://readmanga.me");
             }
-            if (list.get(pos).getURLchapter().contains("AdultManga")){
-                classTop.setURL_site("http://AdultManga.me");
+            if (list.get(pos).getURLchapter().contains("mintmanga")){
+                classTop.setURL_site("http://mintmanga.com");
             }
             //
             classTop.setURL_img(list.get(pos).getURL_img());
@@ -129,5 +127,14 @@ public class Notebook extends BaseActivity {
             pos = -1;
         }
         super.onStop();
+    }
+
+    public void DeleteNotebook(View view) {
+        int poss = (int) view.getTag();
+        Toast.makeText(this, "Delete: " + list.get(poss).getNameMang(),
+                Toast.LENGTH_SHORT).show();
+        classDataBaseViewedHead.setData(list.get(poss).getNameMang(), "0", com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead.NOTEBOOK);
+        list.remove(poss);
+        adapter.notifyDataSetChanged();
     }
 }

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginRight="80dp"
-        android:src="@android:drawable/ic_menu_compass"
+        android:src="@android:drawable/ic_media_play"
         android:visibility="invisible"
         app:fabSize="mini"/>
 
@@ -24,7 +24,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="60dp"
         android:layout_marginBottom="60dp"
-        android:src="@android:drawable/ic_menu_myplaces"
         android:visibility="invisible"
         app:fabSize="mini" />
 

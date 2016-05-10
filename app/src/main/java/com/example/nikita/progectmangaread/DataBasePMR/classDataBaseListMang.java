@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.provider.BaseColumns;
 
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 
@@ -14,47 +15,78 @@ import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 public class classDataBaseListMang {
     private DatabaseHelper mDatabaseHelper;
     private SQLiteDatabase mSqLiteDatabase;
+    private String nameTable;
+    public static final String NAME_MANG = "NameMang";
+    public static final String URL_CHAPTER = "Url_chapter";
+    public static final String URL_IMG = "URL_img";
+    public static final String TOP = "top";
 
-    public classDataBaseListMang(Context context,String nameBase){
-        nameBase = nameBase.replace("http://","");
-        nameBase = nameBase.replace(".ru",".db");
-        mDatabaseHelper = new DatabaseHelper(context,nameBase, null, 1);
+    public classDataBaseListMang(Context context,String NameTable){
+        nameTable = NameTable.replace("http://"," ");
+       // nameBase = nameBase.replace(".ru",".db");
+        nameTable = nameTable.replace(".ru"," ");
+        nameTable = nameTable.replace(".db"," ");
+        nameTable = nameTable.replace(".me"," ");
+        nameTable = nameTable.replace(".com"," ");
+        mDatabaseHelper = new DatabaseHelper(context);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        //создаем табдлицу если не было ее
+        String DATABASE_CREATE_SCRIPT = "create table if not exists "
+                + nameTable + " (" + TOP
+                + " integer, " +  NAME_MANG
+                + " text not null, " +  URL_CHAPTER + " text not null, " +  URL_IMG
+                + " text not null);";
+        mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
+    public boolean thereIsInTheDatabase(String nameMang){
+        String query,name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        query = "SELECT " +  NAME_MANG + " FROM " + nameTable + " WHERE " +  NAME_MANG + "=" +
+                name;
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        if (cursor.getCount() == 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
 
     //добавление в базу данных
-    public void addBasaData(MainClassTop a, String imgSrc){
+    public void addBasaData(MainClassTop a, int number){
         String query,name;
         name = "\"";
         name += a.getName_characher().replace('"',' ') + "\"";
-        query = "SELECT " + DatabaseHelper.NAME_MANG + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + DatabaseHelper.NAME_MANG + "=" +
+        query = "SELECT " +  NAME_MANG + " FROM " + nameTable + " WHERE " +  NAME_MANG + "=" +
                 name;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() == 0){
             ContentValues newValues = new ContentValues();
             // Задайте значения для каждого столбца
-            newValues.put(DatabaseHelper.NAME_MANG, a.getName_characher().replace('"', ' '));
-            newValues.put(DatabaseHelper.URL_CHAPTER, a.getURL_characher());
-            newValues.put(DatabaseHelper.URL_IMG, imgSrc);
+            newValues.put( NAME_MANG, a.getName_characher().replace('"', ' '));
+            newValues.put( URL_CHAPTER, a.getURL_characher());
+            newValues.put( URL_IMG, a.getURL_img());
+            newValues.put( TOP,number);
             // Вставляем данные в таблицу
-            mSqLiteDatabase.insert("Mang", null, newValues);
+            mSqLiteDatabase.insert(nameTable, null, newValues);
         }
         cursor.close();
     }
 
     //получаем структуру с именем и сылками
-    public MainClassTop getMainClassTop(int kol, int page){
-        String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
-                (kol+1);
+    public MainClassTop getMainClassTop(int kol){
+        String query = "SELECT " + "*" + " FROM " + nameTable + " WHERE " + TOP + "=" +
+                (kol);
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
 
         if (cursor.getCount() != 0){
             MainClassTop a = new MainClassTop();
             cursor.moveToFirst();
-            a.setURL_img(cursor.getString(cursor.getColumnIndex(DatabaseHelper.URL_IMG)));
-            a.setName_characher(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME_MANG)));
-            a.setURL_characher(cursor.getString(cursor.getColumnIndex(DatabaseHelper.URL_CHAPTER)));
+            a.setURL_img(cursor.getString(cursor.getColumnIndex( URL_IMG)));
+            a.setName_characher(cursor.getString(cursor.getColumnIndex( NAME_MANG)));
+            a.setURL_characher(cursor.getString(cursor.getColumnIndex( URL_CHAPTER)));
             cursor.close();
             return a;
         }
@@ -63,8 +95,8 @@ public class classDataBaseListMang {
     }
 
     //проверяем в бд есть ли в такой элемент
-    public Boolean download_the_html(int kol, int page){
-        String query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + " _id" + "=" +
+    public Boolean download_the_html(int kol){
+        String query = "SELECT " + "*" + " FROM " + nameTable + " WHERE " + TOP + "=" +
                 (kol+1);
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         //Log.i("LOG_TAG", "download_the_html " + cursor.getCount());
@@ -80,7 +112,7 @@ public class classDataBaseListMang {
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
-        query = "SELECT " + "*" + " FROM " + DatabaseHelper.DATABASE_TABLE + " WHERE " + DatabaseHelper.NAME_MANG + "=" +
+        query = "SELECT " + "*" + " FROM " + nameTable + " WHERE " +  NAME_MANG + "=" +
                 name;
         String data = "null";
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
@@ -93,7 +125,7 @@ public class classDataBaseListMang {
     }
 
     public long fetchPlacesCount() {
-        String sql = "SELECT COUNT(*) FROM " + DatabaseHelper.DATABASE_TABLE;
+        String sql = "SELECT COUNT(*) FROM " + nameTable;
         SQLiteStatement statement = mSqLiteDatabase.compileStatement(sql);
         long count = statement.simpleQueryForLong();
         return count;

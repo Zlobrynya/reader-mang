@@ -16,9 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
-import com.example.nikita.progectmangaread.DataBasePMR.DataBaseViewedHead;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
@@ -38,7 +38,7 @@ public class fragmentDescriptionList extends Fragment {
     private ListView gr;
     private String nameMang,imgURL;
     private classDataBaseViewedHead classDataBaseViewedHead;
-
+    private classDataBaseListMang classDataBaseListMang;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class fragmentDescriptionList extends Fragment {
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
                 classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(position));
-                classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
+                //      classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
 
                 // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
                 //+"?mature=1"
@@ -94,18 +94,17 @@ public class fragmentDescriptionList extends Fragment {
 
     public void onEvent(java.lang.String event){
         if (event.contains("notebook")){
-            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, DataBaseViewedHead.NOTEBOOK));
+            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, classDataBaseViewedHead.NOTEBOOK));
             if (notebook == 0){
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), DataBaseViewedHead.NOTEBOOK);
-                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang,DataBaseViewedHead.LAST_CHAPTER);
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), classDataBaseViewedHead.NOTEBOOK);
+                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang,classDataBaseViewedHead.LAST_CHAPTER);
                 if (lastChapter.contains("null")){
-                    classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
+                 //   classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
                     classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURL_chapter());
-                    classDataBaseViewedHead.setData(nameMang, list.get(list.size()-1).getName_chapter(),DataBaseViewedHead.NAME_LAST_CHAPTER);
-
+                    classDataBaseViewedHead.setData(nameMang, list.get(list.size()-1).getName_chapter(),classDataBaseViewedHead.NAME_LAST_CHAPTER);
                 }
             }else {
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(0),DataBaseViewedHead.NOTEBOOK);
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(0),classDataBaseViewedHead.NOTEBOOK);
             }
 
         }
@@ -114,6 +113,10 @@ public class fragmentDescriptionList extends Fragment {
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
         if (!event.getName().isEmpty()){
+            classDataBaseListMang = new classDataBaseListMang(getActivity(),event.getMainClassTop().getURL_site());
+            if (!classDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
+                classDataBaseListMang.addBasaData(event.getMainClassTop(),-1);
+            }
             ArrayList<classForList> arrayList = event.getClassForList();
             for (classForList b: arrayList){
                         b.setURL_chapter(b.getURL_chapter()+"?mature=1");
@@ -123,7 +126,7 @@ public class fragmentDescriptionList extends Fragment {
             classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());
             if (classDataBaseViewedHead.addBasaData(event.getName())){
                 String strings;
-                strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),DataBaseViewedHead.VIEWED_HEAD);
+                strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),classDataBaseViewedHead.VIEWED_HEAD);
                 if (!strings.contains("null")){
                     String string[] = strings.split(",");
                     for (String aString : string) {
@@ -132,8 +135,9 @@ public class fragmentDescriptionList extends Fragment {
                         list.set(Integer.parseInt(aString), classForList1);
                     }
                 }else{
-                    classDataBaseViewedHead.editLastPage(event.getName(),1);
-                    classDataBaseViewedHead.editLastChapter(event.getName(),list.get(list.size()-1).getURL_chapter());
+                    //Нахрена это надо?
+                 //   classDataBaseViewedHead.setData(event.getName(), String.valueOf(1), classDataBaseViewedHead.LAST_PAGE);
+                 //   classDataBaseViewedHead.editLastChapter(event.getName(),list.get(list.size()-1).getURL_chapter());
                 }
             }
             myAdap.notifyDataSetChanged();

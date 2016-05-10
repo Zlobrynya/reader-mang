@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.AdapterPMR;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -9,9 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
+
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -72,12 +75,20 @@ public class AdapterNotebook  extends ArrayAdapter<classRecentlyRead> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.layout_notebook, null);
             holder.img = (ImageView) v.findViewById(R.id.imageView_notebook);
-            holder.img.setMinimumWidth(w / 6);
-            holder.img.setMinimumHeight(h / 7);
+            holder.img.setMinimumWidth(w / 4);
+            holder.img.setMinimumHeight(h / 5);
             holder.buttonDelete = (ImageButton) v.findViewById(R.id.imageButton_delete_notebook);
             holder.nameMang = (TextView) v.findViewById(R.id.textView_name_notebook);
             v.setTag(holder);
         }
+        holder.buttonDelete.setTag(position);
+      /*  holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "F",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });*/
         //получаем класс из позиции
         classRecentlyRead m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение

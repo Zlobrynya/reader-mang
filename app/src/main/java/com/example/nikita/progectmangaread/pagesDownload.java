@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ public class pagesDownload extends AppCompatActivity {
     private int chapterNumber,pageNumber;
     private TextView textIdPage;
     private String URL,nameMang,nameChapter;
+    private ViewPager pager;
     private classDataBaseViewedHead classDataBaseViewedHead;
 
     @Override
@@ -58,7 +60,7 @@ public class pagesDownload extends AppCompatActivity {
 
         urlPage = new ArrayList<>();
 
-        final ViewPager pager = (ViewPager) findViewById(R.id.pagerImage);
+        pager = (ViewPager) findViewById(R.id.pagerImage);
         textIdPage = (TextView) findViewById(R.id.textNumberPage);
         final AppCompatActivity activity = this;
 
@@ -81,7 +83,7 @@ public class pagesDownload extends AppCompatActivity {
                         activity.finish();
                     }
                     pageNumber = position;
-                    classDataBaseViewedHead.editLastPage(nameMang, pageNumber);
+                    classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), classDataBaseViewedHead.LAST_PAGE);
                 }
             }
 
@@ -106,7 +108,7 @@ public class pagesDownload extends AppCompatActivity {
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
-        pageNumber = intent.getIntExtra("NumberPage", 1);
+        pageNumber = Integer.parseInt(intent.getStringExtra("NumberPage"));
         nameMang = intent.getStringExtra("Chapter");
 
        classDataBaseViewedHead = new classDataBaseViewedHead(this);
@@ -114,6 +116,20 @@ public class pagesDownload extends AppCompatActivity {
         ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
     }
+
+ /*   @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+            pager.setCurrentItem(pageNumber+1);
+        }
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            pager.setCurrentItem(pageNumber-1);
+        }
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            onBackPressed();
+        }
+        return true;
+    }*/
 
     //Для фрагментов
     public void onEvent(String event){
@@ -250,7 +266,7 @@ public class pagesDownload extends AppCompatActivity {
                     size++;
                 }
             }
-            classDataBaseViewedHead.editNameLastChapter(nameMang,nameChapter);
+            classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
             asyncTask.onEnd();
         }
     }

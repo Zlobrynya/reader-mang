@@ -34,7 +34,8 @@
             android:name=".RecentlyRead"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Notebook"
+
+        <activity android:name=".Bookmark"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

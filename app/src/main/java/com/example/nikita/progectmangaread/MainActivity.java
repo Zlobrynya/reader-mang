@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity {
 
     public void AdultManga(View view) {
       //  Intent newInten = new Intent(MainActivity.this,temple_pase.class);
-        clManga = new classMang("http://AdultManga.ru","[class=img] img[src]","[class=img] a","[class=tile col-sm-6]",70);
+        clManga = new classMang("http://mintmanga.com","[class=img] img[src]","[class=img] a","[class=tile col-sm-6]",70);
         clManga.setWhereAll("/list", "?type=&sortType=rate&offset=", "&max=70", 0);
         startActivity(newInten);
     }

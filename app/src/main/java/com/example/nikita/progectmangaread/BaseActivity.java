@@ -68,8 +68,8 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.recently_read) {
             Intent newInten = new Intent(BaseActivity.this,RecentlyRead.class);
             startActivity(newInten);
-        } else if (id == R.id.nav_notebook){
-            Intent newInten = new Intent(BaseActivity.this,Notebook.class);
+        } else if (id == R.id.nav_bookmark){
+            Intent newInten = new Intent(BaseActivity.this,Bookmark.class);
             startActivity(newInten);
         }
     }

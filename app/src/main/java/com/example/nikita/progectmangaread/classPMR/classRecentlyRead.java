@@ -6,8 +6,8 @@ package com.example.nikita.progectmangaread.classPMR;
 public class classRecentlyRead {
     private String URL_img,nameChapter,nameMang,URLchapter,URLchapter_last;
 
-    public classRecentlyRead(String url,String nameMang,String nameChapter,String URLchapter,String URLchapter_last){
-        this.URL_img = url;
+    public classRecentlyRead(String urlImage,String nameMang,String nameChapter,String URLchapter,String URLchapter_last){
+        this.URL_img = urlImage;
         this.nameChapter = nameChapter;
         this.nameMang = nameMang;
         this.URLchapter = URLchapter;

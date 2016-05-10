@@ -144,8 +144,8 @@ public class fragmentTemplePase extends Fragment {
     }
 
     private void initializationArray(){
-        while (!classDataBaseListMang.download_the_html(kol, 0)){
-            MainClassTop classTop = classDataBaseListMang.getMainClassTop(kol, 0);
+        while (!classDataBaseListMang.download_the_html(kol)){
+            MainClassTop classTop = classDataBaseListMang.getMainClassTop(kol);
             classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
@@ -181,8 +181,10 @@ public class fragmentTemplePase extends Fragment {
         }
         classMang = event;
         //создание базы данных
-        String nameBase = classMang.getURL().replace(".me", ".db");
-        classDataBaseListMang = new classDataBaseListMang(getContext(),nameBase);
+        String nameTable = classMang.getURL().replace(".me", " ");
+        nameTable = nameTable.replace("http://"," ");
+        nameTable = nameTable.replace(".ru", " ");
+        classDataBaseListMang = new classDataBaseListMang(getContext(),nameTable);
         initializationArray();
     }
 
@@ -282,7 +284,7 @@ public class fragmentTemplePase extends Fragment {
                 try {
                     if (list.size() <= kol) list.add(kol,a);
                     if (!resultPost) {
-                        classDataBaseListMang.addBasaData(a, imgSrc);
+                        classDataBaseListMang.addBasaData(a,kol);
                     }
                     myAdap.notifyDataSetChanged();
                 }catch (IndexOutOfBoundsException e){
