@@ -3,6 +3,7 @@ package com.example.nikita.progectmangaread.cacheImage;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 
@@ -50,6 +51,7 @@ public class cacheFile {
                     File f = new File(dirFile, params[1]);
                     if (!f.exists()){
                         URL imageUrl = new URL(params[0]);
+                        Log.i("File", params[0]);
                         HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
                         conn.setConnectTimeout(30000);
                         conn.setReadTimeout(30000);
@@ -61,6 +63,7 @@ public class cacheFile {
                             BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, out);
                        }else {
                             OutputStream os = new FileOutputStream(f);
+
                             CopyStream(is, os);
                             os.close();
                         }
@@ -87,7 +90,9 @@ public class cacheFile {
                         os.write(bytes, 0, count);
                     }
                 }
-                catch(Exception ex){}
+                catch(Exception ex){
+                    Log.i("File","Copy");
+                }
             }
 
             @Override
@@ -102,6 +107,7 @@ public class cacheFile {
 
     public String getFile(String nameCache) throws FileNotFoundException {
         File f = new File(dirFile, nameCache);
+        Log.i("File",f.getPath());
         //InputStream in = new FileInputStream(f);
         return f.getPath();
     }

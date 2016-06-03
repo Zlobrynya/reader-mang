@@ -91,7 +91,6 @@ public class fragmentDescriptionList extends Fragment {
         EventBus.getDefault().post(classForList1);
     }
 
-
     public void onEvent(java.lang.String event){
         if (event.contains("notebook")){
             int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, classDataBaseViewedHead.NOTEBOOK));
@@ -119,8 +118,10 @@ public class fragmentDescriptionList extends Fragment {
             }
             ArrayList<classForList> arrayList = event.getClassForList();
             for (classForList b: arrayList){
-                        b.setURL_chapter(b.getURL_chapter()+"?mature=1");
-                        list.add(b);
+                if (!b.getURL_chapter().contains("?mature=1")){
+                    b.setURL_chapter(b.getURL_chapter()+"?mature=1");
+                    list.add(b);
+                }
             }
             nameMang = event.getName();
             classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -91,8 +92,6 @@ public class DescriptionMang extends BaseActivity {
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
 
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +128,7 @@ public class DescriptionMang extends BaseActivity {
                 EventBus.getDefault().post("notebook");
             }
         });
+
 
     }
 
@@ -211,6 +211,7 @@ public class DescriptionMang extends BaseActivity {
             bookmark = true;
             fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
         }
+        if (read) startLastChapter();
     }
 
     public void onEvent(classForList URL){
@@ -231,15 +232,18 @@ public class DescriptionMang extends BaseActivity {
         startLastChapter();
     }
 
-    public void startLastChapter(){
+    private void startLastChapter(){
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
-
+        int numberChapter = numberLastChapter();
         int numberPage = 0;
-        int numberChapter = arList.size()-1;
-        if (string.contains("null")){
-            classForList classForList = arList.get(numberChapter);
-            string = mang.getURL_site()+classForList.getURL_chapter();
+        if (!read){
+            //numberChapter = arList.size()-1;
+            if (string.contains("null")){
+                classForList classForList = arList.get(numberChapter);
+                string = mang.getURL_site()+classForList.getURL_chapter();
+            }
         }
+
         if (!string.contains(mang.getURL_site())){
             string = mang.getURL_site() + string;
         }
@@ -247,9 +251,37 @@ public class DescriptionMang extends BaseActivity {
         Intent intent = new Intent(this, pagesDownload.class);
         intent.putExtra("URL",string);
         intent.putExtra("NumberChapter", numberChapter);
-        intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.LAST_PAGE));
+        intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
         intent.putExtra("Chapter", mang.getName_characher());
         startActivity(intent);
+    }
+
+    private int numberLastChapter(){
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.NAME_LAST_CHAPTER);
+        string = string.replace(" - ", " ");
+        string = string.replace("-", "");
+        string = string.replace(",", "");
+
+        //Узнаем сколько слов в строке
+        int world = string.split(" ").length;
+        //Удаляем по одному слову пока не останится одно слово
+        for (int i = 0; i < world-2;i++){
+            string = string.replaceFirst("\\w+\\s+","");
+        }
+
+        Log.i("Number chapter", string);
+        Short kol = 0;
+        for (classForList c : arList){
+            String name = c.getName_chapter();
+            if (name.contains(string)){
+                Log.i("Number chapter", String.valueOf(kol));
+                //Отправляем в pagesDowload, если было запущено с закладок
+                if (read) EventBus.getDefault().post(kol);
+                return kol;
+            }
+            kol++;
+        }
+        return 0;
     }
 
     public class adapterFragment  extends FragmentPagerAdapter {
@@ -385,7 +417,7 @@ public class DescriptionMang extends BaseActivity {
             classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
             EventBus.getDefault().post(classTransportForList);
             if (read){
-                startLastChapter();
+                numberLastChapter();
                 read = false;
             }
         }

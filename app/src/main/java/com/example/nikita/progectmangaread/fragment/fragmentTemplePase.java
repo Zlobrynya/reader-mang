@@ -287,6 +287,7 @@ public class fragmentTemplePase extends Fragment {
                         classDataBaseListMang.addBasaData(a,kol);
                     }
                     myAdap.notifyDataSetChanged();
+
                 }catch (IndexOutOfBoundsException e){
                     Log.i("Error: ",e.toString());
                     Log.i("Size list: ", String.valueOf(list.size()));

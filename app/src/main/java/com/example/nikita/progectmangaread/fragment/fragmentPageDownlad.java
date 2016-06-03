@@ -119,9 +119,8 @@ public class fragmentPageDownlad extends Fragment {
                 try {
                     image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
                     image.setVisibility(View.VISIBLE);
-
                 } catch (FileNotFoundException e) {
-
+                    file.loadAndCache(url, number);
                 }
             }
             @Override

@@ -71,13 +71,13 @@ public class pagesDownload extends AppCompatActivity {
                     if (position == 0) {
                         //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
                         //      самую старую, (потом это переделать))
-                        EventBus.getDefault().post(chapterNumber+1);
+                        EventBus.getDefault().post(chapterNumber + 1);
                         cacheFile file = new cacheFile(getCacheDir(),"pageCache");
                         file.clearCache();
                         activity.finish();
                     }
                     if (position == urlPage.size()){
-                        EventBus.getDefault().post(chapterNumber-1);
+                        EventBus.getDefault().post(chapterNumber - 1);
                         cacheFile file = new cacheFile(getCacheDir(),"pageCache");
                         file.clearCache();
                         activity.finish();
@@ -96,6 +96,12 @@ public class pagesDownload extends AppCompatActivity {
             @Override
             public void onEnd() {
                 GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
+                if (pageNumber > urlPage.size()){
+                    pageNumber = 1;
+                }
+                if (pageNumber == urlPage.size()){
+                    pageNumber = urlPage.size()-1;
+                }
                 pager.setAdapter(adapter);
                 pager.setCurrentItem(pageNumber);
             }
@@ -110,26 +116,11 @@ public class pagesDownload extends AppCompatActivity {
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
         pageNumber = Integer.parseInt(intent.getStringExtra("NumberPage"));
         nameMang = intent.getStringExtra("Chapter");
-
-       classDataBaseViewedHead = new classDataBaseViewedHead(this);
+        classDataBaseViewedHead = new classDataBaseViewedHead(this);
 
         ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
     }
-
- /*   @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            pager.setCurrentItem(pageNumber+1);
-        }
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-            pager.setCurrentItem(pageNumber-1);
-        }
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            onBackPressed();
-        }
-        return true;
-    }*/
 
     //Для фрагментов
     public void onEvent(String event){
@@ -148,6 +139,11 @@ public class pagesDownload extends AppCompatActivity {
         }
     }
 
+    public void onEvent(java.lang.Short event){
+        chapterNumber = event;
+    }
+
+
     @Override
     public void onStart() {
         EventBus.getDefault().register(this);
@@ -158,6 +154,13 @@ public class pagesDownload extends AppCompatActivity {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+        file.clearCache();
+        super.onBackPressed();
     }
 
     //FragmentStatePagerAdapter
@@ -185,8 +188,6 @@ public class pagesDownload extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.i("Destroy:", String.valueOf("PageDowland"));
-        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
-        file.clearCache();
         super.onDestroy();
     }
 

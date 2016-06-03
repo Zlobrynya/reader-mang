@@ -87,8 +87,16 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
         MainClassTop m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
-            ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img, options);
-            holder.tv.setText(m1.getName_characher());
+            //проверка есть ли это изображение и изменилось ли оно
+            //если нет то ничего не трогаем если да то грузим изображение
+            //исправляет "баг" мерцание
+            if (holder.img.getTag() == null ||
+                    !holder.img.getTag().equals(m1.getURL_img())) {
+                ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img, options);
+                holder.img.setTag(m1.getURL_img());
+
+                holder.tv.setText(m1.getName_characher());
+            }
         }
         return v;
     }
