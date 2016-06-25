@@ -178,7 +178,7 @@ public class pagesDownload extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) return fragmentNextPrevChapter.getInstance(position,"Previous chapter");
-            if (position == urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
+            if (position >= urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
             if (position < urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
             else return null;
         }

@@ -162,6 +162,11 @@ public class fragmentDescriptionList extends Fragment {
     @Override
     public void onDestroy(){
         EventBus.getDefault().unregister(this);
+        //Закрываем базу данных
+        if (classDataBaseViewedHead != null)
+            classDataBaseListMang.closeDataBase();
+        if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();
         super.onDestroy();
     }
 

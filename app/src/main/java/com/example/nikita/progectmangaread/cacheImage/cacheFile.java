@@ -55,7 +55,6 @@ public class cacheFile {
                         HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
                         conn.setConnectTimeout(30000);
                         conn.setReadTimeout(30000);
-                        conn.setInstanceFollowRedirects(true);
                         InputStream is=conn.getInputStream();
 
                         if (params[0].contains("gif")){

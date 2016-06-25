@@ -37,9 +37,14 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import de.greenrobot.event.EventBus;
 
@@ -60,14 +65,16 @@ import de.greenrobot.event.EventBus;
 public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
     private int firstItem,height,width,page;
-    private int kol,kolSum,kolSum_previous,kol_previous;
+    private int kol,kolSum;
     public int lastItem,kolImage,summ;
-    public Document doc;
-    public LinkedList<MainClassTop> list;
-    public AdapterMainScreen myAdap;
-    public classDataBaseListMang classDataBaseListMang;
+    private Document doc;
+    private LinkedList<MainClassTop> list;
+    private AdapterMainScreen myAdap;
+    private classDataBaseListMang classDataBaseListMang;
     private GridView gr;
-    public boolean mIsScrollingUp,search_and_genres,resultPost;
+    private boolean stopLoad;
+    // 0 - глав стр 1 - результат поиска 2 - по жанрам
+    private int resultPost;
     private Pars past;
 
 
@@ -75,6 +82,7 @@ public class fragmentTemplePase extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
+        stopLoad = false;
         //для узнавания разрешения экрана
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -88,11 +96,8 @@ public class fragmentTemplePase extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mIsScrollingUp = search_and_genres = false;
         kolSum = 28;
-       // kolSum = 8;
-        kolSum_previous = summ = 0;
-        kol_previous = kolImage = 0;
+        summ = kolImage = 0;
         View v = inflater.inflate(R.layout.fragment, null);
 
         gr = (GridView) v.findViewById(R.id.gread_id);
@@ -113,20 +118,11 @@ public class fragmentTemplePase extends Fragment {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
                 int lastVisibleItem = gr.getLastVisiblePosition();
                 if (firstItem != firstVisibleItem) {
-                    if (firstItem > firstVisibleItem) {
-                       /* mIsScrollingUp = true; //UP /\
-                        //     kol = lastVisibleItem;
-                        kolSum_previous = lastVisibleItem - 30;
-                        if (kol_previous < 0) kolSum_previous = 0;
-                        Log.i("Scroll 1:", "Up");*/
-                    }
                     if (firstItem < firstVisibleItem) {
-                        mIsScrollingUp = false; //DOWN \/
-                        // kol = firstVisibleItem;
-                        kolSum = firstVisibleItem + 90;
-                        if (kolSum > kol)
+                        kolSum += 10;
+                        if (kolSum > kol && !stopLoad)
                             parssate(kol);
-                        Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
+                        //  Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
                     }
                 }
                 firstItem = firstVisibleItem;
@@ -138,8 +134,6 @@ public class fragmentTemplePase extends Fragment {
                 // Log.i("Scroll 2", String.valueOf(helpVasr));
             }
         });
-        if (resultPost) parssate(kol);
-        System.out.println("!! " + width + " " + height + 5);
         return v ;
     }
 
@@ -150,6 +144,7 @@ public class fragmentTemplePase extends Fragment {
             list.add(classTop);
             kol++;
         }
+        resultPost = 0;
         if (kol == 0) parssate(kol);
         myAdap.notifyDataSetChanged();
     }
@@ -158,7 +153,7 @@ public class fragmentTemplePase extends Fragment {
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
-            if (kol < kolSum) {
+            if (kol < kolSum && !stopLoad) {
                 kol++;
                 parssate(kol);
             }
@@ -192,18 +187,19 @@ public class fragmentTemplePase extends Fragment {
     public void add(classTransport ev) {
         classMang = ev.getClassMang();
         classMang.setWhere(ev.getURL_Search());
-        resultPost = true;
-    }
-
-        @Override
-    public void onStart() {
-        EventBus.getDefault().register(this);
-            super.onStart();
+        if (ev.getURL_Search().contains("search")) resultPost = 1;
+        else resultPost = 2;
+        parssate(kol);
     }
 
     @Override
-    public void onStop() {
-        if (past != null) past.cancel(false);
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop(){
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -236,6 +232,7 @@ public class fragmentTemplePase extends Fragment {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
+            URL2 = name_char = imgSrc = "";
         }
 
         @Override
@@ -247,11 +244,16 @@ public class fragmentTemplePase extends Fragment {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                page = kol / classMang.getMaxInPage();
-//                   page = kol / classMang.getMaxInPage();
-                int kol_mang = kol - (classMang.getMaxInPage()*page);
+                int kol_mang;
+                // Проверка на то что сейчас парсим, если запрос то там без страниц идет
+                if (resultPost != 1){
+                    page = kol / classMang.getMaxInPage();
+                    kol_mang = kol - (classMang.getMaxInPage()*page);
+                }else kol_mang = kol;
+
                 if (doc == null) {
                     classMang.editWhere(page);
+                    // Подключаемся и качаем html страницу
                     doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll()).get();
                 }
 
@@ -266,11 +268,12 @@ public class fragmentTemplePase extends Fragment {
                 imgSrc = el2.attr("src");
                 name_char = el2.attr("title");
                 summ++;
-                if (kol_mang == 69) doc = null;
+                if (kol_mang == 69 && resultPost != 1) doc = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception e) {
                 System.out.println("Не грузит страницу либо больше нечего грузить");
+                stopLoad = true;
             }
             return null;
         }
@@ -278,12 +281,13 @@ public class fragmentTemplePase extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
-            if (kol >= 0) {
+            if (kol >= 0 && !URL2.isEmpty() && !name_char.isEmpty() && !classMang.getURL().isEmpty()) {
                 MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getURL());
                 Log.i("Kol parse: ", String.valueOf(kol));
                 try {
-                    if (list.size() <= kol) list.add(kol,a);
-                    if (!resultPost) {
+                    if (list.size() <= kol)
+                        list.add(a);
+                    if (resultPost == 0) {
                         classDataBaseListMang.addBasaData(a,kol);
                     }
                     myAdap.notifyDataSetChanged();

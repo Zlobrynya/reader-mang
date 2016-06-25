@@ -257,8 +257,8 @@ public class DescriptionMang extends BaseActivity {
     }
 
     private int numberLastChapter(){
-        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.NAME_LAST_CHAPTER);
-        string = string.replace(" - ", " ");
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
+       /* string = string.replace(" - ", " ");
         string = string.replace("-", "");
         string = string.replace(",", "");
 
@@ -267,13 +267,14 @@ public class DescriptionMang extends BaseActivity {
         //Удаляем по одному слову пока не останится одно слово
         for (int i = 0; i < world-2;i++){
             string = string.replaceFirst("\\w+\\s+","");
-        }
+        }*/
 
         Log.i("Number chapter", string);
         Short kol = 0;
         for (classForList c : arList){
-            String name = c.getName_chapter();
-            if (name.contains(string)){
+            String name = c.getURL_chapter();
+            Log.i("Number chapter",name);
+            if (string.contains(name)) {
                 Log.i("Number chapter", String.valueOf(kol));
                 //Отправляем в pagesDowload, если было запущено с закладок
                 if (read) EventBus.getDefault().post(kol);
