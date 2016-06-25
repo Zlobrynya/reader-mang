@@ -319,6 +319,7 @@ public class DescriptionMang extends BaseActivity {
         private MainClassTop mang;
         private AsyncTaskLisen lisens;
         private com.example.nikita.progectmangaread.classPMR.classDescriptionMang classDescriptionMang;
+        private boolean not_net; //отвечает за проверку подклчение
 
         //конструктор потока
         protected Pars(AsyncTaskLisen callback,MainClassTop mang) {
@@ -327,6 +328,7 @@ public class DescriptionMang extends BaseActivity {
             classDescriptionMang = new classDescriptionMang();
             classDescriptionMang.setNameMang(mang.getName_characher());
             classDescriptionMang.setImg_url(mang.getURL_img());
+            not_net = false;
         }
 
         @Override
@@ -373,6 +375,7 @@ public class DescriptionMang extends BaseActivity {
                 classDescriptionMang.setDescription(el2.attr("content"));
             } catch (IOException e) {
                 e.printStackTrace();
+                not_net = true;
             }catch (Exception e) {
                 System.out.println("Не грузит страницу либо больше нечего грузить");
             }
@@ -381,21 +384,31 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            EventBus.getDefault().post(classDescriptionMang);
-            if (lisens != null) lisens.onEnd();
+            if (!not_net){
+                EventBus.getDefault().post(classDescriptionMang);
+                if (lisens != null) lisens.onEnd();
+            }else{
+                Toast.makeText(DescriptionMang.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
+                DescriptionMang.this.finish();
+
+            }
         }
     }
 
     public class ParsList extends AsyncTask<Void,Void,Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            el = doc.select("[class = table table-hover]").first();
-            if (el != null){
-                el = el.select("tbody").first();
-                el = el.select("tr").first();
-                do {
-                    parsList();
-                }while (el != null);
+            try {
+                el = doc.select("[class = table table-hover]").first();
+                if (el != null){
+                    el = el.select("tbody").first();
+                    el = el.select("tr").first();
+                    do {
+                        parsList();
+                    }while (el != null);
+                }
+            }catch (NullPointerException e){
+             //   Toast.makeText(getApplication(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
             }
 
             return null;
@@ -415,11 +428,13 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
-            EventBus.getDefault().post(classTransportForList);
-            if (read){
-                numberLastChapter();
-                read = false;
+            if (!arList.isEmpty()){
+                classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
+                EventBus.getDefault().post(classTransportForList);
+                if (read){
+                    numberLastChapter();
+                    read = false;
+                }
             }
         }
     }

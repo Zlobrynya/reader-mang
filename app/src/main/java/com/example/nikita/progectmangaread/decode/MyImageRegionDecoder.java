@@ -12,7 +12,7 @@ import rapid.decoder.BitmapDecoder;
 /**
  * Created by Nikita on 01.04.2016.
  */
-public class MyImageRegionDecoder  implements ImageRegionDecoder {
+public class MyImageRegionDecoder implements ImageRegionDecoder {
 
     private BitmapDecoder decoder;
 

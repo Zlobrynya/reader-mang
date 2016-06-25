@@ -143,10 +143,10 @@ public class fragmentTemplePase extends Fragment {
             classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
+            myAdap.notifyDataSetChanged();
         }
         resultPost = 0;
         if (kol == 0) parssate(kol);
-        myAdap.notifyDataSetChanged();
     }
 
     //создается клас с описанием интерфейсв

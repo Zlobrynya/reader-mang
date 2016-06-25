@@ -6,8 +6,6 @@ import android.net.Uri;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 
-import java.io.IOException;
-
 import rapid.decoder.BitmapDecoder;
 
 /**
@@ -23,7 +21,6 @@ public class MyImageDecoder implements ImageDecoder {
     public Bitmap decode(Context context, Uri uri) throws Exception {
         Bitmap bitmap;
         bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
-       // if (bitmap == null)  BitmapDecoder.from(context, uri).useBuiltInDecoder(true).config(Bitmap.Config.ARGB_8888).decode();
         return bitmap;
     }
 

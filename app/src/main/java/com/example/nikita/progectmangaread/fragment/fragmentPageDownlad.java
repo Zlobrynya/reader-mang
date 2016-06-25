@@ -62,17 +62,15 @@ public class fragmentPageDownlad extends Fragment {
         @Override
         public void onReady() {
             progress.setVisibility(View.GONE);
-            Log.i("hRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRReR", String.valueOf(image.getSHeight()));
         }
 
         @Override
         public void onImageLoaded() {
-            Log.i("heL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", String.valueOf(image.getSHeight()));
-            if (image.getSHeight() < 3000){
-                image.setDoubleTapZoomDpi(80);
+         /*   if (image.getSHeight() < 3000){
+                image.setDoubleTapZoomDpi(150);
             }else {
 
-            }
+            }*/
         }
 
         @Override
@@ -110,9 +108,10 @@ public class fragmentPageDownlad extends Fragment {
         final String url = getArguments().getString("String");
         progress.setVisibility(View.VISIBLE);
         image.setVisibility(View.GONE);
-        image.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+        //установка на сколько приближается при двойном тапе
+        image.setDoubleTapZoomDpi(100);
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
-        image.setMinimumDpi(50);
+        image.setMinimumDpi(60);
         AsyncTaskLisen as = new AsyncTaskLisen() {
             @Override
             public void onEnd() {

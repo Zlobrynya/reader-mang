@@ -11,7 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
@@ -35,8 +37,6 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 07.03.2016.
  *
  * Продумать норм загрузку стр (показать что качается)
- * ПРОБЛЕМА: Не грузит 0 страницу после 2 перелистывания назад, разобраться.
- *
  *
  */
 
@@ -47,6 +47,7 @@ public class pagesDownload extends AppCompatActivity {
     private String URL,nameMang,nameChapter;
     private ViewPager pager;
     private classDataBaseViewedHead classDataBaseViewedHead;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +60,12 @@ public class pagesDownload extends AppCompatActivity {
         actionBar.hide();
 
         urlPage = new ArrayList<>();
+        progress = (ProgressBar) findViewById(R.id.loading);
+
 
         pager = (ViewPager) findViewById(R.id.pagerImage);
+        pager.setVisibility(View.GONE);
+
         textIdPage = (TextView) findViewById(R.id.textNumberPage);
         final AppCompatActivity activity = this;
 
@@ -239,7 +244,7 @@ public class pagesDownload extends AppCompatActivity {
             StringBuilder secondBuffer = new StringBuilder(html);
             Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
             Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
-            String second = html;
+            String second = "";
             Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
             second =  secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
             second = second.replace("[","");
@@ -248,10 +253,9 @@ public class pagesDownload extends AppCompatActivity {
 
             // for(String tt: test) Log.i("Str: ", tt);
 
-            String[] URL,URLhelp;
+            String[] URLhelp;
             URLhelp = new String[3];
             int kol = 0;
-            int size = 0;
             for(String tt: test){
                 if (tt.contains("'")){
                     URLhelp[kol] = tt.substring(tt.indexOf("'")+1,tt.lastIndexOf("'"));
@@ -264,9 +268,11 @@ public class pagesDownload extends AppCompatActivity {
                     kol = 0;
                     urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
                     //   Log.i("URL", URL[size]);
-                    size++;
                 }
             }
+            progress.setVisibility(View.GONE);
+            pager.setVisibility(View.VISIBLE);
+
             classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
             asyncTask.onEnd();
         }
