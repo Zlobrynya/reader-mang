@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
@@ -226,6 +227,7 @@ public class fragmentTemplePase extends Fragment {
         private AsyncTaskLisen lisens;
         private String imgSrc;
         private int kol;
+        private boolean not_net;
 
         //конструктор потока
         protected Pars(AsyncTaskLisen callback, int kol,classMang classMang) {
@@ -271,6 +273,7 @@ public class fragmentTemplePase extends Fragment {
                 if (kol_mang == 69 && resultPost != 1) doc = null;
             } catch (IOException e) {
                 e.printStackTrace();
+                not_net = true;
             }catch (Exception e) {
                 System.out.println("Не грузит страницу либо больше нечего грузить");
                 stopLoad = true;
@@ -281,25 +284,30 @@ public class fragmentTemplePase extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
-            if (kol >= 0 && !URL2.isEmpty() && !name_char.isEmpty() && !classMang.getURL().isEmpty()) {
-                MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getURL());
-                Log.i("Kol parse: ", String.valueOf(kol));
-                try {
-                    if (list.size() <= kol)
-                        list.add(a);
-                    if (resultPost == 0) {
-                        classDataBaseListMang.addBasaData(a,kol);
-                    }
-                    myAdap.notifyDataSetChanged();
+            if (!not_net){
+                if (kol >= 0 && !URL2.isEmpty() && !name_char.isEmpty() && !classMang.getURL().isEmpty()) {
+                    MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getURL());
+                    Log.i("Kol parse: ", String.valueOf(kol));
+                    try {
+                        if (list.size() <= kol)
+                            list.add(a);
+                        if (resultPost == 0) {
+                            classDataBaseListMang.addBasaData(a,kol);
+                        }
+                        myAdap.notifyDataSetChanged();
 
-                }catch (IndexOutOfBoundsException e){
-                    Log.i("Error: ",e.toString());
-                    Log.i("Size list: ", String.valueOf(list.size()));
-                    Log.i("Kol: ", String.valueOf(kol));
+                    }catch (IndexOutOfBoundsException e){
+                        Log.i("Error: ",e.toString());
+                        Log.i("Size list: ", String.valueOf(list.size()));
+                        Log.i("Kol: ", String.valueOf(kol));
+                    }
+                    //кричим интерфейсу что мы фсе
+                    if (lisens != null) lisens.onEnd();
                 }
-                //кричим интерфейсу что мы фсе
-                if (lisens != null) lisens.onEnd();
+            }else {
+                Toast.makeText(fragmentTemplePase.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 }

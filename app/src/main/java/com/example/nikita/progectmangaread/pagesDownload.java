@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.cacheImage.cacheFile;
@@ -24,6 +25,7 @@ import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
@@ -198,14 +200,12 @@ public class pagesDownload extends AppCompatActivity {
 
     //поток для скачивания сылок для изображений
     public class ParsURLPage extends AsyncTask<Void,Void,Void> {
-        String url;
-        Document doc;
-        Element script;
-        AsyncTaskLisen asyncTask;
-        String html;
+        private Document doc;
+        private AsyncTaskLisen asyncTask;
+        private String html;
+        private boolean not_net;
         //конструктор потока
         protected ParsURLPage(AsyncTaskLisen addImg,String url) {
-            this.url = url;
             asyncTask = addImg;
         }
 
@@ -222,18 +222,19 @@ public class pagesDownload extends AppCompatActivity {
                 if (doc == null) doc = Jsoup.connect(URL).get();
                 nameChapter = doc.select("[class = pageBlock container]").select("h1").text();
                 //pageBlock container
-
-                script = doc.select("body").select("script").first(); // Get the script part
-                for (int i =0 ;i < 100; i++){
-                    html = script.data();
-                    if (html.contains("var transl_next_page='Следующая страница';")){
+                Elements scripts = doc.select("body").select("script");
+                for (Element script : scripts){
+                    if (script.data().contains("transl_next_page")){
+                        html = script.data();
                         break;
-                    }else script = script.nextElementSibling();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                not_net = true;
             } catch (Exception e) {
-                System.out.println("Не грузит страницу либо больше нечего грузить");
+                e.printStackTrace();
+                Log.i("pageDowload","Не грузит страницу либо больше нечего грузить");
             }
             return null;
         }
@@ -241,40 +242,42 @@ public class pagesDownload extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result){
  //           TextView textView = (TextView) findViewById(R.id.text);
-            StringBuilder secondBuffer = new StringBuilder(html);
-            Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
-            Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
-            String second = "";
-            Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
-            second =  secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
-            second = second.replace("[","");
-            second = second.replace("]","");
-            String[] test = second.split(",");
+            if (!not_net){
+                StringBuilder secondBuffer = new StringBuilder(html);
+              //  Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
+              //  Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
+                String second = "";
+             //   Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
+                second = secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
+                second = second.replace("[","");
+                second = second.replace("]","");
+                String[] test = second.split(",");
 
-            // for(String tt: test) Log.i("Str: ", tt);
+                String[] URLhelp;
+                URLhelp = new String[3];
+                int kol = 0;
+                for(String tt: test){
+                    if (tt.contains("'")){
+                        URLhelp[kol] = tt.substring(tt.indexOf("'")+1,tt.lastIndexOf("'"));
+                        kol++;
+                    }else if (tt.contains("\"")){
+                        URLhelp[2] = tt.substring(tt.indexOf("\"")+1,tt.lastIndexOf("\""));
+                        kol++;
+                    }
+                    if (kol == 3){
+                        kol = 0;
+                        urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
+                    }
+                }
+                progress.setVisibility(View.GONE);
+                pager.setVisibility(View.VISIBLE);
 
-            String[] URLhelp;
-            URLhelp = new String[3];
-            int kol = 0;
-            for(String tt: test){
-                if (tt.contains("'")){
-                    URLhelp[kol] = tt.substring(tt.indexOf("'")+1,tt.lastIndexOf("'"));
-                    kol++;
-                }else if (tt.contains("\"")){
-                    URLhelp[2] = tt.substring(tt.indexOf("\"")+1,tt.lastIndexOf("\""));
-                    kol++;
-                }
-                if (kol == 3){
-                    kol = 0;
-                    urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
-                    //   Log.i("URL", URL[size]);
-                }
+                classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
+                asyncTask.onEnd();
+            }else{
+                Toast.makeText(pagesDownload.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
-            progress.setVisibility(View.GONE);
-            pager.setVisibility(View.VISIBLE);
 
-            classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
-            asyncTask.onEnd();
         }
     }
 }

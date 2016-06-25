@@ -4,9 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,16 +26,19 @@ import java.net.URL;
  * Класс работы с кэшем
  */
 public class cacheFile {
-    File dirFile;
-    AsyncTaskLisen as;
+    private File dirFile;
+    private AsyncTaskLisen as;
+    private ProgressBar progressBar;
 
-    public cacheFile(File dirFile, String nameDir,AsyncTaskLisen as){
+    public cacheFile(File dirFile, String nameDir,AsyncTaskLisen as,ProgressBar progressBar){
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
             this.dirFile.mkdir();
         }
         this.as = as;
+        this.progressBar = progressBar;
     }
+
     public cacheFile(File dirFile, String nameDir){
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
@@ -43,7 +48,8 @@ public class cacheFile {
     }
     //download image and cache it
     public void loadAndCache(String url, int number){
-        class downlandImage extends AsyncTask<String,Void,Void> {
+        class downlandImage extends AsyncTask<String,Integer,Void> {
+            private int lenghtOfFile;
             @Override
             protected Void doInBackground(String... params) {
                 try {
@@ -55,14 +61,16 @@ public class cacheFile {
                         HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
                         conn.setConnectTimeout(30000);
                         conn.setReadTimeout(30000);
-                        InputStream is=conn.getInputStream();
+                        conn.connect();
+                        lenghtOfFile = conn.getContentLength();
+                        //InputStream is=conn.getInputStream();
+                        InputStream is = new BufferedInputStream(imageUrl.openStream(), 8192);
 
                         if (params[0].contains("gif")){
                             FileOutputStream  out = new FileOutputStream(f);
                             BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, out);
                        }else {
                             OutputStream os = new FileOutputStream(f);
-
                             CopyStream(is, os);
                             os.close();
                         }
@@ -74,18 +82,31 @@ public class cacheFile {
                 }
                 return null;
             }
+
+            //выводим в прогресс бар, сколько скачалось
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                progressBar.setProgress(values[0]);
+                Log.i("ProgressBar", String.valueOf(values[0]));
+                super.onProgressUpdate(values);
+            }
+
             //Copy inputStream in OutputStream
             private void CopyStream(InputStream is, OutputStream os)
             {
-                final int buffer_size=1024*120;
+                //буфер
+                final int buffer_size=1024*12;
                 try
                 {
+                    int total = 0;
                     byte[] bytes=new byte[buffer_size];
                     for(;;)
                     {
                         int count=is.read(bytes, 0, buffer_size);
                         if(count==-1)
                             break;
+                        total += count;
+                        publishProgress((int)((total*100)/lenghtOfFile));
                         os.write(bytes, 0, count);
                     }
                 }

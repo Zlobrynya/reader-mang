@@ -390,7 +390,6 @@ public class DescriptionMang extends BaseActivity {
             }else{
                 Toast.makeText(DescriptionMang.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
                 DescriptionMang.this.finish();
-
             }
         }
     }
@@ -408,9 +407,8 @@ public class DescriptionMang extends BaseActivity {
                     }while (el != null);
                 }
             }catch (NullPointerException e){
-             //   Toast.makeText(getApplication(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-            }
 
+            }
             return null;
         }
 

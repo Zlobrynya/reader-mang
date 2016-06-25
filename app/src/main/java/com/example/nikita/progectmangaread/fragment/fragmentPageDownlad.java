@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.app.ProgressDialog;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -106,7 +107,11 @@ public class fragmentPageDownlad extends Fragment {
         });
         number = getArguments().getInt("imageId");
         final String url = getArguments().getString("String");
+        //Настройки прогресс бара
         progress.setVisibility(View.VISIBLE);
+        progress.setIndeterminate(false);
+        progress.setMax(100);
+
         image.setVisibility(View.GONE);
         //установка на сколько приближается при двойном тапе
         image.setDoubleTapZoomDpi(100);
@@ -127,7 +132,7 @@ public class fragmentPageDownlad extends Fragment {
             }
         };
 
-        file = new cacheFile(getContext().getCacheDir(),"pageCache",as);
+        file = new cacheFile(getContext().getCacheDir(),"pageCache",as,progress);
         file.loadAndCache(url, number);
         return v;
     }
