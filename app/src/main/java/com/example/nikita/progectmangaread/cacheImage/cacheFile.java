@@ -87,7 +87,7 @@ public class cacheFile {
             @Override
             protected void onProgressUpdate(Integer... values) {
                 progressBar.setProgress(values[0]);
-                Log.i("ProgressBar", String.valueOf(values[0]));
+                //Log.i("ProgressBar", String.valueOf(values[0]));
                 super.onProgressUpdate(values);
             }
 
@@ -111,7 +111,7 @@ public class cacheFile {
                     }
                 }
                 catch(Exception ex){
-                    Log.i("File","Copy");
+                    Log.i("File","Copy Error");
                 }
             }
 

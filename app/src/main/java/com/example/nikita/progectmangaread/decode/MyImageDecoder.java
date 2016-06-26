@@ -3,6 +3,7 @@ package com.example.nikita.progectmangaread.decode;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 
@@ -21,6 +22,7 @@ public class MyImageDecoder implements ImageDecoder {
     public Bitmap decode(Context context, Uri uri) throws Exception {
         Bitmap bitmap;
         bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
+        Log.i("ImageDecoder", String.valueOf(bitmap.getHeight()));
         return bitmap;
     }
 

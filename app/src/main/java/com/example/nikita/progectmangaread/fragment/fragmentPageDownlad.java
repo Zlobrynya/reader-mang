@@ -62,7 +62,8 @@ public class fragmentPageDownlad extends Fragment {
     SubsamplingScaleImageView.OnImageEventListener d = new SubsamplingScaleImageView.OnImageEventListener() {
         @Override
         public void onReady() {
-            progress.setVisibility(View.GONE);
+            Log.i("Image", "ready");
+          //  progress.setVisibility(View.GONE);
         }
 
         @Override
@@ -72,6 +73,8 @@ public class fragmentPageDownlad extends Fragment {
             }else {
 
             }*/
+            Log.i("Image","Load");
+            progress.setVisibility(View.GONE);
         }
 
         @Override
@@ -95,8 +98,10 @@ public class fragmentPageDownlad extends Fragment {
         final View v = inflater.inflate(R.layout.layout_fullscreen_image, null);
 
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
+
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
+
         progress = (ProgressBar) v.findViewById(R.id.loading);
         image.setOnImageEventListener(d);
         image.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +115,7 @@ public class fragmentPageDownlad extends Fragment {
         //Настройки прогресс бара
         progress.setVisibility(View.VISIBLE);
         progress.setIndeterminate(false);
-        progress.setMax(100);
+        progress.setMax(110);
 
         image.setVisibility(View.GONE);
         //установка на сколько приближается при двойном тапе

@@ -48,8 +48,6 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .build();
 
-
-
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
@@ -78,8 +76,11 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.layout_from_graund_view, null);
             holder.img = (ImageView)v.findViewById(R.id.imageView1);
-            holder.img.setMinimumWidth(w/4);
-            holder.img.setMinimumHeight(h/5);
+
+
+            holder.img.setMinimumWidth(w);
+            holder.img.setMinimumHeight(h);
+
             holder.tv = (TextView) v.findViewById(R.id.textMang);
             v.setTag(holder);
         }
@@ -94,7 +95,6 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
                     !holder.img.getTag().equals(m1.getURL_img())) {
                 ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img, options);
                 holder.img.setTag(m1.getURL_img());
-
                 holder.tv.setText(m1.getName_characher());
             }
         }

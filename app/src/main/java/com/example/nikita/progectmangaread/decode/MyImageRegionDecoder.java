@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
 
@@ -19,18 +20,18 @@ public class MyImageRegionDecoder implements ImageRegionDecoder {
     @Override
     public Point init(Context context, Uri uri) throws Exception {
         decoder = BitmapDecoder.from(context, uri);
-        decoder.useBuiltInDecoder(true);
+        decoder.useBuiltInDecoder(false);
         return new Point(decoder.sourceWidth(), decoder.sourceHeight());
     }
 
     @Override
     public synchronized Bitmap decodeRegion(Rect sRect, int sampleSize) {
         try {
-            return decoder.reset().region(sRect).scale(sRect.width()/sampleSize, sRect.height()/sampleSize).decode();
-           /* return decoder.region(sRect)
-                    .scaleBy(0.5f)
-                    .useBuiltInDecoder(true)
-                    .decode();*/
+            Log.i("ImageDecoderRegion ", String.valueOf(sRect.height())+" w "+sRect.width());
+            decoder.reset()
+                    .region(sRect)
+                    .scale(sRect.width()/sampleSize, sRect.height()/sampleSize);
+            return decoder.decode();
         } catch (Exception e) {
             return null;
         }

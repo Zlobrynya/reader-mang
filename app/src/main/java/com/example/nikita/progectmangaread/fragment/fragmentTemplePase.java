@@ -84,25 +84,30 @@ public class fragmentTemplePase extends Fragment {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
         stopLoad = false;
-        //для узнавания разрешения экрана
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        height = displaymetrics.heightPixels;
-        width = displaymetrics.widthPixels;
-        //создаем адаптер для GriedView
-        //result = false;
         kol = page = lastItem = firstItem = 0;
-        myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
     }
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //для узнавания разрешения экрана
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        height = displaymetrics.heightPixels/sizeCalculate(displaymetrics.heightPixels);
+        width = displaymetrics.widthPixels/sizeCalculate(displaymetrics.widthPixels);
+
+        //создаем адаптер для GriedView
+        myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
+
         kolSum = 28;
         summ = kolImage = 0;
         View v = inflater.inflate(R.layout.fragment, null);
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
+        gr.setNumColumns(sizeCalculate(displaymetrics.widthPixels));
+
 
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -138,6 +143,7 @@ public class fragmentTemplePase extends Fragment {
         return v ;
     }
 
+    //инициализация с БД
     private void initializationArray(){
         while (!classDataBaseListMang.download_the_html(kol)){
             MainClassTop classTop = classDataBaseListMang.getMainClassTop(kol);
@@ -148,6 +154,13 @@ public class fragmentTemplePase extends Fragment {
         }
         resultPost = 0;
         if (kol == 0) parssate(kol);
+    }
+
+    private int sizeCalculate(double size){
+        if (size <= 720) return 4;
+        if (size >= 720 && size <= 1500) return 6;
+        if (size >= 1500) return 8;
+        return 3;
     }
 
     //создается клас с описанием интерфейсв

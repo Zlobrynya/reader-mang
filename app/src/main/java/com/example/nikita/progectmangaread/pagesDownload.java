@@ -37,9 +37,6 @@ import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 07.03.2016.
- *
- * Продумать норм загрузку стр (показать что качается)
- *
  */
 
 public class pagesDownload extends AppCompatActivity {
