@@ -1,17 +1,8 @@
 package com.example.nikita.progectmangaread.fragment;
 
-import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
-import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classMang;
@@ -38,14 +28,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
-import java.util.zip.GZIPInputStream;
 
 import de.greenrobot.event.EventBus;
 
@@ -55,19 +38,14 @@ import de.greenrobot.event.EventBus;
  * ---
  * Сделать:
  * и с помощью сервиса обновлять из раз в неделю (пункт дaлеко идущего плана)
- * СДЕЛАТЬ:
- * Переделать под новую библиотеку!
- * Продумать обовление что бы не "моргало"
- * Убрать лишнее 
  *
  * ---
  */
 
 public class fragmentTemplePase extends Fragment {
     public com.example.nikita.progectmangaread.classPMR.classMang classMang;
-    private int firstItem,height,width,page;
+    private int firstItem,page;
     private int kol,kolSum;
-    public int lastItem,kolImage,summ;
     private Document doc;
     private LinkedList<MainClassTop> list;
     private AdapterMainScreen myAdap;
@@ -84,13 +62,13 @@ public class fragmentTemplePase extends Fragment {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
         stopLoad = false;
-        kol = page = lastItem = firstItem = 0;
+        kol = page = firstItem = kolSum = 0;
     }
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        int height,width;
         //для узнавания разрешения экрана
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -100,14 +78,18 @@ public class fragmentTemplePase extends Fragment {
         //создаем адаптер для GriedView
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
 
-        kolSum = 28;
-        summ = kolImage = 0;
+        if (kolSum == 0){
+            if (sizeCalculate(displaymetrics.widthPixels) > 4)
+                kolSum = 40;
+            else
+                kolSum = 28;
+        }
+
         View v = inflater.inflate(R.layout.fragment, null);
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
         gr.setNumColumns(sizeCalculate(displaymetrics.widthPixels));
-
 
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -122,17 +104,13 @@ public class fragmentTemplePase extends Fragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
-                int lastVisibleItem = gr.getLastVisiblePosition();
-                if (firstItem != firstVisibleItem) {
-                    if (firstItem < firstVisibleItem) {
-                        kolSum += 10;
-                        if (kolSum > kol && !stopLoad)
-                            parssate(kol);
-                        //  Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
-                    }
+                if (firstItem < firstVisibleItem) {
+                    kolSum += 10;
+                    if (kolSum > kol && !stopLoad)
+                        parssate(kol);
+                    //  Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
                 }
                 firstItem = firstVisibleItem;
-                lastItem = lastVisibleItem;
             }
 
             @Override
@@ -156,6 +134,7 @@ public class fragmentTemplePase extends Fragment {
         if (kol == 0) parssate(kol);
     }
 
+    //расчитать количество столбцов в строке
     private int sizeCalculate(double size){
         if (size <= 720) return 4;
         if (size >= 720 && size <= 1500) return 6;
@@ -163,11 +142,19 @@ public class fragmentTemplePase extends Fragment {
         return 3;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) kolSum = kol + 10;
+        Log.i("temp Pase","result");
+    }
+
     //создается клас с описанием интерфейсв
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
             if (kol < kolSum && !stopLoad) {
+                Log.i("Lisener", String.valueOf(kol)+" "+kolSum);
                 kol++;
                 parssate(kol);
             }
@@ -282,13 +269,13 @@ public class fragmentTemplePase extends Fragment {
 
                 imgSrc = el2.attr("src");
                 name_char = el2.attr("title");
-                summ++;
                 if (kol_mang == 69 && resultPost != 1) doc = null;
             } catch (IOException e) {
                 e.printStackTrace();
                 not_net = true;
             }catch (Exception e) {
                 System.out.println("Не грузит страницу либо больше нечего грузить");
+                e.printStackTrace();
                 stopLoad = true;
             }
             return null;
@@ -300,7 +287,7 @@ public class fragmentTemplePase extends Fragment {
             if (!not_net){
                 if (kol >= 0 && !URL2.isEmpty() && !name_char.isEmpty() && !classMang.getURL().isEmpty()) {
                     MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getURL());
-                    Log.i("Kol parse: ", String.valueOf(kol));
+                    Log.i("Temple Pase: Kol parse: ", String.valueOf(kol));
                     try {
                         if (list.size() <= kol)
                             list.add(a);
@@ -310,9 +297,9 @@ public class fragmentTemplePase extends Fragment {
                         myAdap.notifyDataSetChanged();
 
                     }catch (IndexOutOfBoundsException e){
-                        Log.i("Error: ",e.toString());
-                        Log.i("Size list: ", String.valueOf(list.size()));
-                        Log.i("Kol: ", String.valueOf(kol));
+                        Log.i("Temple Pase: Error: ",e.toString());
+                        Log.i("Temple Pase: Size list: ", String.valueOf(list.size()));
+                        Log.i("Temple Pase: Kol: ", String.valueOf(kol));
                     }
                     //кричим интерфейсу что мы фсе
                     if (lisens != null) lisens.onEnd();
