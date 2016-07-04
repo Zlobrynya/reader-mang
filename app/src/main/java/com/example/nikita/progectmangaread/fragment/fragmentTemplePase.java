@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -75,6 +76,8 @@ public class fragmentTemplePase extends Fragment {
         height = displaymetrics.heightPixels/sizeCalculate(displaymetrics.heightPixels);
         width = displaymetrics.widthPixels/sizeCalculate(displaymetrics.widthPixels);
 
+        Log.i("W,H TemplePase",height + " " + width);
+
         //создаем адаптер для GriedView
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
 
@@ -136,9 +139,16 @@ public class fragmentTemplePase extends Fragment {
 
     //расчитать количество столбцов в строке
     private int sizeCalculate(double size){
-        if (size <= 720) return 4;
-        if (size >= 720 && size <= 1500) return 6;
-        if (size >= 1500) return 8;
+        //Портретная ориентация
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            if (size <= 720) return 4;
+            if (size >= 720 && size <= 1500) return 6;
+            if (size >= 1500) return 8;
+        }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            if (size <= 720) return 3;
+            if (size >= 720 && size <= 1500) return 6;
+            if (size >= 1500) return 8;
+        }
         return 3;
     }
 

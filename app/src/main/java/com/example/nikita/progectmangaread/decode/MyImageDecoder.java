@@ -3,10 +3,16 @@ package com.example.nikita.progectmangaread.decode;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 
+import magick.ColorspaceType;
+import magick.ImageInfo;
+import magick.MagickException;
+import magick.MagickImage;
+import magick.util.MagickBitmap;
 import rapid.decoder.BitmapDecoder;
 
 /**
@@ -22,7 +28,21 @@ public class MyImageDecoder implements ImageDecoder {
     public Bitmap decode(Context context, Uri uri) throws Exception {
         Bitmap bitmap;
         bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
-        Log.i("ImageDecoder", String.valueOf(bitmap.getHeight()));
+        if (bitmap == null){
+            try {
+                ImageInfo info = new ImageInfo(uri.getPath());
+                MagickImage image = new MagickImage(info);
+
+                if(image.getColorspace() == ColorspaceType.CMYKColorspace) {
+                    image.transformRgbImage(ColorspaceType.CMYKColorspace);
+                }
+
+                bitmap = BitmapDecoder.from(MagickBitmap.ToBitmap(image)).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
+
+            } catch (MagickException e) {
+                Log.e("MagickException", e.getMessage());
+            }        }
+        //Log.i("ImageDecoder", String.valueOf(bitmap.getHeight()));
         return bitmap;
     }
 

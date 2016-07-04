@@ -20,14 +20,14 @@ public class MyImageRegionDecoder implements ImageRegionDecoder {
     @Override
     public Point init(Context context, Uri uri) throws Exception {
         decoder = BitmapDecoder.from(context, uri);
-        decoder.useBuiltInDecoder(false);
+        decoder.useBuiltInDecoder(true);
         return new Point(decoder.sourceWidth(), decoder.sourceHeight());
     }
 
     @Override
     public synchronized Bitmap decodeRegion(Rect sRect, int sampleSize) {
         try {
-            Log.i("ImageDecoderRegion ", String.valueOf(sRect.height())+" w "+sRect.width());
+            Log.i("ImageDecoderRegion ", String.valueOf(sampleSize));
             decoder.reset()
                     .region(sRect)
                     .scale(sRect.width()/sampleSize, sRect.height()/sampleSize);
