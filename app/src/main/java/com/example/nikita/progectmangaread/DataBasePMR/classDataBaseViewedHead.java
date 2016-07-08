@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
 /**
  * Created by Nikita on 17.03.2016.
  */
@@ -172,7 +171,7 @@ public class classDataBaseViewedHead {
         String query;
         query = "SELECT " + NameTable + ".*" + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER + ", "+ LAST_PAGE + " "+
                 "FROM ViewedHead" +
-                " INNER JOIN " + NameTable + " ON "+ NAME_MANG + " = " + NameTable+"."+classDataBaseListMang.NAME_MANG;
+                " INNER JOIN " + NameTable + " ON "+ NAME_MANG + " = " + NameTable+"."+ ClassDataBaseListMang.NAME_MANG;
         Log.i("BD Viewed",query);
 
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
@@ -194,7 +193,7 @@ public class classDataBaseViewedHead {
                     query += " UNION ";
                 }
                 query += "SELECT " + table + ".*" + ", "+ LAST_PAGE + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER +" FROM ViewedHead" +
-                        " INNER JOIN " + table + " ON " + NAME_MANG + " = " + table + "." + classDataBaseListMang.NAME_MANG +
+                        " INNER JOIN " + table + " ON " + NAME_MANG + " = " + table + "." + ClassDataBaseListMang.NAME_MANG +
                         " WHERE " + NOTEBOOK + " > 0";
 
                 Log.i("BD notebook",query);

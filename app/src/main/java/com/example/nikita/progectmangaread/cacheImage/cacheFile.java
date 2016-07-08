@@ -53,8 +53,10 @@ public class cacheFile {
             @Override
             protected Void doInBackground(String... params) {
                 try {
+                    Log.i("Threads","cacheFile"+params[1]);
                     //продумать поименование файлов
                     File f = new File(dirFile, params[1]);
+                    //Проверка на существование изображения
                     if (!f.exists()){
                         URL imageUrl = new URL(params[0]);
                         Log.i("File", params[0]);

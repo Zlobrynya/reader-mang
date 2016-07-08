@@ -20,7 +20,7 @@ import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.classPMR.classTransport;
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,7 +50,7 @@ public class fragmentTemplePase extends Fragment {
     private Document doc;
     private LinkedList<MainClassTop> list;
     private AdapterMainScreen myAdap;
-    private classDataBaseListMang classDataBaseListMang;
+    private ClassDataBaseListMang ClassDataBaseListMang;
     private GridView gr;
     private boolean stopLoad;
     // 0 - глав стр 1 - результат поиска 2 - по жанрам
@@ -126,8 +126,8 @@ public class fragmentTemplePase extends Fragment {
 
     //инициализация с БД
     private void initializationArray(){
-        while (!classDataBaseListMang.download_the_html(kol)){
-            MainClassTop classTop = classDataBaseListMang.getMainClassTop(kol);
+        while (!ClassDataBaseListMang.download_the_html(kol)){
+            MainClassTop classTop = ClassDataBaseListMang.getMainClassTop(kol);
             classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
@@ -190,7 +190,7 @@ public class fragmentTemplePase extends Fragment {
         String nameTable = classMang.getURL().replace(".me", " ");
         nameTable = nameTable.replace("http://"," ");
         nameTable = nameTable.replace(".ru", " ");
-        classDataBaseListMang = new classDataBaseListMang(getContext(),nameTable);
+        ClassDataBaseListMang = new ClassDataBaseListMang(getContext(),nameTable);
         initializationArray();
     }
 
@@ -302,7 +302,7 @@ public class fragmentTemplePase extends Fragment {
                         if (list.size() <= kol)
                             list.add(a);
                         if (resultPost == 0) {
-                            classDataBaseListMang.addBasaData(a,kol);
+                            ClassDataBaseListMang.addBasaData(a,kol);
                         }
                         myAdap.notifyDataSetChanged();
 

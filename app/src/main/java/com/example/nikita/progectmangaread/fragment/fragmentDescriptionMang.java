@@ -3,6 +3,7 @@ package com.example.nikita.progectmangaread.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,11 +44,16 @@ public class fragmentDescriptionMang extends Fragment {
         v = inflater.inflate(R.layout.glav_screen_mang, null);
         progress = (ProgressBar) v.findViewById(R.id.loadingDescription);
         gridLayout = (GridLayout) v.findViewById(R.id.gridLayoutDescription);
-        return v ;
+
+        gridLayout.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                EventBus.getDefault().post("Click");
+            }
+        });
+        return v;
     }
 
     public void onEvent(classDescriptionMang event){
-
         if (this.getArguments().getInt("num") == 0){
             if (v != null) {
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);
@@ -70,7 +76,6 @@ public class fragmentDescriptionMang extends Fragment {
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
                 imageView.setMinimumHeight(displaymetrics.heightPixels / 4);
                 imageView.setMinimumWidth(displaymetrics.widthPixels / 3);
-                imageView.setImageBitmap(event.getImgMang());
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
 
                 progress.setVisibility(View.INVISIBLE);

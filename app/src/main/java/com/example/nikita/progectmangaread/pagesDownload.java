@@ -243,12 +243,12 @@ public class pagesDownload extends AppCompatActivity {
                 StringBuilder secondBuffer = new StringBuilder(html);
               //  Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
               //  Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
-                String second = "";
+                String stringBuffer = "";
              //   Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
-                second = secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
-                second = second.replace("[","");
-                second = second.replace("]","");
-                String[] test = second.split(",");
+                stringBuffer = secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
+                stringBuffer = stringBuffer.replace("[","");
+                stringBuffer = stringBuffer.replace("]","");
+                String[] test = stringBuffer.split(",");
 
                 String[] URLhelp;
                 URLhelp = new String[3];

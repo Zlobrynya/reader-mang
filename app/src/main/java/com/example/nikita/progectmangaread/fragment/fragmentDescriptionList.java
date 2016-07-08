@@ -1,11 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
 
-import android.content.ContentValues;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,7 +13,7 @@ import android.widget.ListView;
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
@@ -38,7 +33,7 @@ public class fragmentDescriptionList extends Fragment {
     private ListView gr;
     private String nameMang,imgURL;
     private classDataBaseViewedHead classDataBaseViewedHead;
-    private classDataBaseListMang classDataBaseListMang;
+    private ClassDataBaseListMang ClassDataBaseListMang;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,9 +107,9 @@ public class fragmentDescriptionList extends Fragment {
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
         if (!event.getName().isEmpty()){
-            classDataBaseListMang = new classDataBaseListMang(getActivity(),event.getMainClassTop().getURL_site());
-            if (!classDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
-                classDataBaseListMang.addBasaData(event.getMainClassTop(),-1);
+            ClassDataBaseListMang = new ClassDataBaseListMang(getActivity(),event.getMainClassTop().getURL_site());
+            if (!ClassDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
+                ClassDataBaseListMang.addBasaData(event.getMainClassTop(),-1);
             }
             ArrayList<classForList> arrayList = event.getClassForList();
             for (classForList b: arrayList){
@@ -164,7 +159,7 @@ public class fragmentDescriptionList extends Fragment {
         EventBus.getDefault().unregister(this);
         //Закрываем базу данных
         if (classDataBaseViewedHead != null)
-            classDataBaseListMang.closeDataBase();
+            ClassDataBaseListMang.closeDataBase();
         if (classDataBaseViewedHead != null)
             classDataBaseViewedHead.closeDataBase();
         super.onDestroy();

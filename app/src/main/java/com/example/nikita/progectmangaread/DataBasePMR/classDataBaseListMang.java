@@ -12,7 +12,7 @@ import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 /**
  * Created by Nikita on 29.03.2016.
  */
-public class classDataBaseListMang {
+public class ClassDataBaseListMang {
     private DatabaseHelper mDatabaseHelper;
     private SQLiteDatabase mSqLiteDatabase;
     private String nameTable;
@@ -21,7 +21,7 @@ public class classDataBaseListMang {
     public static final String URL_IMG = "URL_img";
     public static final String TOP = "top";
 
-    public classDataBaseListMang(Context context,String NameTable){
+    public ClassDataBaseListMang(Context context, String NameTable){
         nameTable = NameTable.replace("http://"," ");
        // nameBase = nameBase.replace(".ru",".db");
         nameTable = nameTable.replace(".ru"," ");

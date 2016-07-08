@@ -1,6 +1,5 @@
 package com.example.nikita.progectmangaread;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,23 +8,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.GridLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.nikita.progectmangaread.AdapterPMR.AdapterSlidingMenu;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
@@ -71,7 +62,6 @@ public class DescriptionMang extends BaseActivity {
     private boolean bookmark = false;
     private classDataBaseViewedHead classDataBaseViewedHead;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +81,21 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            public void onPageSelected(int position) {
+                if (visF){
+                    buttonINVisble();
+                    visF = !visF;
+                }
+            }
+        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,17 +135,6 @@ public class DescriptionMang extends BaseActivity {
         });
 
 
-    }
-
-    //Метод для открытия бокового меню
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {  // узнаем ID нажатой кнопки
-            case android.R.id.home: // если это кнопка-иконка ActionBar,
-            //    menu.toggle(true);        // открываем меню (или закрываем)
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -196,6 +190,17 @@ public class DescriptionMang extends BaseActivity {
 
     }
 
+    // Получаем событие, что был клик на экран и это не фабкнопка
+    // И если кнопки показаны, то их закрываем
+    public void onEvent(String event){
+        if (event.contains("Click")){
+            if (visF){
+                buttonINVisble();
+                visF = !visF;
+            }
+        }
+    }
+
     //ПОЛУЧАЕМ с топлиста
     public void onEvent(MainClassTop event){
         mang = event;
@@ -227,6 +232,7 @@ public class DescriptionMang extends BaseActivity {
             startActivity(intent);
         }
     }
+
     //Процедура для кнопки
     public void StartRead(View view) {
         startLastChapter();
@@ -258,17 +264,6 @@ public class DescriptionMang extends BaseActivity {
 
     private int numberLastChapter(){
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
-       /* string = string.replace(" - ", " ");
-        string = string.replace("-", "");
-        string = string.replace(",", "");
-
-        //Узнаем сколько слов в строке
-        int world = string.split(" ").length;
-        //Удаляем по одному слову пока не останится одно слово
-        for (int i = 0; i < world-2;i++){
-            string = string.replaceFirst("\\w+\\s+","");
-        }*/
-
         Log.i("Number chapter", string);
         Short kol = 0;
         for (classForList c : arList){
@@ -345,29 +340,32 @@ public class DescriptionMang extends BaseActivity {
 
                 //считываем тома
                 el = doc.select("[class = subject-meta col-sm-7]").first();
+                //Получаем количетво томов
                 el = el.select("p").first();
                 classDescriptionMang.setToms(el.select("p").first().text());
-                el = el.nextElementSibling();
+           /*     el = el.nextElementSibling();
                 el = el.nextElementSibling();
                 //считываем
-                classDescriptionMang.setTranslate(el.select("p").text());
-                for (int i = 0; i < 4;i++){
+                classDescriptionMang.setTranslate(el.select("p").text());*/
+
+                for (int i = 0; i < 7;i++){
                     el = el.nextElementSibling();
                     String helpVar = el.text();
-                    Elements el4;
                     if (helpVar.contains("Жанры")){
+                        helpVar = "";
+                        Elements elements = el.select("[class ^= elem_]");
+                        for (Element element: elements){
+                            helpVar += element.text();
+                        }
                         classDescriptionMang.setGenre(helpVar);
                     }else if (helpVar.contains("Автор")){
                         classDescriptionMang.setNameAuthor(el.text());
-                    }else {
-                        el4 = el.select("b");
-                        String category;
-                        if (mang.getURL_characher().contains("readmanga.me")){
-                            category = "Категории";
-                        }else category = "Категория";
-                        if (el4.text().contains(category)){
-                            classDescriptionMang.setCategory(el.text());
-                        }
+                    }else if (helpVar.contains("Категор")){
+                        classDescriptionMang.setCategory(el.text());
+                    }else if (helpVar.contains("Перевод:")){
+                        classDescriptionMang.setTranslate(el.text());
+                    }else if (helpVar.contains("Год")){
+                        break;
                     }
                 }
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
@@ -377,6 +375,7 @@ public class DescriptionMang extends BaseActivity {
                 e.printStackTrace();
                 not_net = true;
             }catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Не грузит страницу либо больше нечего грузить");
             }
             return null;

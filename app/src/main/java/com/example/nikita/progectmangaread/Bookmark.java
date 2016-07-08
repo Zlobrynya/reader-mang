@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterNotebook;
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseListMang;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
 import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
@@ -89,10 +89,10 @@ public class Bookmark extends BaseActivity {
         cursor.moveToFirst();
         for(int i = 0;i < cursor.getCount();i++){
             String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter;
-            nameMang = cursor.getString(cursor.getColumnIndex(classDataBaseListMang.NAME_MANG));
-            URLchapter = cursor.getString(cursor.getColumnIndex(classDataBaseListMang.URL_CHAPTER));
+            nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.NAME_MANG));
+            URLchapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_CHAPTER));
             URLlastChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.LAST_CHAPTER));
-            URLimg = cursor.getString(cursor.getColumnIndex(classDataBaseListMang.URL_IMG));
+            URLimg = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_IMG));
             nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
             list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
             cursor.moveToNext();
