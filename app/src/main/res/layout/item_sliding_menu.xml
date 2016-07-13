@@ -4,20 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/launcher"
+        android:id="@+id/imageView2"
+        android:clickable="true"
+        android:contentDescription="@string/app_name" />
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/launcher"
-            android:id="@+id/imageView2"
-            android:clickable="true"
-            android:contentDescription="@string/app_name" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/textView"
+        android:layout_gravity="center_vertical" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/textView"
-            android:layout_gravity="center_vertical" />
 </LinearLayout>

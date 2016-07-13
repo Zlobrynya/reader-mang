@@ -10,8 +10,8 @@ public class classDescriptionMang {
     private String nameMang,nameAuthor,Rank,toms,genre,description,translate,category,img_url;
 
     public classDescriptionMang() {
-        nameAuthor = nameMang = Rank = toms = genre =  " ";
-        category = img_url = translate = description = " ";
+        nameAuthor = nameMang = Rank = toms = genre =  "";
+        category = img_url = translate = description = "";
 
     }
 

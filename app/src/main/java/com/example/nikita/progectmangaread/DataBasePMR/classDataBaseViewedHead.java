@@ -57,7 +57,7 @@ public class classDataBaseViewedHead {
         if (cursor.getCount() == 0){
             ContentValues newValues = new ContentValues();
             // Задайте значения для каждого столбца
-            newValues.put( NAME_MANG, nameMang);
+            newValues.put( NAME_MANG, nameMang.replace('"', ' '));
             newValues.put( LAST_CHAPTER, "null");
             newValues.put( VIEWED_HEAD,"null");
             newValues.put( NAME_LAST_CHAPTER,"null");

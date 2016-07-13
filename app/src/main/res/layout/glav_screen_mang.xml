@@ -1,86 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:context="com.example.nikita.testadapter.glav_screen"
-    >
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ScrollView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <GridLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.nikita.testadapter.glav_screen"
+        >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/gridLayoutDescription"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:visibility="invisible">
+            android:orientation="vertical"
+            android:id="@+id/linear_description_mang">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView2"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:layout_rowSpan="6"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/textRanck"
-                android:layout_row="0"
-                android:layout_column="1"
-                android:autoText="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/category"
-                android:layout_row="4"
-                android:layout_column="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:id="@+id/textGanres"
-                android:layout_row="7"
-                android:layout_column="0"
-                android:layout_columnSpan="4"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/textVolumes"
-                android:layout_row="1"
-                android:layout_column="1"
-                android:layout_columnSpan="2"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/textTranslate"
-                android:layout_row="2"
-                android:layout_column="1"
-                android:layout_columnSpan="2"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/textAuthor"
-                android:layout_row="3"
-                android:layout_column="1"
-                android:layout_columnSpan="2"/>
+            <include layout="@layout/incl_grid_layout_description_mang"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -89,8 +27,15 @@
                 android:text="@string/gange"
                 android:textStyle="bold|italic"
                 android:id="@+id/textGanresName"
-                android:layout_row="6"
-                android:layout_column="0" />
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/textGanres"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,8 +44,7 @@
                 android:text="@string/description"
                 android:textStyle="bold|italic"
                 android:id="@+id/textDescriptionName"
-                android:layout_row="8"
-                android:layout_column="0" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,29 +52,24 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text=""
                 android:id="@+id/textDescription"
-                android:layout_row="9"
-                android:layout_column="0"
-                android:layout_columnSpan="4"/>
+                />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New Button"
                 android:id="@+id/button"
-                android:layout_row="23"
-                android:layout_column="0"
                 android:onClick="StartRead"/>
-        </GridLayout>
+        </LinearLayout>
 
-    </ScrollView>
+        <ProgressBar
+            android:id="@+id/loadingDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="visible"/>
+    </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/loadingDescription"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:layout_row="23"
-        android:layout_column="1"
-        android:indeterminate="false" />
-</RelativeLayout>
+
+</ScrollView>
+

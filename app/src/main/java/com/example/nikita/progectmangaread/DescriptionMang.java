@@ -23,6 +23,7 @@ import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
+import com.example.nikita.progectmangaread.fragment.fragmentSaveDescriptionMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -46,10 +47,10 @@ import de.greenrobot.event.EventBus;
  */
 
 public class DescriptionMang extends BaseActivity {
-    public Document doc;
+    private Document doc;
     private MainClassTop mang;
-    public ArrayList<classForList> arList;
-    public int kol;
+    private ArrayList<classForList> arList;
+    private int kol;
     private ViewPager pager;
     private adapterFragment gg;
     private Pars pars;
@@ -61,6 +62,9 @@ public class DescriptionMang extends BaseActivity {
     private boolean visF = false;
     private boolean bookmark = false;
     private classDataBaseViewedHead classDataBaseViewedHead;
+    private fragmentSaveDescriptionMang saveFragment;
+    private classDescriptionMang descriptionMang;
+    private classTransportForList classTransportForList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,30 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+
+
+        saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
+
+        if (saveFragment != null){
+            classTransportForList = saveFragment.getClassTransportForList();
+            descriptionMang = saveFragment.getClassDescriptionMang();
+            mang = saveFragment.getMang();
+            classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+            classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+            if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
+                fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+                bookmark = false;
+            }else {
+                bookmark = true;
+                fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            }
+        }
+        else {
+            saveFragment = new fragmentSaveDescriptionMang();
+            getFragmentManager().beginTransaction()
+                    .add(saveFragment, "SAVE_FRAGMENT")
+                    .commit();
+        }
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -133,8 +161,6 @@ public class DescriptionMang extends BaseActivity {
                 EventBus.getDefault().post("notebook");
             }
         });
-
-
     }
 
     @Override
@@ -153,6 +179,15 @@ public class DescriptionMang extends BaseActivity {
         super.onStop();
     }
 
+    @Override
+    public void onResume() {
+        if (descriptionMang != null && classTransportForList != null){
+            EventBus.getDefault().post(descriptionMang);
+            EventBus.getDefault().post(classTransportForList);
+        }
+        super.onResume();
+    }
+
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
@@ -167,6 +202,7 @@ public class DescriptionMang extends BaseActivity {
     };
 
     private void buttonVisible(){
+
         fab1.startAnimation(show_fab_1);
         fab1.setClickable(true);
 
@@ -190,6 +226,13 @@ public class DescriptionMang extends BaseActivity {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        saveFragment.setClassDescriptionMang(descriptionMang);
+        saveFragment.setClassTransportForList(classTransportForList);
+        saveFragment.setMang(mang);
+        super.onSaveInstanceState(outState);
+    }
     // Получаем событие, что был клик на экран и это не фабкнопка
     // И если кнопки показаны, то их закрываем
     public void onEvent(String event){
@@ -223,11 +266,14 @@ public class DescriptionMang extends BaseActivity {
         //узнаем нужно ли запускать активити
         if (URL.getNumberChapter() >= 0){
             Intent intent = new Intent(this, pagesDownload.class);
-            intent.putExtra("URL", mang.getURL_site()+URL.getURL_chapter());
+            intent.putExtra("URL", mang.getURL_site() + URL.getURL_chapter());
             intent.putExtra("NumberChapter", URL.getNumberChapter());
 
+
             classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + URL.getURL_chapter());
-            intent.putExtra("NumberPage", classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
+            String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE);
+            if (helpVar.contains("null")) helpVar = "1";
+            intent.putExtra("NumberPage",helpVar);
             intent.putExtra("Chapter", mang.getName_characher());
             startActivity(intent);
         }
@@ -240,32 +286,41 @@ public class DescriptionMang extends BaseActivity {
 
     private void startLastChapter(){
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
-        int numberChapter = numberLastChapter();
-        int numberPage = 0;
-        if (!read){
-            //numberChapter = arList.size()-1;
-            if (string.contains("null")){
-                classForList classForList = arList.get(numberChapter);
-                string = mang.getURL_site()+classForList.getURL_chapter();
+        try {
+            int numberChapter = numberLastChapter();
+            if (!read){
+                //numberChapter = arList.size()-1;
+                if (string.contains("null")){
+                    classForList classForList = arList.get(numberChapter);
+                    string = mang.getURL_site()+classForList.getURL_chapter();
+                    classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),classDataBaseViewedHead.VIEWED_HEAD);
+                }
             }
-        }
 
-        if (!string.contains(mang.getURL_site())){
-            string = mang.getURL_site() + string;
+            if (!string.contains(mang.getURL_site())){
+                string = mang.getURL_site() + string;
+            }
+            //  classForList classForList = arList.get(numberChapter);
+            Intent intent = new Intent(this, pagesDownload.class);
+            intent.putExtra("URL",string);
+            intent.putExtra("NumberChapter", numberChapter);
+            intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
+            intent.putExtra("Chapter", mang.getName_characher());
+            startActivity(intent);
+        }catch (java.lang.ArrayIndexOutOfBoundsException e){
+            Toast toast = Toast.makeText(this,
+                    "В манге нет глав", Toast.LENGTH_SHORT);
+            toast.show();
         }
-        //  classForList classForList = arList.get(numberChapter);
-        Intent intent = new Intent(this, pagesDownload.class);
-        intent.putExtra("URL",string);
-        intent.putExtra("NumberChapter", numberChapter);
-        intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
-        intent.putExtra("Chapter", mang.getName_characher());
-        startActivity(intent);
     }
 
-    private int numberLastChapter(){
+    private int numberLastChapter() throws ArrayIndexOutOfBoundsException{
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
-        Log.i("Number chapter", string);
+       // Log.i("Number chapter", string);
         Short kol = 0;
+        //Проверка на первый раз, если так то выдаем самую последнюю главу в списке
+        if (string.contains("null")) return arList.size()-1;
+
         for (classForList c : arList){
             String name = c.getURL_chapter();
             Log.i("Number chapter",name);
@@ -368,6 +423,9 @@ public class DescriptionMang extends BaseActivity {
                         break;
                     }
                 }
+                 if (classDescriptionMang.getTranslate().isEmpty()){
+                     classDescriptionMang.setTranslate("Перевод: завершен");
+                 }
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
                 Elements el2 = doc.select("[itemprop = description]");
                 classDescriptionMang.setDescription(el2.attr("content"));
@@ -384,6 +442,7 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!not_net){
+                descriptionMang = classDescriptionMang;
                 EventBus.getDefault().post(classDescriptionMang);
                 if (lisens != null) lisens.onEnd();
             }else{
@@ -426,7 +485,7 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!arList.isEmpty()){
-                classTransportForList classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
+                classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
                 EventBus.getDefault().post(classTransportForList);
                 if (read){
                     numberLastChapter();

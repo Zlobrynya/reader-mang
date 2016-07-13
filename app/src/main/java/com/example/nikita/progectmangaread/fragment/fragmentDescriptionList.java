@@ -41,7 +41,6 @@ public class fragmentDescriptionList extends Fragment {
         list = new ArrayList<>();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
         EventBus.getDefault().register(this);
-        setRetainInstance(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +66,7 @@ public class fragmentDescriptionList extends Fragment {
 
                 // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
                 //+"?mature=1"
-                Log.i("post", classForList1.getURL_chapter() + "?mature=1");
+                Log.i("post", classForList1.getURL_chapter());
                 EventBus.getDefault().post(classForList1);
             }
         });
@@ -107,6 +106,7 @@ public class fragmentDescriptionList extends Fragment {
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
     public void onEvent(classTransportForList event){
         if (!event.getName().isEmpty()){
+            list.clear();
             ClassDataBaseListMang = new ClassDataBaseListMang(getActivity(),event.getMainClassTop().getURL_site());
             if (!ClassDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
                 ClassDataBaseListMang.addBasaData(event.getMainClassTop(),-1);
@@ -114,9 +114,9 @@ public class fragmentDescriptionList extends Fragment {
             ArrayList<classForList> arrayList = event.getClassForList();
             for (classForList b: arrayList){
                 if (!b.getURL_chapter().contains("?mature=1")){
-                    b.setURL_chapter(b.getURL_chapter()+"?mature=1");
-                    list.add(b);
+                    b.setURL_chapter(b.getURL_chapter() + "?mature=1");
                 }
+                list.add(b);
             }
             nameMang = event.getName();
             classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());

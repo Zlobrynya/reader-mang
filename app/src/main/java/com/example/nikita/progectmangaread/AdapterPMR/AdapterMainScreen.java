@@ -77,7 +77,6 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
             v = vi.inflate(R.layout.layout_from_graund_view, null);
             holder.img = (ImageView)v.findViewById(R.id.imageView1);
 
-
             holder.img.setMinimumWidth(w);
             holder.img.setMinimumHeight(h);
 
