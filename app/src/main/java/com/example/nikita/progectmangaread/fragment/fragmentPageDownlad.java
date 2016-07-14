@@ -1,19 +1,13 @@
 package com.example.nikita.progectmangaread.fragment;
 
-import android.app.ProgressDialog;
-import android.graphics.PointF;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -22,8 +16,8 @@ import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.cacheImage.cacheFile;
 import com.example.nikita.progectmangaread.decode.MyImageDecoder;
 import com.example.nikita.progectmangaread.decode.MyImageRegionDecoder;
+import com.example.nikita.progectmangaread.temple_pase;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -103,6 +97,10 @@ public class fragmentPageDownlad extends Fragment {
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
 
         progress = (ProgressBar) v.findViewById(R.id.loading);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
+        params.setMargins(0, temple_pase.HEIGHT_WIND/2, 0, 0);
+        progress.setLayoutParams(params);
+
         image.setOnImageEventListener(d);
         image.setOnClickListener(new View.OnClickListener() {
             @Override

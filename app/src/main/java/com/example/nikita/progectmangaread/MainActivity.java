@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.example.nikita.progectmangaread.DataBasePMR.DatabaseHelper;
@@ -23,13 +24,15 @@ public class MainActivity extends BaseActivity {
     private Intent newInten;
     private classMang clManga;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
         getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
-
         newInten = new Intent(MainActivity.this,temple_pase.class);
+
+
     }
 
     public void Click(View view) {

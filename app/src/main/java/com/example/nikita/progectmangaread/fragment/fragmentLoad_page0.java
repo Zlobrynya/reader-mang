@@ -25,7 +25,6 @@ public class fragmentLoad_page0 extends Fragment{
                              Bundle savedInstanceState) {
     /* Inflate the layout for this fragment */
         View view = inflater.inflate(R.layout.fragment_load, container, false);
-        //Сделать что бы прошлый фрагмент поиска удалялся?
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_load, new fragmentTemplePase());
         transaction.commit();
@@ -55,7 +54,6 @@ public class fragmentLoad_page0 extends Fragment{
             transaction.addToBackStack(null);
             transaction.commit();
         }
-
      }
 
     @Override

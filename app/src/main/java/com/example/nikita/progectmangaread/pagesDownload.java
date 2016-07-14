@@ -80,11 +80,21 @@ public class pagesDownload extends AppCompatActivity {
                         file.clearCache();
                         activity.finish();
                     }
-                    if (position == urlPage.size()){
-                        EventBus.getDefault().post(chapterNumber - 1);
-                        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
-                        file.clearCache();
-                        activity.finish();
+                    //для манги где всего 1 картинка на главу
+                    if (urlPage.size() == 1){
+                        if (position > urlPage.size()){
+                            EventBus.getDefault().post(chapterNumber - 1);
+                            cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                            file.clearCache();
+                            activity.finish();
+                        }
+                    }else{
+                        if (position == urlPage.size()){
+                            EventBus.getDefault().post(chapterNumber - 1);
+                            cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                            file.clearCache();
+                            activity.finish();
+                        }
                     }
                     pageNumber = position;
                     classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), classDataBaseViewedHead.LAST_PAGE);
@@ -93,7 +103,10 @@ public class pagesDownload extends AppCompatActivity {
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position > 0 && position < urlPage.size())
-                        textIdPage.setText(position+"/"+(urlPage.size()-1)+"    "+nameChapter);
+                    textIdPage.setText(position+"/"+(urlPage.size()-1)+"    "+nameChapter);
+                if (urlPage.size() == 1)
+                    textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);
+
             }
         });
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -103,7 +116,7 @@ public class pagesDownload extends AppCompatActivity {
                 if (pageNumber > urlPage.size()){
                     pageNumber = 1;
                 }
-                if (pageNumber == urlPage.size()){
+                if (pageNumber == urlPage.size() && urlPage.size() != 1){
                     pageNumber = urlPage.size()-1;
                 }
                 pager.setAdapter(adapter);
@@ -182,8 +195,17 @@ public class pagesDownload extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) return fragmentNextPrevChapter.getInstance(position,"Previous chapter");
-            if (position >= urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
-            if (position < urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
+            if (urlPage.size() == 1) {
+                if (position > urlPage.size())
+                    return fragmentNextPrevChapter.getInstance(position, "Next chapter");
+                else
+                    return fragmentPageDownlad.getInstance(1, urlPage.get(0));
+            }else{
+                if (position >= urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
+                if (position < urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
+            }
+
+            if (urlPage.size() == 1) return fragmentPageDownlad.getInstance(1,urlPage.get(0));
             else return null;
         }
 

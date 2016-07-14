@@ -13,7 +13,7 @@ import com.example.nikita.progectmangaread.R;
 /**
  * Created by Nikita on 16.03.2016.
  * Этот фрагмент как "закрывалка" для определение что страницы кончились и
- *  нужно пролистать на след страницу.
+ * нужно пролистать на след страницу.
  */
 public class fragmentNextPrevChapter extends Fragment {
 
@@ -28,8 +28,6 @@ public class fragmentNextPrevChapter extends Fragment {
 
     @Override
     public void onDestroy() {
-       // Log.i("Destroy:", String.valueOf(getArguments().get("imageId")));
-        //   file.clearCache();
         super.onDestroy();
     }
 

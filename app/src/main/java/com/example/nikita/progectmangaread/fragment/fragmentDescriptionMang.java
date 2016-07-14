@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,18 +42,18 @@ public class fragmentDescriptionMang extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //list = new ArrayList<>();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = null ;
-        System.out.println("!!!!!!!!!!!!!!!! I am create !!!!!!!!!!!!!!!!!!!!!");
+        //System.out.println("!!!!!!!!!!!!!!!! I am create !!!!!!!!!!!!!!!!!!!!!");
         v = inflater.inflate(R.layout.glav_screen_mang, null);
         progress = (ProgressBar) v.findViewById(R.id.loadingDescription);
         linearLayout = (LinearLayout) v.findViewById(R.id.linear_description_mang);
         GridLayout gridLayout = (GridLayout) v.findViewById(R.id.gridLayoutDescription);
         linearLayout.setVisibility(View.INVISIBLE);
+
 
 
         gridLayout.setOnClickListener(new View.OnClickListener(){
@@ -83,14 +84,12 @@ public class fragmentDescriptionMang extends Fragment {
                 textView.setText(event.getCategory());
 
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView2);
-                DisplayMetrics displaymetrics = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-                if (displaymetrics.heightPixels < displaymetrics.widthPixels){
-                    imageView.setMinimumHeight(displaymetrics.heightPixels / 3);
-                    imageView.setMinimumWidth(displaymetrics.widthPixels / 4);
+                if (temple_pase.HEIGHT_WIND < temple_pase.WIDTH_WIND){
+                    imageView.setMinimumHeight(temple_pase.HEIGHT_WIND / 3);
+                    imageView.setMinimumWidth(temple_pase.WIDTH_WIND / 4);
                 }else {
-                    imageView.setMinimumHeight(displaymetrics.heightPixels / 4);
-                    imageView.setMinimumWidth(displaymetrics.widthPixels / 3);
+                    imageView.setMinimumHeight(temple_pase.HEIGHT_WIND / 4);
+                    imageView.setMinimumWidth(temple_pase.WIDTH_WIND / 3);
                 }
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
 

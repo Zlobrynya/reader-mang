@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -45,6 +46,9 @@ public class temple_pase extends BaseActivity {
     private AdapterPargerFragment gg;
     private MainClassTop classTop;
     private boolean doublePressBack = false;
+
+    public static int HEIGHT_WIND,WIDTH_WIND;
+
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private static final String APP_PREFERENCES_imgURL = "imgURL";
@@ -69,7 +73,7 @@ public class temple_pase extends BaseActivity {
         pager.setAdapter(gg);
         pager.setCurrentItem(1);
         boolean first = mSettings.getBoolean(APP_PREFERENCES_first,true);
-        //Разобраться для правильного внесение значений
+
         if (!first){
             mang = new classMang();
             mang.setImgURL(mSettings.getString(APP_PREFERENCES_imgURL, ""));
@@ -85,6 +89,11 @@ public class temple_pase extends BaseActivity {
             Intent newInten = new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
         }
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        HEIGHT_WIND = displaymetrics.heightPixels;
+        WIDTH_WIND = displaymetrics.widthPixels;
 
         //костыль для того что бы пославть EventBuss после создания фрагментов
         new Handler().postDelayed(new Runnable() {

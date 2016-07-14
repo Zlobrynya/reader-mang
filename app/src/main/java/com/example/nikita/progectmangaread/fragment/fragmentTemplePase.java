@@ -21,6 +21,7 @@ import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.classMang;
 import com.example.nikita.progectmangaread.classPMR.classTransport;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
+import com.example.nikita.progectmangaread.temple_pase;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -71,10 +72,8 @@ public class fragmentTemplePase extends Fragment {
                              Bundle savedInstanceState) {
         int height,width;
         //для узнавания разрешения экрана
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        height = displaymetrics.heightPixels/sizeCalculate(displaymetrics.heightPixels);
-        width = displaymetrics.widthPixels/sizeCalculate(displaymetrics.widthPixels);
+        height = temple_pase.HEIGHT_WIND/sizeCalculate(temple_pase.HEIGHT_WIND);
+        width = temple_pase.WIDTH_WIND/sizeCalculate(temple_pase.WIDTH_WIND);
 
         Log.i("W,H TemplePase",height + " " + width);
 
@@ -82,17 +81,22 @@ public class fragmentTemplePase extends Fragment {
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
 
         if (kolSum == 0){
-            if (sizeCalculate(displaymetrics.widthPixels) > 4)
-                kolSum = 40;
-            else
-                kolSum = 28;
+            switch (sizeCalculate(temple_pase.WIDTH_WIND)){
+                case 4: kolSum = 28;
+                    break;
+                case 6: kolSum = 40;
+                    break;
+                case 15: kolSum = 150;
+                    break;
+                default: kolSum = 90;
+            }
         }
 
         View v = inflater.inflate(R.layout.fragment, null);
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
-        gr.setNumColumns(sizeCalculate(displaymetrics.widthPixels));
+        gr.setNumColumns(sizeCalculate(temple_pase.WIDTH_WIND));
 
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -148,6 +152,7 @@ public class fragmentTemplePase extends Fragment {
             if (size <= 720) return 3;
             if (size >= 720 && size <= 1500) return 6;
             if (size >= 1500) return 8;
+            if (size >= 2000) return 12;
         }
         return 3;
     }
