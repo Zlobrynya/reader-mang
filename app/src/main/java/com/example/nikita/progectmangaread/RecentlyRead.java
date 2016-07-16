@@ -20,6 +20,7 @@ import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by Nikita on 28.04.2016.
@@ -28,7 +29,7 @@ public class RecentlyRead extends BaseActivity{
     private AdapterRecentlyRead adapter;
     private ArrayList<classRecentlyRead> list;
     private classDataBaseViewedHead classDataBaseViewedHead;
-    private ListView listView;
+    private StickyListHeadersListView listView;
     private SharedPreferences mSettings;
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
@@ -39,11 +40,13 @@ public class RecentlyRead extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        getLayoutInflater().inflate(R.layout.list_heads, frameLayout);
+        getLayoutInflater().inflate(R.layout.recently_read, frameLayout);
         pos = -1;
         list = new ArrayList<>();
         classDataBaseViewedHead = new classDataBaseViewedHead(this);
-        listView = (ListView) this.findViewById(R.id.listView);
+        listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
+        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list,temple_pase.WIDTH_WIND,temple_pase.HEIGHT_WIND);
+        listView.setAdapter(adapter);
 
         url = mSettings.getString(APP_PREFERENCES_URL, "");
         //ViewedHead.db
@@ -83,27 +86,27 @@ public class RecentlyRead extends BaseActivity{
         Log.i("Cursor: ", String.valueOf(cursor.getCount()));
         cursor.moveToFirst();
         for(int i = 0;i < cursor.getCount();i++){
-            String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter;
+            String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter,date;
             nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.NAME_MANG));
             URLchapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_CHAPTER));
             URLlastChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.LAST_CHAPTER));
             URLimg = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_IMG));
             nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
-            list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
+            date = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.DATA));
+            if (date != null)
+                list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter,date));
             cursor.moveToNext();
         }
         cursor.close();
-
-        //размер экрана
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int height = displaymetrics.heightPixels;
-        int width = displaymetrics.widthPixels;
-        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list,width,height);
-        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
-
+    @Override
+    public void onResume() {
+        list.clear();
+        initializationRR();
+        super.onResume();
+    }
 
 
     @Override

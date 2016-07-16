@@ -30,5 +30,6 @@ dependencies {
     compile 'rapid.decoder:library:0.3.0'
     compile 'rapid.decoder:jpeg-decoder:0.3.0'
     compile 'rapid.decoder:png-decoder:0.3.0'
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile project(':androidlibmagick')
 }

@@ -22,17 +22,20 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import java.util.ArrayList;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
 /**
  * Created by Nikita on 28.04.2016.
  */
-public class AdapterRecentlyRead extends ArrayAdapter<classRecentlyRead> {
+public class AdapterRecentlyRead extends ArrayAdapter<classRecentlyRead> implements StickyListHeadersAdapter {
     protected ImageLoader imageLoader;
-    int w, h;
+    private int w, h;
     private DisplayImageOptions options;
-
+    private ArrayList<classRecentlyRead> item;
 
     public AdapterRecentlyRead(Context context, int resource, ArrayList<classRecentlyRead> item, int w, int h) {
         super(context, resource, item);
+        this.item = item;
         imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
@@ -56,10 +59,19 @@ public class AdapterRecentlyRead extends ArrayAdapter<classRecentlyRead> {
                 .build();
     }
 
+    @Override
+    public long getHeaderId(int position) {
+        return Long.parseLong(item.get(position).getDate().replace("-",""));
+    }
+
     public class Holder {
         TextView nameChapter;
         TextView nameMang;
         ImageView img;
+    }
+
+    class HeaderViewHolder {
+        TextView text;
     }
 
     @Override
@@ -87,5 +99,24 @@ public class AdapterRecentlyRead extends ArrayAdapter<classRecentlyRead> {
             holder.nameChapter.setText(m1.getNameChapter());
         }
         return v;
+    }
+
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+        View v = convertView;
+        HeaderViewHolder holder;
+        if (convertView == null) {
+            holder = new HeaderViewHolder();
+            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = vi.inflate(R.layout.header_recently_read, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.head_recently_read);
+            convertView.setTag(holder);
+        } else {
+            holder = (HeaderViewHolder) convertView.getTag();
+        }
+        //set header text as first char in name
+        String headerText = item.get(position).getDate();
+        holder.text.setText(headerText);
+        return convertView;
     }
 }

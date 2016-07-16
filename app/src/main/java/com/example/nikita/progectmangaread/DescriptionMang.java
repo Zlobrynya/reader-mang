@@ -35,7 +35,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 
@@ -59,7 +61,7 @@ public class DescriptionMang extends BaseActivity {
     private Pars pars;
     private Element el;
     private boolean read;
-    private FloatingActionButton fab1,fab2,fab3;
+    private FloatingActionButton fab1,fab2,fab3,fab;
     private Animation show_fab_1;
     private Animation hide_fab_1;
     private boolean visF = false;
@@ -82,7 +84,8 @@ public class DescriptionMang extends BaseActivity {
         Intent intent = getIntent();
         read = intent.getBooleanExtra("read", false);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_lastChapter);
         fab2 = (FloatingActionButton) findViewById(R.id.fab_notebook);
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
@@ -271,7 +274,6 @@ public class DescriptionMang extends BaseActivity {
             intent.putExtra("URL", mang.getURL_site() + URL.getURL_chapter());
             intent.putExtra("NumberChapter", URL.getNumberChapter());
 
-
             classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + URL.getURL_chapter());
             String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE);
             if (helpVar.contains("null")) helpVar = "1";
@@ -298,6 +300,11 @@ public class DescriptionMang extends BaseActivity {
                     classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),classDataBaseViewedHead.VIEWED_HEAD);
                 }
             }
+            //Получаем дату и пишем в БД
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = df.format(c.getTime());
+            classDataBaseViewedHead.setData(mang.getName_characher(), formattedDate,classDataBaseViewedHead.DATA);
 
             if (!string.contains(mang.getURL_site())){
                 string = mang.getURL_site() + string;
@@ -337,6 +344,7 @@ public class DescriptionMang extends BaseActivity {
         return 0;
     }
 
+    //Открываем сылку в браузере
     public void openURL(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mang.getURL_characher()));
         startActivity(browserIntent);
@@ -461,6 +469,7 @@ public class DescriptionMang extends BaseActivity {
                 descriptionMang = classDescriptionMang;
                 EventBus.getDefault().post(classDescriptionMang);
                 if (lisens != null) lisens.onEnd();
+                fab.setVisibility(View.VISIBLE);
             }else{
                 Toast.makeText(DescriptionMang.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
                 DescriptionMang.this.finish();
