@@ -18,7 +18,10 @@ import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 
@@ -66,7 +69,14 @@ public class fragmentDescriptionList extends Fragment {
 
                 // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
                 //+"?mature=1"
-                Log.i("post", classForList1.getURL_chapter());
+
+                //Получаем дату когда тыкнули главу и загрузили в бд
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c.getTime());
+                classDataBaseViewedHead.setData(nameMang, formattedDate, com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead.DATA);
+
+                Log.i("Data", formattedDate);
                 EventBus.getDefault().post(classForList1);
             }
         });

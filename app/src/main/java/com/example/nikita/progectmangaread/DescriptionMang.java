@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
@@ -85,7 +88,6 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
-
 
         saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
 
@@ -335,6 +337,11 @@ public class DescriptionMang extends BaseActivity {
         return 0;
     }
 
+    public void openURL(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mang.getURL_characher()));
+        startActivity(browserIntent);
+    }
+
     public class adapterFragment  extends FragmentPagerAdapter {
         int kol;
         public adapterFragment(FragmentManager mgr, int kol) {
@@ -388,7 +395,16 @@ public class DescriptionMang extends BaseActivity {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).get();
+                try{
+                    if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
+                            .timeout(2000)
+                            .get();
+                }catch (java.net.SocketTimeoutException e){
+                    //если лимит превышен пытаемся заново подкл
+                    if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
+                            .timeout(3000)
+                            .get();
+                }
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
                 classDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,9 +60,10 @@ public class pagesDownload extends AppCompatActivity {
         actionBar.hide();
 
         urlPage = new ArrayList<>();
-        progress = (ProgressBar) findViewById(R.id.loading);
-
-
+        progress = (ProgressBar) findViewById(R.id.loadingPageView);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
+        params.setMargins(0, temple_pase.HEIGHT_WIND/2, 0, 0);
+        progress.setLayoutParams(params);
         pager = (ViewPager) findViewById(R.id.pagerImage);
         pager.setVisibility(View.GONE);
 

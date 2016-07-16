@@ -62,11 +62,12 @@ public class fragmentPageDownlad extends Fragment {
 
         @Override
         public void onImageLoaded() {
-         /*   if (image.getSHeight() < 3000){
+            if (image.getSHeight() > 3000){
+                image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+            } else {
                 image.setDoubleTapZoomDpi(150);
-            }else {
+            }
 
-            }*/
             Log.i("Image","Load");
             progress.setVisibility(View.GONE);
         }
@@ -92,15 +93,13 @@ public class fragmentPageDownlad extends Fragment {
         final View v = inflater.inflate(R.layout.layout_fullscreen_image, null);
 
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
+        progress = (ProgressBar) v.findViewById(R.id.loading);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
+        params.setMargins(0, temple_pase.HEIGHT_WIND / 2, 0, 0);
+        progress.setLayoutParams(params);
 
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
-
-        progress = (ProgressBar) v.findViewById(R.id.loading);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
-        params.setMargins(0, temple_pase.HEIGHT_WIND/2, 0, 0);
-        progress.setLayoutParams(params);
-
         image.setOnImageEventListener(d);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,8 +116,7 @@ public class fragmentPageDownlad extends Fragment {
 
         image.setVisibility(View.GONE);
         //установка на сколько приближается при двойном тапе
-        image.setDoubleTapZoomDpi(100);
-        image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+
         image.setMinimumDpi(60);
         AsyncTaskLisen as = new AsyncTaskLisen() {
             @Override

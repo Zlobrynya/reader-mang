@@ -18,16 +18,18 @@ public class classDataBaseViewedHead {
     public static final String NAME_MANG = "Name_mang";
     public static final String VIEWED_HEAD = "Viewed_head";
     public static final String LAST_CHAPTER = "Last_chapter";
-    public static final String LAST_PAGE= "Last_page";
-    public static final String NAME_LAST_CHAPTER= "name_last_chapter";
+    public static final String LAST_PAGE = "Last_page";
+    public static final String NAME_LAST_CHAPTER = "name_last_chapter";
     public static final String NOTEBOOK  = "notebook";
+    public static final String DATA  = "data";
+
 
     public classDataBaseViewedHead(Context context){
         mDatabaseHelper = new DatabaseHelper(context);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
                 +  DATABASE_TABLE + " (" + NAME_MANG + " text not null, " +  VIEWED_HEAD
-                + " text not null, " +  LAST_CHAPTER + " text, "+  NAME_LAST_CHAPTER + " text, " +   LAST_PAGE +" integer, "+  NOTEBOOK +  " integer);";
+                + " text not null, " +  LAST_CHAPTER + " text, "+  NAME_LAST_CHAPTER + " text, " +   LAST_PAGE +" integer, "+  NOTEBOOK +  " integer," +  DATA + " text);";
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
@@ -41,7 +43,7 @@ public class classDataBaseViewedHead {
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
                 + DATABASE_TABLE + " (" + NAME_MANG + " text not null, " + VIEWED_HEAD
-                + " text not null, " + LAST_CHAPTER + " text, "+ NAME_LAST_CHAPTER + " text, " +  LAST_PAGE +" integer, "+ NOTEBOOK +  " integer);";
+                + " text not null, " +  LAST_CHAPTER + " text, "+  NAME_LAST_CHAPTER + " text, " +   LAST_PAGE +" integer, "+  NOTEBOOK +  " integer," +  DATA + " text);";
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
         addBasaData(name);
     }
@@ -139,18 +141,6 @@ public class classDataBaseViewedHead {
         }
     }
 
- /*   public String getNameMang(int i){
-        String name = null;
-        String query = "select * from ViewedHead WHERE _id="+(i+1);
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-        if (cursor.getCount() != 0){
-            cursor.moveToFirst();
-            name =  cursor.getString(cursor.getColumnIndex(NAME_MANG));
-        }
-        cursor.close();
-        return name;
-    }*/
-
     public void setData(String nameMang, String data,String where){
         String query,name;
         name = "\"";
@@ -165,17 +155,17 @@ public class classDataBaseViewedHead {
             cv.put(where, data);
             mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + "=" + name,null);
         }
+        cursor.close();
     }
 
     public Cursor getViewedChapter(String NameTable){
         String query;
-        query = "SELECT " + NameTable + ".*" + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER + ", "+ LAST_PAGE + " "+
+        query = "SELECT " + NameTable + ".*" + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER + ", "+ LAST_PAGE + ", "+ DATA + " " +
                 "FROM ViewedHead" +
-                " INNER JOIN " + NameTable + " ON "+ NAME_MANG + " = " + NameTable+"."+ ClassDataBaseListMang.NAME_MANG;
+                " INNER JOIN " + NameTable + " ON "+ NAME_MANG + " = " + NameTable+"."+ ClassDataBaseListMang.NAME_MANG + " ORDER BY date(" + DATA + ") DESC";
         Log.i("BD Viewed",query);
 
-        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-        return cursor;
+        return mSqLiteDatabase.rawQuery(query, null);
     }
 
     public Cursor getNotebook(){

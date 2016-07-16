@@ -271,7 +271,9 @@ public class fragmentTemplePase extends Fragment {
                 if (doc == null) {
                     classMang.editWhere(page);
                     // Подключаемся и качаем html страницу
-                    doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll()).get();
+                    doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll()).userAgent("Mozilla")
+                            .timeout(3000)
+                            .get();
                 }
 
                 Element el = doc.select(classMang.getNameCell()).first();

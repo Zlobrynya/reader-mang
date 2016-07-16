@@ -12,7 +12,7 @@ import android.provider.BaseColumns;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mang.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -24,6 +24,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            if (newVersion == 2 && oldVersion == 1){
+                db.execSQL("ALTER TABLE ViewedHead ADD COLUMN data TEXT DEFAULT 0");
+            }
     }
 }
