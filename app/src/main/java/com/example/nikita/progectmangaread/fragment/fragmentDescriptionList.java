@@ -18,7 +18,6 @@ import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.classForList;
 import com.example.nikita.progectmangaread.classPMR.classTransportForList;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +32,7 @@ public class fragmentDescriptionList extends Fragment {
     View v;
     ArrayList<classForList> list;
     public AdapterList myAdap;
-    private ListView gr;
+    private ListView listView;
     private String nameMang,imgURL;
     private classDataBaseViewedHead classDataBaseViewedHead;
     private ClassDataBaseListMang ClassDataBaseListMang;
@@ -49,27 +48,23 @@ public class fragmentDescriptionList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.list_heads, null);
-        gr = (ListView) v.findViewById(R.id.listView);
-        gr.setAdapter(myAdap);
+        listView = (ListView) v.findViewById(R.id.listView);
+        listView.setAdapter(myAdap);
         final classForList classForList = new classForList();
         classForList.setName_chapter("GG");
 
-        gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 classForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
                 classForList1.setNumberChapter(position);
-                //classForList1.setURL_chapter(classForList1.getURL_chapter());
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
+
                 classDataBaseViewedHead.editBaseDate(nameMang, String.valueOf(position));
-                //      classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
-
-                // classDataBaseViewedHead.editLastChapter(nameMang,classForList1.getURL_chapter());
-                //+"?mature=1"
-
                 //Получаем дату когда тыкнули главу и загрузили в бд
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

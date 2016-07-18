@@ -31,8 +31,6 @@ public class MainActivity extends BaseActivity {
        // setContentView(R.layout.activity_main);
         getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
         newInten = new Intent(MainActivity.this,temple_pase.class);
-
-
     }
 
     public void Click(View view) {

@@ -113,9 +113,12 @@ public class DownChapter extends Service {
 
         for (String s: chapter){
             urlChapter.add(urlMang+s);
-            String nameDir = urlMang.replace("http://", "");
-            nameDir = nameDir.replace(nameSite+"/","");
-            nameDir += s.replace("/","_");
+            String nameDir = urlMang;
+            nameDir = nameDir.replace(nameSite,"");
+            nameDir = nameDir.replace("/","");
+            nameDir += s.replace("?mature=1"," ");
+            nameDir = nameDir.replace("/","_");
+            Log.i(LOG_TAG,nameDir);
             listNameMang.add(nameDir);
         }
 

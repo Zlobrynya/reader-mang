@@ -60,7 +60,7 @@ public class DescriptionMang extends BaseActivity {
     private adapterFragment gg;
     private Pars pars;
     private Element el;
-    private boolean read;
+    private boolean read,download;
     private FloatingActionButton fab1,fab2,fab3,fab;
     private Animation show_fab_1;
     private Animation hide_fab_1;
@@ -79,10 +79,11 @@ public class DescriptionMang extends BaseActivity {
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
-        arList = new ArrayList<classForList>();
+        arList = new ArrayList<>();
         EventBus.getDefault().register(this);
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         read = intent.getBooleanExtra("read", false);
+        download = false;
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
@@ -133,10 +134,10 @@ public class DescriptionMang extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (visF){
+                if (visF) {
                     buttonINVisble();
                     visF = !visF;
-                }else {
+                } else {
                     buttonVisible();
                     visF = !visF;
 
@@ -166,6 +167,17 @@ public class DescriptionMang extends BaseActivity {
                 EventBus.getDefault().post("notebook");
             }
         });
+
+        fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newInten = new Intent(DescriptionMang.this,DownloadChapter.class);
+                newInten.putExtra("mang",mang.getURL_characher());
+                newInten.putExtra("site",mang.getURL_site());
+                startActivity(newInten);
+                download = true;
+            }
+        });
     }
 
     @Override
@@ -181,6 +193,8 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onStop() {
+        if (download)
+            EventBus.getDefault().post(classTransportForList);
         super.onStop();
     }
 

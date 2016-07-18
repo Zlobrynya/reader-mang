@@ -22,22 +22,34 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".DescriptionMang"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".pagesDownload"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".pagesDownload" />
+
         <activity
             android:name=".BaseActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".RecentlyRead"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".Bookmark"
+        <activity
+            android:name=".Bookmark"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".DownloadChapter"/>
+
+        <service
+            android:name=".servise.DownChapter"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>
