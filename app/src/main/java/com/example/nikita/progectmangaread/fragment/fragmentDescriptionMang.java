@@ -56,7 +56,7 @@ public class fragmentDescriptionMang extends Fragment {
 
 
 
-        gridLayout.setOnClickListener(new View.OnClickListener(){
+        linearLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 EventBus.getDefault().post("Click");
             }

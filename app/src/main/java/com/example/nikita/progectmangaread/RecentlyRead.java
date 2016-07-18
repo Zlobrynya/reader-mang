@@ -93,7 +93,7 @@ public class RecentlyRead extends BaseActivity{
             URLimg = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_IMG));
             nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
             date = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.DATA));
-            if (date != null)
+            if (date != null && !nameChapter.contains("null"))
                 list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter,date));
             cursor.moveToNext();
         }

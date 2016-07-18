@@ -17,7 +17,13 @@
         <item
             android:id="@+id/recently_read"
             android:icon="@drawable/ic_schedule_black_48dp"
-            android:title="recently read" />
+            android:title="Recently read" />
+
+        <item
+            android:id="@+id/download_chapter"
+            android:icon="@android:drawable/ic_menu_save"
+            android:title="Download" />
+
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_settings_black_48dp"

@@ -30,7 +30,7 @@ public class cacheFile {
     private AsyncTaskLisen as;
     private ProgressBar progressBar;
 
-    public cacheFile(File dirFile, String nameDir,AsyncTaskLisen as,ProgressBar progressBar){
+    public cacheFile(File dirFile, String nameDir, AsyncTaskLisen as, ProgressBar progressBar){
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
             this.dirFile.mkdir();
@@ -39,13 +39,27 @@ public class cacheFile {
         this.progressBar = progressBar;
     }
 
+    public cacheFile(){
+    }
+
     public cacheFile(File dirFile, String nameDir){
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
             this.dirFile.mkdir();
         }
         this.as = null;
+        progressBar = null;
     }
+
+    public void parameterSetting(File dirFile, String nameDir, AsyncTaskLisen as, ProgressBar progressBar){
+        this.dirFile = new File(dirFile,nameDir);
+        if (!this.dirFile.exists()){
+            this.dirFile.mkdir();
+        }
+        this.as = as;
+        this.progressBar = progressBar;
+    }
+
     //download image and cache it
     public void loadAndCache(String url, int number){
         class downlandImage extends AsyncTask<String,Integer,Void> {
@@ -71,7 +85,7 @@ public class cacheFile {
                         if (params[0].contains("gif")){
                             FileOutputStream  out = new FileOutputStream(f);
                             BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, out);
-                       }else {
+                        }else {
                             OutputStream os = new FileOutputStream(f);
                             CopyStream(is, os);
                             os.close();
@@ -88,7 +102,8 @@ public class cacheFile {
             //выводим в прогресс бар, сколько скачалось
             @Override
             protected void onProgressUpdate(Integer... values) {
-                progressBar.setProgress(values[0]);
+                if (progressBar != null)
+                    progressBar.setProgress(values[0]);
                 //Log.i("ProgressBar", String.valueOf(values[0]));
                 super.onProgressUpdate(values);
             }
@@ -119,7 +134,8 @@ public class cacheFile {
 
             @Override
             protected void onPostExecute(Void result){
-              as.onEnd();
+                if (as != null)
+                    as.onEnd();
             }
         }
 
@@ -140,5 +156,9 @@ public class cacheFile {
             return;
         for(File f:files)
             f.delete();
+    }
+
+    public void clearDownloadChapter(){
+        dirFile.deleteOnExit();
     }
 }
