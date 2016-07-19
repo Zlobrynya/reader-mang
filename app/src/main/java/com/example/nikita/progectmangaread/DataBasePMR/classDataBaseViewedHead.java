@@ -178,7 +178,7 @@ public class ClassDataBaseViewedHead {
         Cursor cursor = null;
         for (int i = 0; i < cursorTable.getCount();i++){
             String table = cursorTable.getString(0);
-            if (!(table.contains("metadata") || table.contains("sqlite") || table.contains("ViewedHead"))){
+            if (!(table.contains("metadata") || table.contains("sqlite") || table.contains("ViewedHead") || table.contains("DownloadMang"))){
                 if (!query.isEmpty()){
                     query += " UNION ";
                 }

@@ -62,7 +62,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         list = new ArrayList<>();
         setRetainInstance(true);
         classMang = new ClassTransport();
-        myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
+        myAdap = new AdapterList(getActivity(), R.layout.list_view_checkbox, list);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

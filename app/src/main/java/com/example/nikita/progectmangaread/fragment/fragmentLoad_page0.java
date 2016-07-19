@@ -20,7 +20,7 @@ public class fragmentLoad_page0 extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-    /* Inflate the layout for this fragment */
+    /* Inflate the layout for this ffragment */
         View view = inflater.inflate(R.layout.fragment_load, container, false);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_load, new fragmentTemplePase());
@@ -41,8 +41,8 @@ public class fragmentLoad_page0 extends Fragment{
             FragmentTransaction transaction = getFragmentManager()
                     .beginTransaction();
 		/*
-		 * When this container fragment is created, we fill it with our first
-		 * "real" fragment
+		 * When this container ffragment is created, we fill it with our first
+		 * "real" ffragment
 		 */
             fragmentTemplePase frag = new fragmentTemplePase();
             frag.add(event);

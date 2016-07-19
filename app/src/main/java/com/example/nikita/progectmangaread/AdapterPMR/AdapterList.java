@@ -37,7 +37,7 @@ public class AdapterList extends ArrayAdapter<ClassForList> {
             holder = (Holder) v.getTag();
         }else {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.layout_for_list_view, null);
+            v = vi.inflate(R.layout.list_view_checkbox, null);
             holder.checkBox = (CheckBox)v.findViewById(R.id.checkBoxList);
             holder.tv = (TextView) v.findViewById(R.id.listNameChapter);
             v.setTag(holder);

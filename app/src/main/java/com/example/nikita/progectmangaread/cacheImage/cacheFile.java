@@ -52,9 +52,15 @@ public class CacheFile {
     }
 
     public void parameterSetting(File dirFile, String nameDir, AsyncTaskLisen as, ProgressBar progressBar){
+        String[] namesDir = nameDir.split("/");
+        File firsFile = new File(dirFile,namesDir[0]);
+        if (!firsFile.exists()){
+            firsFile.mkdir();
+        }
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
             this.dirFile.mkdir();
+
         }
         this.as = as;
         this.progressBar = progressBar;

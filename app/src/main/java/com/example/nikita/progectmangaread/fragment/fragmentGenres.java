@@ -43,7 +43,7 @@ public class fragmentGenres extends Fragment {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
         classTransport = new ClassTransport();
-        myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
+        myAdap = new AdapterList(getActivity(), R.layout.list_view_checkbox, list);
         setRetainInstance(true);
     }
 

@@ -20,7 +20,7 @@ import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
-import com.example.nikita.progectmangaread.TopManga;
+import com.example.nikita.progectmangaread.Activity.TopManga;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -91,7 +91,7 @@ public class fragmentTemplePase extends Fragment {
             }
         }
 
-        View v = inflater.inflate(R.layout.fragment, null);
+        View v = inflater.inflate(R.layout.grid_view, null);
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);

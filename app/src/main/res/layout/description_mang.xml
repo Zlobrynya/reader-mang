@@ -3,9 +3,9 @@
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/activity_temple_pase"/>
+    <include layout="@layout/activity_top_mang"/>
 
-    <include layout="@layout/layout_fap_button" />
+    <include layout="@layout/fab_button" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

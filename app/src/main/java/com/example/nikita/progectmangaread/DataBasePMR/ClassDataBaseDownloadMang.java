@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 /**
  * Created by Nikita on 19.07.2016.
@@ -92,4 +94,32 @@ public class ClassDataBaseDownloadMang {
         cursor.close();
     }
 
+    public Cursor getDownloadMang(){
+        String query;
+        query = "SELECT " + "*" + "FROM " + DATABASE_TABLE;
+        Log.i("BD Viewed", query);
+        return mSqLiteDatabase.rawQuery(query, null);
+    }
+
+    public String getDataFromDataBase(String nameMang,String where){
+        String query,name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + "=" +
+                name;
+        String data = null;
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        if (cursor.getCount() != 0){
+            cursor.moveToFirst();
+            data = cursor.getString(cursor.getColumnIndex(where));
+        }
+        cursor.close();
+        return data;
+    }
+
+    public long fetchPlacesCount() {
+        String sql = "SELECT COUNT(*) FROM " +  DATABASE_TABLE;
+        SQLiteStatement statement = mSqLiteDatabase.compileStatement(sql);
+        return statement.simpleQueryForLong();
+    }
 }

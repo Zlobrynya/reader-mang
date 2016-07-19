@@ -25,7 +25,7 @@
         android:id="@+id/imageButton_delete_notebook"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_delete_forever_black_24dp"
-        android:onClick="DeleteNotebook"
+        android:onClick="deleteDownloadedMang"
         />
 
 </LinearLayout>

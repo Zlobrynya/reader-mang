@@ -16,7 +16,7 @@ import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.decode.MyImageDecoder;
 import com.example.nikita.progectmangaread.decode.MyImageRegionDecoder;
-import com.example.nikita.progectmangaread.TopManga;
+import com.example.nikita.progectmangaread.Activity.TopManga;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -90,7 +90,7 @@ public class fragmentPageDownlad extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.layout_fullscreen_image, null);
+        final View v = inflater.inflate(R.layout.fullscreen_image, null);
 
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);

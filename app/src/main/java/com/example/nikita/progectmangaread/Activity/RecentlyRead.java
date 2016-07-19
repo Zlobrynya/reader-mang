@@ -1,6 +1,5 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -12,6 +11,7 @@ import android.widget.AdapterView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterRecentlyRead;
 import com.example.nikita.progectmangaread.DataBasePMR.*;
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 
@@ -37,7 +37,7 @@ public class RecentlyRead extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
         getLayoutInflater().inflate(R.layout.recently_read, frameLayout);
         pos = -1;
         list = new ArrayList<>();

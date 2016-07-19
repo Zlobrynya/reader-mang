@@ -106,21 +106,16 @@ public class ServiceDownChapter extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String urlMang = intent.getStringExtra("URL_Mang");
         String[] chapter = intent.getStringExtra("chapter").split(",");
+        String[] nameDir = intent.getStringExtra("name_dir").split(",");
         String nameSite = intent.getStringExtra("name_site");
         boolean firstUrl = false;
         if (urlChapter.isEmpty())
             firstUrl = true;
 
-        for (String s: chapter){
+        for (String s: chapter)
             urlChapter.add(urlMang+s);
-            String nameDir = urlMang;
-            nameDir = nameDir.replace(nameSite,"");
-            nameDir = nameDir.replace("/","");
-            nameDir += s.replace("?mature=1"," ");
-            nameDir = nameDir.replace("/","_");
-            Log.i(LOG_TAG, nameDir);
-            listNameMang.add(nameDir);
-        }
+        for (String s: nameDir)
+            listNameMang.add(s);
 
         if (firstUrl)
             new ParsURLPage(receivedAddress).execute();

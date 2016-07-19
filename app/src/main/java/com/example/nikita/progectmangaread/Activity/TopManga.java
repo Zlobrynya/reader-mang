@@ -1,6 +1,5 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -15,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
@@ -56,8 +56,8 @@ public class TopManga extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_temple_pase, frameLayout);
-        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        getLayoutInflater().inflate(R.layout.activity_top_mang, frameLayout);
+        mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
 
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new AdapterPargerFragment(getSupportFragmentManager(),3);

@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,9 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.nikita.progectmangaread.AdapterPMR.AdapterNotebook;
+import com.example.nikita.progectmangaread.AdapterPMR.AdapterBookmark;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 
@@ -24,12 +25,11 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 09.05.2016.
  */
 public class Bookmark extends BaseActivity {
-    private AdapterNotebook adapter;
+    private AdapterBookmark adapter;
     private ArrayList<ClassRecentlyRead> list;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ListView listView;
     private int pos;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +42,6 @@ public class Bookmark extends BaseActivity {
         pos = - 1;
 
         listView = (ListView) this.findViewById(R.id.listView);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int position, long id) {
-                return true;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -104,7 +90,7 @@ public class Bookmark extends BaseActivity {
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
-        adapter = new AdapterNotebook(this,R.layout.list_heads,list,width,height);
+        adapter = new AdapterBookmark(this,R.layout.list_heads,list,width,height);
         listView.setAdapter(adapter);
     }
 

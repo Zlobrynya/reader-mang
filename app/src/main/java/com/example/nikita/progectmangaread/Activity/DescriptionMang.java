@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,8 +15,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
@@ -57,7 +59,7 @@ public class DescriptionMang extends BaseActivity {
     private adapterFragment gg;
     private Pars pars;
     private Element el;
-    private boolean read,download;
+    private boolean read, downloadChapter;
     private FloatingActionButton fab1,fab2,fab3,fab;
     private Animation show_fab_1;
     private Animation hide_fab_1;
@@ -71,16 +73,18 @@ public class DescriptionMang extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        kol = 0;
-        getLayoutInflater().inflate(R.layout.layout_description_mang, frameLayout);
+        EventBus.getDefault().register(this);
+        getLayoutInflater().inflate(R.layout.description_mang, frameLayout);
+
         pager=(ViewPager)findViewById(R.id.pager);
         gg = new adapterFragment(getSupportFragmentManager(),2);
         pager.setAdapter(gg);
         arList = new ArrayList<>();
-        EventBus.getDefault().register(this);
         final Intent intent = getIntent();
         read = intent.getBooleanExtra("read", false);
-        download = false;
+        kol = 0;
+
+        downloadChapter = false;
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
@@ -180,14 +184,12 @@ public class DescriptionMang extends BaseActivity {
                 classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getToms(),ClassDataBaseDownloadMang.TOMS);
                 classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getTranslate(),ClassDataBaseDownloadMang.TRANSLATION);
 
-
-
                 Intent newInten = new Intent(DescriptionMang.this,DownloadChapter.class);
                 newInten.putExtra("mang",mang.getURL_characher());
                 newInten.putExtra("site",mang.getURL_site());
                 newInten.putExtra("Name",mang.getName_characher());
                 startActivity(newInten);
-                download = true;
+                downloadChapter = true;
             }
         });
     }
@@ -205,7 +207,7 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onStop() {
-        if (download)
+        if (downloadChapter)
             EventBus.getDefault().post(classTransportForList);
         super.onStop();
     }
@@ -293,19 +295,28 @@ public class DescriptionMang extends BaseActivity {
         if (read) startLastChapter();
     }
 
-    public void onEvent(ClassForList URL){
+    public void onEvent(ClassForList event){
         //узнаем нужно ли запускать активити
-        if (URL.getNumberChapter() >= 0){
+        if (event.getNumberChapter() >= 0){
             Intent intent = new Intent(this, PagesDownload.class);
-            intent.putExtra("URL", mang.getURL_site() + URL.getURL_chapter());
-            intent.putExtra("NumberChapter", URL.getNumberChapter());
+            if (!event.getDownload()){
+                intent.putExtra("URL", mang.getURL_site() + event.getURL_chapter());
+                intent.putExtra("NumberChapter", event.getNumberChapter());
+                classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + event.getURL_chapter());
+                String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE);
+                if (helpVar.contains("null")) helpVar = "1";
+                intent.putExtra("NumberPage",helpVar);
+                intent.putExtra("Chapter", mang.getName_characher());
+                startActivity(intent);
+            }else {
+                intent.putExtra("URL", event.getURL_chapter());
+                intent.putExtra("NumberChapter", event.getNumberChapter());
+                intent.putExtra("Download",true);
+                intent.putExtra("NumberPage","1");
+                intent.putExtra("Chapter", event.getName_chapter());
+                startActivity(intent);
+            }
 
-            classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + URL.getURL_chapter());
-            String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE);
-            if (helpVar.contains("null")) helpVar = "1";
-            intent.putExtra("NumberPage",helpVar);
-            intent.putExtra("Chapter", mang.getName_characher());
-            startActivity(intent);
         }
     }
 

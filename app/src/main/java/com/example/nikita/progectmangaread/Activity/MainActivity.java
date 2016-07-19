@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
 import android.support.v4.view.GravityCompat;
@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
 
 import de.greenrobot.event.EventBus;

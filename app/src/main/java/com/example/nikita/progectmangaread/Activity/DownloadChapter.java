@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 import com.example.nikita.progectmangaread.service.ServiceDownChapter;
@@ -30,7 +31,7 @@ public class DownloadChapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_chapter);
         list = new ArrayList<>();
-        myAdap = new AdapterList(this, R.layout.layout_for_list_view, list);
+        myAdap = new AdapterList(this, R.layout.list_view_checkbox, list);
         listView = (ListView) findViewById(R.id.listChapter);
         listView.setAdapter(myAdap);
         EventBus.getDefault().register(this);
@@ -59,20 +60,24 @@ public class DownloadChapter extends AppCompatActivity {
             public void onClick(View view) {
                 String chapter = "";
                 String nameChapter = "";
+                String startStr = urlMang.replace(urlSite,"").replace("/","");
+                String nameDir = "";
                 for (ClassForList classForList: list){
                     if (classForList.getCheck()) {
+                        nameDir += startStr + "/" + classForList.getURL_chapter().substring(1).replace("/","_") + ",";
                         chapter += classForList.getURL_chapter() + ",";
                         nameChapter += classForList.getName_chapter() + ",";
                     }
                 }
                 ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DownloadChapter.this);
-                classDataBaseDownloadMang.setData(name,chapter,ClassDataBaseDownloadMang.NAME_DIR);
+                classDataBaseDownloadMang.setData(name, nameDir,ClassDataBaseDownloadMang.NAME_DIR);
                 classDataBaseDownloadMang.setData(name, nameChapter, ClassDataBaseDownloadMang.NAME_CHAPTER);
 
                // Log.i("DownloadChapter", chapter.substring(0,chapter.length()-2));
-                startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
+               startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
                         .putExtra("name_site", urlSite)
-                        .putExtra("chapter", chapter));
+                        .putExtra("chapter", chapter)
+                        .putExtra("name_dir", nameDir));
 
                 Toast.makeText(DownloadChapter.this, "Mang download.", Toast.LENGTH_SHORT).show();
             }

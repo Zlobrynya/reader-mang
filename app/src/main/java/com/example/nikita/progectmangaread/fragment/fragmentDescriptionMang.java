@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
-import com.example.nikita.progectmangaread.TopManga;
+import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.greenrobot.event.EventBus;
@@ -39,7 +39,7 @@ public class fragmentDescriptionMang extends Fragment {
                              Bundle savedInstanceState) {
         v = null ;
         //System.out.println("!!!!!!!!!!!!!!!! I am create !!!!!!!!!!!!!!!!!!!!!");
-        v = inflater.inflate(R.layout.glav_screen_mang, null);
+        v = inflater.inflate(R.layout.description_screen_mang, null);
         progress = (ProgressBar) v.findViewById(R.id.loadingDescription);
         linearLayout = (LinearLayout) v.findViewById(R.id.linear_description_mang);
         GridLayout gridLayout = (GridLayout) v.findViewById(R.id.gridLayoutDescription);

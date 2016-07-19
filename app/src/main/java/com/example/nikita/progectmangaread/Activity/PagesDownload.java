@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread;
+package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,7 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
+import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.fragment.fragmentNextPrevChapter;
 import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
@@ -134,9 +136,13 @@ public class PagesDownload extends AppCompatActivity {
         pageNumber = Integer.parseInt(intent.getStringExtra("NumberPage"));
         nameMang = intent.getStringExtra("Chapter");
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
+        boolean download = intent.getBooleanExtra("Download",false);
+        if (!download){
+            ParsURLPage par = new ParsURLPage(addImg,URL);
+            par.execute();
+        }else {
 
-        ParsURLPage par = new ParsURLPage(addImg,URL);
-        par.execute();
+        }
     }
 
     //Для фрагментов

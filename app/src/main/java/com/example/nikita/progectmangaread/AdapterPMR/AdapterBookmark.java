@@ -27,13 +27,13 @@ import java.util.ArrayList;
 /**
  * Created by Nikita on 03.05.2016.
  */
-public class AdapterNotebook  extends ArrayAdapter<ClassRecentlyRead> {
+public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
     protected ImageLoader imageLoader;
     int w, h;
     private DisplayImageOptions options;
 
 
-    public AdapterNotebook(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
+    public AdapterBookmark(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
         super(context, resource, item);
         imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
@@ -72,7 +72,7 @@ public class AdapterNotebook  extends ArrayAdapter<ClassRecentlyRead> {
             holder = (Holder) v.getTag();
         } else {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.layout_notebook, null);
+            v = vi.inflate(R.layout.bookmark, null);
             holder.img = (ImageView) v.findViewById(R.id.imageView_notebook);
             holder.img.setMinimumWidth(w / 4);
             holder.img.setMinimumHeight(h / 5);
