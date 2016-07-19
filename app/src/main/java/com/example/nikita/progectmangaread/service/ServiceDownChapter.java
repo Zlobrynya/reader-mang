@@ -1,4 +1,4 @@
-package com.example.nikita.progectmangaread.servise;
+package com.example.nikita.progectmangaread.service;
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.cacheImage.cacheFile;
+import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
 
-public class DownChapter extends Service {
+public class ServiceDownChapter extends Service {
     private final String LOG_TAG = "Servise Down";
     private ArrayList<String> urlPage,urlChapter,listNameMang,listNameChapter;
     private int numberPage,startId;
-    private cacheFile cacheFile;
+    private CacheFile cacheFile;
     private ExecutorService es;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
@@ -88,7 +88,7 @@ public class DownChapter extends Service {
         urlChapter = new ArrayList<>();
         listNameMang = new ArrayList<>();
         listNameChapter = new ArrayList<>();
-        cacheFile = new cacheFile();
+        cacheFile = new CacheFile();
         numberPage = 0;
         startId = 0;
 
@@ -118,14 +118,14 @@ public class DownChapter extends Service {
             nameDir = nameDir.replace("/","");
             nameDir += s.replace("?mature=1"," ");
             nameDir = nameDir.replace("/","_");
-            Log.i(LOG_TAG,nameDir);
+            Log.i(LOG_TAG, nameDir);
             listNameMang.add(nameDir);
         }
 
         if (firstUrl)
             new ParsURLPage(receivedAddress).execute();
 
-        Log.i(LOG_TAG,"d");
+        Log.i(LOG_TAG, "d");
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -5,18 +5,18 @@ import android.graphics.Bitmap;
 /**
  * Created by Nikita on 01.01.2016.
  */
-public class MainClassTop {
+public class ClassMainTop {
     private String URL_characher;
     private String name_characher;
     private String URL_img;
     private Bitmap img;
     private String URL_site;
 
-    public MainClassTop(){
+    public ClassMainTop(){
 
     }
 
-    public MainClassTop(String URL, String name,String img,String URL_site){
+    public ClassMainTop(String URL, String name, String img, String URL_site){
         URL_characher = URL;
         name_characher = name;
         URL_img = img;

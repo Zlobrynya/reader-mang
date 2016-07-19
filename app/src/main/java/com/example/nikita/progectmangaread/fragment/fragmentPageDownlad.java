@@ -13,10 +13,10 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.cacheImage.cacheFile;
+import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.decode.MyImageDecoder;
 import com.example.nikita.progectmangaread.decode.MyImageRegionDecoder;
-import com.example.nikita.progectmangaread.temple_pase;
+import com.example.nikita.progectmangaread.TopManga;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ import de.greenrobot.event.EventBus;
  */
 public class fragmentPageDownlad extends Fragment {
     private int number;
-    private cacheFile file;
+    private CacheFile file;
     private SubsamplingScaleImageView image;
     private ProgressBar progress;
 
@@ -95,7 +95,7 @@ public class fragmentPageDownlad extends Fragment {
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
-        params.setMargins(0, temple_pase.HEIGHT_WIND / 2, 0, 0);
+        params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
         progress.setLayoutParams(params);
 
         image.setBitmapDecoderClass(MyImageDecoder.class);
@@ -133,7 +133,7 @@ public class fragmentPageDownlad extends Fragment {
             }
         };
 
-        file = new cacheFile(getContext().getCacheDir(),"pageCache",as,progress);
+        file = new CacheFile(getContext().getCacheDir(),"pageCache",as,progress);
         file.loadAndCache(url, number);
         return v;
     }

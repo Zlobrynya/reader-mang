@@ -1,28 +1,19 @@
 package com.example.nikita.progectmangaread.fragment;
 
-import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.nikita.progectmangaread.DescriptionMang;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
-import com.example.nikita.progectmangaread.temple_pase;
+import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
+import com.example.nikita.progectmangaread.TopManga;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import de.greenrobot.event.EventBus;
@@ -34,7 +25,7 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class fragmentDescriptionMang extends Fragment {
-    private classDescriptionMang classDescriptionMang;
+    private ClassDescriptionMang ClassDescriptionMang;
     private View v;
     private ProgressBar progress;
     private LinearLayout linearLayout,linearLayoutButton;
@@ -64,10 +55,10 @@ public class fragmentDescriptionMang extends Fragment {
         return v;
     }
 
-    public void onEvent(classDescriptionMang event) {
+    public void onEvent(ClassDescriptionMang event) {
         if (this.getArguments().getInt("num") == 0){
             if (v != null) {
-                classDescriptionMang = event;
+                ClassDescriptionMang = event;
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);
                 textView.setText(event.getNameAuthor());
                 textView = (TextView) v.findViewById(R.id.textRanck);
@@ -84,12 +75,12 @@ public class fragmentDescriptionMang extends Fragment {
                 textView.setText(event.getCategory());
 
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView2);
-                if (temple_pase.HEIGHT_WIND < temple_pase.WIDTH_WIND){
-                    imageView.setMinimumHeight(temple_pase.HEIGHT_WIND / 3);
-                    imageView.setMinimumWidth(temple_pase.WIDTH_WIND / 4);
+                if (TopManga.HEIGHT_WIND < TopManga.WIDTH_WIND){
+                    imageView.setMinimumHeight(TopManga.HEIGHT_WIND / 3);
+                    imageView.setMinimumWidth(TopManga.WIDTH_WIND / 4);
                 }else {
-                    imageView.setMinimumHeight(temple_pase.HEIGHT_WIND / 4);
-                    imageView.setMinimumWidth(temple_pase.WIDTH_WIND / 3);
+                    imageView.setMinimumHeight(TopManga.HEIGHT_WIND / 4);
+                    imageView.setMinimumWidth(TopManga.WIDTH_WIND / 3);
                 }
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
 

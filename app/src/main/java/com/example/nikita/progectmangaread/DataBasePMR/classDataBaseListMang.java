@@ -5,9 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.provider.BaseColumns;
 
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 
 /**
  * Created by Nikita on 29.03.2016.
@@ -60,7 +59,7 @@ public class ClassDataBaseListMang {
     }
 
     //добавление в базу данных
-    public void addBasaData(MainClassTop a, int number){
+    public void addBasaData(ClassMainTop a, int number){
         String query,name;
         name = "\"";
         name += a.getName_characher().replace('"',' ') + "\"";
@@ -81,13 +80,13 @@ public class ClassDataBaseListMang {
     }
 
     //получаем структуру с именем и сылками
-    public MainClassTop getMainClassTop(int kol){
+    public ClassMainTop getMainClassTop(int kol){
         String query = "SELECT " + "*" + " FROM " + nameTable + " WHERE " + TOP + "=" +
                 (kol);
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
 
         if (cursor.getCount() != 0){
-            MainClassTop a = new MainClassTop();
+            ClassMainTop a = new ClassMainTop();
             cursor.moveToFirst();
             a.setURL_img(cursor.getString(cursor.getColumnIndex( URL_IMG)));
             a.setName_characher(cursor.getString(cursor.getColumnIndex( NAME_MANG)));

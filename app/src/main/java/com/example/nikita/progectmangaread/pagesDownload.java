@@ -1,6 +1,5 @@
 package com.example.nikita.progectmangaread;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -18,8 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
-import com.example.nikita.progectmangaread.cacheImage.cacheFile;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
+import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.fragment.fragmentNextPrevChapter;
 import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
 
@@ -40,13 +38,13 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 07.03.2016.
  */
 
-public class pagesDownload extends AppCompatActivity {
+public class PagesDownload extends AppCompatActivity {
     private ArrayList<String> urlPage;
     private int chapterNumber,pageNumber;
     private TextView textIdPage;
     private String URL,nameMang,nameChapter;
     private ViewPager pager;
-    private classDataBaseViewedHead classDataBaseViewedHead;
+    private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ProgressBar progress;
 
     @Override
@@ -62,7 +60,7 @@ public class pagesDownload extends AppCompatActivity {
         urlPage = new ArrayList<>();
         progress = (ProgressBar) findViewById(R.id.loadingPageView);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
-        params.setMargins(0, temple_pase.HEIGHT_WIND/2, 0, 0);
+        params.setMargins(0, TopManga.HEIGHT_WIND/2, 0, 0);
         progress.setLayoutParams(params);
         pager = (ViewPager) findViewById(R.id.pagerImage);
         pager.setVisibility(View.GONE);
@@ -78,7 +76,7 @@ public class pagesDownload extends AppCompatActivity {
                         //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
                         //      самую старую, (потом это переделать))
                         EventBus.getDefault().post(chapterNumber + 1);
-                        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                        CacheFile file = new CacheFile(getCacheDir(),"pageCache");
                         file.clearCache();
                         activity.finish();
                     }
@@ -86,14 +84,14 @@ public class pagesDownload extends AppCompatActivity {
                     if (urlPage.size() == 1){
                         if (position > urlPage.size()){
                             EventBus.getDefault().post(chapterNumber - 1);
-                            cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                            CacheFile file = new CacheFile(getCacheDir(),"pageCache");
                             file.clearCache();
                             activity.finish();
                         }
                     }else{
                         if (position == urlPage.size()){
                             EventBus.getDefault().post(chapterNumber - 1);
-                            cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+                            CacheFile file = new CacheFile(getCacheDir(),"pageCache");
                             file.clearCache();
                             activity.finish();
                         }
@@ -135,7 +133,7 @@ public class pagesDownload extends AppCompatActivity {
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
         pageNumber = Integer.parseInt(intent.getStringExtra("NumberPage"));
         nameMang = intent.getStringExtra("Chapter");
-        classDataBaseViewedHead = new classDataBaseViewedHead(this);
+        classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
 
         ParsURLPage par = new ParsURLPage(addImg,URL);
         par.execute();
@@ -177,7 +175,7 @@ public class pagesDownload extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        cacheFile file = new cacheFile(getCacheDir(),"pageCache");
+        CacheFile file = new CacheFile(getCacheDir(),"pageCache");
         file.clearCache();
         super.onBackPressed();
     }
@@ -296,7 +294,7 @@ public class pagesDownload extends AppCompatActivity {
                 classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
                 asyncTask.onEnd();
             }else{
-                Toast.makeText(pagesDownload.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PagesDownload.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
 
         }

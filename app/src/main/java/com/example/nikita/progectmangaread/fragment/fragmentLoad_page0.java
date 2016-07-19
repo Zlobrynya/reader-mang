@@ -3,14 +3,11 @@ package com.example.nikita.progectmangaread.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.nikita.progectmangaread.classPMR.classTransport;
-import com.example.nikita.progectmangaread.fragment.fragmentTemplePase;
+import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.R;
 
 import de.greenrobot.event.EventBus;
@@ -19,7 +16,7 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 25.02.2016.
  */
 public class fragmentLoad_page0 extends Fragment{
-    public classTransport transport;
+    public ClassTransport transport;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,7 +36,7 @@ public class fragmentLoad_page0 extends Fragment{
         return fragment;
     }
 
-     public void onEvent(classTransport event) {
+     public void onEvent(ClassTransport event) {
         if (event != null){
             FragmentTransaction transaction = getFragmentManager()
                     .beginTransaction();

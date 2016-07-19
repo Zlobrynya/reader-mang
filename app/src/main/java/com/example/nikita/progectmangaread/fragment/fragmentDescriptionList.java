@@ -11,12 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
-import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
-import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.classPMR.classTransportForList;
+import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
+import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,11 +30,11 @@ import de.greenrobot.event.EventBus;
  */
 public class fragmentDescriptionList extends Fragment {
     View v;
-    ArrayList<classForList> list;
+    ArrayList<ClassForList> list;
     public AdapterList myAdap;
     private ListView listView;
     private String nameMang,imgURL;
-    private classDataBaseViewedHead classDataBaseViewedHead;
+    private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ClassDataBaseListMang ClassDataBaseListMang;
 
     @Override
@@ -50,7 +50,7 @@ public class fragmentDescriptionList extends Fragment {
         v = inflater.inflate(R.layout.list_heads, null);
         listView = (ListView) v.findViewById(R.id.listView);
         listView.setAdapter(myAdap);
-        final classForList classForList = new classForList();
+        final ClassForList classForList = new ClassForList();
         classForList.setName_chapter("GG");
 
 
@@ -58,7 +58,7 @@ public class fragmentDescriptionList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                classForList classForList1 = list.get(position);
+                ClassForList classForList1 = list.get(position);
                 classForList1.setCheck(true);
                 classForList1.setNumberChapter(position);
                 list.set(position, classForList1);
@@ -69,7 +69,7 @@ public class fragmentDescriptionList extends Fragment {
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 String formattedDate = df.format(c.getTime());
-                classDataBaseViewedHead.setData(nameMang, formattedDate, com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead.DATA);
+                classDataBaseViewedHead.setData(nameMang, formattedDate, ClassDataBaseViewedHead.DATA);
 
                 Log.i("Data", formattedDate);
                 EventBus.getDefault().post(classForList1);
@@ -80,7 +80,7 @@ public class fragmentDescriptionList extends Fragment {
     }
     //"Посылка" с fragmentPageDowland, что надо переключить главу
     public void onEvent(java.lang.Integer event){
-        classForList classForList1 = list.get(event);
+        ClassForList classForList1 = list.get(event);
         classForList1.setNumberChapter(event);
         if (!classForList1.getCheck())
             classForList1.setCheck(true);
@@ -97,7 +97,6 @@ public class fragmentDescriptionList extends Fragment {
                 classDataBaseViewedHead.setData(nameMang, String.valueOf(1), classDataBaseViewedHead.NOTEBOOK);
                 String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang,classDataBaseViewedHead.LAST_CHAPTER);
                 if (lastChapter.contains("null")){
-                 //   classDataBaseViewedHead.setData(nameMang, imgURL, DataBaseViewedHead.URL_IMG);
                     classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURL_chapter());
                     classDataBaseViewedHead.setData(nameMang, list.get(list.size()-1).getName_chapter(),classDataBaseViewedHead.NAME_LAST_CHAPTER);
                 }
@@ -109,43 +108,41 @@ public class fragmentDescriptionList extends Fragment {
     }
 
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
-    public void onEvent(classTransportForList event){
+    public void onEvent(ClassTransportForList event){
         if (!event.getName().isEmpty()){
             list.clear();
             ClassDataBaseListMang = new ClassDataBaseListMang(getActivity(),event.getMainClassTop().getURL_site());
             if (!ClassDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
                 ClassDataBaseListMang.addBasaData(event.getMainClassTop(),-1);
             }
-            ArrayList<classForList> arrayList = event.getClassForList();
-            for (classForList b: arrayList){
+            ArrayList<ClassForList> arrayList = event.getClassForList();
+            for (ClassForList b: arrayList){
                 if (!b.getURL_chapter().contains("?mature=1")){
                     b.setURL_chapter(b.getURL_chapter() + "?mature=1");
                 }
                 list.add(b);
             }
             nameMang = event.getName();
-            classDataBaseViewedHead = new classDataBaseViewedHead(getActivity());
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
             if (classDataBaseViewedHead.addBasaData(event.getName())){
                 String strings;
                 strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),classDataBaseViewedHead.VIEWED_HEAD);
                 if (!strings.contains("null")){
                     String string[] = strings.split(",");
                     for (String aString : string) {
-                        classForList classForList1 = list.get(Integer.parseInt(aString));
+                        ClassForList classForList1 = list.get(Integer.parseInt(aString));
                         classForList1.setCheck(true);
                         list.set(Integer.parseInt(aString), classForList1);
                     }
                 }else{
                     //Нахрена это надо?
-                 //   classDataBaseViewedHead.setData(event.getName(), String.valueOf(1), classDataBaseViewedHead.LAST_PAGE);
-                 //   classDataBaseViewedHead.editLastChapter(event.getName(),list.get(list.size()-1).getURL_chapter());
                 }
             }
             myAdap.notifyDataSetChanged();
         }
     }
 
-    public void onEvent(classDescriptionMang event) {
+    public void onEvent(ClassDescriptionMang event) {
         imgURL = event.getImg_url();
     }
 

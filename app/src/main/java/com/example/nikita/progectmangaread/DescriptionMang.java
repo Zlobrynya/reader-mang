@@ -10,20 +10,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
-import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
-import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.classPMR.classTransportForList;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
+import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
+import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 import com.example.nikita.progectmangaread.fragment.fragmentSaveDescriptionMang;
@@ -53,8 +50,8 @@ import de.greenrobot.event.EventBus;
 
 public class DescriptionMang extends BaseActivity {
     private Document doc;
-    private MainClassTop mang;
-    private ArrayList<classForList> arList;
+    private ClassMainTop mang;
+    private ArrayList<ClassForList> arList;
     private int kol;
     private ViewPager pager;
     private adapterFragment gg;
@@ -66,10 +63,10 @@ public class DescriptionMang extends BaseActivity {
     private Animation hide_fab_1;
     private boolean visF = false;
     private boolean bookmark = false;
-    private classDataBaseViewedHead classDataBaseViewedHead;
+    private ClassDataBaseViewedHead classDataBaseViewedHead;
     private fragmentSaveDescriptionMang saveFragment;
-    private classDescriptionMang descriptionMang;
-    private classTransportForList classTransportForList;
+    private ClassDescriptionMang descriptionMang;
+    private ClassTransportForList classTransportForList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +96,8 @@ public class DescriptionMang extends BaseActivity {
             classTransportForList = saveFragment.getClassTransportForList();
             descriptionMang = saveFragment.getClassDescriptionMang();
             mang = saveFragment.getMang();
-            classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
-            classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
             if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
                 fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
                 bookmark = false;
@@ -171,9 +168,24 @@ public class DescriptionMang extends BaseActivity {
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DescriptionMang.this);
+                classDataBaseDownloadMang.addBasaData(mang.getName_characher());
+                //добавляем в бд описание манги и т.п.
+                classDataBaseDownloadMang.setData(mang.getName_characher(),mang.getURL_characher(),ClassDataBaseDownloadMang.URL_MANG);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getRank(),ClassDataBaseDownloadMang.RATING);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getCategory(),ClassDataBaseDownloadMang.CATEGORY);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getDescription(),ClassDataBaseDownloadMang.DESCRIPTION);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getGenre(),ClassDataBaseDownloadMang.GENRES);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getNameAuthor(),ClassDataBaseDownloadMang.AUTHOR);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getToms(),ClassDataBaseDownloadMang.TOMS);
+                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getTranslate(),ClassDataBaseDownloadMang.TRANSLATION);
+
+
+
                 Intent newInten = new Intent(DescriptionMang.this,DownloadChapter.class);
                 newInten.putExtra("mang",mang.getURL_characher());
                 newInten.putExtra("site",mang.getURL_site());
+                newInten.putExtra("Name",mang.getName_characher());
                 startActivity(newInten);
                 download = true;
             }
@@ -264,13 +276,13 @@ public class DescriptionMang extends BaseActivity {
     }
 
     //ПОЛУЧАЕМ с топлиста
-    public void onEvent(MainClassTop event){
+    public void onEvent(ClassMainTop event){
         mang = event;
         pars = new Pars(addImg,mang);
         pars.execute();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(event.getName_characher()); // set the top title
-        classDataBaseViewedHead = new classDataBaseViewedHead(this,mang.getName_characher());
+        classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
         if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
             fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
             bookmark = false;
@@ -281,10 +293,10 @@ public class DescriptionMang extends BaseActivity {
         if (read) startLastChapter();
     }
 
-    public void onEvent(classForList URL){
+    public void onEvent(ClassForList URL){
         //узнаем нужно ли запускать активити
         if (URL.getNumberChapter() >= 0){
-            Intent intent = new Intent(this, pagesDownload.class);
+            Intent intent = new Intent(this, PagesDownload.class);
             intent.putExtra("URL", mang.getURL_site() + URL.getURL_chapter());
             intent.putExtra("NumberChapter", URL.getNumberChapter());
 
@@ -309,7 +321,7 @@ public class DescriptionMang extends BaseActivity {
             if (!read){
                 //numberChapter = arList.size()-1;
                 if (string.contains("null")){
-                    classForList classForList = arList.get(numberChapter);
+                    ClassForList classForList = arList.get(numberChapter);
                     string = mang.getURL_site()+classForList.getURL_chapter();
                     classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),classDataBaseViewedHead.VIEWED_HEAD);
                 }
@@ -323,8 +335,8 @@ public class DescriptionMang extends BaseActivity {
             if (!string.contains(mang.getURL_site())){
                 string = mang.getURL_site() + string;
             }
-            //  classForList classForList = arList.get(numberChapter);
-            Intent intent = new Intent(this, pagesDownload.class);
+
+            Intent intent = new Intent(this, PagesDownload.class);
             intent.putExtra("URL",string);
             intent.putExtra("NumberChapter", numberChapter);
             intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
@@ -344,7 +356,7 @@ public class DescriptionMang extends BaseActivity {
         //Проверка на первый раз, если так то выдаем самую последнюю главу в списке
         if (string.contains("null")) return arList.size()-1;
 
-        for (classForList c : arList){
+        for (ClassForList c : arList){
             String name = c.getURL_chapter();
             Log.i("Number chapter",name);
             if (string.contains(name)) {
@@ -395,18 +407,18 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public class Pars extends AsyncTask<Void,Void,Void> {
-        private MainClassTop mang;
+        private ClassMainTop mang;
         private AsyncTaskLisen lisens;
-        private com.example.nikita.progectmangaread.classPMR.classDescriptionMang classDescriptionMang;
+        private ClassDescriptionMang ClassDescriptionMang;
         private boolean not_net; //отвечает за проверку подклчение
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback,MainClassTop mang) {
+        protected Pars(AsyncTaskLisen callback,ClassMainTop mang) {
             this.mang = mang;
             this.lisens = callback;
-            classDescriptionMang = new classDescriptionMang();
-            classDescriptionMang.setNameMang(mang.getName_characher());
-            classDescriptionMang.setImg_url(mang.getURL_img());
+            ClassDescriptionMang = new ClassDescriptionMang();
+            ClassDescriptionMang.setNameMang(mang.getName_characher());
+            ClassDescriptionMang.setImg_url(mang.getURL_img());
             not_net = false;
         }
 
@@ -429,17 +441,17 @@ public class DescriptionMang extends BaseActivity {
                 }
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
-                classDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
+                ClassDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
 
                 //считываем тома
                 el = doc.select("[class = subject-meta col-sm-7]").first();
                 //Получаем количетво томов
                 el = el.select("p").first();
-                classDescriptionMang.setToms(el.select("p").first().text());
+                ClassDescriptionMang.setToms(el.select("p").first().text());
            /*     el = el.nextElementSibling();
                 el = el.nextElementSibling();
                 //считываем
-                classDescriptionMang.setTranslate(el.select("p").text());*/
+                ClassDescriptionMang.setTranslate(el.select("p").text());*/
 
                 for (int i = 0; i < 7;i++){
                     el = el.nextElementSibling();
@@ -450,23 +462,23 @@ public class DescriptionMang extends BaseActivity {
                         for (Element element: elements){
                             helpVar += element.text();
                         }
-                        classDescriptionMang.setGenre(helpVar);
+                        ClassDescriptionMang.setGenre(helpVar);
                     }else if (helpVar.contains("Автор")){
-                        classDescriptionMang.setNameAuthor(el.text());
+                        ClassDescriptionMang.setNameAuthor(el.text());
                     }else if (helpVar.contains("Категор")){
-                        classDescriptionMang.setCategory(el.text());
+                        ClassDescriptionMang.setCategory(el.text());
                     }else if (helpVar.contains("Перевод:")){
-                        classDescriptionMang.setTranslate(el.text());
+                        ClassDescriptionMang.setTranslate(el.text());
                     }else if (helpVar.contains("Год")){
                         break;
                     }
                 }
-                 if (classDescriptionMang.getTranslate().isEmpty()){
-                     classDescriptionMang.setTranslate("Перевод: завершен");
+                 if (ClassDescriptionMang.getTranslate().isEmpty()){
+                     ClassDescriptionMang.setTranslate("Перевод: завершен");
                  }
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
                 Elements el2 = doc.select("[itemprop = description]");
-                classDescriptionMang.setDescription(el2.attr("content"));
+                ClassDescriptionMang.setDescription(el2.attr("content"));
             } catch (IOException e) {
                 e.printStackTrace();
                 not_net = true;
@@ -480,8 +492,8 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!not_net){
-                descriptionMang = classDescriptionMang;
-                EventBus.getDefault().post(classDescriptionMang);
+                descriptionMang = ClassDescriptionMang;
+                EventBus.getDefault().post(ClassDescriptionMang);
                 if (lisens != null) lisens.onEnd();
                 fab.setVisibility(View.VISIBLE);
             }else{
@@ -510,7 +522,7 @@ public class DescriptionMang extends BaseActivity {
         }
 
         void parsList(){
-            classForList classForList = new classForList();
+            ClassForList classForList = new ClassForList();
             classForList.setNumberChapter(-1);
             Elements el2 = el.select("a");
             String URL = el2.attr("href");
@@ -524,7 +536,7 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!arList.isEmpty()){
-                classTransportForList = new classTransportForList(arList,mang.getName_characher(),mang);
+                classTransportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
                 EventBus.getDefault().post(classTransportForList);
                 if (read){
                     numberLastChapter();

@@ -10,10 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
+import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -28,13 +27,13 @@ import java.util.ArrayList;
 /**
  * Created by Nikita on 03.05.2016.
  */
-public class AdapterNotebook  extends ArrayAdapter<classRecentlyRead> {
+public class AdapterNotebook  extends ArrayAdapter<ClassRecentlyRead> {
     protected ImageLoader imageLoader;
     int w, h;
     private DisplayImageOptions options;
 
 
-    public AdapterNotebook(Context context, int resource, ArrayList<classRecentlyRead> item, int w, int h) {
+    public AdapterNotebook(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
         super(context, resource, item);
         imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
@@ -90,7 +89,7 @@ public class AdapterNotebook  extends ArrayAdapter<classRecentlyRead> {
             }
         });*/
         //получаем класс из позиции
-        classRecentlyRead m1 = getItem(position);
+        ClassRecentlyRead m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
             ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img,options);

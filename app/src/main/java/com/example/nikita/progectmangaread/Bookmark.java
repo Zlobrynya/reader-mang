@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterNotebook;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
-import com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
-import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
+import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 
 import java.util.ArrayList;
 
@@ -25,8 +25,8 @@ import de.greenrobot.event.EventBus;
  */
 public class Bookmark extends BaseActivity {
     private AdapterNotebook adapter;
-    private ArrayList<classRecentlyRead> list;
-    private com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead classDataBaseViewedHead;
+    private ArrayList<ClassRecentlyRead> list;
+    private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ListView listView;
     private int pos;
 
@@ -37,7 +37,7 @@ public class Bookmark extends BaseActivity {
         getLayoutInflater().inflate(R.layout.list_heads, frameLayout);
 
         list = new ArrayList<>();
-        classDataBaseViewedHead = new classDataBaseViewedHead(this);
+        classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
 
         pos = - 1;
 
@@ -94,7 +94,7 @@ public class Bookmark extends BaseActivity {
             URLlastChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.LAST_CHAPTER));
             URLimg = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_IMG));
             nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
-            list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
+            list.add(new ClassRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
             cursor.moveToNext();
         }
         cursor.close();
@@ -111,7 +111,7 @@ public class Bookmark extends BaseActivity {
     @Override
     public void onStop() {
         if (pos > -1){
-            MainClassTop classTop = new MainClassTop();
+            ClassMainTop classTop = new ClassMainTop();
             classTop.setName_characher(list.get(pos).getNameMang());
             //Костыли
             if (list.get(pos).getURLchapter().contains("readmang")){
@@ -133,7 +133,7 @@ public class Bookmark extends BaseActivity {
         int poss = (int) view.getTag();
         Toast.makeText(this, "Delete: " + list.get(poss).getNameMang(),
                 Toast.LENGTH_SHORT).show();
-        classDataBaseViewedHead.setData(list.get(poss).getNameMang(), "0", com.example.nikita.progectmangaread.DataBasePMR.classDataBaseViewedHead.NOTEBOOK);
+        classDataBaseViewedHead.setData(list.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
         list.remove(poss);
         adapter.notifyDataSetChanged();
     }

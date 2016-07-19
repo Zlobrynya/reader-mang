@@ -18,22 +18,18 @@ import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.classPMR.classMang;
-import com.example.nikita.progectmangaread.classPMR.classTransport;
+import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassMang;
+import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -45,7 +41,7 @@ import de.greenrobot.event.EventBus;
  *
  * Фрагмент для создание post запроса
  *
- * Используется classForList где:
+ * Используется ClassForList где:
  * URL_chapter - имя ключа для post запроса;
  * Name_chapter - имя жанра или т.п.;
  * check - in/" " (на будущее сделать еще исключение (см. поиск readmanga.me))
@@ -55,17 +51,17 @@ import de.greenrobot.event.EventBus;
  */
 public class fragmentSearchAndGenres extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener {
     View v;
-    ArrayList<classForList> list;
+    ArrayList<ClassForList> list;
     public AdapterList myAdap;
     private ListView gr;
-    public classTransport classMang;
+    public ClassTransport classMang;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
         setRetainInstance(true);
-        classMang = new classTransport();
+        classMang = new ClassTransport();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
     }
 
@@ -83,7 +79,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                classForList classForList1 = list.get(position);
+                ClassForList classForList1 = list.get(position);
                 if (classForList1.getCheck()) classForList1.setCheck(false);
                 else classForList1.setCheck(true);
                 list.set(position, classForList1);
@@ -95,7 +91,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         return v ;
     }
 
-    public void onEvent(classMang event){
+    public void onEvent(ClassMang event){
         this.classMang.setClassMang(event);
         int id = 0;
         if (classMang.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
@@ -122,7 +118,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         //Парсим то что скачали с файла
         Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
         for (Element e : doc.select("genres")) {
-            classForList a = new classForList(e.attr("post"),e.text(),-1);
+            ClassForList a = new ClassForList(e.attr("post"),e.text(),-1);
             list.add(a);
         }
         myAdap.notifyDataSetChanged();
@@ -137,8 +133,6 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
 
     @Override
     public void onStop() {
-     //   if (classMang.getClassMang() != null)
-     //       EventBus.getDefault().post(classMang);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -170,7 +164,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        for (classForList a : list){
+        for (ClassForList a : list){
             String in;
             if (a.getCheck()) in = "in";
             else in="";

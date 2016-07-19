@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -19,8 +19,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -28,13 +26,13 @@ import java.util.LinkedList;
  * Class for Main screen top mang
  * класс для гравного экрана топа манг
  */
-public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
+public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
 
     int w,h;
     private DisplayImageOptions options;
     protected ImageLoader imageLoader;
 
-    public AdapterMainScreen(Context context, int resourse, LinkedList<MainClassTop> item,int w, int h) {
+    public AdapterMainScreen(Context context, int resourse, LinkedList<ClassMainTop> item,int w, int h) {
         super(context, resourse,item);
         this.w = w;
         this.h = h;
@@ -84,7 +82,7 @@ public class AdapterMainScreen extends ArrayAdapter<MainClassTop> {
             v.setTag(holder);
         }
         //получаем класс из позиции
-        MainClassTop m1 = getItem(position);
+        ClassMainTop m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
             //проверка есть ли это изображение и изменилось ли оно

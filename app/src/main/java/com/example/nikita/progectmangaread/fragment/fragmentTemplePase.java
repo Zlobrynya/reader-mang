@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +15,12 @@ import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.classMang;
-import com.example.nikita.progectmangaread.classPMR.classTransport;
+import com.example.nikita.progectmangaread.classPMR.ClassMang;
+import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
-import com.example.nikita.progectmangaread.temple_pase;
+import com.example.nikita.progectmangaread.TopManga;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,11 +44,11 @@ import de.greenrobot.event.EventBus;
  */
 
 public class fragmentTemplePase extends Fragment {
-    public com.example.nikita.progectmangaread.classPMR.classMang classMang;
+    public ClassMang classMang;
     private int firstItem,page;
     private int kol,kolSum;
     private Document doc;
-    private LinkedList<MainClassTop> list;
+    private LinkedList<ClassMainTop> list;
     private AdapterMainScreen myAdap;
     private ClassDataBaseListMang ClassDataBaseListMang;
     private GridView gr;
@@ -72,8 +71,8 @@ public class fragmentTemplePase extends Fragment {
                              Bundle savedInstanceState) {
         int height,width;
         //для узнавания разрешения экрана
-        height = temple_pase.HEIGHT_WIND/sizeCalculate(temple_pase.HEIGHT_WIND);
-        width = temple_pase.WIDTH_WIND/sizeCalculate(temple_pase.WIDTH_WIND);
+        height = TopManga.HEIGHT_WIND/sizeCalculate(TopManga.HEIGHT_WIND);
+        width = TopManga.WIDTH_WIND/sizeCalculate(TopManga.WIDTH_WIND);
 
         Log.i("W,H TemplePase",height + " " + width);
 
@@ -81,7 +80,7 @@ public class fragmentTemplePase extends Fragment {
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
 
         if (kolSum == 0){
-            switch (sizeCalculate(temple_pase.WIDTH_WIND)){
+            switch (sizeCalculate(TopManga.WIDTH_WIND)){
                 case 4: kolSum = 28;
                     break;
                 case 6: kolSum = 40;
@@ -96,12 +95,12 @@ public class fragmentTemplePase extends Fragment {
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
-        gr.setNumColumns(sizeCalculate(temple_pase.WIDTH_WIND));
+        gr.setNumColumns(sizeCalculate(TopManga.WIDTH_WIND));
 
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainClassTop Class = list.get(position);
+                ClassMainTop Class = list.get(position);
                 //отправляем в DescriptionMang
                 EventBus.getDefault().post(Class);
             }
@@ -131,7 +130,7 @@ public class fragmentTemplePase extends Fragment {
     //инициализация с БД
     private void initializationArray(){
         while (!ClassDataBaseListMang.download_the_html(kol)){
-            MainClassTop classTop = ClassDataBaseListMang.getMainClassTop(kol);
+            ClassMainTop classTop = ClassDataBaseListMang.getMainClassTop(kol);
             classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
@@ -181,7 +180,7 @@ public class fragmentTemplePase extends Fragment {
         }
     };
 
-    public void onEvent(classMang event){
+    public void onEvent(ClassMang event){
         if (classMang != null){
             if (!event.getURL().contains(classMang.getURL())){
                 list.clear();
@@ -200,7 +199,7 @@ public class fragmentTemplePase extends Fragment {
     }
 
     //Для фрагментов
-    public void add(classTransport ev) {
+    public void add(ClassTransport ev) {
         classMang = ev.getClassMang();
         classMang.setWhere(ev.getURL_Search());
         if (ev.getURL_Search().contains("search")) resultPost = 1;
@@ -238,14 +237,14 @@ public class fragmentTemplePase extends Fragment {
 
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
-        private classMang classMang;
+        private ClassMang classMang;
         private AsyncTaskLisen lisens;
         private String imgSrc;
         private int kol;
         private boolean not_net;
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback, int kol,classMang classMang) {
+        protected Pars(AsyncTaskLisen callback, int kol,ClassMang classMang) {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
@@ -303,7 +302,7 @@ public class fragmentTemplePase extends Fragment {
             //добавляем в лист и обновление
             if (!not_net){
                 if (kol >= 0 && !URL2.isEmpty() && !name_char.isEmpty() && !classMang.getURL().isEmpty()) {
-                    MainClassTop a = new MainClassTop(URL2,name_char,imgSrc,classMang.getURL());
+                    ClassMainTop a = new ClassMainTop(URL2,name_char,imgSrc,classMang.getURL());
                     Log.i("Temple Pase: Kol parse: ", String.valueOf(kol));
                     try {
                         if (list.size() <= kol)

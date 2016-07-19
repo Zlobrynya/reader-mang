@@ -10,7 +10,7 @@ import android.util.Log;
 /**
  * Created by Nikita on 17.03.2016.
  */
-public class classDataBaseViewedHead {
+public class ClassDataBaseViewedHead {
 
     private DatabaseHelper mDatabaseHelper;
     private SQLiteDatabase mSqLiteDatabase;
@@ -24,7 +24,7 @@ public class classDataBaseViewedHead {
     public static final String DATA  = "data";
 
 
-    public classDataBaseViewedHead(Context context){
+    public ClassDataBaseViewedHead(Context context){
         mDatabaseHelper = new DatabaseHelper(context);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
@@ -38,7 +38,7 @@ public class classDataBaseViewedHead {
             mSqLiteDatabase.close();
     }
 
-    public classDataBaseViewedHead(Context context,String name){
+    public ClassDataBaseViewedHead(Context context, String name){
         mDatabaseHelper = new DatabaseHelper(context);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         String DATABASE_CREATE_SCRIPT = "create table if not exists "

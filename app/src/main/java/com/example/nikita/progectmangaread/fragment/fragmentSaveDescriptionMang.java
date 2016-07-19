@@ -3,12 +3,9 @@ package com.example.nikita.progectmangaread.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
-import com.example.nikita.progectmangaread.classPMR.classDescriptionMang;
-import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.classPMR.classTransportForList;
-
-import java.util.ArrayList;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
+import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
+import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
 /**
  * Created by Nikita on 13.07.2016.
@@ -16,9 +13,9 @@ import java.util.ArrayList;
  */
 public class fragmentSaveDescriptionMang extends Fragment {
 
-    private classTransportForList classTransportForList;
-    private classDescriptionMang classDescriptionMang;
-    private MainClassTop mang;
+    private ClassTransportForList classTransportForList;
+    private ClassDescriptionMang ClassDescriptionMang;
+    private ClassMainTop mang;
 
     @Override
     public void onCreate(Bundle saveInstanceState){
@@ -26,27 +23,27 @@ public class fragmentSaveDescriptionMang extends Fragment {
         setRetainInstance(true);
     }
 
-    public void setClassTransportForList(classTransportForList classTransportForList){
+    public void setClassTransportForList(ClassTransportForList classTransportForList){
         this.classTransportForList = classTransportForList;
     }
 
-    public void setClassDescriptionMang(classDescriptionMang classDescriptionMang){
-        this.classDescriptionMang = classDescriptionMang;
+    public void setClassDescriptionMang(ClassDescriptionMang ClassDescriptionMang){
+        this.ClassDescriptionMang = ClassDescriptionMang;
     }
 
-    public void setMang(MainClassTop mang){
+    public void setMang(ClassMainTop mang){
         this.mang = mang;
     }
 
-    public classTransportForList getClassTransportForList(){
+    public ClassTransportForList getClassTransportForList(){
         return classTransportForList;
     }
 
-    public classDescriptionMang getClassDescriptionMang(){
-        return classDescriptionMang;
+    public ClassDescriptionMang getClassDescriptionMang(){
+        return ClassDescriptionMang;
     }
 
-    public MainClassTop getMang(){
+    public ClassMainTop getMang(){
         return mang;
     }
 

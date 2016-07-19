@@ -63,7 +63,7 @@ public class BaseActivity extends AppCompatActivity
             Intent newInten = new Intent(BaseActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
         } else if (id == R.id.top_Mang) {
-            Intent newInten = new Intent(BaseActivity.this,temple_pase.class);
+            Intent newInten = new Intent(BaseActivity.this,TopManga.class);
             startActivity(newInten);
         } else if (id == R.id.recently_read) {
             Intent newInten = new Intent(BaseActivity.this,RecentlyRead.class);

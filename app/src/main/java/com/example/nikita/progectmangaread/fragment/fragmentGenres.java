@@ -11,9 +11,9 @@ import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.classPMR.classMang;
-import com.example.nikita.progectmangaread.classPMR.classTransport;
+import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassMang;
+import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,17 +32,17 @@ import de.greenrobot.event.EventBus;
  */
 public class fragmentGenres extends Fragment {
     View v;
-    ArrayList<classForList> list;
+    ArrayList<ClassForList> list;
     public AdapterList myAdap;
     public String genres;
     private ListView gr;
-    public classTransport classTransport;
+    public ClassTransport classTransport;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
-        classTransport = new classTransport();
+        classTransport = new ClassTransport();
         myAdap = new AdapterList(getActivity(), R.layout.layout_for_list_view, list);
         setRetainInstance(true);
     }
@@ -56,7 +56,7 @@ public class fragmentGenres extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                classForList classForList1 = list.get(position);
+                ClassForList classForList1 = list.get(position);
                 genres = classForList1.getURL_chapter();
                 postRequest();
             }
@@ -65,7 +65,7 @@ public class fragmentGenres extends Fragment {
         return v ;
     }
 
-    public void onEvent(com.example.nikita.progectmangaread.classPMR.classMang event){
+    public void onEvent(ClassMang event){
         this.classTransport.setClassMang(event);
         int id = 0;
         if (classTransport.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
@@ -92,7 +92,7 @@ public class fragmentGenres extends Fragment {
         for (Element e : doc.select("genres")) {
             String str = e.attr("list");
             if (str == "") break;
-            classForList a = new classForList(str,e.text(),list.size());
+            ClassForList a = new ClassForList(str,e.text(),list.size());
             list.add(a);
         }
         myAdap.notifyDataSetChanged();

@@ -5,17 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterRecentlyRead;
 import com.example.nikita.progectmangaread.DataBasePMR.*;
-import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
+import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 
 import java.util.ArrayList;
 
@@ -27,8 +25,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class RecentlyRead extends BaseActivity{
     private AdapterRecentlyRead adapter;
-    private ArrayList<classRecentlyRead> list;
-    private classDataBaseViewedHead classDataBaseViewedHead;
+    private ArrayList<ClassRecentlyRead> list;
+    private ClassDataBaseViewedHead classDataBaseViewedHead;
     private StickyListHeadersListView listView;
     private SharedPreferences mSettings;
     private static final String APP_PREFERENCES = "settingsListMang";
@@ -43,9 +41,9 @@ public class RecentlyRead extends BaseActivity{
         getLayoutInflater().inflate(R.layout.recently_read, frameLayout);
         pos = -1;
         list = new ArrayList<>();
-        classDataBaseViewedHead = new classDataBaseViewedHead(this);
+        classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
         listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
-        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list,temple_pase.WIDTH_WIND,temple_pase.HEIGHT_WIND);
+        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
         listView.setAdapter(adapter);
 
         url = mSettings.getString(APP_PREFERENCES_URL, "");
@@ -94,7 +92,7 @@ public class RecentlyRead extends BaseActivity{
             nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
             date = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.DATA));
             if (date != null && !nameChapter.contains("null"))
-                list.add(new classRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter,date));
+                list.add(new ClassRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter,date));
             cursor.moveToNext();
         }
         cursor.close();
@@ -112,7 +110,7 @@ public class RecentlyRead extends BaseActivity{
     @Override
     public void onStop() {
         if (pos > -1){
-            MainClassTop classTop = new MainClassTop();
+            ClassMainTop classTop = new ClassMainTop();
             classTop.setName_characher(list.get(pos).getNameMang());
             //Костыли
             if (list.get(pos).getURLchapter().contains("readmang")){

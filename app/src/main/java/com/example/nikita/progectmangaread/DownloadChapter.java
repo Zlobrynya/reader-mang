@@ -3,28 +3,27 @@ package com.example.nikita.progectmangaread;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
-import com.example.nikita.progectmangaread.classPMR.classForList;
-import com.example.nikita.progectmangaread.classPMR.classTransportForList;
-import com.example.nikita.progectmangaread.servise.DownChapter;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
+import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
+import com.example.nikita.progectmangaread.service.ServiceDownChapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 
 public class DownloadChapter extends AppCompatActivity {
-    ArrayList<classForList> list;
+    ArrayList<ClassForList> list;
     private AdapterList myAdap;
     private ListView listView;
-    private String url_mang,url_site;
+    private String urlMang, urlSite, name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +36,15 @@ public class DownloadChapter extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         Intent intent = getIntent();
-        url_mang = intent.getStringExtra("mang");
-        url_site = intent.getStringExtra("site");
+        urlMang = intent.getStringExtra("mang");
+        urlSite = intent.getStringExtra("site");
+        name = intent.getStringExtra("Name");
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                classForList classForList1 = list.get(position);
+                ClassForList classForList1 = list.get(position);
                 classForList1.setCheck(!classForList1.getCheck());
                 //Log.i("DownloadChapter", classForList1.getURL_chapter());
                 classForList1.setNumberChapter(position);
@@ -58,23 +58,37 @@ public class DownloadChapter extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String chapter = "";
-                for (classForList classForList: list){
-                    if (classForList.getCheck())
+                String nameChapter = "";
+                for (ClassForList classForList: list){
+                    if (classForList.getCheck()) {
                         chapter += classForList.getURL_chapter() + ",";
+                        nameChapter += classForList.getName_chapter() + ",";
+                    }
                 }
+                ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DownloadChapter.this);
+                classDataBaseDownloadMang.setData(name,chapter,ClassDataBaseDownloadMang.NAME_DIR);
+                classDataBaseDownloadMang.setData(name, nameChapter, ClassDataBaseDownloadMang.NAME_CHAPTER);
+
                // Log.i("DownloadChapter", chapter.substring(0,chapter.length()-2));
-                startService(new Intent(DownloadChapter.this, DownChapter.class).putExtra("URL_Mang", url_mang)
-                        .putExtra("name_site", url_site)
+                startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
+                        .putExtra("name_site", urlSite)
                         .putExtra("chapter", chapter));
+
+                Toast.makeText(DownloadChapter.this, "Mang download.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void onEvent(classTransportForList event){
+    protected void onDestroy(){
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    public void onEvent(ClassTransportForList event){
         if (!event.getName().isEmpty()){
             list.clear();
-            ArrayList<classForList> arrayList = event.getClassForList();
-            for (classForList b: arrayList){
+            ArrayList<ClassForList> arrayList = event.getClassForList();
+            for (ClassForList b: arrayList){
                 if (b.getCheck())
                     b.setCheck(false);
                 String[] strings = b.getURL_chapter().split("/");

@@ -6,21 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
-import com.example.nikita.progectmangaread.classPMR.classForList;
+import com.example.nikita.progectmangaread.classPMR.ClassForList;
 
 import java.util.ArrayList;
 
 /**
  * Created by Nikita on 03.02.2016.
  */
-public class AdapterList extends ArrayAdapter<classForList> {
+public class AdapterList extends ArrayAdapter<ClassForList> {
 
-    public AdapterList(Context context, int resourse, ArrayList<classForList> item) {
+    public AdapterList(Context context, int resourse, ArrayList<ClassForList> item) {
         super(context, resourse,item);
     }
 
@@ -45,7 +43,7 @@ public class AdapterList extends ArrayAdapter<classForList> {
             v.setTag(holder);
         }
         //получаем класс из позиции
-        classForList m1 = this.getItem(position);
+        ClassForList m1 = this.getItem(position);
         //если он есть то получаеи и устанавливаем
         if (m1 != null){
             if (m1.getCheck())

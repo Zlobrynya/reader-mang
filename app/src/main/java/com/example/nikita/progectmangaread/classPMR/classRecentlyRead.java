@@ -3,12 +3,12 @@ package com.example.nikita.progectmangaread.classPMR;
 /**
  * Created by Nikita on 28.04.2016.
  */
-public class classRecentlyRead {
+public class ClassRecentlyRead {
     private String URL_img,nameChapter,nameMang,URLchapter,URLchapter_last;
     private String date;
 
     //для activity RecentlyRead
-    public classRecentlyRead(String urlImage,String nameMang,String nameChapter,String URLchapter,String URLchapter_last,String date){
+    public ClassRecentlyRead(String urlImage, String nameMang, String nameChapter, String URLchapter, String URLchapter_last, String date){
         this.URL_img = urlImage;
         this.nameChapter = nameChapter;
         this.nameMang = nameMang;
@@ -17,7 +17,7 @@ public class classRecentlyRead {
         this.date = date;
     }
     //для активити Bookmaks
-    public classRecentlyRead(String urlImage,String nameMang,String nameChapter,String URLchapter,String URLchapter_last){
+    public ClassRecentlyRead(String urlImage, String nameMang, String nameChapter, String URLchapter, String URLchapter_last){
         this.URL_img = urlImage;
         this.nameChapter = nameChapter;
         this.nameMang = nameMang;

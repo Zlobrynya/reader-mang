@@ -6,10 +6,10 @@ import android.graphics.Bitmap;
  * Created by Nikita on 03.02.2016.
  */
 
-public class classDescriptionMang {
+public class ClassDescriptionMang {
     private String nameMang,nameAuthor,Rank,toms,genre,description,translate,category,img_url;
 
-    public classDescriptionMang() {
+    public ClassDescriptionMang() {
         nameAuthor = nameMang = Rank = toms = genre =  "";
         category = img_url = translate = description = "";
 

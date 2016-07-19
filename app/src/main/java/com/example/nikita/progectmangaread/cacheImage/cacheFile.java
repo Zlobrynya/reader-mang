@@ -25,12 +25,12 @@ import java.net.URL;
  * Class work with cache
  * Класс работы с кэшем
  */
-public class cacheFile {
+public class CacheFile {
     private File dirFile;
     private AsyncTaskLisen as;
     private ProgressBar progressBar;
 
-    public cacheFile(File dirFile, String nameDir, AsyncTaskLisen as, ProgressBar progressBar){
+    public CacheFile(File dirFile, String nameDir, AsyncTaskLisen as, ProgressBar progressBar){
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
             this.dirFile.mkdir();
@@ -39,10 +39,10 @@ public class cacheFile {
         this.progressBar = progressBar;
     }
 
-    public cacheFile(){
+    public CacheFile(){
     }
 
-    public cacheFile(File dirFile, String nameDir){
+    public CacheFile(File dirFile, String nameDir){
         this.dirFile = new File(dirFile,nameDir);
         if (!this.dirFile.exists()){
             this.dirFile.mkdir();
@@ -67,7 +67,7 @@ public class cacheFile {
             @Override
             protected Void doInBackground(String... params) {
                 try {
-                    Log.i("Threads","cacheFile"+params[1]);
+                    Log.i("Threads","CacheFile"+params[1]);
                     //продумать поименование файлов
                     File f = new File(dirFile, params[1]);
                     //Проверка на существование изображения

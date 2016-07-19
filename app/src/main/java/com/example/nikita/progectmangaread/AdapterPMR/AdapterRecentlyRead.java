@@ -10,8 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
-import com.example.nikita.progectmangaread.classPMR.classRecentlyRead;
+import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -27,13 +26,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 /**
  * Created by Nikita on 28.04.2016.
  */
-public class AdapterRecentlyRead extends ArrayAdapter<classRecentlyRead> implements StickyListHeadersAdapter {
+public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> implements StickyListHeadersAdapter {
     protected ImageLoader imageLoader;
     private int w, h;
     private DisplayImageOptions options;
-    private ArrayList<classRecentlyRead> item;
+    private ArrayList<ClassRecentlyRead> item;
 
-    public AdapterRecentlyRead(Context context, int resource, ArrayList<classRecentlyRead> item, int w, int h) {
+    public AdapterRecentlyRead(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
         super(context, resource, item);
         this.item = item;
         imageLoader = ImageLoader.getInstance();
@@ -91,7 +90,7 @@ public class AdapterRecentlyRead extends ArrayAdapter<classRecentlyRead> impleme
             v.setTag(holder);
         }
         //получаем класс из позиции
-        classRecentlyRead m1 = getItem(position);
+        ClassRecentlyRead m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
             ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img,options);

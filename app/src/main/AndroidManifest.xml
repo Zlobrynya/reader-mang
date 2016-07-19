@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".temple_pase"
+            android:name=".TopManga"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -28,7 +28,7 @@
             android:name=".DescriptionMang"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".pagesDownload" />
+        <activity android:name=".PagesDownload" />
 
         <activity
             android:name=".BaseActivity"
@@ -47,7 +47,7 @@
         <activity android:name=".DownloadChapter"/>
 
         <service
-            android:name=".servise.DownChapter"
+            android:name=".service.ServiceDownChapter"
             android:enabled="true"
             android:exported="false"/>
     </application>

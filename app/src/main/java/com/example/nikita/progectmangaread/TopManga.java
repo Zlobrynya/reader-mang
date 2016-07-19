@@ -5,33 +5,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.nikita.progectmangaread.classPMR.MainClassTop;
-import com.example.nikita.progectmangaread.classPMR.classMang;
-import com.example.nikita.progectmangaread.classPMR.classTransport;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
+import com.example.nikita.progectmangaread.classPMR.ClassMang;
+import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.fragment.fragmentLoad_page0;
 import com.example.nikita.progectmangaread.fragment.fragmentGenres;
 import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
 
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
-
 import de.greenrobot.event.EventBus;
-import de.greenrobot.event.util.ErrorDialogManager;
 
 /**
  * Класс для топа вывода манг, с помощью ViewPager,
@@ -40,11 +31,11 @@ import de.greenrobot.event.util.ErrorDialogManager;
  *
  */
 
-public class temple_pase extends BaseActivity {
-    private classMang mang;
+public class TopManga extends BaseActivity {
+    private ClassMang mang;
     private ViewPager pager;
     private AdapterPargerFragment gg;
-    private MainClassTop classTop;
+    private ClassMainTop classTop;
     private boolean doublePressBack = false;
 
     public static int HEIGHT_WIND,WIDTH_WIND;
@@ -75,7 +66,7 @@ public class temple_pase extends BaseActivity {
         boolean first = mSettings.getBoolean(APP_PREFERENCES_first,true);
 
         if (!first){
-            mang = new classMang();
+            mang = new ClassMang();
             mang.setImgURL(mSettings.getString(APP_PREFERENCES_imgURL, ""));
             mang.setWhereAll(mSettings.getString(APP_PREFERENCES_whereAll, ""));
             mang.setNameURL(mSettings.getString(APP_PREFERENCES_nameURL, ""));
@@ -122,16 +113,16 @@ public class temple_pase extends BaseActivity {
         super.onStop();
     }
 
-    public void onEvent(MainClassTop event){
+    public void onEvent(ClassMainTop event){
         Toast toast = Toast.makeText(this,
                 event.getURL_characher(), Toast.LENGTH_SHORT);
         toast.show();
         classTop = event;
-        Intent intent = new Intent(temple_pase.this,DescriptionMang.class);
+        Intent intent = new Intent(TopManga.this,DescriptionMang.class);
         startActivity(intent);
     }
 
-    public void onEvent(classMang event){
+    public void onEvent(ClassMang event){
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(APP_PREFERENCES_URL,event.getURL());
         editor.putString(APP_PREFERENCES_nameCell,event.getNameCell());
@@ -146,7 +137,7 @@ public class temple_pase extends BaseActivity {
         editor.putInt(APP_PREFERENCES_maxInPage, event.getMaxInPage());
         editor.apply();
 
-        mang = new classMang();
+        mang = new ClassMang();
         mang = event;
     }
 
@@ -182,7 +173,7 @@ public class temple_pase extends BaseActivity {
 
     }
 
-    public void onEvent(classTransport event) {
+    public void onEvent(ClassTransport event) {
         pager.setCurrentItem(1);
     }
 

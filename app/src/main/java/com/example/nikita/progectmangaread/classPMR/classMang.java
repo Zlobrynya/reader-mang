@@ -5,14 +5,14 @@ import android.widget.ImageView;
 /**
  * Created by Nikita on 03.01.2016.
  */
-public class classMang {
+public class ClassMang {
     private String URL,imgURL,nameURL, nameCell;
     private String whereAll,where,path,path2;
     private int maxInPage,numberPage;
 
-    public classMang(){}
+    public ClassMang(){}
 
-    public classMang(String URL, String imgURL, String nameURL, String nameCell, int maxInPage){
+    public ClassMang(String URL, String imgURL, String nameURL, String nameCell, int maxInPage){
         this.URL = URL;
         this.imgURL = imgURL;
         this.nameCell = nameCell;
