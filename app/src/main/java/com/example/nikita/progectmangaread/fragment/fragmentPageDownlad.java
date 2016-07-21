@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.example.nikita.progectmangaread.Activity.PagesDownload;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.cacheImage.CacheFile;
@@ -133,8 +134,12 @@ public class fragmentPageDownlad extends Fragment {
             }
         };
 
-        file = new CacheFile(getContext().getCacheDir(),"pageCache",as,progress);
-        file.loadAndCache(url, number);
+        file = new CacheFile(getContext().getCacheDir(), PagesDownload.nameDirectory ,as,progress);
+        if (PagesDownload.nameDirectory.contains("pageCache")) {
+            file.loadAndCache(url, number);
+        }else {
+            as.onEnd();
+        }
         return v;
     }
 }

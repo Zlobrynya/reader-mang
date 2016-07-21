@@ -70,14 +70,17 @@ public class DownloadChapter extends AppCompatActivity {
                     }
                 }
                 ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DownloadChapter.this);
-                classDataBaseDownloadMang.setData(name, nameDir,ClassDataBaseDownloadMang.NAME_DIR);
-                classDataBaseDownloadMang.setData(name, nameChapter, ClassDataBaseDownloadMang.NAME_CHAPTER);
+                String nameDirFromBD = classDataBaseDownloadMang.getDataFromDataBase(name,ClassDataBaseDownloadMang.NAME_DIR) + nameDir;
+                String nameChapterFromBD = classDataBaseDownloadMang.getDataFromDataBase(name,ClassDataBaseDownloadMang.NAME_CHAPTER) + nameChapter;
+                classDataBaseDownloadMang.setData(name, nameDirFromBD,ClassDataBaseDownloadMang.NAME_DIR);
+                classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
+                classDataBaseDownloadMang.closeDataBase();
 
                // Log.i("DownloadChapter", chapter.substring(0,chapter.length()-2));
                startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
-                        .putExtra("name_site", urlSite)
-                        .putExtra("chapter", chapter)
-                        .putExtra("name_dir", nameDir));
+                       .putExtra("name_site", urlSite)
+                       .putExtra("chapter", chapter)
+                       .putExtra("name_dir", nameDir));
 
                 Toast.makeText(DownloadChapter.this, "Mang download.", Toast.LENGTH_SHORT).show();
             }

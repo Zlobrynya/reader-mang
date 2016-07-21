@@ -44,6 +44,7 @@ public class ClassDataBaseDownloadMang {
             mSqLiteDatabase.close();
     }
 
+
     //добавление в базу данных
     public boolean addBasaData(String nameMang){
         String query,name;

@@ -22,10 +22,10 @@
         android:focusable="false"
         android:layout_width="50dp"
         android:layout_height="60dp"
-        android:id="@+id/imageButton_delete_notebook"
+        android:id="@+id/imageButton_delete"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_delete_forever_black_24dp"
-        android:onClick="deleteDownloadedMang"
+        android:onClick="imageButtonDelete"
         />
 
 </LinearLayout>

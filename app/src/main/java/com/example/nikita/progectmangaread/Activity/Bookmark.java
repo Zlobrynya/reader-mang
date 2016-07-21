@@ -1,12 +1,15 @@
 package com.example.nikita.progectmangaread.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,7 +32,6 @@ public class Bookmark extends BaseActivity {
     private ArrayList<ClassRecentlyRead> list;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ListView listView;
-    private int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +40,22 @@ public class Bookmark extends BaseActivity {
 
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-
-        pos = - 1;
-
         listView = (ListView) this.findViewById(R.id.listView);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int position, long id) {
-                Intent intent = new Intent(Bookmark.this, DescriptionMang.class);
-                startActivity(intent);
-                pos = position;
-                Log.v("long clicked", "pos: " + position);
+                Intent intent = new Intent(Bookmark.this,DescriptionMang.class);
+                ClassMainTop mainTop = getClassMainTop(position);
+                if (mainTop != null){
+                    intent.putExtra("URL_ch",mainTop.getURL_characher());
+                    intent.putExtra("Url_img",mainTop.getURL_img());
+                    intent.putExtra("Name_ch",mainTop.getName_characher());
+                    intent.putExtra("Url_site", mainTop.getURL_site());
+                    startActivity(intent);
+                    Log.v("long clicked", "pos: " + position);
+                }
                 return true;
             }
         });
@@ -58,15 +63,40 @@ public class Bookmark extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Bookmark.this, DescriptionMang.class);
-                intent.putExtra("read", true);
-                startActivity(intent);
-                pos = position;
+                Intent intent = new Intent(Bookmark.this,DescriptionMang.class);
+                ClassMainTop mainTop = getClassMainTop(position);
+                if (mainTop != null){
+                    intent.putExtra("URL_ch",mainTop.getURL_characher());
+                    intent.putExtra("Url_img",mainTop.getURL_img());
+                    intent.putExtra("Name_ch",mainTop.getName_characher());
+                    intent.putExtra("Url_site",mainTop.getURL_site());
+                    intent.putExtra("read", true);
+                    startActivity(intent);
+                    Log.v("long clicked", "pos: " + position);
+                }
             }
         });
-
         initializationNotebook();
+    }
 
+    private ClassMainTop getClassMainTop(int pos){
+        if (pos > -1){
+            ClassMainTop classTop = new ClassMainTop();
+            classTop.setName_characher(list.get(pos).getNameMang());
+            //Костыли
+            if (list.get(pos).getURLchapter().contains("readmang")){
+                classTop.setURL_site("http://readmanga.me");
+            }
+            if (list.get(pos).getURLchapter().contains("mintmanga")){
+                classTop.setURL_site("http://mintmanga.com");
+            }
+            //
+            classTop.setURL_img(list.get(pos).getURL_img());
+            classTop.setURL_characher(list.get(pos).getURLchapter());
+            EventBus.getDefault().post(classTop);
+            pos = -1;
+        }
+        return null;
     }
 
     private void initializationNotebook(){
@@ -96,26 +126,10 @@ public class Bookmark extends BaseActivity {
 
     @Override
     public void onStop() {
-        if (pos > -1){
-            ClassMainTop classTop = new ClassMainTop();
-            classTop.setName_characher(list.get(pos).getNameMang());
-            //Костыли
-            if (list.get(pos).getURLchapter().contains("readmang")){
-                classTop.setURL_site("http://readmanga.me");
-            }
-            if (list.get(pos).getURLchapter().contains("mintmanga")){
-                classTop.setURL_site("http://mintmanga.com");
-            }
-            //
-            classTop.setURL_img(list.get(pos).getURL_img());
-            classTop.setURL_characher(list.get(pos).getURLchapter());
-            EventBus.getDefault().post(classTop);
-            pos = -1;
-        }
         super.onStop();
     }
 
-    public void DeleteNotebook(View view) {
+    public void imageButtonDelete(View view) {
         int poss = (int) view.getTag();
         Toast.makeText(this, "Delete: " + list.get(poss).getNameMang(),
                 Toast.LENGTH_SHORT).show();

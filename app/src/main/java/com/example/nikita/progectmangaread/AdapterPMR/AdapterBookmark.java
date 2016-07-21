@@ -76,18 +76,11 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
             holder.img = (ImageView) v.findViewById(R.id.imageView_notebook);
             holder.img.setMinimumWidth(w / 4);
             holder.img.setMinimumHeight(h / 5);
-            holder.buttonDelete = (ImageButton) v.findViewById(R.id.imageButton_delete_notebook);
+            holder.buttonDelete = (ImageButton) v.findViewById(R.id.imageButton_delete);
             holder.nameMang = (TextView) v.findViewById(R.id.textView_name_notebook);
             v.setTag(holder);
         }
         holder.buttonDelete.setTag(position);
-      /*  holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "F",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });*/
         //получаем класс из позиции
         ClassRecentlyRead m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение

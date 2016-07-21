@@ -62,7 +62,7 @@ public class ClassDataBaseListMang {
     public void addBasaData(ClassMainTop a, int number){
         String query,name;
         name = "\"";
-        name += a.getName_characher().replace('"',' ') + "\"";
+        name += a.getName_characher().replace('"', ' ') + "\"";
         query = "SELECT " +  NAME_MANG + " FROM " + nameTable + " WHERE " +  NAME_MANG + "=" +
                 name;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
@@ -88,9 +88,9 @@ public class ClassDataBaseListMang {
         if (cursor.getCount() != 0){
             ClassMainTop a = new ClassMainTop();
             cursor.moveToFirst();
-            a.setURL_img(cursor.getString(cursor.getColumnIndex( URL_IMG)));
-            a.setName_characher(cursor.getString(cursor.getColumnIndex( NAME_MANG)));
-            a.setURL_characher(cursor.getString(cursor.getColumnIndex( URL_CHAPTER)));
+            a.setURL_img(cursor.getString(cursor.getColumnIndex(URL_IMG)));
+            a.setName_characher(cursor.getString(cursor.getColumnIndex(NAME_MANG)));
+            a.setURL_characher(cursor.getString(cursor.getColumnIndex(URL_CHAPTER)));
             cursor.close();
             return a;
         }

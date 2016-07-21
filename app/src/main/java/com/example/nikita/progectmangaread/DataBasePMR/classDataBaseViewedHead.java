@@ -115,7 +115,7 @@ public class ClassDataBaseViewedHead {
         }
     }
 
-    public void editBaseDate(String nameMang, String thisChap){
+    public void addViewedChapter(String nameMang, String thisChap){
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";

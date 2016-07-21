@@ -48,12 +48,18 @@ public class PagesDownload extends AppCompatActivity {
     private ViewPager pager;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ProgressBar progress;
-
+    private boolean download;
+    public static String nameDirectory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pageview_image);
+
+        //Имя где будут искаться страницы манги. pageCache - для онлайн посмотра остальное
+        // для скачанной манги
+        nameDirectory = "pageCache";
+        download = false;
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -99,7 +105,8 @@ public class PagesDownload extends AppCompatActivity {
                         }
                     }
                     pageNumber = position;
-                    classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), classDataBaseViewedHead.LAST_PAGE);
+                    if (!download)
+                        classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), classDataBaseViewedHead.LAST_PAGE);
                 }
             }
 
@@ -135,13 +142,21 @@ public class PagesDownload extends AppCompatActivity {
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
         pageNumber = Integer.parseInt(intent.getStringExtra("NumberPage"));
         nameMang = intent.getStringExtra("Chapter");
-        classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-        boolean download = intent.getBooleanExtra("Download",false);
+        download = intent.getBooleanExtra("Download",false);
         if (!download){
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
             ParsURLPage par = new ParsURLPage(addImg,URL);
             par.execute();
         }else {
-
+            CacheFile file = new CacheFile(getCacheDir(),URL);
+            nameDirectory = URL;
+            nameChapter = intent.getStringExtra("Chapter");
+            for (int i = 0; i < file.getNumberOfFile();i++)
+                urlPage.add(String.valueOf(i));
+            progress.setVisibility(View.GONE);
+            pager.setVisibility(View.VISIBLE);
+            addImg.onEnd();
+            Log.i("PagesDownload", String.valueOf(file.getNumberOfFile()));
         }
     }
 
@@ -181,8 +196,10 @@ public class PagesDownload extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        CacheFile file = new CacheFile(getCacheDir(),"pageCache");
-        file.clearCache();
+        if (!download){
+            CacheFile file = new CacheFile(getCacheDir(),"pageCache");
+            file.clearCache();
+        }
         super.onBackPressed();
     }
 
@@ -220,6 +237,8 @@ public class PagesDownload extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.i("Destroy:", String.valueOf("PageDowland"));
+        if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();
         super.onDestroy();
     }
 
@@ -296,7 +315,6 @@ public class PagesDownload extends AppCompatActivity {
                 }
                 progress.setVisibility(View.GONE);
                 pager.setVisibility(View.VISIBLE);
-
                 classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
                 asyncTask.onEnd();
             }else{

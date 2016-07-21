@@ -54,7 +54,6 @@ public class DescriptionMang extends BaseActivity {
     private Document doc;
     private ClassMainTop mang;
     private ArrayList<ClassForList> arList;
-    private int kol;
     private ViewPager pager;
     private adapterFragment gg;
     private Pars pars;
@@ -70,22 +69,15 @@ public class DescriptionMang extends BaseActivity {
     private ClassDescriptionMang descriptionMang;
     private ClassTransportForList classTransportForList;
 
+    private final String PROBLEM = "ProblemTime";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         getLayoutInflater().inflate(R.layout.description_mang, frameLayout);
 
+     //   Log.i(PROBLEM, "Description start");
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new adapterFragment(getSupportFragmentManager(),2);
-        pager.setAdapter(gg);
-        arList = new ArrayList<>();
-        final Intent intent = getIntent();
-        read = intent.getBooleanExtra("read", false);
-        kol = 0;
-
-        downloadChapter = false;
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_lastChapter);
@@ -93,29 +85,23 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+        gg = new adapterFragment(getSupportFragmentManager(),2);
+        pager.setAdapter(gg);
+        arList = new ArrayList<>();
+        read = false;
 
-        saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
-
-        if (saveFragment != null){
-            classTransportForList = saveFragment.getClassTransportForList();
-            descriptionMang = saveFragment.getClassDescriptionMang();
-            mang = saveFragment.getMang();
-            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-            if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
-                fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
-                bookmark = false;
-            }else {
-                bookmark = true;
-                fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
-            }
+        final Intent intent = getIntent();
+        if (intent.getStringExtra("URL_ch") != null){
+            mang = new ClassMainTop();
+            mang.setURL_characher(intent.getStringExtra("URL_ch"));
+            mang.setName_characher(intent.getStringExtra("Name_ch"));
+            mang.setURL_site(intent.getStringExtra("Url_site"));
+            mang.setURL_img(intent.getStringExtra("Url_img"));
+            read = intent.getBooleanExtra("read", false);
+            parsAndSettings();
         }
-        else {
-            saveFragment = new fragmentSaveDescriptionMang();
-            getFragmentManager().beginTransaction()
-                    .add(saveFragment, "SAVE_FRAGMENT")
-                    .commit();
-        }
+        downloadChapter = false;
+        dataRecovery();
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -125,7 +111,7 @@ public class DescriptionMang extends BaseActivity {
             }
 
             public void onPageSelected(int position) {
-                if (visF){
+                if (visF) {
                     buttonINVisble();
                     visF = !visF;
                 }
@@ -141,7 +127,6 @@ public class DescriptionMang extends BaseActivity {
                 } else {
                     buttonVisible();
                     visF = !visF;
-
                 }
             }
         });
@@ -175,38 +160,70 @@ public class DescriptionMang extends BaseActivity {
                 ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DescriptionMang.this);
                 classDataBaseDownloadMang.addBasaData(mang.getName_characher());
                 //добавляем в бд описание манги и т.п.
-                classDataBaseDownloadMang.setData(mang.getName_characher(),mang.getURL_characher(),ClassDataBaseDownloadMang.URL_MANG);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getRank(),ClassDataBaseDownloadMang.RATING);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getCategory(),ClassDataBaseDownloadMang.CATEGORY);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getDescription(),ClassDataBaseDownloadMang.DESCRIPTION);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getGenre(),ClassDataBaseDownloadMang.GENRES);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getNameAuthor(),ClassDataBaseDownloadMang.AUTHOR);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getToms(),ClassDataBaseDownloadMang.TOMS);
-                classDataBaseDownloadMang.setData(mang.getName_characher(),descriptionMang.getTranslate(),ClassDataBaseDownloadMang.TRANSLATION);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), mang.getURL_characher(), ClassDataBaseDownloadMang.URL_MANG);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getRank(), ClassDataBaseDownloadMang.RATING);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getCategory(), ClassDataBaseDownloadMang.CATEGORY);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getDescription(), ClassDataBaseDownloadMang.DESCRIPTION);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getGenre(), ClassDataBaseDownloadMang.GENRES);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getNameAuthor(), ClassDataBaseDownloadMang.AUTHOR);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getToms(), ClassDataBaseDownloadMang.TOMS);
+                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getTranslate(), ClassDataBaseDownloadMang.TRANSLATION);
+                classDataBaseDownloadMang.closeDataBase();
 
-                Intent newInten = new Intent(DescriptionMang.this,DownloadChapter.class);
-                newInten.putExtra("mang",mang.getURL_characher());
-                newInten.putExtra("site",mang.getURL_site());
-                newInten.putExtra("Name",mang.getName_characher());
+                Intent newInten = new Intent(DescriptionMang.this, DownloadChapter.class);
+                newInten.putExtra("mang", mang.getURL_characher());
+                newInten.putExtra("site", mang.getURL_site());
+                newInten.putExtra("Name", mang.getName_characher());
                 startActivity(newInten);
                 downloadChapter = true;
             }
         });
+
+       // Log.i(PROBLEM, "End onCreate");
+
+    }
+
+    private void dataRecovery(){
+        saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
+
+        if (saveFragment != null){
+            classTransportForList = saveFragment.getClassTransportForList();
+            descriptionMang = saveFragment.getClassDescriptionMang();
+            mang = saveFragment.getMang();
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
+            if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
+                fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+                bookmark = false;
+            }else {
+                bookmark = true;
+                fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            }
+        }
+        else {
+            saveFragment = new fragmentSaveDescriptionMang();
+            getFragmentManager().beginTransaction()
+                    .add(saveFragment, "SAVE_FRAGMENT")
+                    .commit();
+        }
     }
 
     @Override
     public void onDestroy(){
-        EventBus.getDefault().unregister(this);
+        if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();
         super.onDestroy();
     }
 
     @Override
     public void onStart() {
+        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         if (downloadChapter)
             EventBus.getDefault().post(classTransportForList);
         super.onStop();
@@ -214,10 +231,11 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onResume() {
-        if (descriptionMang != null && classTransportForList != null){
-            EventBus.getDefault().post(descriptionMang);
-            EventBus.getDefault().post(classTransportForList);
-        }
+        //Зачем это нужно?
+      /*  if (descriptionMang != null && classTransportForList != null){
+            //EventBus.getDefault().post(descriptionMang);
+            //EventBus.getDefault().post(classTransportForList);
+        }*/
         super.onResume();
     }
 
@@ -278,12 +296,14 @@ public class DescriptionMang extends BaseActivity {
     }
 
     //ПОЛУЧАЕМ с топлиста
-    public void onEvent(ClassMainTop event){
-        mang = event;
+    public void parsAndSettings(){
+        Log.i(PROBLEM, "Get ClassMainTop event");
+
+       // mang = event;
         pars = new Pars(addImg,mang);
         pars.execute();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
-        getSupportActionBar().setTitle(event.getName_characher()); // set the top title
+        getSupportActionBar().setTitle(mang.getName_characher()); // set the top title
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
         if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
             fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
@@ -440,16 +460,11 @@ public class DescriptionMang extends BaseActivity {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                try{
-                    if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
-                            .timeout(2000)
-                            .get();
-                }catch (java.net.SocketTimeoutException e){
-                    //если лимит превышен пытаемся заново подкл
-                    if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
-                            .timeout(3000)
-                            .get();
-                }
+                Log.i(PROBLEM, "StartDownload");
+                if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
+                        .timeout(3000)
+                        .get();
+                Log.i(PROBLEM, "StopDownload");
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
                 ClassDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
@@ -518,6 +533,7 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
+                Log.i(PROBLEM, "ChapterAdd");
                 el = doc.select("[class = table table-hover]").first();
                 if (el != null){
                     el = el.select("tbody").first();
@@ -549,6 +565,7 @@ public class DescriptionMang extends BaseActivity {
             if (!arList.isEmpty()){
                 classTransportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
                 EventBus.getDefault().post(classTransportForList);
+                Log.i(PROBLEM, "StopChapterAdd");
                 if (read){
                     numberLastChapter();
                     read = false;

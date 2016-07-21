@@ -53,6 +53,9 @@ public class TopManga extends BaseActivity {
     private static final String APP_PREFERENCES_maxInPage = "maxInPage";
     private SharedPreferences mSettings;
 
+
+    private final String PROBLEM = "ProblemTime";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,18 +112,20 @@ public class TopManga extends BaseActivity {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        if (classTop != null) EventBus.getDefault().post(classTop);
+        if (classTop != null)
+            EventBus.getDefault().post(classTop);
+        Log.i(PROBLEM, "StTop");
         super.onStop();
     }
 
-    public void onEvent(ClassMainTop event){
+   /* public void onEvent(ClassMainTop event){
         Toast toast = Toast.makeText(this,
                 event.getURL_characher(), Toast.LENGTH_SHORT);
         toast.show();
         classTop = event;
-        Intent intent = new Intent(TopManga.this,DescriptionMang.class);
-        startActivity(intent);
-    }
+        Log.i(PROBLEM, "event Top");
+
+    }*/
 
     public void onEvent(ClassMang event){
         SharedPreferences.Editor editor = mSettings.edit();

@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +30,13 @@ public class fragmentDescriptionMang extends Fragment {
     private View v;
     private ProgressBar progress;
     private LinearLayout linearLayout,linearLayoutButton;
+    private final String PROBLEM = "ProblemTime";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(PROBLEM, "Create fragmentDescriptionMang");
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,14 +48,16 @@ public class fragmentDescriptionMang extends Fragment {
         linearLayout = (LinearLayout) v.findViewById(R.id.linear_description_mang);
         GridLayout gridLayout = (GridLayout) v.findViewById(R.id.gridLayoutDescription);
         linearLayout.setVisibility(View.INVISIBLE);
+        Log.i(PROBLEM, "Start fragmentDescriptionMang");
 
 
 
-        linearLayout.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 EventBus.getDefault().post("Click");
             }
         });
+        Log.i(PROBLEM, "End Start fragmentDescriptionMang");
         return v;
     }
 
@@ -88,6 +94,7 @@ public class fragmentDescriptionMang extends Fragment {
                 progress.setVisibility(View.INVISIBLE);
             }
         }
+
     }
 
     @Override

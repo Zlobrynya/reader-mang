@@ -3,6 +3,7 @@ package com.example.nikita.progectmangaread.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,17 @@ import de.greenrobot.event.EventBus;
  */
 public class fragmentLoad_page0 extends Fragment{
     public ClassTransport transport;
+    private final String PROBLEM = "ProblemTime";
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
     /* Inflate the layout for this ffragment */
         View view = inflater.inflate(R.layout.fragment_load, container, false);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_load, new fragmentTemplePase());
+        transaction.replace(R.id.fragment_load, new fragmentTopMang());
         transaction.commit();
         return view;
     }
@@ -44,7 +49,7 @@ public class fragmentLoad_page0 extends Fragment{
 		 * When this container ffragment is created, we fill it with our first
 		 * "real" ffragment
 		 */
-            fragmentTemplePase frag = new fragmentTemplePase();
+            fragmentTopMang frag = new fragmentTopMang();
             frag.add(event);
             transaction.replace(R.id.fragment_load, frag);
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -61,6 +66,7 @@ public class fragmentLoad_page0 extends Fragment{
 
     @Override
     public void onStop() {
+        Log.i(PROBLEM, "Stop fragment Top Manga");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }

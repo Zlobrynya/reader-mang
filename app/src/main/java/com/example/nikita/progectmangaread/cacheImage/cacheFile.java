@@ -167,4 +167,8 @@ public class CacheFile {
     public void clearDownloadChapter(){
         dirFile.deleteOnExit();
     }
+
+    public int getNumberOfFile(){
+        return dirFile.listFiles().length;
+    }
 }

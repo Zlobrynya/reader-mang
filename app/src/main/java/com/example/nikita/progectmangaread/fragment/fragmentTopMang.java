@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.Activity.DescriptionMang;
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterMainScreen;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
@@ -43,20 +45,21 @@ import de.greenrobot.event.EventBus;
  * ---
  */
 
-public class fragmentTemplePase extends Fragment {
+public class fragmentTopMang extends Fragment {
     public ClassMang classMang;
     private int firstItem,page;
     private int kol,kolSum;
     private Document doc;
     private LinkedList<ClassMainTop> list;
     private AdapterMainScreen myAdap;
-    private ClassDataBaseListMang ClassDataBaseListMang;
+    private ClassDataBaseListMang classDataBaseListMang;
     private GridView gr;
     private boolean stopLoad;
-    // 0 - глав стр 1 - результат поиска 2 - по жанрам
-    private int resultPost;
+    private int resultPost;  // 0 - глав стр 1 - результат поиска 2 - по жанрам
     private Pars past;
+    private ClassMainTop mainTop;
 
+    private final String PROBLEM = "ProblemTime";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,9 +103,15 @@ public class fragmentTemplePase extends Fragment {
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ClassMainTop Class = list.get(position);
+                mainTop = list.get(position);
                 //отправляем в DescriptionMang
-                EventBus.getDefault().post(Class);
+                Intent intent = new Intent(getActivity(),DescriptionMang.class);
+                intent.putExtra("URL_ch",mainTop.getURL_characher());
+                intent.putExtra("Url_img",mainTop.getURL_img());
+                intent.putExtra("Name_ch",mainTop.getName_characher());
+                intent.putExtra("Url_site",mainTop.getURL_site());
+                startActivity(intent);
+            //    Log.i(PROBLEM, "click item");
             }
         });
 
@@ -129,8 +138,8 @@ public class fragmentTemplePase extends Fragment {
 
     //инициализация с БД
     private void initializationArray(){
-        while (!ClassDataBaseListMang.download_the_html(kol)){
-            ClassMainTop classTop = ClassDataBaseListMang.getMainClassTop(kol);
+        while (!classDataBaseListMang.download_the_html(kol)){
+            ClassMainTop classTop = classDataBaseListMang.getMainClassTop(kol);
             classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
@@ -138,6 +147,8 @@ public class fragmentTemplePase extends Fragment {
         }
         resultPost = 0;
         if (kol == 0) parssate(kol);
+        Log.i(PROBLEM, "initializationArray");
+
     }
 
     //расчитать количество столбцов в строке
@@ -161,6 +172,8 @@ public class fragmentTemplePase extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) kolSum = kol + 10;
         Log.i("temp Pase","result");
+        Log.i(PROBLEM, "onActivityCreated");
+
     }
 
     //создается клас с описанием интерфейсв
@@ -194,8 +207,9 @@ public class fragmentTemplePase extends Fragment {
         String nameTable = classMang.getURL().replace(".me", " ");
         nameTable = nameTable.replace("http://"," ");
         nameTable = nameTable.replace(".ru", " ");
-        ClassDataBaseListMang = new ClassDataBaseListMang(getContext(),nameTable);
+        classDataBaseListMang = new ClassDataBaseListMang(getContext(),nameTable);
         initializationArray();
+        // Log.i(PROBLEM, "onEvent(ClassMang event)");
     }
 
     //Для фрагментов
@@ -205,6 +219,7 @@ public class fragmentTemplePase extends Fragment {
         if (ev.getURL_Search().contains("search")) resultPost = 1;
         else resultPost = 2;
         parssate(kol);
+     //   Log.i(PROBLEM, "add(ClassTransport ev)");
     }
 
     @Override
@@ -215,13 +230,24 @@ public class fragmentTemplePase extends Fragment {
 
     @Override
     public void onStop(){
+      //  Log.i(PROBLEM, "Stop fragment Top Manga");
+        if (mainTop != null)
+            EventBus.getDefault().post(mainTop);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
+    @Override
+    public void onDestroy(){
+        Log.i(PROBLEM, "onDestroy");
+        if (classDataBaseListMang != null)
+            classDataBaseListMang.closeDataBase();
+        super.onDestroy();
+    }
+
     //фабричный метод для ViewPager
-    public static fragmentTemplePase newInstance(int page) {
-        fragmentTemplePase fragment = new fragmentTemplePase();
+    public static fragmentTopMang newInstance(int page) {
+        fragmentTopMang fragment = new fragmentTopMang();
         Bundle args=new Bundle();
         args.putInt("num", page);
         fragment.setArguments(args);
@@ -308,7 +334,7 @@ public class fragmentTemplePase extends Fragment {
                         if (list.size() <= kol)
                             list.add(a);
                         if (resultPost == 0) {
-                            ClassDataBaseListMang.addBasaData(a,kol);
+                            classDataBaseListMang.addBasaData(a, kol);
                         }
                         myAdap.notifyDataSetChanged();
 
@@ -321,7 +347,7 @@ public class fragmentTemplePase extends Fragment {
                     if (lisens != null) lisens.onEnd();
                 }
             }else {
-                Toast.makeText(fragmentTemplePase.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragmentTopMang.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
 
         }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +29,6 @@ public class ShowDownloaded extends BaseActivity {
     private ClassDataBaseDownloadMang classDataBaseDownloadMang;
     private ListView listView;
     private int pos;
-    private String nameMang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +37,7 @@ public class ShowDownloaded extends BaseActivity {
         pos = - 1;
         list = new ArrayList<>();
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
-
         listView = (ListView) this.findViewById(R.id.listView);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int position, long id) {
-                Intent intent = new Intent(ShowDownloaded.this, DescriptionMang.class);
-                startActivity(intent);
-                pos = position;
-                Log.v("long clicked", "pos: " + position);
-                return true;
-            }
-        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,7 +65,6 @@ public class ShowDownloaded extends BaseActivity {
                     cursor.moveToNext();
         }
         cursor.close();
-
 
         adapter = new AdapterBookmark(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
         listView.setAdapter(adapter);
@@ -108,15 +95,19 @@ public class ShowDownloaded extends BaseActivity {
             }
             EventBus.getDefault().post(new ClassTransportForList(forLists,list.get(pos).getNameMang(),null));
         }
+       // classDataBaseDownloadMang.closeDataBase();
         super.onStop();
     }
 
-    public void deleteDownloadedMang(View view) {
+    public void onDestroy(){
+        classDataBaseDownloadMang.closeDataBase();
+        super.onDestroy();
+    }
+
+    public void imageButtonDelete(View view) {
         int poss = (int) view.getTag();
         Toast.makeText(this, "Delete: " + list.get(poss).getNameMang(),
                 Toast.LENGTH_SHORT).show();
-        classDataBaseDownloadMang.setData(list.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
-        list.remove(poss);
         adapter.notifyDataSetChanged();
     }
 

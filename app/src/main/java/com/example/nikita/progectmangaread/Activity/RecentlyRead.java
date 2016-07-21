@@ -32,14 +32,12 @@ public class RecentlyRead extends BaseActivity{
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private String url;
-    private int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
         getLayoutInflater().inflate(R.layout.recently_read, frameLayout);
-        pos = -1;
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
         listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
@@ -61,9 +59,15 @@ public class RecentlyRead extends BaseActivity{
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int position, long id) {
                 Intent intent = new Intent(RecentlyRead.this,DescriptionMang.class);
-                startActivity(intent);
-                pos = position;
-                Log.v("long clicked", "pos: " + position);
+                ClassMainTop mainTop = getClassMainTop(position);
+                if (mainTop != null){
+                    intent.putExtra("URL_ch",mainTop.getURL_characher());
+                    intent.putExtra("Url_img",mainTop.getURL_img());
+                    intent.putExtra("Name_ch",mainTop.getName_characher());
+                    intent.putExtra("Url_site",mainTop.getURL_site());
+                    startActivity(intent);
+                    Log.v("long clicked", "pos: " + position);
+                }
                 return true;
             }
         });
@@ -72,11 +76,37 @@ public class RecentlyRead extends BaseActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(RecentlyRead.this,DescriptionMang.class);
-                intent.putExtra("read",true);
-                startActivity(intent);
-                pos = position;
+                ClassMainTop mainTop = getClassMainTop(position);
+                if (mainTop != null){
+                    intent.putExtra("URL_ch",mainTop.getURL_characher());
+                    intent.putExtra("Url_img",mainTop.getURL_img());
+                    intent.putExtra("Name_ch",mainTop.getName_characher());
+                    intent.putExtra("Url_site",mainTop.getURL_site());
+                    intent.putExtra("read",true);
+                    startActivity(intent);
+                    Log.v("long clicked", "pos: " + position);
+                }
             }
         });
+    }
+
+    private ClassMainTop getClassMainTop(int pos){
+        if (pos > -1){
+            ClassMainTop classTop = new ClassMainTop();
+            classTop.setName_characher(list.get(pos).getNameMang());
+            //Костыли
+            if (list.get(pos).getURLchapter().contains("readmang")){
+                classTop.setURL_site("http://readmanga.me");
+            }
+            if (list.get(pos).getURLchapter().contains("mintmanga")){
+                classTop.setURL_site("http://mintmanga.com");
+            }
+            //
+            classTop.setURL_img(list.get(pos).getURL_img());
+            classTop.setURL_characher(list.get(pos).getURLchapter());
+            return classTop;
+        }
+        return null;
     }
 
     private void initializationRR(){
@@ -109,22 +139,6 @@ public class RecentlyRead extends BaseActivity{
 
     @Override
     public void onStop() {
-        if (pos > -1){
-            ClassMainTop classTop = new ClassMainTop();
-            classTop.setName_characher(list.get(pos).getNameMang());
-            //Костыли
-            if (list.get(pos).getURLchapter().contains("readmang")){
-                classTop.setURL_site("http://readmanga.me");
-            }
-            if (list.get(pos).getURLchapter().contains("mintmanga")){
-                classTop.setURL_site("http://mintmanga.com");
-            }
-            //
-            classTop.setURL_img(list.get(pos).getURL_img());
-            classTop.setURL_characher(list.get(pos).getURLchapter());
-            EventBus.getDefault().post(classTop);
-            pos = -1;
-        }
         super.onStop();
     }
 
