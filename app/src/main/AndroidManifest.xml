@@ -50,6 +50,11 @@
             android:exported="false" />
 
         <activity android:name=".Activity.DeleteChapter" />
+
+        <service
+            android:name=".service.UpdateMangBookmark"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

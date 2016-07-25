@@ -106,7 +106,7 @@ public class ServiceDownChapter extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String urlMang = intent.getStringExtra("URL_Mang");
+        String urlSite = intent.getStringExtra("url_site");
         String[] chapter = intent.getStringExtra("chapter").split(",");
         String[] nameDir = intent.getStringExtra("name_dir").split(",");
 
@@ -115,7 +115,7 @@ public class ServiceDownChapter extends Service {
             firstUrl = true;
 
         for (String s: chapter)
-            urlChapter.add(urlMang+s);
+            urlChapter.add(urlSite+s);
         Collections.addAll(listNameMang, nameDir);
 
         if (firstUrl)

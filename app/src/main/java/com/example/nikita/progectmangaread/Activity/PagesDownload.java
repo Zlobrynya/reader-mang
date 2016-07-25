@@ -237,8 +237,6 @@ public class PagesDownload extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.i("Destroy:", String.valueOf("PageDowland"));
-        if (classDataBaseViewedHead != null)
-            classDataBaseViewedHead.closeDataBase();
         super.onDestroy();
     }
 

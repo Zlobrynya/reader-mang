@@ -54,9 +54,6 @@ public class DescriptionMang extends BaseActivity {
     private Document doc;
     private ClassMainTop mang;
     private ArrayList<ClassForList> arList;
-    private ViewPager pager;
-    private adapterFragment gg;
-    private Pars pars;
     private Element el;
     private boolean read, downloadChapter;
     private FloatingActionButton fab1,fab2,fab3,fab;
@@ -77,7 +74,7 @@ public class DescriptionMang extends BaseActivity {
         getLayoutInflater().inflate(R.layout.description_mang, frameLayout);
 
      //   Log.i(PROBLEM, "Description start");
-        pager=(ViewPager)findViewById(R.id.pager);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_lastChapter);
@@ -85,7 +82,7 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
-        gg = new adapterFragment(getSupportFragmentManager(),2);
+        adapterFragment gg = new adapterFragment(getSupportFragmentManager(), 2);
         pager.setAdapter(gg);
         arList = new ArrayList<>();
         read = false;
@@ -101,7 +98,7 @@ public class DescriptionMang extends BaseActivity {
             parsAndSettings();
         }
         downloadChapter = false;
-        dataRecovery();
+      //  dataRecovery();
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -213,8 +210,6 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onDestroy(){
-        if (classDataBaseViewedHead != null)
-            classDataBaseViewedHead.closeDataBase();
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -234,11 +229,6 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onResume() {
-        //Зачем это нужно?
-      /*  if (descriptionMang != null && classTransportForList != null){
-            //EventBus.getDefault().post(descriptionMang);
-            //EventBus.getDefault().post(classTransportForList);
-        }*/
         super.onResume();
     }
 
@@ -282,9 +272,9 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        saveFragment.setClassDescriptionMang(descriptionMang);
+/*        saveFragment.setClassDescriptionMang(descriptionMang);
         saveFragment.setClassTransportForList(classTransportForList);
-        saveFragment.setMang(mang);
+        saveFragment.setMang(mang);*/
         super.onSaveInstanceState(outState);
     }
     // Получаем событие, что был клик на экран и это не фабкнопка
@@ -303,12 +293,12 @@ public class DescriptionMang extends BaseActivity {
         Log.i(PROBLEM, "Get ClassMainTop event");
 
        // mang = event;
-        pars = new Pars(addImg,mang);
+        Pars pars = new Pars(addImg, mang);
         pars.execute();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(mang.getName_characher()); // set the top title
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-        if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),classDataBaseViewedHead.NOTEBOOK).contains("1")){
+        if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
             fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
             bookmark = false;
         }else {
@@ -326,7 +316,7 @@ public class DescriptionMang extends BaseActivity {
                 intent.putExtra("URL", mang.getURL_site() + event.getURL_chapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + event.getURL_chapter());
-                String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE);
+                String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE);
                 if (helpVar.contains("null")) helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
                 intent.putExtra("Chapter", mang.getName_characher());
@@ -349,7 +339,7 @@ public class DescriptionMang extends BaseActivity {
     }
 
     private void startLastChapter(){
-        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_CHAPTER);
         try {
             int numberChapter = numberLastChapter();
             if (!read){
@@ -357,14 +347,14 @@ public class DescriptionMang extends BaseActivity {
                 if (string.contains("null")){
                     ClassForList classForList = arList.get(numberChapter);
                     string = mang.getURL_site()+classForList.getURL_chapter();
-                    classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),classDataBaseViewedHead.VIEWED_HEAD);
+                    classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),ClassDataBaseViewedHead.VIEWED_HEAD);
                 }
             }
             //Получаем дату и пишем в БД
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = df.format(c.getTime());
-            classDataBaseViewedHead.setData(mang.getName_characher(), formattedDate,classDataBaseViewedHead.DATA);
+            classDataBaseViewedHead.setData(mang.getName_characher(), formattedDate,ClassDataBaseViewedHead.DATA);
 
             if (!string.contains(mang.getURL_site())){
                 string = mang.getURL_site() + string;
@@ -373,7 +363,7 @@ public class DescriptionMang extends BaseActivity {
             Intent intent = new Intent(this, PagesDownload.class);
             intent.putExtra("URL",string);
             intent.putExtra("NumberChapter", numberChapter);
-            intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_PAGE));
+            intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE));
             intent.putExtra("Chapter", mang.getName_characher());
             startActivity(intent);
         }catch (java.lang.ArrayIndexOutOfBoundsException e){
@@ -384,7 +374,7 @@ public class DescriptionMang extends BaseActivity {
     }
 
     private int numberLastChapter() throws ArrayIndexOutOfBoundsException{
-        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), classDataBaseViewedHead.LAST_CHAPTER);
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_CHAPTER);
        // Log.i("Number chapter", string);
         Short kol = 0;
         //Проверка на первый раз, если так то выдаем самую последнюю главу в списке
@@ -546,7 +536,7 @@ public class DescriptionMang extends BaseActivity {
                     }while (el != null);
                 }
             }catch (NullPointerException e){
-
+                Log.getStackTraceString(e);
             }
             return null;
         }
@@ -566,8 +556,9 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!arList.isEmpty()){
-                classTransportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
-                EventBus.getDefault().post(classTransportForList);
+                ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
+                classTransportForList = transportForList;
+                EventBus.getDefault().post(transportForList);
                 Log.i(PROBLEM, "StopChapterAdd");
                 if (read){
                     numberLastChapter();

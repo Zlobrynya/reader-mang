@@ -15,11 +15,9 @@ import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
-import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,15 +32,11 @@ import de.greenrobot.event.EventBus;
  */
 public class fragmentDescriptionList extends Fragment {
     private final static String strLog = "Fragment Description List";
-    private View v;
     private ArrayList<ClassForList> list;
     private AdapterList myAdap;
-    private ListView listView;
-    private String nameMang,imgURL;
+    private String nameMang;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
-    private ClassDataBaseListMang ClassDataBaseListMang;
     private boolean readDownloaded;
-    private final String PROBLEM = "ProblemTime";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,15 +44,12 @@ public class fragmentDescriptionList extends Fragment {
         list = new ArrayList<>();
         readDownloaded = false;
         myAdap = new AdapterList(getActivity(), R.layout.list_view_checkbox, list);
-        EventBus.getDefault().register(this);
-        Log.i(PROBLEM, "Create fragmentDescriptionList");
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.list_heads, null);
-        listView = (ListView) v.findViewById(R.id.listView);
+        View v = inflater.inflate(R.layout.list_heads, null);
+        ListView listView = (ListView) v.findViewById(R.id.listView);
         listView.setAdapter(myAdap);
         final ClassForList classForList = new ClassForList();
         classForList.setName_chapter("GG");
@@ -134,20 +125,21 @@ public class fragmentDescriptionList extends Fragment {
         EventBus.getDefault().post(classForList1);
     }
 
+
+
     public void onEvent(java.lang.String event){
         if (event.contains("notebook")){
-            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, classDataBaseViewedHead.NOTEBOOK));
+            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NOTEBOOK));
             if (notebook == 0){
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), classDataBaseViewedHead.NOTEBOOK);
-                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang, classDataBaseViewedHead.LAST_CHAPTER);
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.NOTEBOOK);
+                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.LAST_CHAPTER);
                 if (lastChapter.contains("null")){
                     classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURL_chapter());
-                    classDataBaseViewedHead.setData(nameMang, list.get(list.size() - 1).getName_chapter(), classDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    classDataBaseViewedHead.setData(nameMang, list.get(list.size() - 1).getName_chapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
                 }
             }else {
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(0), classDataBaseViewedHead.NOTEBOOK);
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(0), ClassDataBaseViewedHead.NOTEBOOK);
             }
-
         }
     }
 
@@ -159,12 +151,11 @@ public class fragmentDescriptionList extends Fragment {
             nameMang = event.getName();
             //Проверка откуда пришел евент
             if (event.getMainClassTop() != null){
-                ClassDataBaseListMang = new ClassDataBaseListMang(getActivity(),event.getMainClassTop().getURL_site());
-                if (!ClassDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
-                    ClassDataBaseListMang.addBasaData(event.getMainClassTop(), -1);
+                com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang classDataBaseListMang = new ClassDataBaseListMang(getActivity(), event.getMainClassTop().getURL_site());
+                if (!classDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
+                    classDataBaseListMang.addBasaData(event.getMainClassTop(), -1);
                 }
-                ArrayList<ClassForList> arrayList = event.getClassForList();
-                for (ClassForList b: arrayList){
+                for (ClassForList b: event.getClassForList()){
                     if (!b.getURL_chapter().contains("?mature=1")){
                         b.setURL_chapter(b.getURL_chapter() + "?mature=1");
                     }
@@ -175,33 +166,36 @@ public class fragmentDescriptionList extends Fragment {
                     list.add(b);
                 readDownloaded = true;
             }
-            checkChapter(event);
+            checkChapter();
             myAdap.notifyDataSetChanged();
         }
     }
 
-    private String[] checkDownloaded(ClassTransportForList event){
+    private String[] checkDownloaded(String nameMang){
         ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(getContext());
-        if (downloadMang.itIsInTheDatabase(event.getName())){
-            String[] strings = downloadMang.getDataFromDataBase(event.getName(),ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
+        if (downloadMang.itIsInTheDatabase(nameMang)){
+            String[] strings = downloadMang.getDataFromDataBase(nameMang,ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
             downloadMang.closeDataBase();
             return strings;
         }
         return null;
     }
 
-    private void checkChapter(ClassTransportForList event){
+    private void checkChapter(){
         classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
         List<String> arrayListString = null;
-        String[] download = checkDownloaded(event);
-        if (classDataBaseViewedHead.addBasaData(event.getName())){
-            String strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),ClassDataBaseViewedHead.VIEWED_HEAD);
+        String[] download = checkDownloaded(nameMang);
+        if (classDataBaseViewedHead.addBasaData(nameMang)){
+            String strings = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.VIEWED_HEAD);
             if (!strings.contains("null")) {
                 arrayListString = Arrays.asList(strings.split(","));
             }
                 //проходимся по списку глав
+
             for (int numbr = 0; numbr < list.size();numbr++){
                 ClassForList classForList = list.get(numbr);
+                if (classForList.getCheck())
+                    classForList.setCheck(false);
                 //проходися по списку строк где указаны просмотреенные главы
                 if (arrayListString != null){
                     for (String aString: arrayListString){
@@ -212,7 +206,6 @@ public class fragmentDescriptionList extends Fragment {
                         }
                     }
                 }
-
                 //проходися по списку строк где указаны скачанные главы
                 if (download != null){
                     for (String aString: download){
@@ -227,27 +220,34 @@ public class fragmentDescriptionList extends Fragment {
                 list.set(numbr, classForList);
             }
         }
-        classDataBaseViewedHead.setData(event.getName(), String.valueOf(list.size()),ClassDataBaseViewedHead.NUMBER_OF_CHAPTER);
+        classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_CHAPTER);
     }
 
-    public void onEvent(ClassDescriptionMang event) {
-        imgURL = event.getImg_url();
-    }
 
-        @Override
+    @Override
     public void onStart() {
         super.onStart();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     @Override
     public void onDestroy(){
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        if (!list.isEmpty()){
+            checkChapter();
+            myAdap.notifyDataSetChanged();
+        }
+        EventBus.getDefault().register(this);
+        super.onResume();
     }
 
     //фабричный метод для ViewPage

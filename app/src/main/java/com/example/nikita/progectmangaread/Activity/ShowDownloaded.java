@@ -50,6 +50,7 @@ public class ShowDownloaded extends BaseActivity {
                 pos = position;
             }
         });
+        adapter = new AdapterBookmark(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
 
         initializationDonwload();
 
@@ -59,6 +60,7 @@ public class ShowDownloaded extends BaseActivity {
         Cursor cursor = classDataBaseDownloadMang.getDownloadMang();
         Log.i("Cursor: ", String.valueOf(cursor.getCount()));
         cursor.moveToFirst();
+        list.clear();
         for(int i = 0;i < cursor.getCount();i++){
             String nameMang,URLchapter;
             nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.NAME_MANG));
@@ -70,8 +72,7 @@ public class ShowDownloaded extends BaseActivity {
                     cursor.moveToNext();
         }
         cursor.close();
-
-        adapter = new AdapterBookmark(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
+        adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
     }
 
@@ -82,17 +83,19 @@ public class ShowDownloaded extends BaseActivity {
             classDescriptionMang.setCategory(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.CATEGORY));
             classDescriptionMang.setDescription(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.DESCRIPTION));
             classDescriptionMang.setGenre(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.GENRES));
-            classDescriptionMang.setImg_url(imgUrl);
+            classDescriptionMang.setImg_url("file://"+getCacheDir().toString()+"/"+classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_IMG));
             classDescriptionMang.setNameAuthor(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.AUTHOR));
             classDescriptionMang.setRank(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.RATING));
             classDescriptionMang.setToms(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TOMS));
             classDescriptionMang.setTranslate(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TRANSLATION));
             EventBus.getDefault().post(classDescriptionMang);
             EventBus.getDefault().post(creatureClassTransportForList());
-            pos = -1;
         }
-        if (delete)
+        if (delete){
             EventBus.getDefault().post(creatureClassTransportForList());
+        }
+        delete = false;
+        pos = -1;
         // classDataBaseDownloadMang.closeDataBase();
         super.onStop();
     }
@@ -111,8 +114,12 @@ public class ShowDownloaded extends BaseActivity {
     }
 
     public void onDestroy(){
-        classDataBaseDownloadMang.closeDataBase();
         super.onDestroy();
+    }
+
+    public void onResume(){
+        initializationDonwload();
+        super.onResume();
     }
 
     public void imageButtonDelete(View view) {
