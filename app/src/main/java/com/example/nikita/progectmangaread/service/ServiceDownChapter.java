@@ -21,6 +21,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 
 
@@ -32,14 +33,14 @@ public class ServiceDownChapter extends Service {
     private ExecutorService es;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
-    private final int notifyID = 1;
+
 
     AsyncTaskLisen receivedAddress = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
             Log.d(LOG_TAG, "Start Dow Pic");
             if (numberPage < urlPage.size()){
-                cacheFile.loadAndCache(urlPage.get(numberPage),numberPage);
+                cacheFile.loadAndCache(urlPage.get(numberPage), String.valueOf(numberPage));
                 numberPage++;
             }else {
                 startId++;
@@ -77,6 +78,7 @@ public class ServiceDownChapter extends Service {
         // Moves the expanded layout object into the notification object.
         //mBuilder.setStyle(inboxStyle);
 
+        int notifyID = 1;
         mNotificationManager.notify(
                 notifyID,
                 mBuilder.build());
@@ -107,15 +109,14 @@ public class ServiceDownChapter extends Service {
         String urlMang = intent.getStringExtra("URL_Mang");
         String[] chapter = intent.getStringExtra("chapter").split(",");
         String[] nameDir = intent.getStringExtra("name_dir").split(",");
-        String nameSite = intent.getStringExtra("name_site");
+
         boolean firstUrl = false;
         if (urlChapter.isEmpty())
             firstUrl = true;
 
         for (String s: chapter)
             urlChapter.add(urlMang+s);
-        for (String s: nameDir)
-            listNameMang.add(s);
+        Collections.addAll(listNameMang, nameDir);
 
         if (firstUrl)
             new ParsURLPage(receivedAddress).execute();

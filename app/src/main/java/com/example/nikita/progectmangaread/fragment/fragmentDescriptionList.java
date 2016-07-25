@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
@@ -83,7 +84,7 @@ public class fragmentDescriptionList extends Fragment {
                             numberChapter += num;
                             kolInt++;
                         }
-                     //   Log.i(strLog, "number " + numberChapter);
+                        //   Log.i(strLog, "number " + numberChapter);
                     } catch (NumberFormatException e) {
                         if (strings[i].contains("-") && !numberChapter.contains("-"))
                             numberChapter += " - ";
@@ -93,7 +94,7 @@ public class fragmentDescriptionList extends Fragment {
                             else
                                 numberChapter += " " + strings[i];
                         }
-                       // Log.i(strLog, "Error number " + numberChapter);
+                        // Log.i(strLog, "Error number " + numberChapter);
                     }
                 }
 
@@ -124,8 +125,10 @@ public class fragmentDescriptionList extends Fragment {
             classForList1.setCheck(true);
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
-        if (!readDownloaded)
+        if (!readDownloaded){
             classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(event));
+            classForList1.setDownload(false);
+        }
         else
             classForList1.setDownload(true);
         EventBus.getDefault().post(classForList1);
@@ -177,29 +180,54 @@ public class fragmentDescriptionList extends Fragment {
         }
     }
 
+    private String[] checkDownloaded(ClassTransportForList event){
+        ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(getContext());
+        if (downloadMang.itIsInTheDatabase(event.getName())){
+            String[] strings = downloadMang.getDataFromDataBase(event.getName(),ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
+            downloadMang.closeDataBase();
+            return strings;
+        }
+        return null;
+    }
+
     private void checkChapter(ClassTransportForList event){
         classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
-        List<String> arrayListString = new ArrayList<>();
+        List<String> arrayListString = null;
+        String[] download = checkDownloaded(event);
         if (classDataBaseViewedHead.addBasaData(event.getName())){
-            String strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),classDataBaseViewedHead.VIEWED_HEAD);
-            if (!strings.contains("null")){
+            String strings = classDataBaseViewedHead.getDataFromDataBase(event.getName(),ClassDataBaseViewedHead.VIEWED_HEAD);
+            if (!strings.contains("null")) {
                 arrayListString = Arrays.asList(strings.split(","));
+            }
                 //проходимся по списку глав
-                for (int numbr = 0; numbr < list.size();numbr++){
-                    ClassForList classForList = list.get(numbr);
-                    //проходися по списку строк где указаны просмотреенные главы
+            for (int numbr = 0; numbr < list.size();numbr++){
+                ClassForList classForList = list.get(numbr);
+                //проходися по списку строк где указаны просмотреенные главы
+                if (arrayListString != null){
                     for (String aString: arrayListString){
                         //если есть совпадение то ставим галочку и удалем этот элемент из массива строк
                         if (classForList.getName_chapter().contains(aString)){
                             classForList.setCheck(true);
-                            list.set(numbr, classForList);
                             break;
                         }
                     }
                 }
 
+                //проходися по списку строк где указаны скачанные главы
+                if (download != null){
+                    for (String aString: download){
+                        //если есть совпадение то ставим галочку и удалем этот элемент из массива строк
+                        if (classForList.getName_chapter().equals(aString)){
+                            classForList.setCheckDownload(true);
+                            Log.i(strLog, "Download");
+                            break;
+                        }
+                    }
+                }
+                list.set(numbr, classForList);
             }
         }
+        classDataBaseViewedHead.setData(event.getName(), String.valueOf(list.size()),ClassDataBaseViewedHead.NUMBER_OF_CHAPTER);
     }
 
     public void onEvent(ClassDescriptionMang event) {
@@ -219,11 +247,6 @@ public class fragmentDescriptionList extends Fragment {
     @Override
     public void onDestroy(){
         EventBus.getDefault().unregister(this);
-        //Закрываем базу данных
-        if (classDataBaseViewedHead != null)
-            ClassDataBaseListMang.closeDataBase();
-        if (classDataBaseViewedHead != null)
-            classDataBaseViewedHead.closeDataBase();
         super.onDestroy();
     }
 

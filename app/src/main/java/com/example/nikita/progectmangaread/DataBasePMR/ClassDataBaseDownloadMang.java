@@ -13,7 +13,6 @@ import android.util.Log;
 public class ClassDataBaseDownloadMang {
     private DatabaseHelper mDatabaseHelper;
     private SQLiteDatabase mSqLiteDatabase;
-    private String nameTable;
     public static final String NAME_MANG = "NameMang";
     public static final String DATABASE_TABLE = "DownloadMang";
     public static final String URL_MANG = "Url_mang";
@@ -32,8 +31,8 @@ public class ClassDataBaseDownloadMang {
         mDatabaseHelper = new DatabaseHelper(context);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
-                +  DATABASE_TABLE + " (" + NAME_MANG + " text not null, " +  URL_MANG + " text not null, " +
-                NAME_CHAPTER + " text not null, "+  NAME_DIR+ " text not null, " + RATING + " text not null, " +
+                +  DATABASE_TABLE + " (" + NAME_MANG + " text, " +  URL_MANG + " text, " +
+                NAME_CHAPTER + " text, "+  NAME_DIR+ " text, " + RATING + " text not null, " +
                 TOMS + " text not null, " + TRANSLATION + " text not null, " + AUTHOR + " text not null, " +
                 GENRES + " text not null, " + CATEGORY + " text not null, " + NAME_IMG + " text not null, " + DESCRIPTION + " text);";
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
@@ -57,16 +56,16 @@ public class ClassDataBaseDownloadMang {
             ContentValues newValues = new ContentValues();
             // Задайте значения для каждого столбца
             newValues.put( NAME_MANG, nameMang.replace('"', ' '));
-            newValues.put( URL_MANG, "null");
-            newValues.put( NAME_CHAPTER,"null");
-            newValues.put( NAME_DIR,"null");
+            newValues.put( URL_MANG, "");
+            newValues.put( NAME_CHAPTER,"");
+            newValues.put( NAME_DIR,"");
             newValues.put( RATING, "null");
             newValues.put( TOMS, "null");
             newValues.put( TRANSLATION, "null");
             newValues.put( AUTHOR, "null");
             newValues.put( GENRES, "null");
             newValues.put( DESCRIPTION, "");
-            newValues.put( NAME_IMG,"null");
+            newValues.put( NAME_IMG,"");
             newValues.put( CATEGORY,"null");
 
             // Вставляем данные в таблицу
@@ -116,6 +115,22 @@ public class ClassDataBaseDownloadMang {
         }
         cursor.close();
         return data;
+    }
+
+    //проверяем в бд есть ли в такой элемент
+    public Boolean itIsInTheDatabase(String name){
+        String locName = "\"";
+        locName += name.replace('"', ' ') + "\"";
+        String query = "SELECT " + "*" + " FROM " + DATABASE_TABLE + " WHERE " + NAME_MANG + "=" +
+                locName;
+        Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+        //Log.i("LOG_TAG", "download_the_html " + cursor.getCount());
+        if (cursor.getCount() != 0) {
+            cursor.close();
+            return true;
+        }
+        cursor.close();
+        return false;
     }
 
     public long fetchPlacesCount() {

@@ -126,7 +126,7 @@ public class fragmentPageDownlad extends Fragment {
                     image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
                     image.setVisibility(View.VISIBLE);
                 } catch (FileNotFoundException e) {
-                    file.loadAndCache(url, number);
+                    file.loadAndCache(url, String.valueOf(number));
                 }
             }
             @Override
@@ -136,7 +136,7 @@ public class fragmentPageDownlad extends Fragment {
 
         file = new CacheFile(getContext().getCacheDir(), PagesDownload.nameDirectory ,as,progress);
         if (PagesDownload.nameDirectory.contains("pageCache")) {
-            file.loadAndCache(url, number);
+            file.checkFile(url, String.valueOf(number));
         }else {
             as.onEnd();
         }

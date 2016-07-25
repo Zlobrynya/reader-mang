@@ -39,14 +39,17 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.DownloadChapter" />
-        <activity android:name=".Activity.ShowDownloaded"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activity.ShowDownloaded"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".service.ServiceDownChapter"
             android:enabled="true"
             android:exported="false" />
 
+        <activity android:name=".Activity.DeleteChapter" />
     </application>
 
 </manifest>

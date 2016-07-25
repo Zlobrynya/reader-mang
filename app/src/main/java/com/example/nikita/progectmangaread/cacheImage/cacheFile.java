@@ -9,9 +9,7 @@ import android.widget.ProgressBar;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -67,7 +65,7 @@ public class CacheFile {
     }
 
     //download image and cache it
-    public void loadAndCache(String url, int number){
+    public void loadAndCache(String url, String nameFile){
         class downlandImage extends AsyncTask<String,Integer,Void> {
             private int lenghtOfFile;
             @Override
@@ -146,7 +144,19 @@ public class CacheFile {
         }
 
         downlandImage Task = new downlandImage();
-        Task.execute(url, String.valueOf(number));
+        Task.execute(url, nameFile);
+    }
+
+    public boolean checkFile(String url, String nameFile){
+        File f = new File(dirFile, nameFile);
+        if (f.exists()){
+            if (as != null)
+                as.onEnd();
+            return true;
+        }else {
+            loadAndCache(url, nameFile);
+            return false;
+        }
     }
 
     public String getFile(String nameCache) throws FileNotFoundException {
@@ -164,8 +174,14 @@ public class CacheFile {
             f.delete();
     }
 
-    public void clearDownloadChapter(){
-        dirFile.deleteOnExit();
+    public void deleteDirectory(){
+        File[] files=dirFile.listFiles();
+        if(files==null)
+            return;
+        for(File f:files)
+            f.delete();
+
+        dirFile.delete();
     }
 
     public int getNumberOfFile(){

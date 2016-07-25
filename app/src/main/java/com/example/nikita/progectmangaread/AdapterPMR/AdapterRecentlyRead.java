@@ -39,7 +39,6 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new UsingFreqLimitedMemoryCache(8 * 1024 * 1024)) // 2 Mb
                 .diskCache(new LimitedAgeDiskCache(context.getApplicationContext().getCacheDir(), null, new HashCodeFileNameGenerator(), 60 * 60 * 30))
                 .imageDownloader(new BaseImageDownloader(context)) // connectTimeout (5 s), readTimeout (30 s)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
@@ -51,9 +50,6 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
         imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.launcher) // resource or drawable
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }

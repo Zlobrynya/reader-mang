@@ -29,12 +29,15 @@ public class ShowDownloaded extends BaseActivity {
     private ClassDataBaseDownloadMang classDataBaseDownloadMang;
     private ListView listView;
     private int pos;
+    private boolean delete;
+    private String imgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.list_heads, frameLayout);
         pos = - 1;
+        delete = false;
         list = new ArrayList<>();
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
         listView = (ListView) this.findViewById(R.id.listView);
@@ -57,11 +60,13 @@ public class ShowDownloaded extends BaseActivity {
         Log.i("Cursor: ", String.valueOf(cursor.getCount()));
         cursor.moveToFirst();
         for(int i = 0;i < cursor.getCount();i++){
-            String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter;
+            String nameMang,URLchapter;
             nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.NAME_MANG));
             URLchapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.URL_MANG));
             //Путь до изображения в фотрате: "file://"+getCacheDir().toString()+ "дальнейший путь"
-            list.add(new ClassRecentlyRead("file://"+getCacheDir().toString()+"/-1042388072",nameMang,"",URLchapter,""));
+            imgUrl = "file://"+getCacheDir().toString()+"/"+cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.NAME_IMG));
+            if (!classDataBaseDownloadMang.getDataFromDataBase(nameMang, ClassDataBaseDownloadMang.NAME_CHAPTER).isEmpty())
+                list.add(new ClassRecentlyRead(imgUrl,nameMang,"",URLchapter,""));
                     cursor.moveToNext();
         }
         cursor.close();
@@ -72,31 +77,37 @@ public class ShowDownloaded extends BaseActivity {
 
     @Override
     public void onStop() {
-        if (pos > -1){
+        if (pos > -1 && !delete){
             ClassDescriptionMang classDescriptionMang = new ClassDescriptionMang();
             classDescriptionMang.setCategory(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.CATEGORY));
             classDescriptionMang.setDescription(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.DESCRIPTION));
             classDescriptionMang.setGenre(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.GENRES));
-            classDescriptionMang.setImg_url("file://" + getCacheDir().toString() + "/-1042388072");
+            classDescriptionMang.setImg_url(imgUrl);
             classDescriptionMang.setNameAuthor(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.AUTHOR));
             classDescriptionMang.setRank(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.RATING));
             classDescriptionMang.setToms(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TOMS));
             classDescriptionMang.setTranslate(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TRANSLATION));
             EventBus.getDefault().post(classDescriptionMang);
-
-            ArrayList<ClassForList> forLists = new ArrayList<>();
-            String[] names = classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
-            String[] urls = classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_DIR).split(",");
-            for (int i = 0; i < names.length; i++){
-                ClassForList forList = new ClassForList();
-                forList.setName_chapter(names[i]);
-                forList.setURL_chapter(urls[i]);
-                forLists.add(forList);
-            }
-            EventBus.getDefault().post(new ClassTransportForList(forLists,list.get(pos).getNameMang(),null));
+            EventBus.getDefault().post(creatureClassTransportForList());
+            pos = -1;
         }
-       // classDataBaseDownloadMang.closeDataBase();
+        if (delete)
+            EventBus.getDefault().post(creatureClassTransportForList());
+        // classDataBaseDownloadMang.closeDataBase();
         super.onStop();
+    }
+
+    private ClassTransportForList creatureClassTransportForList(){
+        ArrayList<ClassForList> forLists = new ArrayList<>();
+        String[] names = classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
+        String[] urls = classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_DIR).split(",");
+        for (int i = 0; i < names.length; i++){
+            ClassForList forList = new ClassForList();
+            forList.setName_chapter(names[i]);
+            forList.setURL_chapter(urls[i]);
+            forLists.add(forList);
+        }
+        return new ClassTransportForList(forLists,list.get(pos).getNameMang(),null);
     }
 
     public void onDestroy(){
@@ -105,10 +116,13 @@ public class ShowDownloaded extends BaseActivity {
     }
 
     public void imageButtonDelete(View view) {
-        int poss = (int) view.getTag();
-        Toast.makeText(this, "Delete: " + list.get(poss).getNameMang(),
-                Toast.LENGTH_SHORT).show();
-        adapter.notifyDataSetChanged();
+        pos = (int) view.getTag();
+        if (!classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_CHAPTER).isEmpty()){
+            Toast.makeText(this, "Delete: " + list.get(pos).getNameMang(),
+                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(ShowDownloaded.this, DeleteChapter.class).putExtra("name",
+                    list.get(pos).getNameMang()));
+        }
+        delete = true;
     }
-
 }

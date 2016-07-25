@@ -19,6 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import java.io.File;
 import java.util.LinkedList;
 
 /**
@@ -36,12 +37,13 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
         super(context, resourse,item);
         this.w = w;
         this.h = h;
+        File cacheDir = new File(context.getApplicationContext().getCacheDir(),"cacheGlavTop");
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(new UsingFreqLimitedMemoryCache(8 * 1024 * 1024)) // 2 Mb
-                .diskCache(new LimitedAgeDiskCache(context.getApplicationContext().getCacheDir(), null, new HashCodeFileNameGenerator(), 60 * 60 * 30))
+                .diskCache(new LimitedAgeDiskCache(cacheDir, null, new HashCodeFileNameGenerator(), 60 * 60 * 30))
                 .imageDownloader(new BaseImageDownloader(context)) // connectTimeout (5 s), readTimeout (30 s)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .build();

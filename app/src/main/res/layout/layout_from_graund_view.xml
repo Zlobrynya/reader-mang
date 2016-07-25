@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/textMang"
         android:maxLines="1"
-        android:textSize="8sp"/>
+        android:textSize="8sp"
+        android:singleLine="true"
+        android:ellipsize="end"/>
 
 </LinearLayout>

@@ -154,6 +154,7 @@ public class DescriptionMang extends BaseActivity {
             }
         });
 
+        //Кнопка скачивания
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,12 +175,14 @@ public class DescriptionMang extends BaseActivity {
                 newInten.putExtra("mang", mang.getURL_characher());
                 newInten.putExtra("site", mang.getURL_site());
                 newInten.putExtra("Name", mang.getName_characher());
+                newInten.putExtra("image",mang.getURL_img());
                 startActivity(newInten);
                 downloadChapter = true;
             }
         });
 
        // Log.i(PROBLEM, "End onCreate");
+        EventBus.getDefault().register(this);
 
     }
 
@@ -212,18 +215,18 @@ public class DescriptionMang extends BaseActivity {
     public void onDestroy(){
         if (classDataBaseViewedHead != null)
             classDataBaseViewedHead.closeDataBase();
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+       //
         if (downloadChapter)
             EventBus.getDefault().post(classTransportForList);
         super.onStop();
