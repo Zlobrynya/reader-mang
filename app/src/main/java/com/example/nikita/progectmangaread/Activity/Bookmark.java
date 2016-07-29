@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ public class Bookmark extends BaseActivity {
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
         listView = (ListView) this.findViewById(R.id.listView);
+        getSupportActionBar().setTitle("Bookmark"); // set the top title
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -107,9 +110,9 @@ public class Bookmark extends BaseActivity {
             String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter;
             nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.NAME_MANG));
             URLchapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_CHAPTER));
-            URLlastChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.LAST_CHAPTER));
+            URLlastChapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseViewedHead.LAST_CHAPTER));
             URLimg = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_IMG));
-            nameChapter = cursor.getString(cursor.getColumnIndex(classDataBaseViewedHead.NAME_LAST_CHAPTER));
+            nameChapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseViewedHead.NAME_LAST_CHAPTER));
             list.add(new ClassRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
             cursor.moveToNext();
         }

@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:weightSum="1">
 
     <ListView
         android:id="@+id/listChapter"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/download_btn" >
+        android:layout_above="@+id/linear_download_chapter_mang" >
     </ListView>
 
-    <Button
-        android:id="@+id/download_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:width="170dp"
-        android:text="Скачать"
-        android:layout_alignParentBottom="true" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:orientation="horizontal"
+        android:id="@+id/linear_download_chapter_mang"
+        android:layout_alignParentBottom="true"
+        android:columnCount="6">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_done_all_black_24dp"
+            android:onClick="CheckAllChapter"
+            android:id="@+id/button5" />
+
+        <Button
+            android:id="@+id/download_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="80"
+            android:text="Скачать" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:src="@drawable/ic_highlight_off_black_24dp"
+            android:onClick="ClickDeleteCheck"
+            android:id="@+id/button4"/>
+    </LinearLayout>
+
 
 </RelativeLayout>

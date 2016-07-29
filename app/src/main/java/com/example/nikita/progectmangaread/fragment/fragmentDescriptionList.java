@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
+import com.example.nikita.progectmangaread.AdapterPMR.AdapterListChapter;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
@@ -25,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by Nikita on 03.02.2016.
@@ -33,7 +35,7 @@ import de.greenrobot.event.EventBus;
 public class fragmentDescriptionList extends Fragment {
     private final static String strLog = "Fragment Description List";
     private ArrayList<ClassForList> list;
-    private AdapterList myAdap;
+    private AdapterListChapter myAdap;
     private String nameMang;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private boolean readDownloaded;
@@ -43,17 +45,18 @@ public class fragmentDescriptionList extends Fragment {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
         readDownloaded = false;
-        myAdap = new AdapterList(getActivity(), R.layout.list_view_checkbox, list);
+        myAdap = new AdapterListChapter(getActivity(), R.layout.list_view_checkbox, list);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.list_heads, null);
-        ListView listView = (ListView) v.findViewById(R.id.listView);
+        View v = inflater.inflate(R.layout.sticky_list, null);
+        StickyListHeadersListView listView = (StickyListHeadersListView) v.findViewById(R.id.listRecentlyRead);
         listView.setAdapter(myAdap);
         final ClassForList classForList = new ClassForList();
         classForList.setName_chapter("GG");
        // Log.i(PROBLEM, "Start fragmentDescriptionList");
+        EventBus.getDefault().register(this);
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -65,32 +68,10 @@ public class fragmentDescriptionList extends Fragment {
                 classForList1.setNumberChapter(position);
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
-                String[] strings = classForList1.getName_chapter().split(" ");
-                String numberChapter = " ";
-                int kolInt = 0;
-                for (int i = 0; i < strings.length; i++) {
-                    try {
-                        int num = Integer.parseInt(strings[i]);
-                        if (kolInt < 2) {
-                            numberChapter += num;
-                            kolInt++;
-                        }
-                        //   Log.i(strLog, "number " + numberChapter);
-                    } catch (NumberFormatException e) {
-                        if (strings[i].contains("-") && !numberChapter.contains("-"))
-                            numberChapter += " - ";
-                        if (strings[i].contains("Экстр")) {
-                            if (i + 1 < strings.length)
-                                numberChapter += " " + strings[i] + " " + strings[i + 1];
-                            else
-                                numberChapter += " " + strings[i];
-                        }
-                        // Log.i(strLog, "Error number " + numberChapter);
-                    }
-                }
 
+                String numberChapter = getNumberChapter(classForList1.getName_chapter());
 
-                classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter + " ");
+                classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
 
                 //Получаем дату когда тыкнули главу и загрузили в бд
                 Calendar c = Calendar.getInstance();
@@ -108,6 +89,34 @@ public class fragmentDescriptionList extends Fragment {
      //   Log.i(PROBLEM, "End Start fragmentDescriptionList");
         return v;
     }
+
+    private String getNumberChapter(String nameChapter){
+        String[] strings = nameChapter.split(" ");
+        String numberChapter = "";
+        int kolInt = 0;
+        for (int i = 1; i < strings.length; i++) {
+            try {
+                int num = Integer.parseInt(strings[i]);
+                if (kolInt < 2) {
+                    numberChapter += num;
+                    kolInt++;
+                }else break;
+                //   Log.i(strLog, "number " + numberChapter);
+            } catch (NumberFormatException e) {
+                if (strings[i].contains("-") && !numberChapter.contains("-"))
+                    numberChapter += " - ";
+                if (strings[i].contains("Экстр")) {
+                    if (i + 1 < strings.length)
+                        numberChapter += strings[i] + " " + strings[i + 1];
+                    else
+                        numberChapter += " " + strings[i];
+                }
+                // Log.i(strLog, "Error number " + numberChapter);
+            }
+        }
+        return numberChapter;
+    }
+
     //"Посылка" с fragmentPageDowland, что надо переключить главу
     public void onEvent(java.lang.Integer event){
         ClassForList classForList1 = list.get(event);
@@ -200,7 +209,7 @@ public class fragmentDescriptionList extends Fragment {
                 if (arrayListString != null){
                     for (String aString: arrayListString){
                         //если есть совпадение то ставим галочку и удалем этот элемент из массива строк
-                        if (classForList.getName_chapter().contains(aString)){
+                        if (getNumberChapter(classForList.getName_chapter()).equals(aString)){
                             classForList.setCheck(true);
                             break;
                         }
@@ -230,13 +239,13 @@ public class fragmentDescriptionList extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        EventBus.getDefault().unregister(this);
-        super.onPause();
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
     public void onDestroy(){
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -246,7 +255,6 @@ public class fragmentDescriptionList extends Fragment {
             checkChapter();
             myAdap.notifyDataSetChanged();
         }
-        EventBus.getDefault().register(this);
         super.onResume();
     }
 

@@ -98,7 +98,7 @@ public class DescriptionMang extends BaseActivity {
             parsAndSettings();
         }
         downloadChapter = false;
-      //  dataRecovery();
+        dataRecovery();
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -272,9 +272,9 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-/*        saveFragment.setClassDescriptionMang(descriptionMang);
+        saveFragment.setClassDescriptionMang(descriptionMang);
         saveFragment.setClassTransportForList(classTransportForList);
-        saveFragment.setMang(mang);*/
+        saveFragment.setMang(mang);
         super.onSaveInstanceState(outState);
     }
     // Получаем событие, что был клик на экран и это не фабкнопка

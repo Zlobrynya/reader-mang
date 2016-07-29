@@ -175,7 +175,6 @@ public class TopManga extends BaseActivity {
                 doublePressBack=false;
             }
         }, 2000);
-
     }
 
     public void onEvent(ClassTransport event) {

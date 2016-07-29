@@ -106,7 +106,7 @@ public class PagesDownload extends AppCompatActivity {
                     }
                     pageNumber = position;
                     if (!download)
-                        classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), classDataBaseViewedHead.LAST_PAGE);
+                        classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), ClassDataBaseViewedHead.LAST_PAGE);
                 }
             }
 
@@ -158,6 +158,16 @@ public class PagesDownload extends AppCompatActivity {
             addImg.onEnd();
             Log.i("PagesDownload", String.valueOf(file.getNumberOfFile()));
         }
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pager.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     //Для фрагментов

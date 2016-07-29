@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,7 +59,7 @@ public class fragmentPageDownlad extends Fragment {
         @Override
         public void onReady() {
             Log.i("Image", "ready");
-          //  progress.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
         }
 
         @Override
@@ -96,9 +97,12 @@ public class fragmentPageDownlad extends Fragment {
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
-        params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
+        }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            params.setMargins(0, TopManga.WIDTH_WIND / 2, 0, 0);
+        }
         progress.setLayoutParams(params);
-
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
         image.setOnImageEventListener(d);

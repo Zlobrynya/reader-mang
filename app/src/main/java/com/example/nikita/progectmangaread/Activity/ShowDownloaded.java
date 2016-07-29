@@ -3,6 +3,8 @@ package com.example.nikita.progectmangaread.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,6 +43,7 @@ public class ShowDownloaded extends BaseActivity {
         list = new ArrayList<>();
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
         listView = (ListView) this.findViewById(R.id.listView);
+        getSupportActionBar().setTitle("Download"); // set the top title
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

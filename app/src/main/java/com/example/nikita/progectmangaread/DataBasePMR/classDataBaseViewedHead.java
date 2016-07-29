@@ -86,7 +86,7 @@ public class ClassDataBaseViewedHead {
                 name;
         String data = null;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-        if (cursor.getCount() != 0){
+        if (cursor.getCount() > 0){
             cursor.moveToFirst();
             data = cursor.getString(cursor.getColumnIndex(where));
         }

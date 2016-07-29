@@ -98,7 +98,6 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
 
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();

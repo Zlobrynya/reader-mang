@@ -28,6 +28,9 @@ public class DeleteChapter extends DownloadChapter {
 
         name = getIntent().getStringExtra("name");
 
+        getSupportActionBar().setTitle("Delete chapter"); // set the top title
+
+
         Button downloadButton = (Button) findViewById(R.id.download_btn);
         downloadButton.setText("Удалить");
         downloadButton.setOnClickListener(new View.OnClickListener() {
@@ -60,11 +63,14 @@ public class DeleteChapter extends DownloadChapter {
                 }
 
                 ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DeleteChapter.this);
-                classDataBaseDownloadMang.setData(name,notDeleteDir,ClassDataBaseDownloadMang.NAME_DIR);
-                classDataBaseDownloadMang.setData(name,notDeleteName,ClassDataBaseDownloadMang.NAME_CHAPTER);
+                classDataBaseDownloadMang.setData(name,notDeleteDir, ClassDataBaseDownloadMang.NAME_DIR);
+                classDataBaseDownloadMang.setData(name, notDeleteName, ClassDataBaseDownloadMang.NAME_CHAPTER);
                 classDataBaseDownloadMang.closeDataBase();
 
                 myAdap.notifyDataSetChanged();
+                if (list.isEmpty())
+                    DeleteChapter.this.finish();
+
             }
         });
     }

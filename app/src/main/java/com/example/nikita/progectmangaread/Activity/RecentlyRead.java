@@ -17,7 +17,6 @@ import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -37,12 +36,13 @@ public class RecentlyRead extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-        getLayoutInflater().inflate(R.layout.recently_read, frameLayout);
+        getLayoutInflater().inflate(R.layout.sticky_list, frameLayout);
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
         listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
         adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
         listView.setAdapter(adapter);
+        getSupportActionBar().setTitle("Recently Read"); // set the top title
 
         url = mSettings.getString(APP_PREFERENCES_URL, "");
         //ViewedHead.db
@@ -141,5 +141,4 @@ public class RecentlyRead extends BaseActivity{
     public void onStop() {
         super.onStop();
     }
-
 }

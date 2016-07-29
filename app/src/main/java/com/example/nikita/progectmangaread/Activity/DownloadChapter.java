@@ -40,6 +40,7 @@ public class DownloadChapter extends AppCompatActivity {
         listView.setAdapter(myAdap);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Download chapter"); // set the top title
 
         Intent intent = getIntent();
         urlMang = intent.getStringExtra("mang");
@@ -73,7 +74,7 @@ public class DownloadChapter extends AppCompatActivity {
                         int numbr = list.indexOf(classForList);
                         String s[] = classForList.getURL_chapter().split("/");
                         nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
-                        chapter += classForList.getURL_chapter() + ",";
+                        chapter += classForList.getURL_chapter() + "?mature=1,";
                         nameChapter += classForList.getName_chapter() + ",";
                         classForList.setCheckDownload(true);
                         list.set(numbr, classForList);
@@ -137,6 +138,26 @@ public class DownloadChapter extends AppCompatActivity {
                 b.setURL_chapter(b.getURL_chapter().replace("?mature=1",""));
                 list.add(b);
             }
+            myAdap.notifyDataSetChanged();
+        }
+    }
+
+    public void ClickDeleteCheck(View view) {
+        for (int i = 0; i < list.size();i++){
+            ClassForList forList = list.get(i);
+            if (forList.getCheck()){
+                forList.setCheck(false);
+                list.set(i, forList);
+                myAdap.notifyDataSetChanged();
+            }
+        }
+    }
+
+    public void CheckAllChapter(View view) {
+        for (int i = 0; i < list.size();i++){
+            ClassForList forList = list.get(i);
+            forList.setCheck(true);
+            list.set(i, forList);
             myAdap.notifyDataSetChanged();
         }
     }
