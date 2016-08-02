@@ -19,7 +19,6 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
     public static final String APP_SETTINGS = "globalSettings";
     public static final String APP_SETTINGS_WIFI = "WiFi";
     public static final String APP_SETTINGS_PATH = "path";
-    public static final String APP_SETTINGS_NOTIFICATION = "notification";
     public static final String APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE = "downloadComp";
     public static final String APP_SETTINGS_NOTIFICATION_VIBRATION = "vibration";
     public static final String APP_SETTINGS_NOTIFICATION_SOUNG = "soung";
@@ -44,15 +43,15 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
         Switch WiFi = (Switch) findViewById(R.id.settings_wifi);
         WiFi.setChecked(mSettings.getBoolean(APP_SETTINGS_WIFI, false));
         Switch NotificationAll = (Switch) findViewById(R.id.switch_all_notification);
-        NotificationAll.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION, false)));
-       // Switch ChapterComplite = (Switch) findViewById(R.id.switchChapterComplite);
-      //  ChapterComplite.setClickable((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, false)));
+        NotificationAll.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, false)));
+     //   Switch ChapterComplite = (Switch) findViewById(R.id.switch_chapter_complite);
+    //    ChapterComplite.setClickable((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, false)));
         Switch vibration = (Switch) findViewById(R.id.switch_download_vibration);
         vibration.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_VIBRATION, false)));
         Switch soung = (Switch) findViewById(R.id.switch_download_soung);
         soung.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_SOUNG, false)));
         Switch chapterNew = (Switch) findViewById(R.id.switch_chapter_new);
-     //   chapterNew.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, false)));
+        chapterNew.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, false)));
 
     }
 
@@ -107,15 +106,9 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
         editor.commit();
     }
 
-    public void NotificationCompliteDownload(View view) {
-        Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,aSwitch.isChecked());
-        editor.commit();
-    }
-
     public void AllNotification(View view) {
         Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_NOTIFICATION,aSwitch.isChecked());
+        editor.putBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,aSwitch.isChecked());
         editor.commit();
     }
 

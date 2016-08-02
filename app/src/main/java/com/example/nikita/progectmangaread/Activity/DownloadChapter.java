@@ -125,7 +125,10 @@ public class DownloadChapter extends AppCompatActivity {
                     .putExtra("url_site", urlSite)
                     .putExtra("chapter", chapter)
                     .putExtra("name_dir", nameDir)
-                    .putExtra("path",path));
+                    .putExtra("path",path)
+                    .putExtra("vibratyon",mSettings.getBoolean(MainSettings.APP_SETTINGS_NOTIFICATION_VIBRATION,false))
+                    .putExtra("sound",mSettings.getBoolean(MainSettings.APP_SETTINGS_NOTIFICATION_SOUNG,false))
+                    .putExtra("notification",mSettings.getBoolean(MainSettings.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,false)));
 
             Toast.makeText(DownloadChapter.this, "Mang download.", Toast.LENGTH_SHORT).show();
         }

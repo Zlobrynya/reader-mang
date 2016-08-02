@@ -11,29 +11,13 @@
     <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Оповещение"
+        android:text="Главы скачаны"
         android:layout_marginTop="16dip"
         android:layout_marginBottom="16dip"
         android:layout_marginLeft="16dip"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/switch_all_notification"
         android:onClick="AllNotification"/>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
-    <Switch
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Главы скачаны"
-        android:layout_marginTop="16dip"
-        android:layout_marginBottom="16dip"
-        android:layout_marginLeft="16dip"
-        android:id="@+id/switch_chapter_complite"
-        android:onClick="NotificationCompliteDownload"
-        />
 
     <Switch
         android:layout_width="match_parent"

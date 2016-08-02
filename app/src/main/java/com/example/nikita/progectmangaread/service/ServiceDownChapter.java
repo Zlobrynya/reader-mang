@@ -4,8 +4,11 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -34,7 +37,7 @@ public class ServiceDownChapter extends Service {
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private String path;
-
+    private boolean vibration,notif;
 
     AsyncTaskLisen receivedAddress = new AsyncTaskLisen() {
         @Override
@@ -51,7 +54,8 @@ public class ServiceDownChapter extends Service {
                     urlPage.clear();
                     new ParsURLPage(receivedAddress).execute();
                 }else {
-                    sendNotif();
+                    if (notif)
+                        sendNotif();
                     stopSelf();
                     Log.d(LOG_TAG, "stopSelf");
                 }
@@ -79,6 +83,13 @@ public class ServiceDownChapter extends Service {
         // Moves the expanded layout object into the notification object.
         //mBuilder.setStyle(inboxStyle);
 
+        if (vibration){
+            // Get instance of Vibrator from current Context
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 300 milliseconds
+            v.vibrate(300);
+        }
+
         int notifyID = 1;
         mNotificationManager.notify(
                 notifyID,
@@ -102,7 +113,6 @@ public class ServiceDownChapter extends Service {
                 .setContentTitle("Downloaded")
                 .setContentText("You've received new messages.")
                 .setSmallIcon(R.drawable.launcher);
-
         Log.d(LOG_TAG, "onCreate");
     }
 
@@ -111,6 +121,14 @@ public class ServiceDownChapter extends Service {
         String[] chapter = intent.getStringExtra("chapter").split(",");
         String[] nameDir = intent.getStringExtra("name_dir").split(",");
         path = intent.getStringExtra("path");
+        notif = intent.getBooleanExtra("notification",false);
+        vibration = intent.getBooleanExtra("vibratyon",true);
+
+        if(intent.getBooleanExtra("sound",false)){
+            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            mBuilder.setSound(soundUri);
+        }
+
 
         boolean firstUrl = false;
         if (urlChapter.isEmpty())
