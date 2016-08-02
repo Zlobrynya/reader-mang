@@ -71,6 +71,7 @@ public class fragmentGenres extends Fragment {
         if (classTransport.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
         else if (classTransport.getClassMang().getURL().contains("mintmanga")) id = R.raw.search_adultmanga;
 
+        list.clear();
         //считываем с ресурсов
         InputStream XmlFileInputStream = getResources().openRawResource(id); // getting XML
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

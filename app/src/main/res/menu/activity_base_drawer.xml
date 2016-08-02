@@ -3,11 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/list_Site"
+            android:id="@+id/nav_list_Site"
             android:icon="@drawable/ic_dns_black_24dp"
             android:title="List Site" />
         <item
-            android:id="@+id/top_Mang"
+            android:id="@+id/nav_top_mang"
             android:icon="@drawable/ic_chrome_reader_mode_black_24dp"
             android:title="Top mang" />
         <item
@@ -15,17 +15,17 @@
             android:icon="@drawable/ic_book_black_48dp"
             android:title="Bookmark" />
         <item
-            android:id="@+id/recently_read"
+            android:id="@+id/nav_recently_read"
             android:icon="@drawable/ic_schedule_black_48dp"
             android:title="Recently read" />
 
         <item
-            android:id="@+id/download_chapter"
+            android:id="@+id/nav_download_chapter"
             android:icon="@android:drawable/ic_menu_save"
             android:title="Download" />
 
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_48dp"
             android:title="Tools" />
     </group>

@@ -39,9 +39,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public void mangafox(View view) {
-        clManga = new ClassMang("http://mangafox.me","[class=manga_img] img[src]","[class=manga_img] ", "[class=list] li",44);
+/*        clManga = new ClassMang("http://mangafox.me","[class=manga_img] img[src]","[class=manga_img] ", "[class=list] li",44);
         clManga.setWhereAll("/directory/", ".html", 1);
-        startActivity(newInten);
+        startActivity(newInten);*/
     }
 
     @Override

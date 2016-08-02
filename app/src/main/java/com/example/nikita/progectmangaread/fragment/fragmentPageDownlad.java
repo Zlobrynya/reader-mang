@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.example.nikita.progectmangaread.Activity.MainSettings;
 import com.example.nikita.progectmangaread.Activity.PagesDownload;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
@@ -20,6 +22,7 @@ import com.example.nikita.progectmangaread.decode.MyImageDecoder;
 import com.example.nikita.progectmangaread.decode.MyImageRegionDecoder;
 import com.example.nikita.progectmangaread.Activity.TopManga;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -138,7 +141,7 @@ public class fragmentPageDownlad extends Fragment {
             }
         };
 
-        file = new CacheFile(getContext().getCacheDir(), PagesDownload.nameDirectory ,as,progress);
+        file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,as,progress);
         if (PagesDownload.nameDirectory.contains("pageCache")) {
             file.checkFile(url, String.valueOf(number));
         }else {

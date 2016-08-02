@@ -126,7 +126,7 @@ public class fragmentDescriptionList extends Fragment {
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
         if (!readDownloaded){
-            classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(event));
+            classDataBaseViewedHead.addViewedChapter(nameMang, getNumberChapter(classForList1.getName_chapter()));
             classForList1.setDownload(false);
         }
         else
@@ -199,8 +199,7 @@ public class fragmentDescriptionList extends Fragment {
             if (!strings.contains("null")) {
                 arrayListString = Arrays.asList(strings.split(","));
             }
-                //проходимся по списку глав
-
+            //проходимся по списку глав
             for (int numbr = 0; numbr < list.size();numbr++){
                 ClassForList classForList = list.get(numbr);
                 if (classForList.getCheck())

@@ -54,8 +54,6 @@ public class TopManga extends BaseActivity {
     private SharedPreferences mSettings;
 
 
-    private final String PROBLEM = "ProblemTime";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +112,6 @@ public class TopManga extends BaseActivity {
         EventBus.getDefault().unregister(this);
         if (classTop != null)
             EventBus.getDefault().post(classTop);
-        Log.i(PROBLEM, "StTop");
         super.onStop();
     }
 

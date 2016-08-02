@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Оповещение"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switch_all_notification"
+        android:onClick="AllNotification"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Главы скачаны"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:id="@+id/switch_chapter_complite"
+        android:onClick="NotificationCompliteDownload"
+        />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Вибрация"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:id="@+id/switch_download_vibration"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:onClick="NotificationVibration"/>
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Звук"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switch_download_soung"
+        android:onClick="NotificationSoung"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Новые главы"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switch_chapter_new"
+        android:onClick="NotificationNewChapter"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        style="@style/linear_layout_settings_text"
+        android:onClick="NotificationTime"
+        android:background="@drawable/style_linear_layout_button">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text= "Время обновления:"
+                android:layout_marginLeft="5dip"
+                android:textColor="@android:color/background_dark"
+                android:clickable="false" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:textColor="@android:color/background_dark"
+                android:layout_marginLeft="15dip"
+                android:id="@+id/textNotificationTimeUpdate" />
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_dialog_info"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/settingsButtonInfoTime"
+            android:onClick="InfoTime"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+</LinearLayout>

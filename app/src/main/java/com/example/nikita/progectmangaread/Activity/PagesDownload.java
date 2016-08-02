@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -49,7 +51,9 @@ public class PagesDownload extends AppCompatActivity {
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ProgressBar progress;
     private boolean download;
-    public static String nameDirectory;
+    private SharedPreferences mSettings;
+    public static String nameDirectory,pathDir;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -60,6 +64,7 @@ public class PagesDownload extends AppCompatActivity {
         // для скачанной манги
         nameDirectory = "pageCache";
         download = false;
+        mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -97,7 +102,7 @@ public class PagesDownload extends AppCompatActivity {
                             activity.finish();
                         }
                     }else{
-                        if (position == urlPage.size()){
+                        if (position == urlPage.size()+1){
                             EventBus.getDefault().post(chapterNumber - 1);
                             CacheFile file = new CacheFile(getCacheDir(),"pageCache");
                             file.clearCache();
@@ -111,8 +116,8 @@ public class PagesDownload extends AppCompatActivity {
             }
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position > 0 && position < urlPage.size())
-                    textIdPage.setText(position+"/"+(urlPage.size()-1)+"    "+nameChapter);
+                if (position > 0 && position <= urlPage.size())
+                    textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);
                 if (urlPage.size() == 1)
                     textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);
 
@@ -144,11 +149,13 @@ public class PagesDownload extends AppCompatActivity {
         nameMang = intent.getStringExtra("Chapter");
         download = intent.getBooleanExtra("Download",false);
         if (!download){
+            pathDir = getCacheDir().getPath();
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
             ParsURLPage par = new ParsURLPage(addImg,URL);
             par.execute();
         }else {
-            CacheFile file = new CacheFile(getCacheDir(),URL);
+            pathDir = mSettings.getString(MainSettings.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
+            CacheFile file = new CacheFile(new File(pathDir),URL);
             nameDirectory = URL;
             nameChapter = intent.getStringExtra("Chapter");
             for (int i = 0; i < file.getNumberOfFile();i++)
@@ -234,12 +241,11 @@ public class PagesDownload extends AppCompatActivity {
                 else
                     return fragmentPageDownlad.getInstance(1, urlPage.get(0));
             }else{
-                if (position >= urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
-                if (position < urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
+                if (position > urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
+                if (position <= urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
             }
 
-            if (urlPage.size() == 1) return fragmentPageDownlad.getInstance(1,urlPage.get(0));
-            else return null;
+            return null;
         }
 
     }

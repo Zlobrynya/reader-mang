@@ -96,8 +96,7 @@ public class Bookmark extends BaseActivity {
             //
             classTop.setURL_img(list.get(pos).getURL_img());
             classTop.setURL_characher(list.get(pos).getURLchapter());
-            EventBus.getDefault().post(classTop);
-            pos = -1;
+            return classTop;
         }
         return null;
     }

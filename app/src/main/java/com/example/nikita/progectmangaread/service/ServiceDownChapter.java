@@ -18,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,9 +31,9 @@ public class ServiceDownChapter extends Service {
     private ArrayList<String> urlPage,urlChapter,listNameMang,listNameChapter;
     private int numberPage,startId;
     private CacheFile cacheFile;
-    private ExecutorService es;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
+    private String path;
 
 
     AsyncTaskLisen receivedAddress = new AsyncTaskLisen() {
@@ -109,6 +110,7 @@ public class ServiceDownChapter extends Service {
         String urlSite = intent.getStringExtra("url_site");
         String[] chapter = intent.getStringExtra("chapter").split(",");
         String[] nameDir = intent.getStringExtra("name_dir").split(",");
+        path = intent.getStringExtra("path");
 
         boolean firstUrl = false;
         if (urlChapter.isEmpty())
@@ -155,7 +157,7 @@ public class ServiceDownChapter extends Service {
 
         @Override
         protected Void doInBackground(Void... params) {
-            cacheFile.parameterSetting(getCacheDir(),listNameMang.get(startId),receivedAddress,null);
+            cacheFile.parameterSetting(new File(path),listNameMang.get(startId),receivedAddress,null);
             try {
                 Log.d(LOG_TAG, "Start Dow URL");
                 //Запрос на получение сылок для изображений:

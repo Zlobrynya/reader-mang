@@ -97,7 +97,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         if (classMang.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
         else if (classMang.getClassMang().getURL().contains("mintmanga")) id = R.raw.search_adultmanga;
 
-
+        list.clear();
         //считываем с ресурсов
         InputStream XmlFileInputStream = getResources().openRawResource(id); // getting XML
 

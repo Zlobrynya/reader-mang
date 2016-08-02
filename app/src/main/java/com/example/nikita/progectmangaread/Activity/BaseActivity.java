@@ -60,20 +60,23 @@ public class BaseActivity extends AppCompatActivity
     }
 
     private void startActivity(int id){
-        if (id == R.id.list_Site) {
+        if (id == R.id.nav_list_Site) {
             Intent newInten = new Intent(BaseActivity.this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
-        } else if (id == R.id.top_Mang) {
+        } else if (id == R.id.nav_top_mang) {
             Intent newInten = new Intent(BaseActivity.this,TopManga.class);
             startActivity(newInten);
-        } else if (id == R.id.recently_read) {
+        } else if (id == R.id.nav_recently_read) {
             Intent newInten = new Intent(BaseActivity.this,RecentlyRead.class);
             startActivity(newInten);
         } else if (id == R.id.nav_bookmark){
             Intent newInten = new Intent(BaseActivity.this,Bookmark.class);
             startActivity(newInten);
-        } else if (id == R.id.download_chapter){
+        } else if (id == R.id.nav_download_chapter){
             Intent newInten = new Intent(BaseActivity.this,ShowDownloaded.class);
+            startActivity(newInten);
+        } else if (id == R.id.nav_settings){
+            Intent newInten = new Intent(BaseActivity.this,MainSettings.class);
             startActivity(newInten);
         }
     }

@@ -516,7 +516,7 @@ public class DescriptionMang extends BaseActivity {
                 if (lisens != null) lisens.onEnd();
                 fab.setVisibility(View.VISIBLE);
             }else{
-                Toast.makeText(DescriptionMang.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
+          //      Toast.makeText(DescriptionMang.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
                 DescriptionMang.this.finish();
             }
         }

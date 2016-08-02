@@ -43,8 +43,7 @@ public class fragmentLoad_page0 extends Fragment{
 
      public void onEvent(ClassTransport event) {
         if (event != null){
-            FragmentTransaction transaction = getFragmentManager()
-                    .beginTransaction();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		/*
 		 * When this container ffragment is created, we fill it with our first
 		 * "real" ffragment
