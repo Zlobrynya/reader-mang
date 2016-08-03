@@ -138,4 +138,8 @@ public class ClassDataBaseDownloadMang {
         SQLiteStatement statement = mSqLiteDatabase.compileStatement(sql);
         return statement.simpleQueryForLong();
     }
+
+    public void clearAll(){
+        mSqLiteDatabase.execSQL("delete from "+ DATABASE_TABLE);
+    }
 }

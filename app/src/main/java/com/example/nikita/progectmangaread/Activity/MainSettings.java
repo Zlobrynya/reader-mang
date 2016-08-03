@@ -4,17 +4,27 @@ package com.example.nikita.progectmangaread.Activity;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StatFs;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.service.MoveFile;
 
-public class MainSettings extends AppCompatActivity implements DialogPath.NoticeDialogListener  {
+import java.io.File;
+
+public class MainSettings extends BaseActivity implements DialogPath.NoticeDialogListener  {
     private TextView time,path;
     public static final String APP_SETTINGS = "globalSettings";
     public static final String APP_SETTINGS_WIFI = "WiFi";
@@ -30,7 +40,8 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.setting_main_fragment);
+        getLayoutInflater().inflate(R.layout.setting_main_fragment, frameLayout);
+
         SharedPreferences mSettings = getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE);
         editor = mSettings.edit();
 
@@ -53,6 +64,16 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
         Switch chapterNew = (Switch) findViewById(R.id.switch_chapter_new);
         chapterNew.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, false)));
 
+     //   setSize();
+    }
+
+    private void setSize(){
+        File internalPath = new File(String.valueOf(path.getText()));
+        StatFs stat = new StatFs(internalPath.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getBlockCount();
+        TextView infoSize = (TextView) findViewById(R.id.text_setting_system_clear_size);
+        infoSize.setText(Formatter.formatFileSize(this, internalPath.getTotalSpace()));
     }
 
     TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
@@ -71,9 +92,13 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
 
     @Override
     public void onDialogClickPath(String path) {
+        startService(new Intent(MainSettings.this, MoveFile.class).putExtra("out", this.path.getText())
+                .putExtra("inp", path));
+        Toast.makeText(this, "Перенос файлов", Toast.LENGTH_SHORT).show();
         this.path.setText(path);
         editor.putString(APP_SETTINGS_PATH, path);
         editor.commit();
+      //  setSize();
     }
 
     @Override
@@ -86,6 +111,8 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
     }
 
     public void InfoTime(View view) {
+        DialogInfo dialogInfoTime = new DialogInfo();
+        dialogInfoTime.show(getFragmentManager(), "Time");
     }
 
     public void NotificationNewChapter(View view) {
@@ -127,5 +154,19 @@ public class MainSettings extends AppCompatActivity implements DialogPath.Notice
     }
 
     public void ClearAll(View view) {
+        File[] dirs= new File((String) path.getText()).listFiles();
+        for(File dir: dirs){
+            File chapters[] = dir.listFiles();
+            for(File chapter: chapters){
+                File imgs[] = chapter.listFiles();
+                for(File img: imgs) {
+                    img.delete();
+                }
+                chapter.delete();
+            }
+            dir.delete();
+        }
+        ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(this);
+        downloadMang.clearAll();
     }
 }

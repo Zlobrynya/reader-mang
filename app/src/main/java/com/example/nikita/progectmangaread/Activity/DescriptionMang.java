@@ -222,7 +222,7 @@ public class DescriptionMang extends BaseActivity {
     @Override
     public void onStop() {
        //
-        if (downloadChapter)
+        if (downloadChapter && classTransportForList != null)
             EventBus.getDefault().post(classTransportForList);
         super.onStop();
     }
