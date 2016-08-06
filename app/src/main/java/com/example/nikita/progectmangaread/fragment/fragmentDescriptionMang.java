@@ -46,7 +46,6 @@ public class fragmentDescriptionMang extends Fragment {
         v = inflater.inflate(R.layout.description_screen_mang, null);
         progress = (ProgressBar) v.findViewById(R.id.loadingDescription);
         linearLayout = (LinearLayout) v.findViewById(R.id.linear_description_mang);
-        GridLayout gridLayout = (GridLayout) v.findViewById(R.id.gridLayoutDescription);
         linearLayout.setVisibility(View.INVISIBLE);
         Log.i(PROBLEM, "Start fragmentDescriptionMang");
 

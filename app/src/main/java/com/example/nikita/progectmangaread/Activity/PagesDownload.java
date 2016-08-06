@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -52,6 +54,7 @@ public class PagesDownload extends AppCompatActivity {
     private ProgressBar progress;
     private boolean download;
     private SharedPreferences mSettings;
+    private PagerTabStrip pagerTabStrip;
     public static String nameDirectory,pathDir;
 
     @Override
@@ -59,6 +62,9 @@ public class PagesDownload extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pageview_image);
+
+        CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+        file.clearCache();
 
         //Имя где будут искаться страницы манги. pageCache - для онлайн посмотра остальное
         // для скачанной манги
@@ -72,40 +78,44 @@ public class PagesDownload extends AppCompatActivity {
 
         urlPage = new ArrayList<>();
         progress = (ProgressBar) findViewById(R.id.loadingPageView);
+        pagerTabStrip = (PagerTabStrip) findViewById(R.id.pagerPageImage);
+        pagerTabStrip.setVisibility(View.GONE);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
-        params.setMargins(0, TopManga.HEIGHT_WIND/2, 0, 0);
+        params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
         progress.setLayoutParams(params);
         pager = (ViewPager) findViewById(R.id.pagerImage);
         pager.setVisibility(View.GONE);
 
-        textIdPage = (TextView) findViewById(R.id.textNumberPage);
+        //textIdPage = (TextView) findViewById(R.id.textNumberPage);
         final AppCompatActivity activity = this;
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
+
             public void onPageSelected(int position) {
-                if (urlPage.size() != 0){
+                if (urlPage.size() != 0) {
                     if (position == 0) {
                         //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
                         //      самую старую, (потом это переделать))
                         EventBus.getDefault().post(chapterNumber + 1);
-                        CacheFile file = new CacheFile(getCacheDir(),"pageCache");
-                        file.clearCache();
+                    //    CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+                    //    file.clearCache();
                         activity.finish();
                     }
                     //для манги где всего 1 картинка на главу
-                    if (urlPage.size() == 1){
-                        if (position > urlPage.size()){
+                    if (urlPage.size() == 1) {
+                        if (position > urlPage.size()) {
                             EventBus.getDefault().post(chapterNumber - 1);
-                            CacheFile file = new CacheFile(getCacheDir(),"pageCache");
-                            file.clearCache();
+                    //        CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+                   //         file.clearCache();
                             activity.finish();
                         }
-                    }else{
-                        if (position == urlPage.size()+1){
+                    } else {
+                        if (position == urlPage.size() + 1) {
                             EventBus.getDefault().post(chapterNumber - 1);
-                            CacheFile file = new CacheFile(getCacheDir(),"pageCache");
-                            file.clearCache();
+                    //        CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+                    //        file.clearCache();
                             activity.finish();
                         }
                     }
@@ -116,11 +126,10 @@ public class PagesDownload extends AppCompatActivity {
             }
 
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position > 0 && position <= urlPage.size())
+               /* if (position > 0 && position <= urlPage.size())
                     textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);
                 if (urlPage.size() == 1)
-                    textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);
-
+                    textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);*/
             }
         });
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -155,7 +164,7 @@ public class PagesDownload extends AppCompatActivity {
             par.execute();
         }else {
             pathDir = mSettings.getString(MainSettings.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
-            CacheFile file = new CacheFile(new File(pathDir),URL);
+            file = new CacheFile(new File(pathDir),URL);
             nameDirectory = URL;
             nameChapter = intent.getStringExtra("Chapter");
             for (int i = 0; i < file.getNumberOfFile();i++)
@@ -163,6 +172,7 @@ public class PagesDownload extends AppCompatActivity {
             progress.setVisibility(View.GONE);
             pager.setVisibility(View.VISIBLE);
             addImg.onEnd();
+            getSupportActionBar().setTitle(nameChapter); // set the top title
             Log.i("PagesDownload", String.valueOf(file.getNumberOfFile()));
         }
     }
@@ -185,10 +195,12 @@ public class PagesDownload extends AppCompatActivity {
             if(actionBar.isShowing()){
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                pagerTabStrip.setVisibility(View.GONE);
                 actionBar.hide();
             }else{
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                pagerTabStrip.setVisibility(View.VISIBLE);
                 actionBar.show();
             }
         }
@@ -233,6 +245,14 @@ public class PagesDownload extends AppCompatActivity {
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            if (position == 0) return "Previous chapter";
+            if (position > urlPage.size()) return "Next chapter";
+            if (position <= urlPage.size()) return position+"/"+urlPage.size();
+            return "Magic";
+        }
+
+        @Override
         public Fragment getItem(int position) {
             if (position == 0) return fragmentNextPrevChapter.getInstance(position,"Previous chapter");
             if (urlPage.size() == 1) {
@@ -245,7 +265,7 @@ public class PagesDownload extends AppCompatActivity {
                 if (position <= urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));
             }
 
-            return null;
+            return fragmentNextPrevChapter.getInstance(position,"Magic");
         }
 
     }
@@ -329,7 +349,8 @@ public class PagesDownload extends AppCompatActivity {
                 }
                 progress.setVisibility(View.GONE);
                 pager.setVisibility(View.VISIBLE);
-                classDataBaseViewedHead.setData(nameMang, nameChapter, classDataBaseViewedHead.NAME_LAST_CHAPTER);
+                classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                getSupportActionBar().setTitle(nameChapter); // set the top title
                 asyncTask.onEnd();
             }else{
                 Toast.makeText(PagesDownload.this, "Что то с инетом", Toast.LENGTH_SHORT).show();

@@ -27,6 +27,7 @@ public class CacheFile {
     private File dirFile;
     private AsyncTaskLisen as;
     private ProgressBar progressBar;
+    private DownlandImage downlandImage;
 
     public CacheFile(File dirFile, String nameDir, AsyncTaskLisen as, ProgressBar progressBar){
         this.dirFile = new File(dirFile,nameDir);
@@ -38,6 +39,9 @@ public class CacheFile {
     }
 
     public CacheFile(){
+        dirFile = null;
+        this.as = null;
+        progressBar = null;
     }
 
     public CacheFile(File dirFile, String nameDir){
@@ -66,85 +70,9 @@ public class CacheFile {
 
     //download image and cache it
     public void loadAndCache(String url, String nameFile){
-        class downlandImage extends AsyncTask<String,Integer,Void> {
-            private int lenghtOfFile;
-            @Override
-            protected Void doInBackground(String... params) {
-                try {
-                    Log.i("Threads","CacheFile"+params[1]);
-                    //продумать поименование файлов
-                    File f = new File(dirFile, params[1]);
-                    //Проверка на существование изображения
-                    if (!f.exists()){
-                        URL imageUrl = new URL(params[0]);
-                        Log.i("File", params[0]);
-                        HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
-                        conn.setConnectTimeout(30000);
-                        conn.setReadTimeout(30000);
-                        conn.connect();
-                        lenghtOfFile = conn.getContentLength();
-                        //InputStream is=conn.getInputStream();
-                        InputStream is = new BufferedInputStream(imageUrl.openStream(), 8192);
-
-                        if (params[0].contains("gif")){
-                            FileOutputStream  out = new FileOutputStream(f);
-                            BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, out);
-                        }else {
-                            OutputStream os = new FileOutputStream(f);
-                            CopyStream(is, os);
-                            os.close();
-                        }
-                        conn.disconnect();
-                    }
-
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            //выводим в прогресс бар, сколько скачалось
-            @Override
-            protected void onProgressUpdate(Integer... values) {
-                if (progressBar != null)
-                    progressBar.setProgress(values[0]);
-                //Log.i("ProgressBar", String.valueOf(values[0]));
-                super.onProgressUpdate(values);
-            }
-
-            //Copy inputStream in OutputStream
-            private void CopyStream(InputStream is, OutputStream os)
-            {
-                //буфер
-                final int buffer_size=1024*12;
-                try
-                {
-                    int total = 0;
-                    byte[] bytes=new byte[buffer_size];
-                    for(;;)
-                    {
-                        int count=is.read(bytes, 0, buffer_size);
-                        if(count==-1)
-                            break;
-                        total += count;
-                        publishProgress((int)((total*100)/lenghtOfFile));
-                        os.write(bytes, 0, count);
-                    }
-                }
-                catch(Exception ex){
-                    Log.i("File","Copy Error");
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Void result){
-                if (as != null)
-                    as.onEnd();
-            }
-        }
-
-        downlandImage Task = new downlandImage();
-        Task.execute(url, nameFile);
+        downlandImage = new DownlandImage();
+        Log.i("CacheFile: ","AsyncTask "+nameFile+ " start");
+        downlandImage.execute(url, nameFile);
     }
 
     public boolean checkFile(String url, String nameFile){
@@ -187,4 +115,93 @@ public class CacheFile {
     public int getNumberOfFile(){
         return dirFile.listFiles().length;
     }
+
+    public void stopAsyncTask(int number){
+        if (downlandImage != null && progressBar.getProgress() < 50){
+            Log.i("CacheFile: ","AsyncTask "+number+ " stop");
+            downlandImage.cancel(true);
+            File f = new File(dirFile, String.valueOf(number));
+            if (f.exists()){
+                f.delete();
+            }
+        }
+    }
+
+    class DownlandImage extends AsyncTask<String,Integer,Void> {
+        private int lenghtOfFile;
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                Log.i("Threads","CacheFile"+params[1]);
+                //продумать поименование файлов
+                File f = new File(dirFile, params[1]);
+                //Проверка на существование изображения
+                if (!f.exists()){
+                    URL imageUrl = new URL(params[0]);
+                    Log.i("File", params[0]);
+                    HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
+                    conn.setConnectTimeout(30000);
+                    conn.setReadTimeout(30000);
+                    conn.connect();
+                    lenghtOfFile = conn.getContentLength();
+                    //InputStream is=conn.getInputStream();
+                    InputStream is = new BufferedInputStream(imageUrl.openStream(), 8192);
+
+                    if (params[0].contains("gif")){
+                        FileOutputStream  out = new FileOutputStream(f);
+                        BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, out);
+                    }else {
+                        OutputStream os = new FileOutputStream(f);
+                        CopyStream(is, os);
+                        os.close();
+                    }
+                    conn.disconnect();
+                }
+
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        //выводим в прогресс бар, сколько скачалось
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            if (progressBar != null)
+                progressBar.setProgress(values[0]);
+            //Log.i("ProgressBar", String.valueOf(values[0]));
+            super.onProgressUpdate(values);
+        }
+
+        //Copy inputStream in OutputStream
+        private void CopyStream(InputStream is, OutputStream os)
+        {
+            //буфер
+            final int buffer_size=1024*12;
+            try
+            {
+                int total = 0;
+                byte[] bytes=new byte[buffer_size];
+                for(;;)
+                {
+                    int count=is.read(bytes, 0, buffer_size);
+                    if(count==-1)
+                        break;
+                    total += count;
+                    publishProgress((int)((total*100)/lenghtOfFile));
+                    os.write(bytes, 0, count);
+                }
+            }
+            catch(Exception ex){
+                Log.i("File","Copy Error");
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            if (as != null && !isCancelled())
+                as.onEnd();
+        }
+    }
+
 }

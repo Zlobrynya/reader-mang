@@ -48,13 +48,15 @@ public class fragmentPageDownlad extends Fragment {
 
     @Override
     public void onDestroy() {
-        Log.i("Destroy:", String.valueOf(getArguments().get("imageId")));
-     //   file.clearCache();
+        Log.i("fragmentPageDownload:", "Destroy: " + String.valueOf(getArguments().get("imageId")));
+        if (file != null)
+            file.stopAsyncTask(getArguments().getInt("imageId"));
         super.onDestroy();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i("fragmentPageDownload:", "Create: " + String.valueOf(getArguments().get("imageId")));
         super.onCreate(savedInstanceState);
     }
 

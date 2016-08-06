@@ -108,10 +108,14 @@ public class ShowDownloaded extends BaseActivity {
         String[] names = classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
         String[] urls = classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_DIR).split(",");
         for (int i = 0; i < names.length; i++){
-            ClassForList forList = new ClassForList();
-            forList.setName_chapter(names[i]);
-            forList.setURL_chapter(urls[i]);
-            forLists.add(forList);
+            try {
+                ClassForList forList = new ClassForList();
+                forList.setName_chapter(names[i]);
+                forList.setURL_chapter(urls[i]);
+                forLists.add(forList);
+            }catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
+            }
         }
         return new ClassTransportForList(forLists,list.get(pos).getNameMang(),null);
     }

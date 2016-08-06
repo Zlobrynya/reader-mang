@@ -315,9 +315,13 @@ public class DescriptionMang extends BaseActivity {
             if (!event.getDownload()){
                 intent.putExtra("URL", mang.getURL_site() + event.getURL_chapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
+                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.LAST_CHAPTER);
+                String helpVar = "";
+                if (lastChapter.contains(event.getURL_chapter())){
+                    helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE);
+                }
                 classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + event.getURL_chapter());
-                String helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE);
-                if (helpVar.contains("null")) helpVar = "1";
+                if (helpVar.isEmpty()) helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
                 intent.putExtra("Chapter", mang.getName_characher());
                 startActivity(intent);

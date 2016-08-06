@@ -14,4 +14,14 @@
     <string name="descr_read">Читать</string>
     <string name="descr_browser">Открыть в браузере</string>
     <string name="info_time_notification">Установка времени, когда приложение будет запрашивать список обновлений за день. Это не обновление, а просто оповещение об обновлении манги, которая была добавлена в закладки. Если Вы выключите этот пункт, манга все равно будет обновляться, но об этом не будет оповещении. Рекомендуется ставить промежуток от 23:00–5:00.</string>
+    <string name="nav_title_mang">Манга</string>
+    <string name="nav_list_site">List Site</string>
+    <string name="nav_top_mang">Top mang</string>
+    <string name="nav_title_person">Персональное</string>
+    <string name="nav_bookmark">Bookmark</string>
+    <string name="nav_recently_read">Recently read</string>
+    <string name="nav_download">Download</string>
+    <string name="nav_title_other">Разное</string>
+    <string name="nav_tools">Tools</string>
+    <string name="search">Поиск</string>
 </resources>
