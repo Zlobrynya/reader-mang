@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -32,7 +33,7 @@ public class ShowDownloaded extends BaseActivity {
     private ListView listView;
     private int pos;
     private boolean delete;
-    private String imgUrl;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,8 @@ public class ShowDownloaded extends BaseActivity {
         pos = - 1;
         delete = false;
         list = new ArrayList<>();
+        SharedPreferences mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
+        path = mSettings.getString(MainSettings.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath());
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
         listView = (ListView) this.findViewById(R.id.listView);
         getSupportActionBar().setTitle("Download"); // set the top title
@@ -69,7 +72,7 @@ public class ShowDownloaded extends BaseActivity {
             nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.NAME_MANG));
             URLchapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.URL_MANG));
             //Путь до изображения в фотрате: "file://"+getCacheDir().toString()+ "дальнейший путь"
-            imgUrl = "file://"+getCacheDir().toString()+"/"+cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.NAME_IMG));
+            String imgUrl = "file://" + path + "/" + cursor.getString(cursor.getColumnIndex(ClassDataBaseDownloadMang.NAME_IMG));
             if (!classDataBaseDownloadMang.getDataFromDataBase(nameMang, ClassDataBaseDownloadMang.NAME_CHAPTER).isEmpty())
                 list.add(new ClassRecentlyRead(imgUrl,nameMang,"",URLchapter,""));
                     cursor.moveToNext();
@@ -86,7 +89,7 @@ public class ShowDownloaded extends BaseActivity {
             classDescriptionMang.setCategory(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.CATEGORY));
             classDescriptionMang.setDescription(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.DESCRIPTION));
             classDescriptionMang.setGenre(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.GENRES));
-            classDescriptionMang.setImg_url("file://"+getCacheDir().toString()+"/"+classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_IMG));
+            classDescriptionMang.setImg_url("file://"+path+"/"+classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.NAME_IMG));
             classDescriptionMang.setNameAuthor(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.AUTHOR));
             classDescriptionMang.setRank(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.RATING));
             classDescriptionMang.setToms(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TOMS));

@@ -28,8 +28,9 @@ public class ThreadManager {
         public void onEnd(int number) {
             if (number > -1){
                 saveImg.set(number,true);
-                EventBus.getDefault().post(String.valueOf(number));
+                EventBus.getDefault().post((byte) number);
             }
+
             for (int i = 0; i < priorityImg.size(); i++) {
                 int numberPri = priorityImg.indexOf(i);
                 if (!saveImg.get(numberPri)) {
@@ -39,6 +40,7 @@ public class ThreadManager {
             }
         }
     };
+
 
     public ThreadManager(ArrayList<String> urlPage){
         this.urlPage = urlPage;
@@ -51,14 +53,18 @@ public class ThreadManager {
         }
     }
 
+    public void stop(){
+        cacheFile.forceStop();
+    }
+
     //Приоритет скачивания страниц
     public void setPriorityImg(int number){
         if (number == 0){
             for (int i = 0; i < priorityImg.size();i++){
                 priorityImg.set(i,i);
             }
-        }else if (number == urlPage.size()) {
-            priorityImg.set(priorityImg.size(),0);
+        }else if (number == urlPage.size()-1) {
+            priorityImg.set(priorityImg.size()-1,0);
             for (int i = number-1,j = 1; i >= 0;i--,j++)
                 priorityImg.set(i,j);
         }else {

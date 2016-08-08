@@ -54,8 +54,9 @@ public class PagesDownload extends AppCompatActivity {
     private boolean download;
     private SharedPreferences mSettings;
     private PagerTabStrip pagerTabStrip;
-    public static ThreadManager threadManager;
+    public ThreadManager threadManager;
     public static String nameDirectory,pathDir;
+    private final String strLog = "DownloadChapter";
 
 
     @Override
@@ -191,25 +192,6 @@ public class PagesDownload extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    //Для фрагментов
-    public void onEvent(String event){
-        if (event.contains("CkickImage")){
-            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-            assert actionBar != null;
-            if(actionBar.isShowing()){
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                pagerTabStrip.setVisibility(View.GONE);
-                actionBar.hide();
-            }else{
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                pagerTabStrip.setVisibility(View.VISIBLE);
-                actionBar.show();
-            }
-        }
-    }
-
     public void onEvent(java.lang.Short event){
         chapterNumber = event;
     }
@@ -223,6 +205,7 @@ public class PagesDownload extends AppCompatActivity {
 
     @Override
     public void onStop() {
+        Log.i(strLog, "Stop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -234,6 +217,22 @@ public class PagesDownload extends AppCompatActivity {
             file.clearCache();
         }
         super.onBackPressed();
+    }
+
+    public void ClickLinearLayout(View view) {
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        if(actionBar.isShowing()){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            pagerTabStrip.setVisibility(View.GONE);
+            actionBar.hide();
+        }else{
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            pagerTabStrip.setVisibility(View.VISIBLE);
+            actionBar.show();
+        }
     }
 
     //FragmentStatePagerAdapter
@@ -277,6 +276,10 @@ public class PagesDownload extends AppCompatActivity {
     @Override
     public void onDestroy() {
         Log.i("Destroy:", String.valueOf("PageDowland"));
+        if (threadManager != null)
+                threadManager.stop();
+        if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();
         super.onDestroy();
     }
 

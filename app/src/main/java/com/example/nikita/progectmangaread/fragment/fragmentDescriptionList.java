@@ -33,7 +33,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  *
  */
 public class fragmentDescriptionList extends Fragment {
-    private final static String strLog = "Fragment Description List";
+    private final String strLog = "Fragment Description List";
     private ArrayList<ClassForList> list;
     private AdapterListChapter myAdap;
     private String nameMang;
@@ -245,6 +245,7 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onStart() {
+        Log.i(strLog,"Start");
         super.onStart();
     }
 

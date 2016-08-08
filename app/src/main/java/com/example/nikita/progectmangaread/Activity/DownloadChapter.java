@@ -117,8 +117,8 @@ public class DownloadChapter extends AppCompatActivity {
             classDataBaseDownloadMang.setData(name, startStr + "/imgGlav", ClassDataBaseDownloadMang.NAME_IMG);
             classDataBaseDownloadMang.closeDataBase();
 
-            CacheFile fileGlavImageMang = new CacheFile(getCacheDir(), startStr);
-            fileGlavImageMang.checkFile(urlImageMang, "imgGlav");
+            CacheFile fileGlavImageMang = new CacheFile(new File(path), startStr);
+            fileGlavImageMang.checkFileAndDownload(urlImageMang, "imgGlav");
 
             // Log.i("DownloadChapter", chapter.substring(0,chapter.length()-2));
             startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
@@ -156,6 +156,7 @@ public class DownloadChapter extends AppCompatActivity {
         EventBus.getDefault().register(this);
         super.onResume();
     }
+
 
 
     public void onEvent(ClassTransportForList event){

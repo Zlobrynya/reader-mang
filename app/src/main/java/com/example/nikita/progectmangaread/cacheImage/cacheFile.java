@@ -84,7 +84,7 @@ public class CacheFile {
         downlandImage.execute(url, nameFile);
     }
 
-    public boolean checkFile(String url, String nameFile){
+    public boolean checkFileAndDownload(String url, String nameFile){
         File f = new File(dirFile, nameFile);
         if (f.exists()){
             if (as != null)
@@ -94,6 +94,10 @@ public class CacheFile {
             loadAndCache(url, nameFile);
             return false;
         }
+    }
+    public boolean checkFile(String nameFile){
+        File f = new File(dirFile, nameFile);
+        return f.exists();
     }
 
     public String getFile(String nameCache) throws FileNotFoundException {
@@ -137,6 +141,11 @@ public class CacheFile {
             return true;
         }
         return downlandImage == null;
+    }
+
+    public void forceStop(){
+        if (downlandImage != null)
+            downlandImage.cancel(true);
     }
 
     private class DownlandImage extends AsyncTask<String,Integer,Void> {
@@ -238,10 +247,14 @@ public class CacheFile {
 
         @Override
         protected void onPostExecute(Void result){
-            if (as != null && !isCancelled())
-                if (numberImg != -1 && !download)
-                    as.onEnd(numberImg);
-                else as.onEnd();
+            if (isCancelled()){
+                as.onEnd(-1);
+            }else {
+                if (as != null)
+                    if (numberImg != -1 && !download)
+                        as.onEnd(numberImg);
+                    else as.onEnd();
+            }
         }
     }
 

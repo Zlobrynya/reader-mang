@@ -109,12 +109,12 @@ public class fragmentPageDownlad extends Fragment{
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
         image.setOnImageEventListener(d);
-        image.setOnClickListener(new View.OnClickListener() {
+      /*  image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post("CkickImage");
             }
-        });
+        });*/
         number = getArguments().getInt("imageId");
         final String url = getArguments().getString("String");
         //Настройки прогресс бара
@@ -126,10 +126,12 @@ public class fragmentPageDownlad extends Fragment{
         //установка на сколько приближается при двойном тапе
 
         image.setMinimumDpi(60);
-
-        if (PagesDownload.threadManager.isImageSave(number)){
+        file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,null);
+        if (file.checkFile(String.valueOf(number)))
             showImageView();
-        }
+     /*   if (PagesDownload.threadManager.isImageSave(number)){
+            showImageView();
+        }*/
 
         if (!PagesDownload.nameDirectory.contains("pageCache")) {
             showImageView();
@@ -139,10 +141,12 @@ public class fragmentPageDownlad extends Fragment{
 
     private void showImageView(){
         try {
-            file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,null);
             if (image != null) {
-                image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
-                image.setVisibility(View.VISIBLE);
+                if (!image.isShown()){
+                    progress.setProgress(100);
+                    image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
+                    image.setVisibility(View.VISIBLE);
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -161,18 +165,20 @@ public class fragmentPageDownlad extends Fragment{
         super.onStop();
     }
 
+    public void onEvent(Byte event) {
+        if (event == number)
+            showImageView();
+    }
 
-    // Принимает евенты о скачивании от CacheFile и ThreadManager
+
+
+        // Принимает евенты о скачивании от CacheFile и ThreadManager
     // разделение в строке идет: / от CacheFile, если не чего делить то выводим на экран изображение
     public void onEvent(String event){
         String[] strings = event.split("/");
-        if (strings.length > 1){
+        if (strings.length == 2){
             if (strings[0].contains(String.valueOf(number))){
                 progress.setProgress(Integer.parseInt(strings[1]));
-            }
-        }else {
-            if (event.contains(String.valueOf(number))){
-                showImageView();
             }
         }
     }

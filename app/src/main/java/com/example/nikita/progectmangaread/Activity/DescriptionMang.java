@@ -65,7 +65,7 @@ public class DescriptionMang extends BaseActivity {
     private ClassDescriptionMang descriptionMang;
     private ClassTransportForList classTransportForList;
 
-    private final String PROBLEM = "ProblemTime";
+    private final String strLog = "DescripotionMang";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,12 +215,13 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onStart() {
+        Log.i(strLog,"Start");
         super.onStart();
     }
 
     @Override
     public void onStop() {
-       //
+        Log.i(strLog,"Stop");
         if (downloadChapter && classTransportForList != null)
             EventBus.getDefault().post(classTransportForList);
         super.onStop();
@@ -289,8 +290,6 @@ public class DescriptionMang extends BaseActivity {
 
     //ПОЛУЧАЕМ с топлиста
     public void parsAndSettings(){
-        Log.i(PROBLEM, "Get ClassMainTop event");
-
        // mang = event;
         Pars pars = new Pars(addImg, mang);
         pars.execute();
@@ -456,11 +455,9 @@ public class DescriptionMang extends BaseActivity {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                Log.i(PROBLEM, "StartDownload");
                 if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
                         .timeout(3000)
                         .get();
-                Log.i(PROBLEM, "StopDownload");
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
                 ClassDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
@@ -529,7 +526,6 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                Log.i(PROBLEM, "ChapterAdd");
                 el = doc.select("[class = table table-hover]").first();
                 if (el != null){
                     el = el.select("tbody").first();
@@ -562,7 +558,6 @@ public class DescriptionMang extends BaseActivity {
                 ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
                 classTransportForList = transportForList;
                 EventBus.getDefault().post(transportForList);
-                Log.i(PROBLEM, "StopChapterAdd");
                 if (read){
                     numberLastChapter();
                     read = false;
