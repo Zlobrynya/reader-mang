@@ -1,6 +1,5 @@
 package com.example.nikita.progectmangaread.fragment;
 
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.ProgressBar;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.example.nikita.progectmangaread.Activity.MainSettings;
 import com.example.nikita.progectmangaread.Activity.PagesDownload;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
@@ -24,18 +22,18 @@ import com.example.nikita.progectmangaread.Activity.TopManga;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 10.03.2016.
  */
-public class fragmentPageDownlad extends Fragment {
+public class fragmentPageDownlad extends Fragment{
     private int number;
     private CacheFile file;
     private SubsamplingScaleImageView image;
     private ProgressBar progress;
+    private final String strLog = "fragmentPageDownload";
 
     public static fragmentPageDownlad getInstance(int imageId,String url) {
         final fragmentPageDownlad instance = new fragmentPageDownlad();
@@ -50,7 +48,7 @@ public class fragmentPageDownlad extends Fragment {
     public void onDestroy() {
         Log.i("fragmentPageDownload:", "Destroy: " + String.valueOf(getArguments().get("imageId")));
         if (file != null)
-            file.stopAsyncTask(getArguments().getInt("imageId"));
+            file.stopAsyncTask();
         super.onDestroy();
     }
 
@@ -128,27 +126,55 @@ public class fragmentPageDownlad extends Fragment {
         //установка на сколько приближается при двойном тапе
 
         image.setMinimumDpi(60);
-        AsyncTaskLisen as = new AsyncTaskLisen() {
-            @Override
-            public void onEnd() {
-                try {
-                    image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
-                    image.setVisibility(View.VISIBLE);
-                } catch (FileNotFoundException e) {
-                    file.loadAndCache(url, String.valueOf(number));
-                }
-            }
-            @Override
-            public void onEnd(InputStream is) {
-            }
-        };
 
-        file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,as,progress);
-        if (PagesDownload.nameDirectory.contains("pageCache")) {
-            file.checkFile(url, String.valueOf(number));
-        }else {
-            as.onEnd();
+        if (PagesDownload.threadManager.isImageSave(number)){
+            showImageView();
+        }
+
+        if (!PagesDownload.nameDirectory.contains("pageCache")) {
+            showImageView();
         }
         return v;
     }
+
+    private void showImageView(){
+        try {
+            file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,null);
+            if (image != null) {
+                image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
+                image.setVisibility(View.VISIBLE);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
+    // Принимает евенты о скачивании от CacheFile и ThreadManager
+    // разделение в строке идет: / от CacheFile, если не чего делить то выводим на экран изображение
+    public void onEvent(String event){
+        String[] strings = event.split("/");
+        if (strings.length > 1){
+            if (strings[0].contains(String.valueOf(number))){
+                progress.setProgress(Integer.parseInt(strings[1]));
+            }
+        }else {
+            if (event.contains(String.valueOf(number))){
+                showImageView();
+            }
+        }
+    }
+
 }

@@ -97,10 +97,17 @@ public class fragmentDescriptionList extends Fragment {
         for (int i = 1; i < strings.length; i++) {
             try {
                 int num = Integer.parseInt(strings[i]);
-                if (kolInt < 2) {
+                if (kolInt == 1) {
                     numberChapter += num;
                     kolInt++;
-                }else break;
+                }
+                if (i+1<strings.length)
+                    if(strings[i+1].contains("-") || strings[i+1].contains("Экстр") && kolInt == 0){
+                        numberChapter += num;
+                        kolInt++;
+                    }
+                if (kolInt == 2)
+                    break;
                 //   Log.i(strLog, "number " + numberChapter);
             } catch (NumberFormatException e) {
                 if (strings[i].contains("-") && !numberChapter.contains("-"))
@@ -110,6 +117,10 @@ public class fragmentDescriptionList extends Fragment {
                         numberChapter += strings[i] + " " + strings[i + 1];
                     else
                         numberChapter += " " + strings[i];
+                }
+                if (strings[i].contains("Сингл")){
+                    numberChapter = strings[i];
+                    break;
                 }
                 // Log.i(strLog, "Error number " + numberChapter);
             }

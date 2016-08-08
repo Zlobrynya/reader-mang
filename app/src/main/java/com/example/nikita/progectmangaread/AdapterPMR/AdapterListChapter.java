@@ -44,17 +44,21 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
     private String getNumberChapter(String nameChapter){
         String[] strings = nameChapter.split(" ");
         String numberChapter = "";
-        int kolInt = 0;
         for (int i = 1; i < strings.length; i++) {
             try {
                 int num = Integer.parseInt(strings[i]);
-                numberChapter += num;
-                break;
+                if (i+1<strings.length)
+                    if(strings[i+1].contains("-") || strings[i+1].contains("Экстр")){
+                        numberChapter += num;
+                        break;
+                    }
                 //   Log.i(strLog, "number " + numberChapter);
             } catch (NumberFormatException e) {
                 // Log.i(strLog, "Error number " + numberChapter);
             }
         }
+        if (numberChapter.isEmpty())
+            numberChapter = "0";
         return numberChapter;
     }
 

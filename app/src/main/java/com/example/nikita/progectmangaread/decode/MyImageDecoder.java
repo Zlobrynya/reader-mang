@@ -41,7 +41,8 @@ public class MyImageDecoder implements ImageDecoder {
 
             } catch (MagickException e) {
                 Log.e("MagickException", e.getMessage());
-            }        }
+            }
+        }
         //Log.i("ImageDecoder", String.valueOf(bitmap.getHeight()));
         return bitmap;
     }

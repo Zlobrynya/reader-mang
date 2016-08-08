@@ -33,7 +33,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -240,7 +239,7 @@ public class DescriptionMang extends BaseActivity {
         }
 
         @Override
-        public void onEnd(InputStream is) {
+        public void onEnd(int number) {
 
         }
     };

@@ -10,5 +10,5 @@ import java.io.InputStream;
 public interface AsyncTaskLisen {
    // void onBegin(); //Асинхронная операция началась
     void onEnd(); //Операция закончилась
-    void onEnd(InputStream is); //Операция закончилась
+    void onEnd(int number);
 }

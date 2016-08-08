@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -19,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.ThreadManager;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
@@ -34,7 +34,6 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
@@ -55,7 +54,9 @@ public class PagesDownload extends AppCompatActivity {
     private boolean download;
     private SharedPreferences mSettings;
     private PagerTabStrip pagerTabStrip;
+    public static ThreadManager threadManager;
     public static String nameDirectory,pathDir;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,8 @@ public class PagesDownload extends AppCompatActivity {
 
             public void onPageSelected(int position) {
                 if (urlPage.size() != 0) {
+                    if (position > 0 && position <= urlPage.size() && !download)
+                        threadManager.setPriorityImg(position-1);
                     if (position == 0) {
                         //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
                         //      самую старую, (потом это переделать))
@@ -136,6 +139,7 @@ public class PagesDownload extends AppCompatActivity {
             @Override
             public void onEnd() {
                 GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
+                threadManager = new ThreadManager(urlPage);
                 if (pageNumber > urlPage.size()){
                     pageNumber = 1;
                 }
@@ -147,7 +151,7 @@ public class PagesDownload extends AppCompatActivity {
             }
 
             @Override
-            public void onEnd(InputStream is) {
+            public void onEnd(int number) {
 
             }
         };

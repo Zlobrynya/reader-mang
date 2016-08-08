@@ -23,10 +23,8 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.ExecutorService;
 
 
 public class ServiceDownChapter extends Service {
@@ -63,7 +61,7 @@ public class ServiceDownChapter extends Service {
         }
 
         @Override
-        public void onEnd(InputStream is) {
+        public void onEnd(int number) {
 
         }
     };
@@ -175,7 +173,7 @@ public class ServiceDownChapter extends Service {
 
         @Override
         protected Void doInBackground(Void... params) {
-            cacheFile.parameterSetting(new File(path),listNameMang.get(startId),receivedAddress,null);
+            cacheFile.parameterSettingDownloadChapter(new File(path), listNameMang.get(startId), receivedAddress);
             try {
                 Log.d(LOG_TAG, "Start Dow URL");
                 //Запрос на получение сылок для изображений:

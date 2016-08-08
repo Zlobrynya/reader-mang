@@ -30,7 +30,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedList;
 
 import de.greenrobot.event.EventBus;
@@ -188,7 +187,7 @@ public class fragmentTopMang extends Fragment {
         }
 
         @Override
-        public void onEnd(InputStream is) {
+        public void onEnd(int number) {
 
         }
     };
