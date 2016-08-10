@@ -1,9 +1,10 @@
 package com.example.nikita.progectmangaread.Activity;
 
-import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.pdf.PdfDocument;
@@ -11,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -224,35 +224,61 @@ public class PagesDownload extends AppCompatActivity {
         if (id == android.R.id.home) {
             onBackPressed();
         }else if (id == R.id.sett_brightness){
-            settingsBrightness();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.System.canWrite(PagesDownload.this)) {
+                    settingsBrightness();
+                }else {
+                    setPermissionBrightness();
+                }
+            }else {
+                settingsBrightness();
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void setPermissionBrightness(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.info_prermission)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent grantIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        startActivity(grantIntent);
+                    }
+                })
+                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        builder.create().show();
+    }
+
+    //Настройка яркости
     private void settingsBrightness(){
-        Dialog dialogBrightness = new Dialog(this);
-        dialogBrightness.setTitle(R.string.sett_brightness);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.dialog_change_screen_brightness, (ViewGroup) findViewById(R.id.layout_dialog_change_brightness));
+        AlertDialog dialog = builder.setTitle(R.string.sett_brightness)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {}
+                })
+                .setView(layout).create();
+
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.show();
+       /* Dialog dialogBrightness = new Dialog(this);
+        dialogBrightness.setTitle(R.string.sett_brightness);
         View layout = inflater.inflate(R.layout.dialog_change_screen_brightness, (ViewGroup) findViewById(R.id.layout_dialog_change_brightness));
         dialogBrightness.setContentView(layout);
         dialogBrightness.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialogBrightness.show();
+        dialogBrightness.show();*/
 
         SeekBar yourDialogSeekBar = (SeekBar)layout.findViewById(R.id.dialog_seekbar_brighness);
         //Получаем начальные данные о яркости
         int brightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,0);
         yourDialogSeekBar.setProgress(brightness);
         final ContentResolver context = getContentResolver();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.System.canWrite(PagesDownload.this)) {
-               // ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_SETTINGS);
-               /* ActivityCompat.requestPermissions(this,
-                        new String[]{Settings.ACTION_MANAGE_WRITE_SETTINGS},
-                       1);*/
-            }
-        }
 
         SeekBar.OnSeekBarChangeListener yourSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -267,12 +293,7 @@ public class PagesDownload extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBark, int progress, boolean fromUser) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (Settings.System.canWrite(PagesDownload.this))
-                        Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
-                }else {
-                    Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
-                }
+                Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
             }
         };
         yourDialogSeekBar.setOnSeekBarChangeListener(yourSeekBarListener);

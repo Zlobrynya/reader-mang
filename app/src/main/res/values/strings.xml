@@ -27,5 +27,7 @@
     <string name="reload_page">Перезагрузка страницы</string>
     <string name="sett_brightness">Яркость</string>
     <string name="rotation">Блок. поворот. экрана</string>
-    <string name="Ok">Ok</string>
+    <string name="Ok">OK</string>
+    <string name="title_permission">Получение прав.</string>
+    <string name="info_prermission">Для работы этой функции требуются права.</string>
 </resources>
