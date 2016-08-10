@@ -1,20 +1,34 @@
 package com.example.nikita.progectmangaread.Activity;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.pdf.PdfDocument;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,9 +88,13 @@ public class PagesDownload extends AppCompatActivity {
         download = false;
         mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+       /* android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
-        actionBar.hide();
+        actionBar.hide();*/
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setVisibility(View.GONE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         urlPage = new ArrayList<>();
         progress = (ProgressBar) findViewById(R.id.loadingPageView);
@@ -190,6 +208,74 @@ public class PagesDownload extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar_page_download, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }else if (id == R.id.sett_brightness){
+            settingsBrightness();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void settingsBrightness(){
+        Dialog dialogBrightness = new Dialog(this);
+        dialogBrightness.setTitle(R.string.sett_brightness);
+        LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.dialog_change_screen_brightness, (ViewGroup) findViewById(R.id.layout_dialog_change_brightness));
+        dialogBrightness.setContentView(layout);
+        dialogBrightness.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialogBrightness.show();
+
+        SeekBar yourDialogSeekBar = (SeekBar)layout.findViewById(R.id.dialog_seekbar_brighness);
+        //Получаем начальные данные о яркости
+        int brightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,0);
+        yourDialogSeekBar.setProgress(brightness);
+        final ContentResolver context = getContentResolver();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(PagesDownload.this)) {
+               // ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_SETTINGS);
+               /* ActivityCompat.requestPermissions(this,
+                        new String[]{Settings.ACTION_MANAGE_WRITE_SETTINGS},
+                       1);*/
+            }
+        }
+
+        SeekBar.OnSeekBarChangeListener yourSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //add code here
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //add code here
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBark, int progress, boolean fromUser) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.System.canWrite(PagesDownload.this))
+                        Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
+                }else {
+                    Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
+                }
+            }
+        };
+        yourDialogSeekBar.setOnSeekBarChangeListener(yourSeekBarListener);
     }
 
     public void onEvent(java.lang.Short event){

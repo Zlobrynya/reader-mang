@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
 
     <application
@@ -31,7 +32,10 @@
         <activity
             android:name=".Activity.DescriptionMang"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.PagesDownload" />
+
+        <activity android:name=".Activity.PagesDownload"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".Activity.BaseActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -43,7 +47,9 @@
             android:name=".Activity.Bookmark"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".Activity.DownloadChapter" />
+
         <activity
             android:name=".Activity.ShowDownloaded"
             android:launchMode="singleTask"

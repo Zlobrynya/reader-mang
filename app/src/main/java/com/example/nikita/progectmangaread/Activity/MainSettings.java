@@ -8,17 +8,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StatFs;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
+import com.example.nikita.progectmangaread.Dialog.DialogInfo;
+import com.example.nikita.progectmangaread.Dialog.DialogPath;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.service.MoveFile;
 

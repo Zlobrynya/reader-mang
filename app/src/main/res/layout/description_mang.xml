@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_more_horiz_white_48dp"
+        android:src="@drawable/ic_more_horiz_white_24dp"
         android:clickable="true"/>
 
 </android.support.design.widget.CoordinatorLayout>

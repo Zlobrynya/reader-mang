@@ -138,11 +138,11 @@ public class DescriptionMang extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (bookmark){
-                    fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+                    fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
                     Toast.makeText(view.getContext(), "Add bookmark", Toast.LENGTH_SHORT).show();
                     bookmark = false;
                 }else {
-                    fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                    fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
                     Toast.makeText(view.getContext(), "Delete bookmark", Toast.LENGTH_SHORT).show();
                     bookmark = true;
                 }
@@ -192,11 +192,11 @@ public class DescriptionMang extends BaseActivity {
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
             if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
-                fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+                fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
                 bookmark = false;
             }else {
                 bookmark = true;
-                fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
             }
         }
         else {
@@ -297,11 +297,11 @@ public class DescriptionMang extends BaseActivity {
         getSupportActionBar().setTitle(mang.getName_characher()); // set the top title
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
         if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
-            fab2.setImageResource(R.drawable.ic_favorite_white_48dp);
+            fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
             bookmark = false;
         }else {
             bookmark = true;
-            fab2.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
         }
         if (read) startLastChapter();
     }

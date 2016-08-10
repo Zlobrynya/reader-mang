@@ -24,4 +24,8 @@
     <string name="nav_title_other">Разное</string>
     <string name="nav_tools">Tools</string>
     <string name="search">Поиск</string>
+    <string name="reload_page">Перезагрузка страницы</string>
+    <string name="sett_brightness">Яркость</string>
+    <string name="rotation">Блок. поворот. экрана</string>
+    <string name="Ok">Ok</string>
 </resources>

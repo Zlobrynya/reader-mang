@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.example.nikita.progectmangaread.AdapterPMR.AdapterList;
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterListChapter;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
@@ -57,7 +55,6 @@ public class fragmentDescriptionList extends Fragment {
         classForList.setName_chapter("GG");
        // Log.i(PROBLEM, "Start fragmentDescriptionList");
         EventBus.getDefault().register(this);
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -164,14 +161,14 @@ public class fragmentDescriptionList extends Fragment {
     }
 
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
-    public void onEvent(ClassTransportForList event){
-        Log.i(strLog,"event ClassTransportForList");
-        if (!event.getName().isEmpty()){
-            list.clear();
+    public void onEvent(ClassTransportForList event) {
+        Log.i(strLog, "event ClassTransportForList");
+        if (!event.getName().isEmpty() && list.isEmpty()){
+            //list.clear();
             nameMang = event.getName();
             //Проверка откуда пришел евент
             if (event.getMainClassTop() != null){
-                com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang classDataBaseListMang = new ClassDataBaseListMang(getActivity(), event.getMainClassTop().getURL_site());
+                ClassDataBaseListMang classDataBaseListMang = new ClassDataBaseListMang(getActivity(), event.getMainClassTop().getURL_site());
                 if (!classDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
                     classDataBaseListMang.addBasaData(event.getMainClassTop(), -1);
                 }
@@ -181,7 +178,9 @@ public class fragmentDescriptionList extends Fragment {
                     }
                     list.add(b);
                 }
+                classDataBaseListMang.closeDataBase();
             }else {
+                //тут для чтения из сохраненых
                 for (ClassForList b: event.getClassForList())
                     list.add(b);
                 readDownloaded = true;
@@ -198,6 +197,7 @@ public class fragmentDescriptionList extends Fragment {
             downloadMang.closeDataBase();
             return strings;
         }
+        downloadMang.closeDataBase();
         return null;
     }
 
@@ -256,6 +256,8 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onDestroy(){
+        if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
