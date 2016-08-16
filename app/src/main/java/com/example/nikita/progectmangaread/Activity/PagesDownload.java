@@ -20,12 +20,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -78,10 +80,6 @@ public class PagesDownload extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pageview_image);
-
-        CacheFile file = new CacheFile(getCacheDir(), "pageCache");
-        file.clearCache();
-
         //Имя где будут искаться страницы манги. pageCache - для онлайн посмотра остальное
         // для скачанной манги
         nameDirectory = "pageCache";
@@ -181,13 +179,14 @@ public class PagesDownload extends AppCompatActivity {
         nameMang = intent.getStringExtra("Chapter");
         download = intent.getBooleanExtra("Download",false);
         if (!download){
+           // file.clearCache();
             pathDir = getCacheDir().getPath();
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
             ParsURLPage par = new ParsURLPage(addImg,URL);
             par.execute();
         }else {
             pathDir = mSettings.getString(MainSettings.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
-            file = new CacheFile(new File(pathDir),URL);
+            CacheFile file = new CacheFile(new File(pathDir),URL);
             nameDirectory = URL;
             nameChapter = intent.getStringExtra("Chapter");
             for (int i = 0; i < file.getNumberOfFile();i++)
@@ -233,9 +232,39 @@ public class PagesDownload extends AppCompatActivity {
             }else {
                 settingsBrightness();
             }
+        }else if (id == R.id.sett_page_rotation){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.System.canWrite(PagesDownload.this)) {
+                    settingsBrightness();
+                }else {
+                    item = setLockRotate(item);
+                }
+            }else {
+                item = setLockRotate(item);
+            }
+        }else if (id == R.id.sett_page_reload){
+            CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+            file.deleteFile(String.valueOf(pageNumber-1));
+            threadManager.setFalseSaveImg(pageNumber-1);
+            threadManager.setPriorityImg(pageNumber-1);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private MenuItem setLockRotate(MenuItem item){
+        MenuItem bufItem = item;
+        if (bufItem.getTitle().equals(getResources().getString(R.string.sett_rotation_lock))){
+            //Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);
+            bufItem.setTitle(getResources().getString(R.string.sett_rotation_unlock));
+            bufItem.setIcon(R.drawable.ic_screen_rotation_black_24dp);
+            Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0); // отключение
+        }else {
+            bufItem.setTitle(getResources().getString(R.string.sett_rotation_lock));
+            bufItem.setIcon(R.drawable.ic_screen_lock_rotation_black_24dp);
+            Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1); //включение
+        }
+        return bufItem;
     }
 
     private void setPermissionBrightness(){
@@ -267,14 +296,10 @@ public class PagesDownload extends AppCompatActivity {
 
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialog.show();
-       /* Dialog dialogBrightness = new Dialog(this);
-        dialogBrightness.setTitle(R.string.sett_brightness);
-        View layout = inflater.inflate(R.layout.dialog_change_screen_brightness, (ViewGroup) findViewById(R.id.layout_dialog_change_brightness));
-        dialogBrightness.setContentView(layout);
-        dialogBrightness.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialogBrightness.show();*/
 
         SeekBar yourDialogSeekBar = (SeekBar)layout.findViewById(R.id.dialog_seekbar_brighness);
+      //  CheckBox checkBox = (CheckBox) layout.findViewById(R.id.dialog_check_box);
+      //  checkBox.setChecked(Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE,0) == 1);
         //Получаем начальные данные о яркости
         int brightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,0);
         yourDialogSeekBar.setProgress(brightness);
@@ -293,6 +318,7 @@ public class PagesDownload extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBark, int progress, boolean fromUser) {
+                Settings.System.putInt(context, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
                 Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
             }
         };
@@ -318,12 +344,17 @@ public class PagesDownload extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (!download){
-            CacheFile file = new CacheFile(getCacheDir(),"pageCache");
-            file.clearCache();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+            return true;
+        }else if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (!download){
+                CacheFile file = new CacheFile(getCacheDir(),"pageCache");
+                file.clearCache();
+            }
+            super.onBackPressed();
         }
-        super.onBackPressed();
+        return super.onKeyDown(keyCode, event);
     }
 
     public void ClickLinearLayout(View view) {
@@ -369,7 +400,7 @@ public class PagesDownload extends AppCompatActivity {
                 if (position > urlPage.size())
                     return fragmentNextPrevChapter.getInstance(position, "Next chapter");
                 else
-                    return fragmentPageDownlad.getInstance(1, urlPage.get(0));
+                    return fragmentPageDownlad.getInstance(0, urlPage.get(0));
             }else{
                 if (position > urlPage.size()) return fragmentNextPrevChapter.getInstance(position,"Next chapter");
                 if (position <= urlPage.size()) return fragmentPageDownlad.getInstance(position-1,urlPage.get(position-1));

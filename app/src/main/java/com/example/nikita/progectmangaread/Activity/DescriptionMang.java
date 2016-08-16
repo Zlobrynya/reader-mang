@@ -19,6 +19,7 @@ import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
+import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
@@ -172,6 +173,8 @@ public class DescriptionMang extends BaseActivity {
                 newInten.putExtra("site", mang.getURL_site());
                 newInten.putExtra("Name", mang.getName_characher());
                 newInten.putExtra("image",mang.getURL_img());
+                CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+                file.clearCache();
                 startActivity(newInten);
                 downloadChapter = true;
             }
@@ -322,15 +325,16 @@ public class DescriptionMang extends BaseActivity {
                 if (helpVar.isEmpty()) helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
                 intent.putExtra("Chapter", mang.getName_characher());
-                startActivity(intent);
             }else {
                 intent.putExtra("URL", event.getURL_chapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 intent.putExtra("Download",true);
-                intent.putExtra("NumberPage","1");
+                intent.putExtra("NumberPage", "1");
                 intent.putExtra("Chapter", event.getName_chapter());
-                startActivity(intent);
             }
+            CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+            file.clearCache();
+            startActivity(intent);
 
         }
     }
@@ -367,6 +371,8 @@ public class DescriptionMang extends BaseActivity {
             intent.putExtra("NumberChapter", numberChapter);
             intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE));
             intent.putExtra("Chapter", mang.getName_characher());
+            CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+            file.clearCache();
             startActivity(intent);
         }catch (java.lang.ArrayIndexOutOfBoundsException e){
             Toast toast = Toast.makeText(this,

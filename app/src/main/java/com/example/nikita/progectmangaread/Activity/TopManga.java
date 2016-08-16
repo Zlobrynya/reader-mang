@@ -1,8 +1,11 @@
 package com.example.nikita.progectmangaread.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -42,15 +45,15 @@ public class TopManga extends BaseActivity {
 
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
-    private static final String APP_PREFERENCES_imgURL = "imgURL";
-    private static final String APP_PREFERENCES_where = "where";
-    private static final String APP_PREFERENCES_whereAll = "whereAll";
-    private static final String APP_PREFERENCES_path = "path";
-    private static final String APP_PREFERENCES_path2 = "path2";
-    private static final String APP_PREFERENCES_nameCell = "nameCell";
-    private static final String APP_PREFERENCES_nameURL = "nameURL";
-    private static final String APP_PREFERENCES_first = "first";
-    private static final String APP_PREFERENCES_maxInPage = "maxInPage";
+    private static final String APP_PREFERENCES_IMG_URL = "imgURL";
+    private static final String APP_PREFERENCES_WHERE = "where";
+    private static final String APP_PREFERENCES_WHERE_ALL = "whereAll";
+    private static final String APP_PREFERENCES_PATH = "path";
+    private static final String APP_PREFERENCES_PATH_2 = "path2";
+    private static final String APP_PREFERENCES_NAME_CELL = "nameCell";
+    private static final String APP_PREFERENCES_NAME_URL = "nameURL";
+    private static final String APP_PREFERENCES_FIRST = "first";
+    private static final String APP_PREFERENCES_MAX_IN_PAGE = "maxInPage";
     private SharedPreferences mSettings;
 
 
@@ -64,19 +67,19 @@ public class TopManga extends BaseActivity {
         gg = new AdapterPargerFragment(getSupportFragmentManager(),3);
         pager.setAdapter(gg);
         pager.setCurrentItem(1);
-        boolean first = mSettings.getBoolean(APP_PREFERENCES_first,true);
+        boolean first = mSettings.getBoolean(APP_PREFERENCES_FIRST,true);
 
         if (!first){
             mang = new ClassMang();
-            mang.setImgURL(mSettings.getString(APP_PREFERENCES_imgURL, ""));
-            mang.setWhereAll(mSettings.getString(APP_PREFERENCES_whereAll, ""));
-            mang.setNameURL(mSettings.getString(APP_PREFERENCES_nameURL, ""));
+            mang.setImgURL(mSettings.getString(APP_PREFERENCES_IMG_URL, ""));
+            mang.setWhereAll(mSettings.getString(APP_PREFERENCES_WHERE_ALL, ""));
+            mang.setNameURL(mSettings.getString(APP_PREFERENCES_NAME_URL, ""));
             mang.setURL(mSettings.getString(APP_PREFERENCES_URL, ""));
-            mang.setNameCell(mSettings.getString(APP_PREFERENCES_nameCell, ""));
-            mang.setMaxInPage(mSettings.getInt(APP_PREFERENCES_maxInPage, 0));
-            mang.setWhere(mSettings.getString(APP_PREFERENCES_where, ""));
-            mang.setPath(mSettings.getString(APP_PREFERENCES_path, ""));
-            mang.setPath2(mSettings.getString(APP_PREFERENCES_path2, ""));
+            mang.setNameCell(mSettings.getString(APP_PREFERENCES_NAME_CELL, ""));
+            mang.setMaxInPage(mSettings.getInt(APP_PREFERENCES_MAX_IN_PAGE, 0));
+            mang.setWhere(mSettings.getString(APP_PREFERENCES_WHERE, ""));
+            mang.setPath(mSettings.getString(APP_PREFERENCES_PATH, ""));
+            mang.setPath2(mSettings.getString(APP_PREFERENCES_PATH_2, ""));
         }else{
             Intent newInten = new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
@@ -127,16 +130,16 @@ public class TopManga extends BaseActivity {
     public void onEvent(ClassMang event){
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(APP_PREFERENCES_URL,event.getURL());
-        editor.putString(APP_PREFERENCES_nameCell,event.getNameCell());
-        editor.putString(APP_PREFERENCES_imgURL,event.getImgURL());
-        editor.putString(APP_PREFERENCES_nameURL,event.getNameURL());
-        editor.putString(APP_PREFERENCES_where, event.getWhere());
-        editor.putString(APP_PREFERENCES_path,event.getPath());
-        editor.putString(APP_PREFERENCES_path2,event.getPath2());
-        editor.putString(APP_PREFERENCES_whereAll,event.getWhereAll());
+        editor.putString(APP_PREFERENCES_NAME_CELL,event.getNameCell());
+        editor.putString(APP_PREFERENCES_IMG_URL,event.getImgURL());
+        editor.putString(APP_PREFERENCES_NAME_URL,event.getNameURL());
+        editor.putString(APP_PREFERENCES_WHERE, event.getWhere());
+        editor.putString(APP_PREFERENCES_PATH,event.getPath());
+        editor.putString(APP_PREFERENCES_PATH_2,event.getPath2());
+        editor.putString(APP_PREFERENCES_WHERE_ALL,event.getWhereAll());
 
-        editor.putBoolean(APP_PREFERENCES_first,false);
-        editor.putInt(APP_PREFERENCES_maxInPage, event.getMaxInPage());
+        editor.putBoolean(APP_PREFERENCES_FIRST,false);
+        editor.putInt(APP_PREFERENCES_MAX_IN_PAGE, event.getMaxInPage());
         editor.apply();
 
         mang = new ClassMang();

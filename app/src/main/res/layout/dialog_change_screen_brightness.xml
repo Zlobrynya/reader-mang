@@ -5,12 +5,18 @@
     android:orientation="vertical"
     android:id="@+id/layout_dialog_change_brightness">
 
+  <!--  <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/auto_brightness"
+        android:layout_marginLeft="5dip"
+        android:id="@+id/dialog_check_box"/> -->
+
     <SeekBar
         android:id="@+id/dialog_seekbar_brighness"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="255"
-        >
+        android:max="255">
     </SeekBar>
 
 </LinearLayout>

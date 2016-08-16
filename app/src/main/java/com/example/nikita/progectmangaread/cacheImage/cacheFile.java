@@ -95,6 +95,15 @@ public class CacheFile {
             return false;
         }
     }
+
+    public void deleteFile(String nameFile){
+        File f = new File(dirFile, nameFile);
+        if (f.exists()){
+            f.delete();
+        }
+    }
+
+
     public boolean checkFile(String nameFile){
         File f = new File(dirFile, nameFile);
         return f.exists();
@@ -140,7 +149,9 @@ public class CacheFile {
             }
             return true;
         }
-        return downlandImage == null;
+        if (downlandImage != null){
+            return downlandImage.getStatus() != AsyncTask.Status.RUNNING;
+        }else return true;
     }
 
     public void forceStop(){

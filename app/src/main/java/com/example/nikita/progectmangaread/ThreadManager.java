@@ -42,6 +42,10 @@ public class ThreadManager {
     };
 
 
+    public void setFalseSaveImg(int number){
+        saveImg.set(number,false);
+    }
+
     public ThreadManager(ArrayList<String> urlPage){
         this.urlPage = urlPage;
         saveImg = new ArrayList<>();

@@ -20,7 +20,7 @@
             <item
                 android:id="@+id/sett_page_rotation"
                 android:icon="@drawable/ic_screen_lock_rotation_black_24dp"
-                android:title="@string/rotation"
+                android:title="@string/sett_rotation_lock"
                 app:showAsAction="always|withText"/>
         </menu>
     </item>
