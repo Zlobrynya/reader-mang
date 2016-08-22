@@ -1,6 +1,8 @@
 package com.example.nikita.progectmangaread.service;
 
+import android.app.Activity;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +12,12 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.example.nikita.progectmangaread.Activity.DownloadChapter;
+import com.example.nikita.progectmangaread.Activity.ShowDownloaded;
+import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.cacheImage.CacheFile;
@@ -42,20 +48,26 @@ public class ServiceDownChapter extends Service {
         public void onEnd() {
             Log.d(LOG_TAG, "Start Dow Pic");
             if (numberPage < urlPage.size()){
+                if (notif)
+                    sendNotif();
                 cacheFile.loadAndCache(urlPage.get(numberPage), String.valueOf(numberPage));
                 numberPage++;
             }else {
                 startId++;
                 if (startId < urlChapter.size()){
                     numberPage = 0;
-                    sendNotif();
+                 //   sendNotif();
                     urlPage.clear();
                     new ParsURLPage(receivedAddress).execute();
                 }else {
-                    if (notif)
-                        sendNotif();
                     stopSelf();
                     Log.d(LOG_TAG, "stopSelf");
+                }
+                if (vibration){
+                    // Get instance of Vibrator from current Context
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 300 milliseconds
+                    v.vibrate(300);
                 }
             }
         }
@@ -66,29 +78,13 @@ public class ServiceDownChapter extends Service {
         }
     };
 
+    //Отправка уведомления
     void sendNotif() {
-       mBuilder.setContentText("Chapter downloaded: ")
-               .setNumber(startId);
-        // то что ниже для расширенного отображения (несколько строк подряд с названиеми глав которые скачались)
-       /*  NotificationCompat.InboxStyle inboxStyle =
-                new NotificationCompat.InboxStyle();
-        // Sets a title for the Inbox in expanded layout
-        inboxStyle.setBigContentTitle("Event tracker details:");
-        for (int i=0; i < listNameChapter.size(); i++) {
-            inboxStyle.addLine(listNameChapter.get(i));
-        }*/
-
-        // Moves the expanded layout object into the notification object.
-        //mBuilder.setStyle(inboxStyle);
-
-        if (vibration){
-            // Get instance of Vibrator from current Context
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 300 milliseconds
-            v.vibrate(300);
-        }
-
+        mBuilder.setNumber(startId)
+                .setContentText(listNameChapter.get(startId))
+                .setProgress(urlPage.size() - 1, numberPage, false);
         int notifyID = 1;
+
         mNotificationManager.notify(
                 notifyID,
                 mBuilder.build());
@@ -109,8 +105,19 @@ public class ServiceDownChapter extends Service {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Downloaded")
-                .setContentText("You've received new messages.")
                 .setSmallIcon(R.drawable.launcher);
+        Intent resultIntent = new Intent(this, ShowDownloaded.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack
+        stackBuilder.addParentStack(ShowDownloaded.class);
+        // Adds the Intent to the top of the stack
+        stackBuilder.addNextIntent(new Intent(this, ShowDownloaded.class));
+
+        // Gets a PendingIntent containing the entire back stack
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
         Log.d(LOG_TAG, "onCreate");
     }
 
@@ -126,7 +133,6 @@ public class ServiceDownChapter extends Service {
             Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             mBuilder.setSound(soundUri);
         }
-
 
         boolean firstUrl = false;
         if (urlChapter.isEmpty())

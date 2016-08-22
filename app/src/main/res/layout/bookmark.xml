@@ -20,6 +20,7 @@
 
     <ImageButton
         android:focusable="false"
+        android:background="@drawable/backgroung_button"
         android:layout_width="50dp"
         android:layout_height="60dp"
         android:id="@+id/imageButton_delete"

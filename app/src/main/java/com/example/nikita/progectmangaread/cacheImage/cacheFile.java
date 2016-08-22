@@ -253,6 +253,8 @@ public class CacheFile {
                 BitmapFactory.decodeStream(fileInputStream).compress(Bitmap.CompressFormat.PNG, 100, os);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            } catch (NullPointerException e){
+
             }
         }
 

@@ -22,7 +22,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -41,23 +40,24 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.RecentlyRead"
-            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.Bookmark"
-            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".Activity.DownloadChapter" />
 
         <activity
             android:name=".Activity.ShowDownloaded"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".Activity.TopManga"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="..Activity.TopManga"/>
+        </activity>
 
         <activity
             android:name=".Activity.MainSettings"
-            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
