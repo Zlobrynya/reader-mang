@@ -1,6 +1,9 @@
 package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +57,8 @@ public class AdapterList extends ArrayAdapter<ClassForList> {
             holder.tv.setText(m1.getName_chapter());
             if (m1.getCheckDownload()){
                 if (holder.imageView != null)
-                    holder.imageView.setVisibility(View.VISIBLE);
-            }else {
-                holder.imageView.setVisibility(View.INVISIBLE);
+                    //@android:drawable/ic_menu_save
+                    holder.imageView.setImageResource(R.drawable.ic_save_black_24dp);
             }
         }
 

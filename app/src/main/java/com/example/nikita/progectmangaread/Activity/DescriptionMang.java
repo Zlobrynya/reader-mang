@@ -563,6 +563,7 @@ public class DescriptionMang extends BaseActivity {
             if (!arList.isEmpty()){
                 ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
                 classTransportForList = transportForList;
+              // classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
                 EventBus.getDefault().post(transportForList);
                 if (read){
                     numberLastChapter();

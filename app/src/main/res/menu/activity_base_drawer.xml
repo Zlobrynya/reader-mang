@@ -27,7 +27,7 @@
                     android:title="@string/nav_recently_read" />
                 <item
                     android:id="@+id/nav_download_chapter"
-                    android:icon="@android:drawable/ic_menu_save"
+                    android:icon="@drawable/ic_save_black_24dp"
                     android:title="@string/nav_download" />
             </menu>
         </item>

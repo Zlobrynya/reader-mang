@@ -1,6 +1,9 @@
 package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,10 +112,19 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
             else holder.checkBox.setChecked(false);
             holder.tv.setText(m1.getName_chapter());
             if (m1.getCheckDownload()){
-                if (holder.imageView != null)
-                    holder.imageView.setVisibility(View.VISIBLE);
+                if (holder.imageView != null){
+                    holder.imageView.setImageResource(R.drawable.ic_save_black_24dp);
+                    ColorFilter filter = new LightingColorFilter( Color.GRAY, Color.GRAY );
+                    holder.imageView.setColorFilter(filter);
+                }
             }else {
-                holder.imageView.setVisibility(View.INVISIBLE);
+                if (m1.getNewChapter()){
+                    if (holder.imageView != null){
+                        holder.imageView.setImageResource(R.drawable.ic_add_black_24dp);
+                        ColorFilter filter = new LightingColorFilter( Color.GRAY, Color.GRAY );
+                        holder.imageView.setColorFilter(filter);
+                    }
+                }
             }
         }
         return v;

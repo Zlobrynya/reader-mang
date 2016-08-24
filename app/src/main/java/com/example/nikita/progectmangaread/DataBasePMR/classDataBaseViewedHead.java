@@ -22,7 +22,7 @@ public class ClassDataBaseViewedHead {
     public static final String NAME_LAST_CHAPTER = "name_last_chapter";
     public static final String NOTEBOOK  = "Notebook";
     public static final String DATA  = "Date";
-    public static final String NUMBER_OF_CHAPTER  = "Number_chapter";
+    public static final String NUMBER_OF_HEADS = "Number_chapter";
 
 
     public ClassDataBaseViewedHead(Context context){
@@ -31,7 +31,7 @@ public class ClassDataBaseViewedHead {
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
                 +  DATABASE_TABLE + " (" + NAME_MANG + " text not null, " +  VIEWED_HEAD
                 + " text not null, " +  LAST_CHAPTER + " text, "+  NAME_LAST_CHAPTER + " text, " +   LAST_PAGE +" integer, "+  NOTEBOOK +  " integer," +  DATA + " text, " +
-                NUMBER_OF_CHAPTER + " integer);";
+                NUMBER_OF_HEADS + " integer);";
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
@@ -46,7 +46,7 @@ public class ClassDataBaseViewedHead {
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
                 + DATABASE_TABLE + " (" + NAME_MANG + " text not null, " + VIEWED_HEAD
                 + " text not null, " +  LAST_CHAPTER + " text, "+  NAME_LAST_CHAPTER + " text, " +   LAST_PAGE +" integer, "+  NOTEBOOK +  " integer," +  DATA + " text, " +
-                NUMBER_OF_CHAPTER + " integer);";
+                NUMBER_OF_HEADS + " integer);";
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
         addBasaData(name);
     }
@@ -68,6 +68,7 @@ public class ClassDataBaseViewedHead {
             newValues.put( NAME_LAST_CHAPTER,"null");
             newValues.put( NOTEBOOK,0);
             newValues.put( LAST_PAGE,1);
+            newValues.put( NUMBER_OF_HEADS,0);
 
             // Вставляем данные в таблицу
             mSqLiteDatabase.insert("ViewedHead", null, newValues);

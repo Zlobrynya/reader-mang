@@ -19,8 +19,6 @@
         android:layout_height="15dip"
         android:id="@+id/ic_save_chapter"
         android:layout_gravity="center_vertical"
-        android:src="@android:drawable/ic_menu_save"
-        android:visibility="invisible"
         />
 
     <TextView
@@ -28,6 +26,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
+        android:layout_marginLeft="4dp"
         android:id="@+id/list_name_chapter"
         android:singleLine="true"
         android:ellipsize="end"

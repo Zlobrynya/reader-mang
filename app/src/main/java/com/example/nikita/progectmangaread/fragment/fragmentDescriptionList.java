@@ -239,7 +239,14 @@ public class fragmentDescriptionList extends Fragment {
                 list.set(numbr, classForList);
             }
         }
-        classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_CHAPTER);
+        int quantity = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NUMBER_OF_HEADS));
+        if (list.size()-quantity > 0){
+            for (int i = 0; i  < list.size()-quantity; i++){
+                ClassForList classForList = list.get(i);
+                classForList.setNewChapter(true);
+            }
+        }
+        classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
     }
 
 
