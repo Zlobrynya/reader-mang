@@ -1,6 +1,8 @@
 package com.example.nikita.progectmangaread.Activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +26,8 @@ import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.fragment.fragmentLoad_page0;
 import com.example.nikita.progectmangaread.fragment.fragmentGenres;
 import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
+import com.example.nikita.progectmangaread.service.AlarmManagerBroadcastReceiver;
+import com.example.nikita.progectmangaread.service.UpdateMangBookmark;
 
 import de.greenrobot.event.EventBus;
 
@@ -85,6 +89,12 @@ public class TopManga extends BaseActivity {
             startActivity(newInten);
         }
 
+        if (!isMyServiceRunning(UpdateMangBookmark.class)){
+            Log.i("Service","start");
+            AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
+            alarm.SetAlarm(this,"");
+        }
+
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         HEIGHT_WIND = displaymetrics.heightPixels;
@@ -124,8 +134,19 @@ public class TopManga extends BaseActivity {
         toast.show();
         classTop = event;
         Log.i(PROBLEM, "event Top");
-
     }*/
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i("Service",serviceClass.getName());
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void onEvent(ClassMang event){
         SharedPreferences.Editor editor = mSettings.edit();

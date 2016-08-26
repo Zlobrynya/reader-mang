@@ -106,7 +106,6 @@ public class ServiceDownChapter extends Service {
         mBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Downloaded")
                 .setSmallIcon(R.drawable.launcher);
-        Intent resultIntent = new Intent(this, ShowDownloaded.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack
         stackBuilder.addParentStack(ShowDownloaded.class);

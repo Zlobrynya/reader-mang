@@ -2,21 +2,21 @@ package com.example.nikita.progectmangaread.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.widget.Toast;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by Nikita on 27.07.2016.
  */
-public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
+public class AlarmManagerBroadcastReceiver extends WakefulBroadcastReceiver {
 
     private final String LOG_TAG = "AlarmManager";
 
@@ -33,7 +33,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
         String msgStr = "";
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
         msgStr = formatter.format(new Date());
-        Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 
         context.startService(new Intent(context.getApplicationContext(), UpdateMangBookmark.class).putExtra("Data", msgStr));
         //Release the lock
@@ -47,14 +47,14 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
         Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        //HOUR_OF_DAY - 24 часа / HOUR - 12 часов
-        calendar.set(Calendar.HOUR, 13);
-        calendar.set(Calendar.MINUTE, 30);
+        //раз в 3 часа
+        if(Build.VERSION.SDK_INT < 23){
+            am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR*3, pi);
+        }
+        else{
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC,AlarmManager.INTERVAL_HOUR*3,pi);
+        }
 
-        //After after 1000*60*24 = 24 часа
-        am.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*24, pi);
     }
 
     public void CancelAlarm(Context context)
@@ -64,7 +64,4 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
-
-
-
 }

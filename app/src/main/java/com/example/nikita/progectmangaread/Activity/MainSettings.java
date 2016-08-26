@@ -24,7 +24,7 @@ import com.example.nikita.progectmangaread.service.MoveFile;
 import java.io.File;
 
 public class MainSettings extends BaseActivity implements DialogPath.NoticeDialogListener  {
-    private TextView time,path;
+    private TextView path;
     public static final String APP_SETTINGS = "globalSettings";
     public static final String APP_SETTINGS_WIFI = "WiFi";
     public static final String APP_SETTINGS_PATH = "path";
@@ -44,24 +44,22 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         SharedPreferences mSettings = getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE);
         editor = mSettings.edit();
 
-        time = (TextView) findViewById(R.id.textNotificationTimeUpdate);
         path = (TextView) findViewById(R.id.textSettingSystemDirectoryPath);
 
-        time.setText(mSettings.getString(APP_SETTINGS_NOTIFICATION_TIME_DOWNLOAD, "10:10"));
         path.setText(mSettings.getString(APP_SETTINGS_PATH, getFilesDir().getAbsolutePath()));
 
         Switch WiFi = (Switch) findViewById(R.id.settings_wifi);
-        WiFi.setChecked(mSettings.getBoolean(APP_SETTINGS_WIFI, false));
+        WiFi.setChecked(mSettings.getBoolean(APP_SETTINGS_WIFI, true));
         Switch NotificationAll = (Switch) findViewById(R.id.switch_all_notification);
-        NotificationAll.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, false)));
+        NotificationAll.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, true)));
      //   Switch ChapterComplite = (Switch) findViewById(R.id.switch_chapter_complite);
     //    ChapterComplite.setClickable((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, false)));
         Switch vibration = (Switch) findViewById(R.id.switch_download_vibration);
-        vibration.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_VIBRATION, false)));
+        vibration.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_VIBRATION, true)));
         Switch soung = (Switch) findViewById(R.id.switch_download_soung);
-        soung.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_SOUNG, false)));
+        soung.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_SOUNG, true)));
         Switch chapterNew = (Switch) findViewById(R.id.switch_chapter_new);
-        chapterNew.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, false)));
+        chapterNew.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, true)));
 
      //   setSize();
     }
@@ -74,20 +72,6 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         TextView infoSize = (TextView) findViewById(R.id.text_setting_system_clear_size);
         infoSize.setText(Formatter.formatFileSize(this, internalPath.getTotalSpace()));
     }
-
-    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            //Тут обработка данных времени с TimePickerDialog
-           String min;
-            if (minute < 10)
-                min = "0"+minute;
-            else
-                min = String.valueOf(minute);
-            time.setText(hourOfDay+":"+min);
-            editor.putString(APP_SETTINGS_NOTIFICATION_TIME_DOWNLOAD, hourOfDay + ":" + min);
-            editor.commit();
-        }
-    };
 
     @Override
     public void onDialogClickPath(String path) {
@@ -103,15 +87,6 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
     @Override
     public void onDialogChoiceOfDirectory(DialogFragment dialog) {
 
-    }
-
-    public void NotificationTime(View view) {
-        new TimePickerDialog(MainSettings.this, myCallBack, 10, 10, true).show();
-    }
-
-    public void InfoTime(View view) {
-        DialogInfo dialogInfoTime = new DialogInfo();
-        dialogInfoTime.show(getFragmentManager(), "Time");
     }
 
     public void NotificationNewChapter(View view) {

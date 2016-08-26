@@ -30,7 +30,6 @@ import de.greenrobot.event.EventBus;
 public class DownloadChapter extends AppCompatActivity {
     protected ArrayList<ClassForList> list;
     protected AdapterList myAdap;
-    private ListView listView;
     private String urlMang, urlSite, name,urlImageMang,path;
     private SharedPreferences mSettings;
 
@@ -40,14 +39,14 @@ public class DownloadChapter extends AppCompatActivity {
         setContentView(R.layout.list_chapter);
         list = new ArrayList<>();
         myAdap = new AdapterList(this, R.layout.list_view_checkbox, list);
-        listView = (ListView) findViewById(R.id.listChapter);
+        ListView listView = (ListView) findViewById(R.id.listChapter);
         listView.setAdapter(myAdap);
         mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Download chapter"); // set the top title
 
-        final boolean wifi = mSettings.getBoolean(MainSettings.APP_SETTINGS_WIFI,false);
+        final boolean wifi = mSettings.getBoolean(MainSettings.APP_SETTINGS_WIFI,true);
         path = mSettings.getString(MainSettings.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
 
         Intent intent = getIntent();
