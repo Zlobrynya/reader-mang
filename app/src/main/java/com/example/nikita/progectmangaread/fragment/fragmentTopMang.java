@@ -55,10 +55,7 @@ public class fragmentTopMang extends Fragment {
     private GridView gr;
     private boolean stopLoad;
     private int resultPost;  // 0 - глав стр 1 - результат поиска 2 - по жанрам
-    private Pars past;
     private ClassMainTop mainTop;
-
-    private final String PROBLEM = "ProblemTime";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +115,7 @@ public class fragmentTopMang extends Fragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
-                if (firstItem < firstVisibleItem) {
+                if (firstItem <= firstVisibleItem) {
                     kolSum += 10;
                     if (kolSum > kol && !stopLoad)
                         parssate(kol);
@@ -142,11 +139,11 @@ public class fragmentTopMang extends Fragment {
             classTop.setURL_site(classMang.getURL());
             list.add(classTop);
             kol++;
+            kolSum = kol + 10;
             myAdap.notifyDataSetChanged();
         }
         resultPost = 0;
         if (kol == 0) parssate(kol);
-        Log.i(PROBLEM, "initializationArray");
 
     }
 
@@ -171,7 +168,7 @@ public class fragmentTopMang extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) kolSum = kol + 10;
         Log.i("temp Pase","result");
-        Log.i(PROBLEM, "onActivityCreated");
+        //Log.i(PROBLEM, "onActivityCreated");
 
     }
 
@@ -238,7 +235,7 @@ public class fragmentTopMang extends Fragment {
 
     @Override
     public void onDestroy(){
-        Log.i(PROBLEM, "onDestroy");
+       // Log.i(PROBLEM, "onDestroy");
         if (classDataBaseListMang != null)
             classDataBaseListMang.closeDataBase();
         super.onDestroy();
@@ -256,10 +253,11 @@ public class fragmentTopMang extends Fragment {
     //метод парсим
     public void parssate(int kol){
         //парсим сайт
-        past = new Pars(addImg,kol,classMang);
+        Pars past = new Pars(addImg, kol, classMang);
         past.execute();
     }
 
+    //Перенос возможен в отдельный пакет.
     public class Pars extends AsyncTask<Void,Void,Void> {
         private String name_char,URL2;
         private ClassMang classMang;

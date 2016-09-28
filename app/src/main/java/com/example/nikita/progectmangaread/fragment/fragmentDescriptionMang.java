@@ -26,7 +26,6 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class fragmentDescriptionMang extends Fragment {
-    private ClassDescriptionMang ClassDescriptionMang;
     private View v;
     private ProgressBar progress;
     private LinearLayout linearLayout,linearLayoutButton;
@@ -63,7 +62,7 @@ public class fragmentDescriptionMang extends Fragment {
     public void onEvent(ClassDescriptionMang event) {
         if (this.getArguments().getInt("num") == 0){
             if (v != null) {
-                ClassDescriptionMang = event;
+               // com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang classDescriptionMang = event;
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);
                 textView.setText(event.getNameAuthor());
                 textView = (TextView) v.findViewById(R.id.textRanck);

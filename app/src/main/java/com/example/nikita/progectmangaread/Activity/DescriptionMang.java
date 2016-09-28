@@ -445,7 +445,7 @@ public class DescriptionMang extends BaseActivity {
         private boolean not_net; //отвечает за проверку подклчение
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback,ClassMainTop mang) {
+        Pars(AsyncTaskLisen callback, ClassMainTop mang) {
             this.mang = mang;
             this.lisens = callback;
             ClassDescriptionMang = new ClassDescriptionMang();

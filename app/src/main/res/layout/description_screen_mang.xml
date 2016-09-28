@@ -65,15 +65,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:weightSum="1">
 
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:text="@string/descr_read"
                     android:id="@+id/button"
                     android:onClick="StartRead"
-                    android:background="@drawable/backgroung_button"/>
+                    android:background="@drawable/backgroung_button"
+                    android:layout_weight="0.46" />
 
                 <Button
                     android:layout_width="wrap_content"

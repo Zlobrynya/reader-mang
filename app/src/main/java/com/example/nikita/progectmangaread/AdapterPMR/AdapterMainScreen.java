@@ -39,19 +39,19 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
         this.h = h;
         File cacheDir = new File(context.getApplicationContext().getCacheDir(),"cacheGlavTop");
 
+
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(new UsingFreqLimitedMemoryCache(8 * 1024 * 1024)) // 2 Mb
                 .diskCache(new LimitedAgeDiskCache(cacheDir, null, new HashCodeFileNameGenerator(), 60 * 60 * 30))
                 .imageDownloader(new BaseImageDownloader(context)) // connectTimeout (5 s), readTimeout (30 s)
-                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .build();
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.launcher) // resource or drawable
+                .showImageOnLoading(R.drawable.f) // resource or drawable
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
