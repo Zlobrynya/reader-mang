@@ -1,14 +1,13 @@
 package com.example.nikita.progectmangaread.fragment;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -28,7 +27,7 @@ import de.greenrobot.event.EventBus;
 public class fragmentDescriptionMang extends Fragment {
     private View v;
     private ProgressBar progress;
-    private LinearLayout linearLayout,linearLayoutButton;
+    private ConstraintLayout constraintLayout,linearLayoutButton;
     private final String PROBLEM = "ProblemTime";
 
     @Override
@@ -44,13 +43,13 @@ public class fragmentDescriptionMang extends Fragment {
         //System.out.println("!!!!!!!!!!!!!!!! I am create !!!!!!!!!!!!!!!!!!!!!");
         v = inflater.inflate(R.layout.description_screen_mang, null);
         progress = (ProgressBar) v.findViewById(R.id.loadingDescription);
-        linearLayout = (LinearLayout) v.findViewById(R.id.linear_description_mang);
-        linearLayout.setVisibility(View.INVISIBLE);
+        constraintLayout = (ConstraintLayout) v.findViewById(R.id.constraint_description_mang);
+        constraintLayout.setVisibility(View.INVISIBLE);
         Log.i(PROBLEM, "Start fragmentDescriptionMang");
 
 
 
-        linearLayout.setOnClickListener(new View.OnClickListener() {
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EventBus.getDefault().post("Click");
             }
@@ -75,7 +74,7 @@ public class fragmentDescriptionMang extends Fragment {
                 textView.setText(event.getToms());
                 textView = (TextView) v.findViewById(R.id.textTranslate);
                 textView.setText(event.getTranslate());
-                textView = (TextView) v.findViewById(R.id.category);
+                textView = (TextView) v.findViewById(R.id.textCategory);
                 textView.setText(event.getCategory());
 
                 ImageView imageView = (ImageView) v.findViewById(R.id.imageView2);
@@ -88,7 +87,7 @@ public class fragmentDescriptionMang extends Fragment {
                 }
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
 
-                linearLayout.setVisibility(View.VISIBLE);
+                constraintLayout.setVisibility(View.VISIBLE);
                 progress.setVisibility(View.INVISIBLE);
             }
         }

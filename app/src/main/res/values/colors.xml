@@ -12,6 +12,6 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
-    <color name="blackground">#F5F5F5</color>
+    <color name="blackground">#f5f5f5</color>
     <color name="button_not_click">#D3D3D3</color>
 </resources>

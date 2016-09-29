@@ -1,101 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.example.nikita.testadapter.glav_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blackground"
         >
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/linear_description_mang">
+            android:visibility="visible"
+            android:id="@+id/constraint_description_mang"
+            android:layout_height="match_parent">
 
-            <include layout="@layout/inc_grid_layout_description_mang"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:id="@+id/imageView2"
+                android:layout_marginStart="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="wrap_content" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/gange"
-                android:layout_gravity="center"
-                android:textStyle="bold|italic"
-                android:id="@+id/textGanresName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textRanck"
+                android:lines="1"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageView2"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                tools:ignore="MissingConstraints"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textVolumes"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageView2"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textRanck"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textTranslate"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageView2"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textVolumes"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textAuthor"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageView2"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textTranslate"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textCategory"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/imageView2"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textAuthor"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:text="@string/ganres"
                 android:textColor="@color/primary_text"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/background_text_view_description"
-                android:id="@+id/textGanres"
-                />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/textGanresName"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:background="@drawable/background_text_view_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textGanres"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textGanresName"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/description"
-                android:layout_gravity="center"
-                android:textColor="@color/primary_text"
-                android:textStyle="bold|italic"
-                android:id="@+id/textDescriptionName"
-                />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:layout_marginLeft="2dp"
-                android:background="@drawable/background_text_view_description"
+                android:id="@+id/textDescriptionName"
+                android:textColor="@color/primary_text"
+                android:textStyle="bold|italic"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textGanres"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/textDescription"
-                />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:background="@drawable/background_text_view_description"
+                android:layout_marginStart="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textDescriptionName"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                tools:layout_constraintRight_creator="1"
+                tools:layout_constraintLeft_creator="1" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:weightSum="1">
+            <Button
+                android:text="@string/descr_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:onClick="StartRead"
+                android:background="@drawable/backgroung_button"
+                android:layout_marginStart="72dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="72dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textDescription" />
 
-                <Button
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/descr_read"
-                    android:id="@+id/button"
-                    android:onClick="StartRead"
-                    android:background="@drawable/backgroung_button"
-                    android:layout_weight="0.46" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/descr_browser"
-                    android:id="@+id/openBrowser"
-                    android:onClick="openURL"
-                    android:layout_marginLeft="3dp"
-                    android:background="@drawable/backgroung_button"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/openBrowser"
+                android:onClick="openURL"
+                android:background="@drawable/backgroung_button"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintLeft_toRightOf="@+id/button"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textDescription" />
+        </android.support.constraint.ConstraintLayout>
 
         <ProgressBar
-            android:id="@+id/loadingDescription"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="visible"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/loadingDescription" />
+
+
     </LinearLayout>
 
 
