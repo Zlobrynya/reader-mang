@@ -42,8 +42,7 @@ public class DialogPath extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String[] name = new String[2];
         name[1] = "";
-      //  name[2] = "Выберите свою директорию.";
-
+        //  name[2] = "Выберите свою директорию.";
         //Расчитываем свободное место для внутреней памяти
         final File internalPath = Environment.getDataDirectory();
         StatFs stat = new StatFs(internalPath.getPath());

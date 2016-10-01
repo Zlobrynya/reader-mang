@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.DataBasePMR;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -196,5 +197,30 @@ public class ClassDataBaseViewedHead {
         }
         if (!query.isEmpty()) cursor = mSqLiteDatabase.rawQuery(query, null);
         return cursor;
+    }
+
+    public Cursor getNotebook(String nameTable){
+        String query;
+        query = "SELECT " + nameTable + ".*" + ", "+ LAST_PAGE + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER +" FROM ViewedHead" +
+                " INNER JOIN " + nameTable + " ON " + NAME_MANG + " = " + nameTable + "." + ClassDataBaseListMang.NAME_MANG +
+                " WHERE " + NOTEBOOK + " > 0";
+        if (!query.isEmpty()) {
+            return mSqLiteDatabase.rawQuery(query, null);
+        }
+        return null;
+    }
+    //Получаем есть ли на этом сайте закладки
+    public boolean whetherThereIsABookmarkInSite(String nameTable){
+        String query;
+        query = "SELECT " + nameTable + ".*" + ", "+ LAST_PAGE + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER +" FROM ViewedHead" +
+                " INNER JOIN " + nameTable + " ON " + NAME_MANG + " = " + nameTable + "." + ClassDataBaseListMang.NAME_MANG +
+                " WHERE " + NOTEBOOK + " > 0";
+
+        if (!query.isEmpty()){
+            //Посмотреть что за SuppressLint
+            @SuppressLint("Recycle") Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+            return cursor.getColumnCount() > 0;
+        }
+        return false;
     }
 }

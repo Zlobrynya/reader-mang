@@ -41,8 +41,6 @@ import de.greenrobot.event.EventBus;
 public class TopManga extends BaseActivity {
     private ClassMang mang;
     private ViewPager pager;
-    private AdapterPargerFragment gg;
-    private ClassMainTop classTop;
     private boolean doublePressBack = false;
 
     public static int HEIGHT_WIND,WIDTH_WIND;
@@ -68,7 +66,7 @@ public class TopManga extends BaseActivity {
         mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
 
         pager=(ViewPager)findViewById(R.id.pager);
-        gg = new AdapterPargerFragment(getSupportFragmentManager(),3);
+        AdapterPargerFragment gg = new AdapterPargerFragment(getSupportFragmentManager(), 3);
         pager.setAdapter(gg);
         pager.setCurrentItem(1);
         boolean first = mSettings.getBoolean(APP_PREFERENCES_FIRST,true);
@@ -123,8 +121,8 @@ public class TopManga extends BaseActivity {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        if (classTop != null)
-            EventBus.getDefault().post(classTop);
+        /*if (classTop != null)
+            EventBus.getDefault().post(classTop);*/
         super.onStop();
     }
 
@@ -204,7 +202,8 @@ public class TopManga extends BaseActivity {
 
     public class AdapterPargerFragment extends FragmentPagerAdapter  {
         int kol;
-        public AdapterPargerFragment(FragmentManager mgr, int kol) {
+
+        AdapterPargerFragment(FragmentManager mgr, int kol) {
             super(mgr);
             this.kol = kol;
         }

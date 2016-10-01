@@ -36,7 +36,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".Activity.PagesDownload"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".Activity.BaseActivity"
@@ -44,11 +45,13 @@
 
         <activity
             android:name=".Activity.RecentlyRead"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".Activity.Bookmark"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activity.TopManga"/>
@@ -65,6 +68,8 @@
                 android:value=".Activity.TopManga"/>
         </activity>
 
+        <activity android:name=".Activity.DeleteChapter" />
+
         <activity
             android:name=".Activity.MainSettings"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -74,7 +79,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".Activity.DeleteChapter" />
 
         <service
             android:name=".service.UpdateMangBookmark"
@@ -87,7 +91,6 @@
             android:exported="false"/>
 
         <receiver android:name=".service.AlarmManagerBroadcastReceiver"/>
-
     </application>
 
 </manifest>

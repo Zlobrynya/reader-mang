@@ -3,6 +3,7 @@ package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 
@@ -28,14 +31,16 @@ import java.util.ArrayList;
  * Created by Nikita on 03.05.2016.
  */
 public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
-    protected ImageLoader imageLoader;
-    int w, h;
+    private int w, h;
     private DisplayImageOptions options;
-
+    private Context context;
+    private  ArrayList<ClassRecentlyRead> item;
 
     public AdapterBookmark(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
         super(context, resource, item);
-        imageLoader = ImageLoader.getInstance();
+        this.item = item;
+        this.context = context;
+        ImageLoader imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
@@ -58,14 +63,15 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
                 .build();
     }
 
-    public class Holder {
+    private class Holder {
         TextView nameMang;
         ImageView img;
         ImageButton buttonDelete;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         Holder holder = new Holder();
         if (v != null) {
@@ -89,6 +95,20 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
             holder.nameMang.setText(m1.getNameMang());
            // holder.nameChapter.setText(m1.getNameChapter());
         }
+        holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int poss = (int) v.getTag();
+                ClassDataBaseViewedHead classDataBaseViewedHead = new ClassDataBaseViewedHead(context);
+                classDataBaseViewedHead.setData(item.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
+                item.remove(poss);
+                classDataBaseViewedHead.closeDataBase();
+                notifyDataSetChanged();
+                Toast.makeText(context, "Delete: " + item.get(poss).getNameMang(),
+                        Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(TravelBite.this, "test", Toast.LENGTH_SHORT).show();
+            }
+        });
         return v;
     }
 }

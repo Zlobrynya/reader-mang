@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.Activity;
 
 
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -37,6 +38,7 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
     private SharedPreferences.Editor editor;
 
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +55,6 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         WiFi.setChecked(mSettings.getBoolean(APP_SETTINGS_WIFI, true));
         Switch NotificationAll = (Switch) findViewById(R.id.switch_all_notification);
         NotificationAll.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, true)));
-     //   Switch ChapterComplite = (Switch) findViewById(R.id.switch_chapter_complite);
-    //    ChapterComplite.setClickable((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, false)));
         Switch vibration = (Switch) findViewById(R.id.switch_download_vibration);
         vibration.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_VIBRATION, true)));
         Switch soung = (Switch) findViewById(R.id.switch_download_soung);
@@ -67,9 +67,9 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
 
     private void setSize(){
         File internalPath = new File(String.valueOf(path.getText()));
-        StatFs stat = new StatFs(internalPath.getPath());
+      /*  StatFs stat = new StatFs(internalPath.getPath());
         long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getBlockCount();
+        long availableBlocks = stat.getBlockCount();*/
         TextView infoSize = (TextView) findViewById(R.id.text_setting_system_clear_size);
         infoSize.setText(Formatter.formatFileSize(this, internalPath.getTotalSpace()));
     }
@@ -147,6 +147,6 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         }
         ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(this);
         downloadMang.clearAll();
-        //тут уведомление
+        Toast.makeText(this, "Очистка загруженной манги завершена.", Toast.LENGTH_SHORT).show();
     }
 }

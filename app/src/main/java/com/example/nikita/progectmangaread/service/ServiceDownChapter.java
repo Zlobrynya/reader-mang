@@ -167,7 +167,7 @@ public class ServiceDownChapter extends Service {
         private boolean not_net;
 
         //конструктор потока
-        protected ParsURLPage(AsyncTaskLisen addImg) {
+        ParsURLPage(AsyncTaskLisen addImg) {
             asyncTask = addImg;
         }
 

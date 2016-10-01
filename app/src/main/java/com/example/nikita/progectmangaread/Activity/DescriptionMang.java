@@ -410,7 +410,8 @@ public class DescriptionMang extends BaseActivity {
 
     public class adapterFragment  extends FragmentPagerAdapter {
         int kol;
-        public adapterFragment(FragmentManager mgr, int kol) {
+
+        adapterFragment(FragmentManager mgr, int kol) {
             super(mgr);
             this.kol = kol;
         }

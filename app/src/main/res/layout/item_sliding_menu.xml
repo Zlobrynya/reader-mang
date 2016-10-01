@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/launcher"
+        android:src="@drawable/f"
         android:id="@+id/imageView2"
         android:clickable="true"
         android:contentDescription="@string/app_name" />

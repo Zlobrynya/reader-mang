@@ -99,6 +99,7 @@ public class fragmentPageDownlad extends Fragment{
 
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);
+
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);

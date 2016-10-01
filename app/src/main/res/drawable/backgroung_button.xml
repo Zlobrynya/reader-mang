@@ -21,7 +21,7 @@
                 android:bottom="10dp"
                 android:left="10dp"
                 android:right="10dp"
-                android:top="16dp" />
+                android:top="10dp" />
         </shape>
     </item>
 </selector>

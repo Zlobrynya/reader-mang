@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,8 +25,12 @@ import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
+import com.example.nikita.progectmangaread.fragment.fragmentBookmark;
+import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
+import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import de.greenrobot.event.EventBus;
 
@@ -30,113 +38,65 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 09.05.2016.
  */
 public class Bookmark extends BaseActivity {
-    private AdapterBookmark adapter;
-    private ArrayList<ClassRecentlyRead> list;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
-    private ListView listView;
+    private ArrayList<String> nameSite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.list_heads, frameLayout);
-
-        list = new ArrayList<>();
+        nameSite = new ArrayList<>();
+        getLayoutInflater().inflate(R.layout.activity_top_mang, frameLayout);
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-        listView = (ListView) this.findViewById(R.id.listView);
-        getSupportActionBar().setTitle("Bookmark"); // set the top title
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int position, long id) {
-                Intent intent = new Intent(Bookmark.this,DescriptionMang.class);
-                ClassMainTop mainTop = getClassMainTop(position);
-                if (mainTop != null){
-                    intent.putExtra("URL_ch",mainTop.getURL_characher());
-                    intent.putExtra("Url_img",mainTop.getURL_img());
-                    intent.putExtra("Name_ch",mainTop.getName_characher());
-                    intent.putExtra("Url_site", mainTop.getURL_site());
-                    startActivity(intent);
-                    Log.v("long clicked", "pos: " + position);
-                }
-                return true;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Bookmark.this,DescriptionMang.class);
-                ClassMainTop mainTop = getClassMainTop(position);
-                if (mainTop != null){
-                    intent.putExtra("URL_ch",mainTop.getURL_characher());
-                    intent.putExtra("Url_img",mainTop.getURL_img());
-                    intent.putExtra("Name_ch",mainTop.getName_characher());
-                    intent.putExtra("Url_site",mainTop.getURL_site());
-                    intent.putExtra("read", true);
-                    startActivity(intent);
-                    Log.v("long clicked", "pos: " + position);
-                }
-            }
-        });
-        initializationNotebook();
-    }
-
-    private ClassMainTop getClassMainTop(int pos){
-        if (pos > -1){
-            ClassMainTop classTop = new ClassMainTop();
-            classTop.setName_characher(list.get(pos).getNameMang());
-            //Костыли
-            if (list.get(pos).getURLchapter().contains("readmang")){
-                classTop.setURL_site("http://readmanga.me");
-            }
-            if (list.get(pos).getURLchapter().contains("mintmanga")){
-                classTop.setURL_site("http://mintmanga.com");
-            }
-            //
-            classTop.setURL_img(list.get(pos).getURL_img());
-            classTop.setURL_characher(list.get(pos).getURLchapter());
-            return classTop;
+        int count = getCountSite();
+        if (count > 0){
+            adapterFragment adapterPargerFragment = new adapterFragment(getSupportFragmentManager(), count);
+            ViewPager pager = (ViewPager) this.findViewById(R.id.pager);
+            pager.setAdapter(adapterPargerFragment);
         }
-        return null;
     }
 
-    private void initializationNotebook(){
-        Cursor cursor = classDataBaseViewedHead.getNotebook();
-        Log.i("Cursor: ", String.valueOf(cursor.getCount()));
-        cursor.moveToFirst();
-        for(int i = 0;i < cursor.getCount();i++){
-            String nameMang,nameChapter,URLchapter,URLimg,URLlastChapter;
-            nameMang = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.NAME_MANG));
-            URLchapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_CHAPTER));
-            URLlastChapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseViewedHead.LAST_CHAPTER));
-            URLimg = cursor.getString(cursor.getColumnIndex(ClassDataBaseListMang.URL_IMG));
-            nameChapter = cursor.getString(cursor.getColumnIndex(ClassDataBaseViewedHead.NAME_LAST_CHAPTER));
-            list.add(new ClassRecentlyRead(URLimg,nameMang,nameChapter,URLchapter,URLlastChapter));
-            cursor.moveToNext();
+    private int getCountSite(){
+        int count = 0;
+        if (classDataBaseViewedHead.whetherThereIsABookmarkInSite("readmanga")) {
+            nameSite.add("readmanga");
+            count++;
         }
-        cursor.close();
-
-        //размер экрана
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int height = displaymetrics.heightPixels;
-        int width = displaymetrics.widthPixels;
-        adapter = new AdapterBookmark(this,R.layout.list_heads,list,width,height);
-        listView.setAdapter(adapter);
+        if (classDataBaseViewedHead.whetherThereIsABookmarkInSite("mintmanga")) {
+            nameSite.add("mintmanga");
+            count++;
+        }
+        return count;
     }
+
 
     @Override
     public void onStop() {
         super.onStop();
     }
 
-    public void imageButtonDelete(View view) {
-        int poss = (int) view.getTag();
-        Toast.makeText(this, "Delete: " + list.get(poss).getNameMang(),
-                Toast.LENGTH_SHORT).show();
-        classDataBaseViewedHead.setData(list.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
-        list.remove(poss);
-        adapter.notifyDataSetChanged();
+    public class adapterFragment  extends FragmentPagerAdapter {
+        int kol;
+
+        adapterFragment(FragmentManager mgr, int kol) {
+            super(mgr);
+            this.kol = kol;
+        }
+        @Override
+        public int getCount() {
+            return(kol);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (nameSite.size() > position){
+                return nameSite.get(position);
+            }else return "Magic";
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentBookmark.newInstance(nameSite.get(position));
+        }
     }
+
 }

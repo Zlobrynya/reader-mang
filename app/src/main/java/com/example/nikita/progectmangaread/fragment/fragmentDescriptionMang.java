@@ -27,7 +27,7 @@ import de.greenrobot.event.EventBus;
 public class fragmentDescriptionMang extends Fragment {
     private View v;
     private ProgressBar progress;
-    private ConstraintLayout constraintLayout,linearLayoutButton;
+    private ConstraintLayout constraintLayout;
     private final String PROBLEM = "ProblemTime";
 
     @Override

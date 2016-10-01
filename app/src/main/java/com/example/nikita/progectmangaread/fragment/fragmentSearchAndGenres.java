@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,7 +54,6 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     View v;
     ArrayList<ClassForList> list;
     public AdapterList myAdap;
-    private ListView gr;
     public ClassTransport classMang;
 
     @Override
@@ -69,8 +69,27 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         Log.i("POST", "!!CREATE!!SEARCH");
         v = inflater.inflate(R.layout.search_and_genres_fragment, null);
-        gr = (ListView) v.findViewById(R.id.listSearch);
+        ListView gr = (ListView) v.findViewById(R.id.listSearch);
         gr.setAdapter(myAdap);
+
+        final EditText editGo = (EditText) v.findViewById(R.id.editText);
+        editGo.setOnEditorActionListener(this);
+
+        ImageButton imageButton = (ImageButton) v.findViewById(R.id.clearSearchButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editGo.setText("");
+                for (int i = 0; i < list.size(); i++){
+                    ClassForList classForList = list.get(i);
+                    if (classForList.getCheck()){
+                        classForList.setCheck(false);
+                        list.set(i,classForList);
+                        myAdap.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
 
         Button b = (Button) v.findViewById(R.id.buttonSearch);
         b.setOnClickListener(this);
@@ -86,8 +105,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
                 myAdap.notifyDataSetChanged();
             }
         });
-        EditText editGo = (EditText) v.findViewById(R.id.editText);
-        editGo.setOnEditorActionListener(this);
+
         return v ;
     }
 
