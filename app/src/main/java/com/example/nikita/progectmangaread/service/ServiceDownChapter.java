@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.service;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -41,7 +42,7 @@ public class ServiceDownChapter extends Service {
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private String path;
-    private boolean vibration,notif;
+    private boolean vibration,notif,sound;
 
     AsyncTaskLisen receivedAddress = new AsyncTaskLisen() {
         @Override
@@ -63,12 +64,12 @@ public class ServiceDownChapter extends Service {
                     stopSelf();
                     Log.d(LOG_TAG, "stopSelf");
                 }
-                if (vibration){
+               /* if (vibration){
                     // Get instance of Vibrator from current Context
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     // Vibrate for 300 milliseconds
                     v.vibrate(300);
-                }
+                }*/
             }
         }
 
@@ -84,6 +85,16 @@ public class ServiceDownChapter extends Service {
                 .setContentText(listNameChapter.get(startId))
                 .setProgress(urlPage.size() - 1, numberPage, false);
         int notifyID = 1;
+
+        if (numberPage == urlPage.size()-1){
+            if (sound && vibration)
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND |
+                        Notification.DEFAULT_VIBRATE);
+            else if (sound)
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+            else if (vibration)
+                mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+        }
 
         mNotificationManager.notify(
                 notifyID,
@@ -103,9 +114,11 @@ public class ServiceDownChapter extends Service {
         //инициализация уведомлений
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         mBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Downloaded")
                 .setSmallIcon(R.drawable.launcher);
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack
         stackBuilder.addParentStack(ShowDownloaded.class);
@@ -126,12 +139,12 @@ public class ServiceDownChapter extends Service {
         String[] nameDir = intent.getStringExtra("name_dir").split(",");
         path = intent.getStringExtra("path");
         notif = intent.getBooleanExtra("notification",false);
-        vibration = intent.getBooleanExtra("vibratyon",true);
-
-        if(intent.getBooleanExtra("sound",false)){
+        vibration = intent.getBooleanExtra("vibratyon",false);
+        sound = intent.getBooleanExtra("sound",false);
+        /*if(intent.getBooleanExtra("sound",false)){
             Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             mBuilder.setSound(soundUri);
-        }
+        }*/
 
         boolean firstUrl = false;
         if (urlChapter.isEmpty())

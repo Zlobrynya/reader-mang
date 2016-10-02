@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.pdf.PdfDocument;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -223,25 +224,9 @@ public class PagesDownload extends AppCompatActivity {
         if (id == android.R.id.home) {
             onBackPressed();
         }else if (id == R.id.sett_brightness){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.System.canWrite(PagesDownload.this)) {
-                    settingsBrightness();
-                }else {
-                    setPermissionBrightness();
-                }
-            }else {
                 settingsBrightness();
-            }
         }else if (id == R.id.sett_page_rotation){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.System.canWrite(PagesDownload.this)) {
-                    settingsBrightness();
-                }else {
-                    item = setLockRotate(item);
-                }
-            }else {
                 item = setLockRotate(item);
-            }
         }else if (id == R.id.sett_page_reload){
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.deleteFile(String.valueOf(pageNumber-1));
@@ -252,21 +237,24 @@ public class PagesDownload extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Поворот экрана
     private MenuItem setLockRotate(MenuItem item){
-        MenuItem bufItem = item;
-        if (bufItem.getTitle().equals(getResources().getString(R.string.sett_rotation_lock))){
+        if (item.getTitle().equals(getResources().getString(R.string.sett_rotation_lock))){
             //Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);
-            bufItem.setTitle(getResources().getString(R.string.sett_rotation_unlock));
-            bufItem.setIcon(R.drawable.ic_screen_rotation_black_24dp);
-            Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0); // отключение
+            item.setTitle(getResources().getString(R.string.sett_rotation_unlock));
+            item.setIcon(R.drawable.ic_screen_rotation_black_24dp);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            // Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0); // отключение
         }else {
-            bufItem.setTitle(getResources().getString(R.string.sett_rotation_lock));
-            bufItem.setIcon(R.drawable.ic_screen_lock_rotation_black_24dp);
-            Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1); //включение
+            item.setTitle(getResources().getString(R.string.sett_rotation_lock));
+            item.setIcon(R.drawable.ic_screen_lock_rotation_black_24dp);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            //Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1); //включение
         }
-        return bufItem;
+        return item;
     }
 
+    /*Для вызова окна с прозьбой разрешить подключаться к системным функциям
     private void setPermissionBrightness(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.info_prermission)
@@ -281,7 +269,7 @@ public class PagesDownload extends AppCompatActivity {
                     }
                 });
         builder.create().show();
-    }
+    }*/
 
     //Настройка яркости
     private void settingsBrightness(){
@@ -318,8 +306,11 @@ public class PagesDownload extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBark, int progress, boolean fromUser) {
-                Settings.System.putInt(context, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
-                Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
+               // Settings.System.putInt(context, Settings.System.SCREEN_BRIGHTNESS_MODE, 0);
+               // Settings.System.putInt(context,Settings.System.SCREEN_BRIGHTNESS,progress);
+                WindowManager.LayoutParams layout = getWindow().getAttributes();
+                layout.screenBrightness = progress;
+                getWindow().setAttributes(layout);
             }
         };
         yourDialogSeekBar.setOnSeekBarChangeListener(yourSeekBarListener);

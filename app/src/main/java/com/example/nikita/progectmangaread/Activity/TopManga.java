@@ -156,7 +156,6 @@ public class TopManga extends BaseActivity {
         editor.putString(APP_PREFERENCES_PATH,event.getPath());
         editor.putString(APP_PREFERENCES_PATH_2,event.getPath2());
         editor.putString(APP_PREFERENCES_WHERE_ALL,event.getWhereAll());
-
         editor.putBoolean(APP_PREFERENCES_FIRST,false);
         editor.putInt(APP_PREFERENCES_MAX_IN_PAGE, event.getMaxInPage());
         editor.apply();

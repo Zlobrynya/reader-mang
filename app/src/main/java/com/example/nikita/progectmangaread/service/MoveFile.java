@@ -53,9 +53,13 @@ public class MoveFile extends Service {
                         newChapter.mkdir();
                     }
                     File imgs[] = chapter.listFiles();
-                    for(File img: imgs) {
-                        moveFile(img.getPath(),newChapter.getPath()+"/"+img.getName());
-                        img.delete();
+                    try{
+                        for(File img: imgs) {
+                            moveFile(img.getPath(),newChapter.getPath()+"/"+img.getName());
+                            img.delete();
+                        }
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
                     }
                     chapter.delete();
                 }
@@ -89,7 +93,7 @@ public class MoveFile extends Service {
                 Log.e("tag", fnfe1.getMessage());
             }
             catch (Exception e) {
-                Log.e("tag", e.getMessage());
+                e.printStackTrace();
             }
         }
 
