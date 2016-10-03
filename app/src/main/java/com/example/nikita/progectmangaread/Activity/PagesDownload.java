@@ -226,7 +226,7 @@ public class PagesDownload extends AppCompatActivity {
         }else if (id == R.id.sett_brightness){
                 settingsBrightness();
         }else if (id == R.id.sett_page_rotation){
-                item = setLockRotate(item);
+               item = setLockRotate(item);
         }else if (id == R.id.sett_page_reload){
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.deleteFile(String.valueOf(pageNumber-1));

@@ -36,8 +36,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".Activity.PagesDownload"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".Activity.BaseActivity"
