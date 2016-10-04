@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,8 @@ import java.util.LinkedList;
  */
 public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
 
-    int w,h;
+    private int w,h;
     private DisplayImageOptions options;
-    protected ImageLoader imageLoader;
 
     public AdapterMainScreen(Context context, int resourse, LinkedList<ClassMainTop> item,int w, int h) {
         super(context, resourse,item);
@@ -48,7 +48,7 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
                 .imageDownloader(new BaseImageDownloader(context)) // connectTimeout (5 s), readTimeout (30 s)
                 .build();
 
-        imageLoader = ImageLoader.getInstance();
+        ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.f) // resource or drawable
@@ -60,14 +60,15 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
     }
 
 
-    public class Holder
+    private class Holder
     {
         TextView tv;
         ImageView img;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         Holder holder=new Holder();
         if (v != null){

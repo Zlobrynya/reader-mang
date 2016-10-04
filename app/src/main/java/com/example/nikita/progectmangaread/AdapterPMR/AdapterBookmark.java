@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread.AdapterPMR;
 
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
@@ -31,12 +33,11 @@ import java.util.ArrayList;
  * Created by Nikita on 03.05.2016.
  */
 public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
-    private int w, h;
     private DisplayImageOptions options;
     private Context context;
     private  ArrayList<ClassRecentlyRead> item;
 
-    public AdapterBookmark(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
+    public AdapterBookmark(Context context, int resource, ArrayList<ClassRecentlyRead> item) {
         super(context, resource, item);
         this.item = item;
         this.context = context;
@@ -50,12 +51,10 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .build();
 
-        this.w = w;
-        this.h = h;
 
         imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.launcher) // resource or drawable
+                .showImageOnLoading(R.drawable.f) // resource or drawable
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
@@ -80,8 +79,8 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.bookmark, null);
             holder.img = (ImageView) v.findViewById(R.id.imageView_notebook);
-            holder.img.setMinimumWidth(w / 4);
-            holder.img.setMinimumHeight(h / 5);
+            holder.img.setMinimumWidth(TopManga.WIDTH_WIND / 4);
+            holder.img.setMinimumHeight(TopManga.HEIGHT_WIND / 5);
             holder.buttonDelete = (ImageButton) v.findViewById(R.id.imageButton_delete);
             holder.nameMang = (TextView) v.findViewById(R.id.textView_name_notebook);
             v.setTag(holder);

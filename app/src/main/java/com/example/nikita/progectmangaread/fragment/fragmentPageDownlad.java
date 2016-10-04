@@ -167,11 +167,10 @@ public class fragmentPageDownlad extends Fragment{
     }
 
     public void onEvent(Byte event) {
-        if (event == number)
+        if (event == number){
             showImageView();
+        }
     }
-
-
 
         // Принимает евенты о скачивании от CacheFile и ThreadManager
     // разделение в строке идет: / от CacheFile, если не чего делить то выводим на экран изображение
@@ -179,7 +178,11 @@ public class fragmentPageDownlad extends Fragment{
         String[] strings = event.split("/");
         if (strings.length == 2){
             if (strings[0].contains(String.valueOf(number))){
-                progress.setProgress(Integer.parseInt(strings[1]));
+                if (strings[1].contains("reload")){
+                    image.setVisibility(View.GONE);
+                    progress.setVisibility(View.VISIBLE);
+                    progress.setProgress(0);
+                }else progress.setProgress(Integer.parseInt(strings[1]));
             }
         }
     }

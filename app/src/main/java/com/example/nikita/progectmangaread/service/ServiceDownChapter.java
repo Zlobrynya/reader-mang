@@ -89,11 +89,14 @@ public class ServiceDownChapter extends Service {
         if (numberPage == urlPage.size()-1){
             if (sound && vibration)
                 mBuilder.setDefaults(Notification.DEFAULT_SOUND |
-                        Notification.DEFAULT_VIBRATE);
+                        Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
             else if (sound)
-                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS);
             else if (vibration)
-                mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+                mBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+        }else {
+            mBuilder.setDefaults(Notification.DEFAULT_LIGHTS);
+
         }
 
         mNotificationManager.notify(

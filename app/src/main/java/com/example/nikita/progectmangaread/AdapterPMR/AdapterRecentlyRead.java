@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
@@ -27,15 +29,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * Created by Nikita on 28.04.2016.
  */
 public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> implements StickyListHeadersAdapter {
-    protected ImageLoader imageLoader;
-    private int w, h;
     private DisplayImageOptions options;
     private ArrayList<ClassRecentlyRead> item;
 
-    public AdapterRecentlyRead(Context context, int resource, ArrayList<ClassRecentlyRead> item, int w, int h) {
+    public AdapterRecentlyRead(Context context, int resource, ArrayList<ClassRecentlyRead> item) {
         super(context, resource, item);
         this.item = item;
-        imageLoader = ImageLoader.getInstance();
+        ImageLoader imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
@@ -44,12 +44,9 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .build();
 
-        this.w = w;
-        this.h = h;
-
         imageLoader.init(config);
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.launcher) // resource or drawable
+                .showImageOnLoading(R.drawable.f) // resource or drawable
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }
@@ -59,18 +56,19 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
         return Long.parseLong(item.get(position).getDate().replace("-",""));
     }
 
-    public class Holder {
+    private class Holder {
         TextView nameChapter;
         TextView nameMang;
         ImageView img;
     }
 
-    class HeaderViewHolder {
+    private class HeaderViewHolder {
         TextView text;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         Holder holder = new Holder();
         if (v != null) {
@@ -79,8 +77,8 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.layout_recently_read, null);
             holder.img = (ImageView) v.findViewById(R.id.imageNameMangRR);
-            holder.img.setMinimumWidth(w / 4);
-            holder.img.setMinimumHeight(h / 5);
+            holder.img.setMinimumWidth(TopManga.WIDTH_WIND / 4);
+            holder.img.setMinimumHeight(TopManga.HEIGHT_WIND / 5);
             holder.nameChapter = (TextView) v.findViewById(R.id.textViewNameChapterRR);
             holder.nameMang = (TextView) v.findViewById(R.id.textViewNameMangRR);
             v.setTag(holder);

@@ -232,6 +232,7 @@ public class PagesDownload extends AppCompatActivity {
             file.deleteFile(String.valueOf(pageNumber-1));
             threadManager.setFalseSaveImg(pageNumber-1);
             threadManager.setPriorityImg(pageNumber-1);
+            EventBus.getDefault().post(pageNumber-1+"/reload");
         }
 
         return super.onOptionsItemSelected(item);

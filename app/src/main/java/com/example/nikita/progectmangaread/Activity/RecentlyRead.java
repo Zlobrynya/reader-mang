@@ -26,8 +26,6 @@ public class RecentlyRead extends BaseActivity{
     private AdapterRecentlyRead adapter;
     private ArrayList<ClassRecentlyRead> list;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
-    private StickyListHeadersListView listView;
-    private SharedPreferences mSettings;
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private String url;
@@ -35,12 +33,12 @@ public class RecentlyRead extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
         getLayoutInflater().inflate(R.layout.sticky_list, frameLayout);
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-        listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
-        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
+        StickyListHeadersListView listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
+        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list);
         listView.setAdapter(adapter);
         getSupportActionBar().setTitle("Recently Read"); // set the top title
 

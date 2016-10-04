@@ -15,10 +15,11 @@ import java.util.ArrayList;
 
 /**
  * Created by Nikita on 26.03.2016.
+ * Задел на будущее в закладках (группы
  */
 public class AdapterSlidingMenu extends BaseAdapter {
-    ArrayList<String> str;
-    Context context;
+    private ArrayList<String> str;
+    private Context context;
 
     public AdapterSlidingMenu(Context context){
         this.context = context;
@@ -44,7 +45,7 @@ public class AdapterSlidingMenu extends BaseAdapter {
         return 0;
     }
 
-    public class Holder
+    private class Holder
     {
         TextView tv;
         ImageView img;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,14 +34,14 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
         this.item = item;
     }
 
-    public class Holder
+    private class Holder
     {
         TextView tv;
         CheckBox checkBox;
         ImageView imageView;
     }
 
-    class HeaderViewHolder {
+    private class HeaderViewHolder {
         TextView text;
     }
 
@@ -89,8 +90,9 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
         return Long.parseLong(getNumberChapter(item.get(position).getName_chapter()));
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         Holder holder=new Holder();
         if (v != null){

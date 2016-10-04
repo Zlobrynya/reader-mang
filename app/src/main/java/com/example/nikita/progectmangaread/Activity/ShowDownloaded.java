@@ -56,7 +56,7 @@ public class ShowDownloaded extends BaseActivity {
                 pos = position;
             }
         });
-        adapter = new AdapterBookmark(this,R.layout.list_heads,list,TopManga.WIDTH_WIND,TopManga.HEIGHT_WIND);
+        adapter = new AdapterBookmark(this,R.layout.list_heads,list);
 
         initializationDonwload();
 

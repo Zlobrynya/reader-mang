@@ -121,7 +121,7 @@ public class fragmentBookmark extends Fragment {
             cursor.moveToNext();
         }
         cursor.close();
-        AdapterBookmark adapter = new AdapterBookmark(getActivity(), R.layout.list_heads, list, TopManga.WIDTH_WIND, TopManga.HEIGHT_WIND);
+        AdapterBookmark adapter = new AdapterBookmark(getActivity(), R.layout.list_heads, list);
         listView.setAdapter(adapter);
     }
 
