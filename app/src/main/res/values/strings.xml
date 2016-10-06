@@ -32,4 +32,6 @@
     <string name="title_permission">Получение прав.</string>
     <string name="info_prermission">Для работы этой функции требуются права.</string>
     <string name="auto_brightness">Автонастройка</string>
+    <string name="next_skip_chapter">Следующая галава</string>
+    <string name="previous_chapter">Предыдущая глава</string>
 </resources>

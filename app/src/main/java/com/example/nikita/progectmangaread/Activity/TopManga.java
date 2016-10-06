@@ -1,13 +1,11 @@
 package com.example.nikita.progectmangaread.Activity;
 
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,7 +18,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.fragment.fragmentLoad_page0;
@@ -62,7 +59,7 @@ public class TopManga extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_top_mang, frameLayout);
+        getLayoutInflater().inflate(R.layout.page_view, frameLayout);
         mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
 
         pager=(ViewPager)findViewById(R.id.pager);
@@ -97,6 +94,10 @@ public class TopManga extends BaseActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         HEIGHT_WIND = displaymetrics.heightPixels;
         WIDTH_WIND = displaymetrics.widthPixels;
+
+        FloatingActionButton up = (FloatingActionButton) findViewById(R.id.skip_to_top);
+
+
 
         //костыль для того что бы пославть EventBuss после создания фрагментов
         new Handler().postDelayed(new Runnable() {

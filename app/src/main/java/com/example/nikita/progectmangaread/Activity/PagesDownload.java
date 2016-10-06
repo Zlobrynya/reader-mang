@@ -233,6 +233,12 @@ public class PagesDownload extends AppCompatActivity {
             threadManager.setFalseSaveImg(pageNumber-1);
             threadManager.setPriorityImg(pageNumber-1);
             EventBus.getDefault().post(pageNumber-1+"/reload");
+        }else if (id == R.id.next_page_skip){
+            EventBus.getDefault().post(chapterNumber - 1);
+            this.finish();
+        }else if (id == R.id.previous_page_skip){
+            EventBus.getDefault().post(chapterNumber + 1);
+            this.finish();
         }
 
         return super.onOptionsItemSelected(item);

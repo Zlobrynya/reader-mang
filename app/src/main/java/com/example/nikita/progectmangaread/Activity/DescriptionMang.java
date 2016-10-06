@@ -57,8 +57,8 @@ public class DescriptionMang extends BaseActivity {
     private Element el;
     private boolean read, downloadChapter;
     private FloatingActionButton fab1,fab2,fab3,fab;
-    private Animation show_fab_1;
-    private Animation hide_fab_1;
+    private Animation show_fab;
+    private Animation hide_fab;
     private boolean visF = false;
     private boolean bookmark = false;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
@@ -80,8 +80,8 @@ public class DescriptionMang extends BaseActivity {
         fab1 = (FloatingActionButton) findViewById(R.id.fab_lastChapter);
         fab2 = (FloatingActionButton) findViewById(R.id.fab_notebook);
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
-        show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
-        hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
+        show_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.fab_show);
+        hide_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.fab_hide);
         adapterFragment gg = new adapterFragment(getSupportFragmentManager(), 2);
         pager.setAdapter(gg);
         arList = new ArrayList<>();
@@ -250,25 +250,25 @@ public class DescriptionMang extends BaseActivity {
 
     private void buttonVisible(){
 
-        fab1.startAnimation(show_fab_1);
+        fab1.startAnimation(show_fab);
         fab1.setClickable(true);
 
-        fab2.startAnimation(show_fab_1);
+        fab2.startAnimation(show_fab);
         fab2.setClickable(true);
 
-        fab3.startAnimation(show_fab_1);
+        fab3.startAnimation(show_fab);
         fab3.setClickable(true);
     }
 
     private void buttonINVisble(){
 
-        fab1.startAnimation(hide_fab_1);
+        fab1.startAnimation(hide_fab);
         fab1.setClickable(false);
 
-        fab2.startAnimation(hide_fab_1);
+        fab2.startAnimation(hide_fab);
         fab2.setClickable(false);
 
-        fab3.startAnimation(hide_fab_1);
+        fab3.startAnimation(hide_fab);
         fab3.setClickable(false);
 
     }

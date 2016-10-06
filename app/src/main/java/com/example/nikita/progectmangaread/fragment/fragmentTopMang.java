@@ -2,6 +2,7 @@ package com.example.nikita.progectmangaread.fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -45,7 +48,7 @@ import de.greenrobot.event.EventBus;
  */
 
 public class fragmentTopMang extends Fragment {
-    public ClassMang classMang;
+    private ClassMang classMang;
     private int firstItem,page;
     private int kol,kolSum;
     private Document doc;
@@ -53,7 +56,7 @@ public class fragmentTopMang extends Fragment {
     private AdapterMainScreen myAdap;
     private ClassDataBaseListMang classDataBaseListMang;
     private GridView gr;
-    private boolean stopLoad;
+    private boolean stopLoad,visibleButton;
     private int resultPost;  // 0 - глав стр 1 - результат поиска 2 - по жанрам
     private ClassMainTop mainTop;
 
@@ -62,6 +65,7 @@ public class fragmentTopMang extends Fragment {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
         stopLoad = false;
+        visibleButton = true;
         kol = page = firstItem = kolSum = 0;
     }
 
@@ -90,7 +94,7 @@ public class fragmentTopMang extends Fragment {
             }
         }
 
-        View v = inflater.inflate(R.layout.grid_view, null);
+        View v = inflater.inflate(R.layout.fragment_top_manga, null);
 
         gr = (GridView) v.findViewById(R.id.gread_id);
         gr.setAdapter(myAdap);
@@ -111,14 +115,32 @@ public class fragmentTopMang extends Fragment {
             }
         });
 
+        final FloatingActionButton upButton = (FloatingActionButton) v.findViewById(R.id.skip_to_top);
+        final Animation fabShow = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_show);
+        final Animation fabHide = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_hide);
+
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
+                if (firstItem < firstVisibleItem){
+                    if (visibleButton){
+                        upButton.setAnimation(fabHide);
+                        upButton.setClickable(false);
+                        visibleButton = false;
+                    }
+                }else {
+                    if (!visibleButton){
+                        upButton.setAnimation(fabShow);
+                        upButton.setClickable(true);
+                        visibleButton = true;
+                    }
+                }
                 if (firstItem <= firstVisibleItem) {
                     kolSum += 10;
                     if (kolSum > kol && !stopLoad)
                         parssate(kol);
+
                     //  Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
                 }
                 firstItem = firstVisibleItem;
@@ -129,6 +151,15 @@ public class fragmentTopMang extends Fragment {
                 // Log.i("Scroll 2", String.valueOf(helpVasr));
             }
         });
+
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               gr.smoothScrollToPosition(0);
+            }
+        });
+
+
         return v ;
     }
 
