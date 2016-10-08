@@ -39,7 +39,6 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
         this.h = h;
         File cacheDir = new File(context.getApplicationContext().getCacheDir(),"cacheGlavTop");
 
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .threadPoolSize(3)
                 .denyCacheImageMultipleSizesInMemory()
@@ -78,8 +77,8 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
             v = vi.inflate(R.layout.layout_from_graund_view, null);
             holder.img = (ImageView)v.findViewById(R.id.imageView1);
 
-            holder.img.setMinimumWidth(w);
-            holder.img.setMinimumHeight(h);
+            holder.img.getLayoutParams().width = w;
+            holder.img.getLayoutParams().height = h;
 
             holder.tv = (TextView) v.findViewById(R.id.textMang);
             v.setTag(holder);

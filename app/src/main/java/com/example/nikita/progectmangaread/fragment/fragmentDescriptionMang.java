@@ -47,8 +47,6 @@ public class fragmentDescriptionMang extends Fragment {
         constraintLayout.setVisibility(View.INVISIBLE);
         Log.i(PROBLEM, "Start fragmentDescriptionMang");
 
-
-
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EventBus.getDefault().post("Click");
@@ -59,7 +57,7 @@ public class fragmentDescriptionMang extends Fragment {
     }
 
     public void onEvent(ClassDescriptionMang event) {
-        if (this.getArguments().getInt("num") == 0){
+        if (this.getArguments().getInt("num") == 1){
             if (v != null) {
                // com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang classDescriptionMang = event;
                 TextView textView = (TextView) v.findViewById(R.id.textAuthor);

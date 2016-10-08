@@ -4,8 +4,8 @@ package com.example.nikita.progectmangaread.classPMR;
  * Created by Nikita on 23.02.2016.
  */
 public class ClassTransport {
-    ClassMang classMang;
-    String URL_Search;
+    private ClassMang classMang;
+    private String URL_Search;
 
     public ClassTransport(){}
 

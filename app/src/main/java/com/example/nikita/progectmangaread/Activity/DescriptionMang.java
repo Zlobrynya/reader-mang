@@ -23,9 +23,11 @@ import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassOtherMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionList;
 import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
+import com.example.nikita.progectmangaread.fragment.fragmentOtherMang;
 import com.example.nikita.progectmangaread.fragment.fragmentSaveDescriptionMang;
 
 import org.jsoup.Jsoup;
@@ -82,8 +84,9 @@ public class DescriptionMang extends BaseActivity {
         fab3 = (FloatingActionButton) findViewById(R.id.fab_download);
         show_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.fab_show);
         hide_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.fab_hide);
-        adapterFragment gg = new adapterFragment(getSupportFragmentManager(), 2);
+        adapterFragment gg = new adapterFragment(getSupportFragmentManager(), 3);
         pager.setAdapter(gg);
+        pager.setCurrentItem(1);
         arList = new ArrayList<>();
         read = false;
 
@@ -408,7 +411,7 @@ public class DescriptionMang extends BaseActivity {
         startActivity(browserIntent);
     }
 
-    public class adapterFragment  extends FragmentPagerAdapter {
+    public class adapterFragment  extends FragmentPagerAdapter{
         int kol;
 
         adapterFragment(FragmentManager mgr, int kol) {
@@ -424,8 +427,10 @@ public class DescriptionMang extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Описание";
+                    return "Другая манга";
                 case 1:
+                    return "Описание";
+                case 2:
                     return "Главы";
                 default:
                     return "Magic";
@@ -434,8 +439,14 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-           if (position == 0) return fragmentDescriptionMang.newInstance(position);
-            else return fragmentDescriptionList.newInstance(position);
+            switch (position){
+                case 0:
+                    return fragmentOtherMang.newInstance();
+                case 1:
+                    return fragmentDescriptionMang.newInstance(position);
+                default:
+                    return fragmentDescriptionList.newInstance(position);
+            }
         }
     }
 
@@ -570,7 +581,97 @@ public class DescriptionMang extends BaseActivity {
                     numberLastChapter();
                     read = false;
                 }
+                ParsSimilarAndRelatedMang parsList = new ParsSimilarAndRelatedMang();
+                parsList.execute();
             }
+        }
+    }
+
+    public class ParsSimilarAndRelatedMang extends AsyncTask<Void,Void,Void>{
+        private ArrayList<ClassOtherMang> list;
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (list == null)
+                list = new ArrayList<>();
+            try {
+                doc = Jsoup.connect("http://readmanga.me/list/like"+mang.getURL_characher().substring(mang.getURL_characher().lastIndexOf("/"))).userAgent("Mozilla")
+                        .timeout(3000)
+                        .get();
+                //вытаскиваем первую таблицу со связаной мангой
+                parsSimilar(0);
+                parsSimilar(1);
+                //перемещаемся на след.таблицу с похожей мангой
+                parsRelated();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        void parsSimilar(int number){
+            String category = "similar";
+            Element element = doc.select("h2").first();
+            if (number == 0 && element.text().contains("Похожее"))
+                return;
+            el = doc.select("[class = table table-hover]").select("tr").first();
+
+            if (number > 0){
+                el = doc.select("[class = table table-hover]").last();
+                el = el.select("tr").first();
+                category = "related";
+            }
+
+            if (el != null){
+                do {
+                    if (!el.text().contains("Аниме")){
+                        ClassOtherMang classOtherMang = new ClassOtherMang();
+                        Elements elements = el.select("td");
+                        element = elements.select("[class = manga-link]").first();
+                        if (element != null){
+                            classOtherMang.setURLchapter(mang.getURL_site() + element.attr("href"));
+                            classOtherMang.setNameMang(element.text());
+                            element = elements.select("[class = screenshot]").first();
+                           /* if (element.select("sup") != null){
+                                element = element.nextElementSibling();
+                            }*/
+                            classOtherMang.setURL_img(element.attr("rel"));
+                            classOtherMang.setNameCategory(category); //тег что это связаное произведение
+                            classOtherMang.setUrlSite(mang.getURL_site());
+                            list.add(classOtherMang);
+                        }
+                        el = el.nextElementSibling();
+                    }else break;
+                }while (el != null);
+            }
+        }
+
+        void parsRelated(){
+            //tiles row
+            el = doc.select("[class = tiles row]").select("[class = tile col-sm-6]").first();
+            do {
+                ClassOtherMang classOtherMang = new ClassOtherMang();
+                Elements elements = el.select("a");
+                if (elements != null){
+                    classOtherMang.setURLchapter(mang.getURL_site() + elements.attr("href"));
+                    //
+                    elements = el.select("img");
+                    /* if (element.select("sup") != null){
+                               element = element.nextElementSibling();
+                           }*/
+                    classOtherMang.setNameMang(elements.attr("title"));
+                    classOtherMang.setURL_img(elements.attr("src"));
+                    classOtherMang.setNameCategory("related"); //тег что это связаное произведение
+                    classOtherMang.setUrlSite(mang.getURL_site());
+                    list.add(classOtherMang);
+                }
+                el = el.nextElementSibling();
+            }while (el != null);
+
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            EventBus.getDefault().post(list);
         }
     }
 }

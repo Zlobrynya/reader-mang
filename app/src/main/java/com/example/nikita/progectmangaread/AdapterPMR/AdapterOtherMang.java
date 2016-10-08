@@ -12,9 +12,10 @@ import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
+import com.example.nikita.progectmangaread.classPMR.ClassOtherMang;
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -25,19 +26,23 @@ import java.util.ArrayList;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
- * Created by Nikita on 28.04.2016.
+ * Created by Nikita on 08.10.2016.
  */
-public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> implements StickyListHeadersAdapter {
-    private DisplayImageOptions options;
-    private ArrayList<ClassRecentlyRead> item;
 
-    public AdapterRecentlyRead(Context context, int resource, ArrayList<ClassRecentlyRead> item) {
-        super(context, resource, item);
-        this.item = item;
+public class AdapterOtherMang extends ArrayAdapter<ClassOtherMang> implements StickyListHeadersAdapter {
+    private DisplayImageOptions options;
+    private final String RELATED = "related";
+    private final String SIMILAR = "similar";
+
+
+    public AdapterOtherMang(Context context, int resource, ArrayList<ClassOtherMang> objects) {
+        super(context, resource, objects);
+
         ImageLoader imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
-                .threadPoolSize(3)
+                .threadPoolSize(1)
                 .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(new UsingFreqLimitedMemoryCache(8 * 1024 * 1024)) // 2 Mb
                 .diskCache(new LimitedAgeDiskCache(context.getApplicationContext().getCacheDir(), null, new HashCodeFileNameGenerator(), 60 * 60 * 30))
                 .imageDownloader(new BaseImageDownloader(context)) // connectTimeout (5 s), readTimeout (30 s)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
@@ -47,12 +52,8 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.f) // resource or drawable
                 .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheOnDisk(true)
                 .build();
-    }
-
-    @Override
-    public long getHeaderId(int position) {
-        return Long.parseLong(item.get(position).getDate().replace("-",""));
     }
 
     private class Holder {
@@ -74,21 +75,21 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
             holder = (Holder) v.getTag();
         } else {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.recently_read, null);
-            holder.img = (ImageView) v.findViewById(R.id.imageNameMangRR);
-            holder.img.setMinimumWidth(TopManga.WIDTH_WIND / 4);
-            holder.img.setMinimumHeight(TopManga.HEIGHT_WIND / 5);
-            holder.nameChapter = (TextView) v.findViewById(R.id.textViewNameChapterRR);
-            holder.nameMang = (TextView) v.findViewById(R.id.textViewNameMangRR);
+            v = vi.inflate(R.layout.other_manga, null);
+            holder.img = (ImageView) v.findViewById(R.id.imageNameOtherMang);
+            holder.img.getLayoutParams().width = TopManga.WIDTH_WIND / 4;
+            holder.img.getLayoutParams().height = TopManga.HEIGHT_WIND / 5;
+            //holder.nameChapter = (TextView) v.findViewById(R.id.textViewNameChapterRR);
+            holder.nameMang = (TextView) v.findViewById(R.id.textViewNameOtherMang);
             v.setTag(holder);
         }
         //получаем класс из позиции
-        ClassRecentlyRead m1 = getItem(position);
+        ClassOtherMang m1 = getItem(position);
         //если он есть то получаеи и устанавливаем изображение
         if (m1 != null){
             ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img,options);
             holder.nameMang.setText(m1.getNameMang());
-            holder.nameChapter.setText(m1.getNameChapter());
+           // holder.nameChapter.setText(m1.getNameChapter());
         }
         return v;
     }
@@ -106,8 +107,28 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
             holder = (HeaderViewHolder) convertView.getTag();
         }
         //set header text as first char in name
-        String headerText = item.get(position).getDate();
-        holder.text.setText(headerText);
+        ClassOtherMang m1 = getItem(position);
+        if (m1 != null) {
+            if (m1.getNameCategory().contains(RELATED))
+                holder.text.setText("Похожее");
+            else if (m1.getNameCategory().contains(SIMILAR))
+                holder.text.setText("Связанные произведения");
+            else holder.text.setText("Magic");
+
+        }else holder.text.setText("Magic");
+
         return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int position) {
+        ClassOtherMang m1 = getItem(position);
+        if (m1 != null) {
+            if (m1.getNameCategory().contains(RELATED))
+                return 0;
+            else if (m1.getNameCategory().contains(SIMILAR))
+                return 1;
+            else return  2;
+        }else return 3;
     }
 }

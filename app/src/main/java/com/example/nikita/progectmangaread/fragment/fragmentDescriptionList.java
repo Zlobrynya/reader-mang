@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.EventBusException;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -53,8 +54,12 @@ public class fragmentDescriptionList extends Fragment {
         listView.setAdapter(myAdap);
         final ClassForList classForList = new ClassForList();
         classForList.setName_chapter("GG");
-       // Log.i(PROBLEM, "Start fragmentDescriptionList");
-        EventBus.getDefault().register(this);
+       // Log.i(PROBLEM, "Start fragmentDescriptionList")
+        try {
+            EventBus.getDefault().register(this);
+        }catch (EventBusException ignored){
+
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

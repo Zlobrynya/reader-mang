@@ -10,7 +10,7 @@ public class ClassForList {
     private int numberChapter;
 
     public ClassForList() {
-        check = false;
+        check = download = checkDownload = newChapter = false;
     }
 
     public ClassForList(String URL_chapter, String name_chapter) {
@@ -25,7 +25,6 @@ public class ClassForList {
     public void setDownload(boolean download){ this.download = download; }
     public void setCheckDownload(boolean check) { this.checkDownload = check; }
     public void setNewChapter(boolean newChapter) { this.newChapter = newChapter; }
-
 
     public String getURL_chapter() { return URL_chapter; }
     public boolean getCheck() { return check;}

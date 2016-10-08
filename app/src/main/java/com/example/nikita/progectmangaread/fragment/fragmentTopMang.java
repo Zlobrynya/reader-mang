@@ -164,7 +164,7 @@ public class fragmentTopMang extends Fragment {
     }
 
     //инициализация с БД
-    private void initializationArray(){
+/*    private void initializationArray(){
         while (!classDataBaseListMang.download_the_html(kol)){
             ClassMainTop classTop = classDataBaseListMang.getMainClassTop(kol);
             classTop.setURL_site(classMang.getURL());
@@ -175,8 +175,7 @@ public class fragmentTopMang extends Fragment {
         }
         resultPost = 0;
         if (kol == 0) parssate(kol);
-
-    }
+    }*/
 
     //расчитать количество столбцов в строке
     private int sizeCalculate(double size){
@@ -235,7 +234,8 @@ public class fragmentTopMang extends Fragment {
         nameTable = nameTable.replace("http://"," ");
         nameTable = nameTable.replace(".ru", " ");
         classDataBaseListMang = new ClassDataBaseListMang(getContext(),nameTable);
-        initializationArray();
+        InitializationArray array = new InitializationArray();
+        array.execute();
         // Log.i(PROBLEM, "onEvent(ClassMang event)");
     }
 
@@ -298,7 +298,7 @@ public class fragmentTopMang extends Fragment {
         private boolean not_net;
 
         //конструктор потока
-        protected Pars(AsyncTaskLisen callback, int kol,ClassMang classMang) {
+        Pars(AsyncTaskLisen callback, int kol, ClassMang classMang) {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
@@ -378,6 +378,34 @@ public class fragmentTopMang extends Fragment {
                 Toast.makeText(fragmentTopMang.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
 
+        }
+    }
+
+    private class InitializationArray  extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            int numberItem = 0;
+            while (!classDataBaseListMang.download_the_html(kol)){
+                ClassMainTop classTop = classDataBaseListMang.getMainClassTop(kol);
+                classTop.setURL_site(classMang.getURL());
+                list.add(classTop);
+                kol++;
+                numberItem++;
+                if (numberItem == 5){
+                    publishProgress();
+                    numberItem = 0;
+                }
+                kolSum = kol + 10;
+            }
+            resultPost = 0;
+            if (kol == 0) parssate(kol);
+            return null;
+        }
+
+        protected void onProgressUpdate(Void... values) {
+            myAdap.notifyDataSetChanged();
+            super.onProgressUpdate(values);
         }
     }
 }

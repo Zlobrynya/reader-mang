@@ -26,6 +26,19 @@ public class ClassRecentlyRead {
         this.date = "";
     }
 
+    public void setURL_img(String URL_img) {
+        this.URL_img = URL_img;
+    }
+
+    public void setNameMang(String nameMang) {
+        this.nameMang = nameMang;
+    }
+
+    public void setURLchapter(String URLchapter) {
+        this.URLchapter = URLchapter;
+    }
+
+
     public String getURL_img(){
         return  URL_img;
     }

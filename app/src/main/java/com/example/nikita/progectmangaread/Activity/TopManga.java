@@ -42,6 +42,7 @@ public class TopManga extends BaseActivity {
 
     public static int HEIGHT_WIND,WIDTH_WIND;
 
+
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private static final String APP_PREFERENCES_IMG_URL = "imgURL";
