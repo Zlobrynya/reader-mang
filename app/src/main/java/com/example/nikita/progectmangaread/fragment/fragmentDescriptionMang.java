@@ -89,19 +89,20 @@ public class fragmentDescriptionMang extends Fragment {
                 progress.setVisibility(View.INVISIBLE);
             }
         }
-
+        //Отмена евента, что бы он дальше не шел
+        //EventBus.getDefault().cancelEventDelivery(event);
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
         EventBus.getDefault().register(this);
-        super.onStart();
+        super.onResume();
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onPause();
     }
 
     //фабричный метод для ViewPage

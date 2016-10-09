@@ -118,30 +118,31 @@ public class fragmentTopMang extends Fragment {
         final FloatingActionButton upButton = (FloatingActionButton) v.findViewById(R.id.skip_to_top);
         final Animation fabShow = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_show);
         final Animation fabHide = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_hide);
+        upButton.setVisibility(View.INVISIBLE);
+        upButton.setClickable(false);
+        visibleButton = false;
+
 
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
-                if (firstItem < firstVisibleItem){
+                if (firstItem <= firstVisibleItem) {
+                    kolSum += 10;
+                    if (kolSum > kol && !stopLoad)
+                        parssate(kol);
                     if (visibleButton){
                         upButton.setAnimation(fabHide);
                         upButton.setClickable(false);
                         visibleButton = false;
                     }
+                    //  Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
                 }else {
-                    if (!visibleButton){
+                    if (!visibleButton  && firstVisibleItem != 0){
                         upButton.setAnimation(fabShow);
                         upButton.setClickable(true);
                         visibleButton = true;
                     }
-                }
-                if (firstItem <= firstVisibleItem) {
-                    kolSum += 10;
-                    if (kolSum > kol && !stopLoad)
-                        parssate(kol);
-
-                    //  Log.i("Scroll 1:", "Down, kolSum " + kolSum + " kol: " + kol);
                 }
                 firstItem = firstVisibleItem;
             }
@@ -155,7 +156,7 @@ public class fragmentTopMang extends Fragment {
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               gr.smoothScrollToPosition(0);
+                gr.smoothScrollToPosition(0);
             }
         });
 

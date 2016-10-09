@@ -648,25 +648,28 @@ public class DescriptionMang extends BaseActivity {
         void parsRelated(){
             //tiles row
             el = doc.select("[class = tiles row]").select("[class = tile col-sm-6]").first();
-            do {
-                ClassOtherMang classOtherMang = new ClassOtherMang();
-                Elements elements = el.select("a");
-                if (elements != null){
-                    classOtherMang.setURLchapter(mang.getURL_site() + elements.attr("href"));
-                    //
-                    elements = el.select("img");
+            try{
+                do {
+                    ClassOtherMang classOtherMang = new ClassOtherMang();
+                    Elements elements = el.select("a");
+                    if (elements != null){
+                        classOtherMang.setURLchapter(mang.getURL_site() + elements.attr("href"));
+                        //
+                        elements = el.select("img");
                     /* if (element.select("sup") != null){
                                element = element.nextElementSibling();
                            }*/
-                    classOtherMang.setNameMang(elements.attr("title"));
-                    classOtherMang.setURL_img(elements.attr("src"));
-                    classOtherMang.setNameCategory("related"); //тег что это связаное произведение
-                    classOtherMang.setUrlSite(mang.getURL_site());
-                    list.add(classOtherMang);
-                }
-                el = el.nextElementSibling();
-            }while (el != null);
+                        classOtherMang.setNameMang(elements.attr("title"));
+                        classOtherMang.setURL_img(elements.attr("src"));
+                        classOtherMang.setNameCategory("related"); //тег что это связаное произведение
+                        classOtherMang.setUrlSite(mang.getURL_site());
+                        list.add(classOtherMang);
+                    }
+                    el = el.nextElementSibling();
+                }while (el != null);
+            }catch (NullPointerException ignored){
 
+            }
         }
 
         @Override

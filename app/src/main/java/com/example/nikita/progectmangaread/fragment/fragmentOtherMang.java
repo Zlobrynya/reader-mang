@@ -65,21 +65,21 @@ public class fragmentOtherMang extends Fragment {
     }
 
     @Override
-    public void onStart() {
-     //   Log.i(strLog,"Start");
+    public void onResume() {
         EventBus.getDefault().register(this);
-        super.onStart();
+        super.onResume();
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onPause();
     }
 
     public void onEvent(ArrayList<ClassOtherMang> event) {
         list.addAll(event);
         adapterOtherMang.notifyDataSetChanged();
+        EventBus.getDefault().cancelEventDelivery(event) ;
     }
 
     //фабричный метод для ViewPage
