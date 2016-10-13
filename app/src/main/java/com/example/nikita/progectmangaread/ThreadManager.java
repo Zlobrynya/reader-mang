@@ -18,7 +18,7 @@ public class ThreadManager {
     private ArrayList<String> urlPage;
     private CacheFile cacheFile;
 
-    AsyncTaskLisen as = new AsyncTaskLisen() {
+    private AsyncTaskLisen as = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
 
@@ -28,7 +28,6 @@ public class ThreadManager {
         public void onEnd(int number) {
             if (number > -1){
                 saveImg.set(number,true);
-                EventBus.getDefault().post((byte) number);
             }
 
             for (int i = 0; i < priorityImg.size(); i++) {

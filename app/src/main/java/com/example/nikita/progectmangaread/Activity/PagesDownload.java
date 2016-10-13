@@ -120,23 +120,17 @@ public class PagesDownload extends AppCompatActivity {
                         //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
                         //      самую старую, (потом это переделать))
                         EventBus.getDefault().post(chapterNumber + 1);
-                    //    CacheFile file = new CacheFile(getCacheDir(), "pageCache");
-                    //    file.clearCache();
                         activity.finish();
                     }
                     //для манги где всего 1 картинка на главу
                     if (urlPage.size() == 1) {
                         if (position > urlPage.size()) {
                             EventBus.getDefault().post(chapterNumber - 1);
-                    //        CacheFile file = new CacheFile(getCacheDir(), "pageCache");
-                   //         file.clearCache();
                             activity.finish();
                         }
                     } else {
                         if (position == urlPage.size() + 1) {
                             EventBus.getDefault().post(chapterNumber - 1);
-                    //        CacheFile file = new CacheFile(getCacheDir(), "pageCache");
-                    //        file.clearCache();
                             activity.finish();
                         }
                     }
@@ -153,6 +147,7 @@ public class PagesDownload extends AppCompatActivity {
                     textIdPage.setText(position+"/"+(urlPage.size())+"    "+nameChapter);*/
             }
         });
+
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
             @Override
             public void onEnd() {
@@ -261,23 +256,6 @@ public class PagesDownload extends AppCompatActivity {
         return item;
     }
 
-    /*Для вызова окна с прозьбой разрешить подключаться к системным функциям
-    private void setPermissionBrightness(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.info_prermission)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent grantIntent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                        startActivity(grantIntent);
-                    }
-                })
-                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        builder.create().show();
-    }*/
-
     //Настройка яркости
     private void settingsBrightness(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -293,8 +271,6 @@ public class PagesDownload extends AppCompatActivity {
         dialog.show();
 
         SeekBar yourDialogSeekBar = (SeekBar)layout.findViewById(R.id.dialog_seekbar_brighness);
-      //  CheckBox checkBox = (CheckBox) layout.findViewById(R.id.dialog_check_box);
-      //  checkBox.setChecked(Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE,0) == 1);
         //Получаем начальные данные о яркости
         int brightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS,0);
         yourDialogSeekBar.setProgress(brightness);
@@ -326,6 +302,18 @@ public class PagesDownload extends AppCompatActivity {
     public void onEvent(java.lang.Short event){
         chapterNumber = event;
     }
+
+    public void onEvent(java.lang.String event){
+        //Если декодирование сфейлилось то запускаем перезагрузку изображдения
+        if (event.contains("DecodeFail")){
+            threadManager.setFalseSaveImg(Integer.parseInt(event.split("/")[1]));
+            threadManager.setPriorityImg(Integer.parseInt(event.split("/")[1]));
+            EventBus.getDefault().post(event.split("/")[1]+"/reload");
+            EventBus.getDefault().cancelEventDelivery(event);
+        }
+    }
+
+
 
 
     @Override

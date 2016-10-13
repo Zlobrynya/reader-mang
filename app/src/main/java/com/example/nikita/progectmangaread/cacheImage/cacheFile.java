@@ -139,19 +139,17 @@ public class CacheFile {
     }
 
     //return false - если не остановили поток, return true - если поток остановлен
-    public boolean stopAsyncTask(){
-        if (downlandImage != null && total < 30){
-            Log.i("CacheFile: ","AsyncTask "+numberImg+ " stop");
+    public boolean stopAsyncTask() {
+        if (downlandImage != null && total < 30) {
+            Log.i("CacheFile: ", "AsyncTask " + numberImg + " stop");
             downlandImage.cancel(true);
             File f = new File(dirFile, String.valueOf(numberImg));
-            if (f.exists()){
+            if (f.exists()) {
                 f.delete();
             }
             return true;
         }
-        if (downlandImage != null){
-            return downlandImage.getStatus() != AsyncTask.Status.RUNNING;
-        }else return true;
+        return downlandImage == null || downlandImage.getStatus() != AsyncTask.Status.RUNNING;
     }
 
     public void forceStop(){
@@ -253,7 +251,7 @@ public class CacheFile {
                 BitmapFactory.decodeStream(fileInputStream).compress(Bitmap.CompressFormat.PNG, 100, os);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (NullPointerException e){
+            } catch (NullPointerException ignored){
 
             }
         }

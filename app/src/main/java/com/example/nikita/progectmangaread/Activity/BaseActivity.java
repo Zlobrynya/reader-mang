@@ -16,6 +16,7 @@ import com.example.nikita.progectmangaread.R;
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     protected RelativeLayout frameLayout;
+    private boolean doublePressBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class BaseActivity extends AppCompatActivity
             startActivity(newInten);
         } else if (id == R.id.nav_top_mang) {
             Intent newInten = new Intent(BaseActivity.this,TopManga.class);
+            newInten.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(newInten);
         } else if (id == R.id.nav_recently_read) {
             Intent newInten = new Intent(BaseActivity.this,RecentlyRead.class);

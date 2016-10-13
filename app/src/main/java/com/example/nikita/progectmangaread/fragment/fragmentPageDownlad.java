@@ -143,7 +143,7 @@ public class fragmentPageDownlad extends Fragment{
     private void showImageView(){
         try {
             if (image != null) {
-                if (!image.isShown()){
+                if (!image.isReady()){
                     progress.setProgress(100);
                     image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
                     image.setVisibility(View.VISIBLE);
@@ -166,11 +166,18 @@ public class fragmentPageDownlad extends Fragment{
         super.onStop();
     }
 
-    public void onEvent(Byte event) {
+    @Override
+    public void onResume() {
+        showImageView();
+        super.onResume();
+    }
+
+
+   /* public void onEvent(Byte event) {
         if (event == number){
             showImageView();
         }
-    }
+    }*/
 
         // Принимает евенты о скачивании от CacheFile и ThreadManager
     // разделение в строке идет: / от CacheFile, если не чего делить то выводим на экран изображение
@@ -182,7 +189,10 @@ public class fragmentPageDownlad extends Fragment{
                     image.setVisibility(View.GONE);
                     progress.setVisibility(View.VISIBLE);
                     progress.setProgress(0);
-                }else progress.setProgress(Integer.parseInt(strings[1]));
+                }else if (Integer.parseInt(strings[1]) == 100){
+                    showImageView();
+                }progress.setProgress(Integer.parseInt(strings[1]));
+
             }
         }
     }

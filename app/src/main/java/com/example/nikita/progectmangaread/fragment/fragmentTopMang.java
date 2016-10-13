@@ -131,7 +131,7 @@ public class fragmentTopMang extends Fragment {
                     kolSum += 10;
                     if (kolSum > kol && !stopLoad)
                         parssate(kol);
-                    if (visibleButton){
+                    if (visibleButton ){
                         upButton.setAnimation(fabHide);
                         upButton.setClickable(false);
                         visibleButton = false;
@@ -163,20 +163,6 @@ public class fragmentTopMang extends Fragment {
 
         return v ;
     }
-
-    //инициализация с БД
-/*    private void initializationArray(){
-        while (!classDataBaseListMang.download_the_html(kol)){
-            ClassMainTop classTop = classDataBaseListMang.getMainClassTop(kol);
-            classTop.setURL_site(classMang.getURL());
-            list.add(classTop);
-            kol++;
-            kolSum = kol + 10;
-            myAdap.notifyDataSetChanged();
-        }
-        resultPost = 0;
-        if (kol == 0) parssate(kol);
-    }*/
 
     //расчитать количество столбцов в строке
     private int sizeCalculate(double size){

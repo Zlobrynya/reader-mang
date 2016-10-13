@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 
+import de.greenrobot.event.EventBus;
 import magick.ColorspaceType;
 import magick.ImageInfo;
 import magick.MagickException;
@@ -41,6 +42,10 @@ public class MyImageDecoder implements ImageDecoder {
 
             } catch (MagickException e) {
                 Log.e("MagickException", e.getMessage());
+            } catch (NullPointerException e){
+                //Полсылаем сигнал, что декодирование сфейлилось и надо бы перезаписать
+                String[] strings = uri.getPath().split("/");
+                EventBus.getDefault().post("DecodeFail/"+strings[strings.length]);
             }
         }
         //Log.i("ImageDecoder", String.valueOf(bitmap.getHeight()));
