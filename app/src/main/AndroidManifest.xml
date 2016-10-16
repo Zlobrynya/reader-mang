@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="preferExternal"
+    android:installLocation="auto"
     package="com.example.nikita.progectmangaread">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -89,6 +89,9 @@
             android:exported="false"/>
 
         <receiver android:name=".service.AlarmManagerBroadcastReceiver"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b341c54fd73fb2e3d1b1e3571f8c24ffd4a27917" />
     </application>
 
 </manifest>

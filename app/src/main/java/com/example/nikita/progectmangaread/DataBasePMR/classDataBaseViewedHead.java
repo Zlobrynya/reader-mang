@@ -37,10 +37,10 @@ public class ClassDataBaseViewedHead {
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
-    public void closeDataBase( ) {
+  /*  public void closeDataBase( ) {
         if (mSqLiteDatabase.isOpen())
             mSqLiteDatabase.close();
-    }
+    }*/
 
     public ClassDataBaseViewedHead(Context context, String name){
         mDatabaseHelper = new DatabaseHelper(context);

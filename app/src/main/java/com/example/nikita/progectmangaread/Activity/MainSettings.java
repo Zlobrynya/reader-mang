@@ -139,7 +139,7 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
                         img.delete();
                     }
                 }catch (NullPointerException e){
-                    Log.i("Settings",e.getMessage());
+                   // Log.i("Settings",e.getMessage());
                 }
                 chapter.delete();
             }

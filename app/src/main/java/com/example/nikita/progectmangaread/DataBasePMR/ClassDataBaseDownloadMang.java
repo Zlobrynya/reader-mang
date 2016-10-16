@@ -38,11 +38,11 @@ public class ClassDataBaseDownloadMang {
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
-    public void closeDataBase(){
+  /*  public void closeDataBase(){
         if (mSqLiteDatabase.isOpen())
             mSqLiteDatabase.close();
     }
-
+*/
 
     //добавление в базу данных
     public boolean addBasaData(String nameMang){

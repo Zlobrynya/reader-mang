@@ -114,7 +114,7 @@ public class DownloadChapter extends AppCompatActivity {
             classDataBaseDownloadMang.setData(name, nameDirFromBD, ClassDataBaseDownloadMang.NAME_DIR);
             classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
             classDataBaseDownloadMang.setData(name, startStr + "/imgGlav", ClassDataBaseDownloadMang.NAME_IMG);
-            classDataBaseDownloadMang.closeDataBase();
+          //  classDataBaseDownloadMang.closeDataBase();
 
             CacheFile fileGlavImageMang = new CacheFile(new File(path), startStr);
             fileGlavImageMang.checkFileAndDownload(urlImageMang, "imgGlav");

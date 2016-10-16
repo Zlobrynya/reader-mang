@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
@@ -169,7 +170,7 @@ public class DescriptionMang extends BaseActivity {
                 classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getNameAuthor(), ClassDataBaseDownloadMang.AUTHOR);
                 classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getToms(), ClassDataBaseDownloadMang.TOMS);
                 classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getTranslate(), ClassDataBaseDownloadMang.TRANSLATION);
-                classDataBaseDownloadMang.closeDataBase();
+              //  classDataBaseDownloadMang.closeDataBase();
 
                 Intent newInten = new Intent(DescriptionMang.this, DownloadChapter.class);
                 newInten.putExtra("mang", mang.getURL_characher());
@@ -526,11 +527,9 @@ public class DescriptionMang extends BaseActivity {
                 Elements el2 = doc.select("[itemprop = description]");
                 ClassDescriptionMang.setDescription(el2.attr("content"));
             } catch (IOException e) {
-                e.printStackTrace();
+               // e.printStackTrace();
                 not_net = true;
             }catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Не грузит страницу либо больше нечего грузить");
             }
             return null;
         }
@@ -562,7 +561,7 @@ public class DescriptionMang extends BaseActivity {
                     }while (el != null);
                 }
             }catch (NullPointerException e){
-                Log.getStackTraceString(e);
+               // Log.getStackTraceString(e);
             }
             return null;
         }
@@ -609,11 +608,16 @@ public class DescriptionMang extends BaseActivity {
                 //вытаскиваем первую таблицу со связаной мангой
                 parsSimilar(0);
                 parsSimilar(1);
+                //Crashlytics.log("Description Mang, отсутствуе похожие манги");
                 //перемещаемся на след.таблицу с похожей мангой
                 parsRelated();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();+
+                //Crashlytics.log("Description Mang, отсутствуе похожие манги");
+                Log.i("Log","work");
+            } catch (NullPointerException ignored){
             }
+
             return null;
         }
 
@@ -623,12 +627,11 @@ public class DescriptionMang extends BaseActivity {
             if (number == 0 && element.text().contains("Похожее"))
                 return;
             el = doc.select("[class = table table-hover]").select("tr").first();
-
-            if (number > 0){
-                el = doc.select("[class = table table-hover]").last();
-                el = el.select("tr").first();
-                category = "related";
-            }
+                if (number > 0){
+                    el = doc.select("[class = table table-hover]").last();
+                    el = el.select("tr").first();
+                    category = "related";
+                }
 
             if (el != null){
                 do {

@@ -131,7 +131,7 @@ public class fragmentTopMang extends Fragment {
                     kolSum += 10;
                     if (kolSum > kol && !stopLoad)
                         parssate(kol);
-                    if (visibleButton ){
+                    if (visibleButton){
                         upButton.setAnimation(fabHide);
                         upButton.setClickable(false);
                         visibleButton = false;
@@ -142,6 +142,13 @@ public class fragmentTopMang extends Fragment {
                         upButton.setAnimation(fabShow);
                         upButton.setClickable(true);
                         visibleButton = true;
+                    }
+                }
+                if (firstVisibleItem == 0){
+                    if (visibleButton){
+                        upButton.setAnimation(fabHide);
+                        upButton.setClickable(false);
+                        visibleButton = false;
                     }
                 }
                 firstItem = firstVisibleItem;
@@ -254,8 +261,8 @@ public class fragmentTopMang extends Fragment {
     @Override
     public void onDestroy(){
        // Log.i(PROBLEM, "onDestroy");
-        if (classDataBaseListMang != null)
-            classDataBaseListMang.closeDataBase();
+       /* if (classDataBaseListMang != null)
+            classDataBaseListMang.closeDataBase();*/
         super.onDestroy();
     }
 

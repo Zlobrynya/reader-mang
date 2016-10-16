@@ -189,7 +189,7 @@ public class fragmentDescriptionList extends Fragment {
                     }
                     list.add(b);
                 }
-                classDataBaseListMang.closeDataBase();
+               // classDataBaseListMang.closeDataBase();
             }else {
                 //тут для чтения из сохраненых
                 for (ClassForList b: event.getClassForList())
@@ -215,8 +215,8 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onDestroy(){
-        if (classDataBaseViewedHead != null)
-            classDataBaseViewedHead.closeDataBase();
+       /* if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();*/
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -320,7 +320,7 @@ public class fragmentDescriptionList extends Fragment {
             //Достаем список глав манги которые были скачаны и сортируем
             ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(getContext());
             stringHead =  downloadMang.getDataFromDataBase(nameMang,ClassDataBaseDownloadMang.NAME_CHAPTER);
-            downloadMang.closeDataBase();
+          //  downloadMang.closeDataBase();
             if ((stringHead != null))
                 if (!stringHead.contains("null")) {
                     for (String s : stringHead.split(",")) {
@@ -350,7 +350,6 @@ public class fragmentDescriptionList extends Fragment {
                 }
             }
         }
-
 
         @Override
         protected void onPostExecute(Void result){

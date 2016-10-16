@@ -65,7 +65,7 @@ public class DeleteChapter extends DownloadChapter {
                 ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DeleteChapter.this);
                 classDataBaseDownloadMang.setData(name,notDeleteDir, ClassDataBaseDownloadMang.NAME_DIR);
                 classDataBaseDownloadMang.setData(name, notDeleteName, ClassDataBaseDownloadMang.NAME_CHAPTER);
-                classDataBaseDownloadMang.closeDataBase();
+             //   classDataBaseDownloadMang.closeDataBase();
 
                 myAdap.notifyDataSetChanged();
                 if (list.isEmpty())

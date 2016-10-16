@@ -101,7 +101,7 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
                 ClassDataBaseViewedHead classDataBaseViewedHead = new ClassDataBaseViewedHead(context);
                 classDataBaseViewedHead.setData(item.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
                 item.remove(poss);
-                classDataBaseViewedHead.closeDataBase();
+              // classDataBaseViewedHead.closeDataBase();
                 notifyDataSetChanged();
                 Toast.makeText(context, "Delete: " + item.get(poss).getNameMang(),
                         Toast.LENGTH_SHORT).show();

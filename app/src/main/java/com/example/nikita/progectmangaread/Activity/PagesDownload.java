@@ -402,8 +402,8 @@ public class PagesDownload extends AppCompatActivity {
         Log.i("Destroy:", String.valueOf("PageDowland"));
         if (threadManager != null)
                 threadManager.stop();
-        if (classDataBaseViewedHead != null)
-            classDataBaseViewedHead.closeDataBase();
+        /*if (classDataBaseViewedHead != null)
+            classDataBaseViewedHead.closeDataBase();*/
         super.onDestroy();
     }
 

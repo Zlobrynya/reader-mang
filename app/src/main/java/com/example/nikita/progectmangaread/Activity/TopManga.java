@@ -17,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
@@ -27,6 +28,7 @@ import com.example.nikita.progectmangaread.service.AlarmManagerBroadcastReceiver
 import com.example.nikita.progectmangaread.service.UpdateMangBookmark;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Класс для топа вывода манг, с помощью ViewPager,
@@ -60,6 +62,7 @@ public class TopManga extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         getLayoutInflater().inflate(R.layout.page_view, frameLayout);
         mSettings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
 
@@ -81,6 +84,9 @@ public class TopManga extends BaseActivity {
             mang.setPath(mSettings.getString(APP_PREFERENCES_PATH, ""));
             mang.setPath2(mSettings.getString(APP_PREFERENCES_PATH_2, ""));
         }else{
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_FIRST,false);
+            editor.apply();
             Intent newInten = new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
         }
@@ -158,7 +164,6 @@ public class TopManga extends BaseActivity {
         editor.putString(APP_PREFERENCES_PATH,event.getPath());
         editor.putString(APP_PREFERENCES_PATH_2,event.getPath2());
         editor.putString(APP_PREFERENCES_WHERE_ALL,event.getWhereAll());
-        editor.putBoolean(APP_PREFERENCES_FIRST,false);
         editor.putInt(APP_PREFERENCES_MAX_IN_PAGE, event.getMaxInPage());
         editor.apply();
 

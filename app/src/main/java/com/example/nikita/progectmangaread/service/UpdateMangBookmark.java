@@ -237,7 +237,7 @@ public class UpdateMangBookmark extends Service {
                 cursor.moveToNext();
             }
             cursor.close();
-            classDataBaseViewedHead.closeDataBase();
+          //  classDataBaseViewedHead.closeDataBase();
             nameBookmark.put(0, bookmarkReadManga);
             nameBookmark.put(1, bookmarkMintManga);
 
