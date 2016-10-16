@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
+import com.example.nikita.progectmangaread.classPMR.ClassOtherMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
 /**
@@ -16,6 +17,7 @@ public class fragmentSaveDescriptionMang extends Fragment {
     private ClassTransportForList classTransportForList;
     private ClassDescriptionMang ClassDescriptionMang;
     private ClassMainTop mang;
+    private ClassOtherMang classOtherMang;
 
     @Override
     public void onCreate(Bundle saveInstanceState){
@@ -29,6 +31,14 @@ public class fragmentSaveDescriptionMang extends Fragment {
 
     public void setClassDescriptionMang(ClassDescriptionMang ClassDescriptionMang){
         this.ClassDescriptionMang = ClassDescriptionMang;
+    }
+
+    public void setClassOtherMang(ClassOtherMang classOtherMang){
+
+    }
+
+    public ClassOtherMang getClassOtherMang() {
+        return classOtherMang;
     }
 
     public void setMang(ClassMainTop mang){

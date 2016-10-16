@@ -125,11 +125,15 @@ public class UpdateMangBookmark extends Service {
                 else {
                     if (!nameMangUpdate.isEmpty())
                         sendNotif();
+                    else
+                        sendNotifDebag();
                 }
                 numberSite = 1;
             }else {
                 if (!nameMangUpdate.isEmpty())
                     sendNotif();
+                else
+                    sendNotifDebag();
             }
         }
 
@@ -138,6 +142,23 @@ public class UpdateMangBookmark extends Service {
 
         }
     };
+
+    void sendNotifDebag() {
+        // то что ниже для расширенного отображения (несколько строк подряд с названиеми глав которые скачались)
+        NotificationCompat.InboxStyle inboxStyle =
+                new NotificationCompat.InboxStyle();
+        // Sets a title for the Inbox in expanded layout
+        inboxStyle.setBigContentTitle("Manga update:");
+        inboxStyle.setSummaryText("Все окей я работаю, прост обновлять нечего.");
+
+        // Moves the expanded layout object into the notification object.
+        mBuilder.setStyle(inboxStyle);
+
+        int notifyID = 1;
+        mNotificationManager.notify(
+                notifyID,
+                mBuilder.build());
+    }
 
     void sendNotif() {
         // то что ниже для расширенного отображения (несколько строк подряд с названиеми глав которые скачались)

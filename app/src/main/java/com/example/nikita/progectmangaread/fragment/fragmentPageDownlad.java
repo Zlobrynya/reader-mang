@@ -20,6 +20,7 @@ import com.example.nikita.progectmangaread.decode.MyImageDecoder;
 import com.example.nikita.progectmangaread.decode.MyImageRegionDecoder;
 import com.example.nikita.progectmangaread.Activity.TopManga;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -29,7 +30,7 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 10.03.2016.
  */
 public class fragmentPageDownlad extends Fragment{
-    private int number;
+    private int idPage;
     private CacheFile file;
     private SubsamplingScaleImageView image;
     private ProgressBar progress;
@@ -116,7 +117,7 @@ public class fragmentPageDownlad extends Fragment{
                 EventBus.getDefault().post("CkickImage");
             }
         });*/
-        number = getArguments().getInt("imageId");
+        idPage = getArguments().getInt("imageId");
         final String url = getArguments().getString("String");
         //Настройки прогресс бара
         progress.setVisibility(View.VISIBLE);
@@ -128,7 +129,7 @@ public class fragmentPageDownlad extends Fragment{
 
         image.setMinimumDpi(60);
         file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,null);
-        if (file.checkFile(String.valueOf(number)))
+        if (file.checkFile(String.valueOf(idPage)))
             showImageView();
      /*   if (PagesDownload.threadManager.isImageSave(number)){
             showImageView();
@@ -143,12 +144,14 @@ public class fragmentPageDownlad extends Fragment{
     private void showImageView(){
         try {
             if (image != null) {
-                if (!image.isReady()){
+                if (!image.isReady() || !image.isShown()){
                     progress.setProgress(100);
-                    image.setImage(ImageSource.uri(file.getFile(String.valueOf(number))));
+                    image.setImage(ImageSource.uri(file.getFile(String.valueOf(idPage))));
                     image.setVisibility(View.VISIBLE);
                 }
             }
+        } catch (EOFException e){
+            EventBus.getDefault().post("FailGetImg/"+idPage);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -184,7 +187,7 @@ public class fragmentPageDownlad extends Fragment{
     public void onEvent(String event){
         String[] strings = event.split("/");
         if (strings.length == 2){
-            if (strings[0].contains(String.valueOf(number))){
+            if (strings[0].contains(String.valueOf(idPage))){
                 if (strings[1].contains("reload")){
                     image.setVisibility(View.GONE);
                     progress.setVisibility(View.VISIBLE);

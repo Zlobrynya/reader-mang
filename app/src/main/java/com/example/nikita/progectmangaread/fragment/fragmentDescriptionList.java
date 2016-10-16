@@ -1,6 +1,8 @@
 package com.example.nikita.progectmangaread.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,9 +21,12 @@ import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.EventBusException;
@@ -71,7 +76,8 @@ public class fragmentDescriptionList extends Fragment {
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
 
-                String numberChapter = getNumberChapter(classForList1.getName_chapter());
+                //высчитываем hashCode строки
+                String numberChapter = String.valueOf(classForList1.getName_chapter().hashCode());
 
                 classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
 
@@ -139,7 +145,7 @@ public class fragmentDescriptionList extends Fragment {
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
         if (!readDownloaded){
-            classDataBaseViewedHead.addViewedChapter(nameMang, getNumberChapter(classForList1.getName_chapter()));
+            classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getName_chapter().hashCode()));
             classForList1.setDownload(false);
         }
         else
@@ -190,70 +196,11 @@ public class fragmentDescriptionList extends Fragment {
                     list.add(b);
                 readDownloaded = true;
             }
-            checkChapter();
             myAdap.notifyDataSetChanged();
+            TheardCheckHeads theardCheckHeads = new TheardCheckHeads();
+            theardCheckHeads.execute();
         }
     }
-
-    private String[] checkDownloaded(String nameMang){
-        ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(getContext());
-        if (downloadMang.itIsInTheDatabase(nameMang)){
-            String[] strings = downloadMang.getDataFromDataBase(nameMang,ClassDataBaseDownloadMang.NAME_CHAPTER).split(",");
-            downloadMang.closeDataBase();
-            return strings;
-        }
-        downloadMang.closeDataBase();
-        return null;
-    }
-
-    private void checkChapter(){
-        classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
-        List<String> arrayListString = null;
-        String[] download = checkDownloaded(nameMang);
-        if (classDataBaseViewedHead.addBasaData(nameMang)){
-            String strings = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.VIEWED_HEAD);
-            if (!strings.contains("null")) {
-                arrayListString = Arrays.asList(strings.split(","));
-            }
-            //проходимся по списку глав
-            for (int numbr = 0; numbr < list.size();numbr++){
-                ClassForList classForList = list.get(numbr);
-                if (classForList.getCheck())
-                    classForList.setCheck(false);
-                //проходися по списку строк где указаны просмотреенные главы
-                if (arrayListString != null){
-                    for (String aString: arrayListString){
-                        //если есть совпадение то ставим галочку и удалем этот элемент из массива строк
-                        if (getNumberChapter(classForList.getName_chapter()).equals(aString)){
-                            classForList.setCheck(true);
-                            break;
-                        }
-                    }
-                }
-                //проходися по списку строк где указаны скачанные главы
-                if (download != null){
-                    for (String aString: download){
-                        //если есть совпадение то ставим галочку и удалем этот элемент из массива строк
-                        if (classForList.getName_chapter().equals(aString)){
-                            classForList.setCheckDownload(true);
-                            Log.i(strLog, "Download");
-                            break;
-                        }
-                    }
-                }
-                list.set(numbr, classForList);
-            }
-        }
-        int quantity = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NUMBER_OF_HEADS));
-        if (list.size()-quantity > 0){
-            for (int i = 0; i  < list.size()-quantity; i++){
-                ClassForList classForList = list.get(i);
-                classForList.setNewChapter(true);
-            }
-        }
-        classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
-    }
-
 
     @Override
     public void onStart() {
@@ -277,8 +224,8 @@ public class fragmentDescriptionList extends Fragment {
     @Override
     public void onResume() {
         if (!list.isEmpty()){
-            checkChapter();
-            myAdap.notifyDataSetChanged();
+            TheardCheckHeads theardCheckHeads = new TheardCheckHeads();
+            theardCheckHeads.execute();
         }
         super.onResume();
     }
@@ -292,4 +239,122 @@ public class fragmentDescriptionList extends Fragment {
         return fragment;
     }
 
+    private class TheardCheckHeads extends AsyncTask<Void,Void,Void>{
+        private ArrayList<Integer> hashCodeViewedHead;
+        private ArrayList<Integer> hashCodeDownloadHead;
+        @Override
+        protected Void doInBackground(Void... params) {
+            checkChapter();
+            return null;
+        }
+
+        private void checkChapter() {
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
+            hashCodeViewedHead = new ArrayList<>();
+            hashCodeDownloadHead = new ArrayList<>();
+
+            @SuppressLint("UseSparseArrays") HashMap<Integer,Integer> hashCodeHead = new HashMap<>();
+            if (classDataBaseViewedHead.addBasaData(nameMang)) {
+                initArray();
+                //Список глав переводим в ХэшКод
+                for (int i = 0; i < list.size(); i++) {
+                    ClassForList classForList = list.get(i);
+                    hashCodeHead.put(i,classForList.getName_chapter().hashCode());
+                }
+                //Сортировка HashMap
+                ValueComparatorMap valueComparatorMap = new ValueComparatorMap(hashCodeHead);
+                TreeMap<Integer, Integer> integerTreeMap = new TreeMap<Integer, Integer>(valueComparatorMap);
+                integerTreeMap.putAll(hashCodeHead);
+                //Начинаем проходится по элементам
+                for (Map.Entry<Integer,Integer> pair: integerTreeMap.entrySet()) {
+                    // Log.i("integerTreeMap: ",pair.getKey()+":"+pair.getValue());
+                    //сравниваем по ХэшеКоду c прочитынами
+                    int key = pair.getKey();
+                    ClassForList classForList = list.get(key);
+                    classForList.setCheck(false);
+
+                    if (hashCodeViewedHead.size() > 0){
+                        if (pair.getValue().equals(hashCodeViewedHead.get(0))){
+                           // Log.i("hashCodeViewedHead: ", String.valueOf(hashCodeViewedHead.get(0)));
+                            classForList.setCheck(true);
+                            hashCodeViewedHead.remove(0);
+                        }
+                    }
+                    //сравниваем по ХэшеКоду c скачаными
+                    if (hashCodeDownloadHead.size() > 0){
+                        if (pair.getValue().equals(hashCodeDownloadHead.get(0))){;
+                            classForList.setCheckDownload(true);
+                            hashCodeDownloadHead.remove(0);
+                        }
+                    }
+                    list.set(key,classForList);
+                }
+                int quantity = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NUMBER_OF_HEADS));
+                if (list.size() - quantity > 0) {
+                    for (int i = 0; i < list.size() - quantity; i++) {
+                        ClassForList classForList = list.get(i);
+                        classForList.setNewChapter(true);
+                    }
+                }
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
+            }
+        }
+
+        //Инициализация ArryList для просмотренных и скачиных глав
+        private void initArray(){
+            //Достаем список глав манги которые были прочитаны и сортируем
+            String stringHead = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.VIEWED_HEAD);
+            if (!stringHead.contains("null")) {
+                for (String s : stringHead.split(",")) {
+                    hashCodeViewedHead.add(Integer.parseInt(s));
+                }
+                // Sorting по возрастанию
+                Collections.sort(hashCodeViewedHead, new Comparator<Integer>() {
+                    @Override
+                    public int compare(Integer lhs, Integer rhs)
+                    {
+                        return  rhs.compareTo(lhs);
+                    }
+                });
+            }
+            //Достаем список глав манги которые были скачаны и сортируем
+            ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(getContext());
+            stringHead =  downloadMang.getDataFromDataBase(nameMang,ClassDataBaseDownloadMang.NAME_CHAPTER);
+            downloadMang.closeDataBase();
+            if ((stringHead != null))
+                if (!stringHead.contains("null")) {
+                    for (String s : stringHead.split(",")) {
+                        hashCodeDownloadHead.add(s.hashCode());
+                    }
+                    // Sorting по возрастанию
+                    Collections.sort(hashCodeDownloadHead, new Comparator<Integer>() {
+                        @Override
+                        public int compare(Integer lhs, Integer rhs) {
+                            return rhs.compareTo(lhs);
+                        }
+                    });
+                }
+        }
+
+        class ValueComparatorMap implements Comparator<Integer> {
+            Map<Integer, Integer> base;
+
+            ValueComparatorMap(Map<Integer, Integer> base) {
+                this.base = base;
+            }
+            public int compare(Integer a, Integer b) {
+                if (base.get(a) >= base.get(b)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result){
+            myAdap.notifyDataSetChanged();
+        }
+    }
 }

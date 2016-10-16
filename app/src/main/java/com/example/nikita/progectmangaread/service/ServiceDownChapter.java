@@ -57,7 +57,7 @@ public class ServiceDownChapter extends Service {
                 startId++;
                 if (startId < urlChapter.size()){
                     numberPage = 0;
-                 //   sendNotif();
+//                    sendNotif();
                     urlPage.clear();
                     new ParsURLPage(receivedAddress).execute();
                 }else {

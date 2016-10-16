@@ -120,6 +120,7 @@ public class DownloadChapter extends AppCompatActivity {
             fileGlavImageMang.checkFileAndDownload(urlImageMang, "imgGlav");
 
             // Log.i("DownloadChapter", chapter.substring(0,chapter.length()-2));
+            //Запуск сервиса
             startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
                     .putExtra("url_site", urlSite)
                     .putExtra("chapter", chapter)
@@ -156,22 +157,23 @@ public class DownloadChapter extends AppCompatActivity {
         super.onResume();
     }
 
-
-
     public void onEvent(ClassTransportForList event){
-        if (!event.getName().isEmpty()){
+        if (!event.getName().isEmpty()) {
             list.clear();
             ArrayList<ClassForList> arrayList = event.getClassForList();
-            for (ClassForList b: arrayList){
+            for (ClassForList b : arrayList) {
                 if (b.getCheck())
                     b.setCheck(false);
-                b.setURL_chapter(b.getURL_chapter().replace("?mature=1",""));
+                b.setURL_chapter(b.getURL_chapter().replace("?mature=1", ""));
                 list.add(b);
             }
             myAdap.notifyDataSetChanged();
         }
+        //Что бы сигнал дальше не шел
+        EventBus.getDefault().cancelEventDelivery(event);
     }
 
+    //Кнопка очистка выбора
     public void ClickDeleteCheck(View view) {
         for (int i = 0; i < list.size();i++){
             ClassForList forList = list.get(i);
@@ -183,6 +185,7 @@ public class DownloadChapter extends AppCompatActivity {
         }
     }
 
+    //Кнопка выбора их всего списка
     public void CheckAllChapter(View view) {
         for (int i = 0; i < list.size();i++){
             ClassForList forList = list.get(i);

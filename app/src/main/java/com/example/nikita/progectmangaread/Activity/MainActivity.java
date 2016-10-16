@@ -28,6 +28,7 @@ public class MainActivity extends BaseActivity {
         //  Intent newInten = new Intent(MainActivity.this,TopManga.class);
         clManga = new ClassMang("http://readmanga.me","[class=img] img[src]","[class=img] a","[class=tile col-sm-6]",70);
         clManga.setWhereAll("/list", "?type=&sortType=rate&offset=", "&max=70", 0);
+        newInten.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(newInten);
     }
 
@@ -35,6 +36,7 @@ public class MainActivity extends BaseActivity {
       //  Intent newInten = new Intent(MainActivity.this,TopManga.class);
         clManga = new ClassMang("http://mintmanga.com","[class=img] img[src]","[class=img] a","[class=tile col-sm-6]",70);
         clManga.setWhereAll("/list", "?type=&sortType=rate&offset=", "&max=70", 0);
+        newInten.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(newInten);
     }
 

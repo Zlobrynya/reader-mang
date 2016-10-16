@@ -28,9 +28,11 @@ public class MyImageDecoder implements ImageDecoder {
     @Override
     public Bitmap decode(Context context, Uri uri) throws Exception {
         Bitmap bitmap;
+        Log.i("Decode: ","Decode norm");
         bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
         if (bitmap == null){
             try {
+                Log.i("Decode: ","Decode magic");
                 ImageInfo info = new ImageInfo(uri.getPath());
                 MagickImage image = new MagickImage(info);
 

@@ -305,7 +305,7 @@ public class PagesDownload extends AppCompatActivity {
 
     public void onEvent(java.lang.String event){
         //Если декодирование сфейлилось то запускаем перезагрузку изображдения
-        if (event.contains("DecodeFail")){
+        if (event.contains("FailGetImg")){
             threadManager.setFalseSaveImg(Integer.parseInt(event.split("/")[1]));
             threadManager.setPriorityImg(Integer.parseInt(event.split("/")[1]));
             EventBus.getDefault().post(event.split("/")[1]+"/reload");

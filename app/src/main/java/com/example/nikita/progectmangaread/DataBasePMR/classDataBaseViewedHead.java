@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
@@ -215,11 +216,14 @@ public class ClassDataBaseViewedHead {
         query = "SELECT " + nameTable + ".*" + ", "+ LAST_PAGE + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER +" FROM ViewedHead" +
                 " INNER JOIN " + nameTable + " ON " + NAME_MANG + " = " + nameTable + "." + ClassDataBaseListMang.NAME_MANG +
                 " WHERE " + NOTEBOOK + " > 0";
-
-        if (!query.isEmpty()){
-            //Посмотреть что за SuppressLint
-            @SuppressLint("Recycle") Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-            return cursor.getColumnCount() > 0;
+        try {
+            if (!query.isEmpty()){
+                //Посмотреть что за SuppressLint
+                @SuppressLint("Recycle") Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
+                return cursor.getColumnCount() > 0;
+            }
+        }catch (SQLException e){
+            return false;
         }
         return false;
     }

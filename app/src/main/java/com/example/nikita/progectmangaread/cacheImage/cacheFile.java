@@ -12,6 +12,7 @@ import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -109,7 +110,7 @@ public class CacheFile {
         return f.exists();
     }
 
-    public String getFile(String nameCache) throws FileNotFoundException {
+    public String getFile(String nameCache) throws FileNotFoundException,EOFException {
         File f = new File(dirFile, nameCache);
         Log.i("File",f.getPath());
         //InputStream in = new FileInputStream(f);

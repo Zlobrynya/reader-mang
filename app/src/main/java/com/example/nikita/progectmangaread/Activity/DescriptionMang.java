@@ -101,7 +101,7 @@ public class DescriptionMang extends BaseActivity {
             parsAndSettings();
         }
         downloadChapter = false;
-        dataRecovery();
+        //dataRecovery();
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -188,6 +188,7 @@ public class DescriptionMang extends BaseActivity {
 
     }
 
+    //Процедура востановление
     private void dataRecovery(){
         saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
 
@@ -196,7 +197,7 @@ public class DescriptionMang extends BaseActivity {
             descriptionMang = saveFragment.getClassDescriptionMang();
             mang = saveFragment.getMang();
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
+        //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
             if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
                 fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
                 bookmark = false;
@@ -204,6 +205,9 @@ public class DescriptionMang extends BaseActivity {
                 bookmark = true;
                 fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
             }
+            //Посылаем данные в фрагменты
+            //EventBus.getDefault().post(classTransportForList);
+           // EventBus.getDefault().post(descriptionMang);
         }
         else {
             saveFragment = new fragmentSaveDescriptionMang();
@@ -235,6 +239,11 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onResume() {
+        //Вроде это должно востанавливать данные если они стерты
+        // не тестированно, так что хз, востановит ли?
+        if (mang == null){
+            dataRecovery();
+        }
         super.onResume();
     }
 
@@ -278,9 +287,9 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        saveFragment.setClassDescriptionMang(descriptionMang);
-        saveFragment.setClassTransportForList(classTransportForList);
-        saveFragment.setMang(mang);
+//        saveFragment.setClassDescriptionMang(descriptionMang);
+//        saveFragment.setClassTransportForList(classTransportForList);
+//        saveFragment.setMang(mang);
         super.onSaveInstanceState(outState);
     }
     // Получаем событие, что был клик на экран и это не фабкнопка
