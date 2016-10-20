@@ -42,8 +42,8 @@ public class ShowDownloaded extends BaseActivity {
         pos = - 1;
         delete = false;
         list = new ArrayList<>();
-        SharedPreferences mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
-        path = mSettings.getString(MainSettings.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath());
+        SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
+        path = mSettings.getString(TopManga.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath());
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
         listView = (ListView) this.findViewById(R.id.listView);
         getSupportActionBar().setTitle("Download"); // set the top title

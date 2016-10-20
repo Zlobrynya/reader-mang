@@ -85,7 +85,7 @@ public class PagesDownload extends AppCompatActivity {
         // для скачанной манги
         nameDirectory = "pageCache";
         download = false;
-        mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
+        mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
        /* android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -181,7 +181,7 @@ public class PagesDownload extends AppCompatActivity {
             ParsURLPage par = new ParsURLPage(addImg,URL);
             par.execute();
         }else {
-            pathDir = mSettings.getString(MainSettings.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
+            pathDir = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
             CacheFile file = new CacheFile(new File(pathDir),URL);
             nameDirectory = URL;
             nameChapter = intent.getStringExtra("Chapter");

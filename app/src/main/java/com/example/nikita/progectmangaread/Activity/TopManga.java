@@ -44,7 +44,16 @@ public class TopManga extends BaseActivity {
 
     public static int HEIGHT_WIND,WIDTH_WIND;
 
+    //Для настроек
+    public static final String APP_SETTINGS = "globalSettings";
+    public static final String APP_SETTINGS_WIFI = "WiFi";
+    public static final String APP_SETTINGS_PATH = "path";
+    public static final String APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE = "downloadComp";
+    public static final String APP_SETTINGS_NOTIFICATION_VIBRATION = "vibration";
+    public static final String APP_SETTINGS_NOTIFICATION_SOUNG = "soung";
+    public static final String APP_SETTINGS_NOTIFICATION_NEW_CHAPTER = "notificationNewChapter";
 
+    //
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private static final String APP_PREFERENCES_IMG_URL = "imgURL";
@@ -89,6 +98,15 @@ public class TopManga extends BaseActivity {
             editor.apply();
             Intent newInten = new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
+            //Настройки по умолчанию
+            SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, Context.MODE_PRIVATE);
+            editor = mSettings.edit();
+            editor.putString(TopManga.APP_SETTINGS_PATH, getFilesDir().toString());
+            editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_NEW_CHAPTER,true);
+            editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_VIBRATION,true);
+            editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,true);
+            editor.putBoolean(TopManga.APP_SETTINGS_WIFI,true);
+            editor.commit();
         }
 
         if (!isMyServiceRunning(UpdateMangBookmark.class)){

@@ -53,7 +53,7 @@ public class fragmentOtherMang extends Fragment {
                 if (mainTop != null) {
                     intent.putExtra("URL_ch", mainTop.getURLchapter());
                     intent.putExtra("Url_img", mainTop.getURL_img());
-                    intent.putExtra("Name_ch", mainTop.getNameCategory());
+                    intent.putExtra("Name_ch", mainTop.getNameMang());
                     intent.putExtra("Url_site", mainTop.getUrlSite());
                     startActivity(intent);
                     Log.v("long clicked", "pos: " + position);

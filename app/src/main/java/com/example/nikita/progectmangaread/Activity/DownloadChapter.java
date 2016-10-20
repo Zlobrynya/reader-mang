@@ -41,13 +41,13 @@ public class DownloadChapter extends AppCompatActivity {
         myAdap = new AdapterList(this, R.layout.list_view_checkbox, list);
         ListView listView = (ListView) findViewById(R.id.listChapter);
         listView.setAdapter(myAdap);
-        mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
+        mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Download chapter"); // set the top title
 
-        final boolean wifi = mSettings.getBoolean(MainSettings.APP_SETTINGS_WIFI,true);
-        path = mSettings.getString(MainSettings.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
+        final boolean wifi = mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI,true);
+        path = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
 
         Intent intent = getIntent();
         urlMang = intent.getStringExtra("mang");
@@ -126,9 +126,9 @@ public class DownloadChapter extends AppCompatActivity {
                     .putExtra("chapter", chapter)
                     .putExtra("name_dir", nameDir)
                     .putExtra("path",path)
-                    .putExtra("vibratyon",mSettings.getBoolean(MainSettings.APP_SETTINGS_NOTIFICATION_VIBRATION,false))
-                    .putExtra("sound",mSettings.getBoolean(MainSettings.APP_SETTINGS_NOTIFICATION_SOUNG,false))
-                    .putExtra("notification",mSettings.getBoolean(MainSettings.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,false)));
+                    .putExtra("vibratyon",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_VIBRATION,false))
+                    .putExtra("sound",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_SOUNG,false))
+                    .putExtra("notification",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,false)));
 
             Toast.makeText(DownloadChapter.this, "Mang download.", Toast.LENGTH_SHORT).show();
         }

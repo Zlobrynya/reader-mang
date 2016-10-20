@@ -43,16 +43,17 @@ public class AlarmManagerBroadcastReceiver extends WakefulBroadcastReceiver {
 
     public void SetAlarm(Context context,String data)
     {
-        AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am= (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        //раз в 3 часа
+        //раз в 3 часа AlarmManager.INTERVAL_HOUR*3
         if(Build.VERSION.SDK_INT < 23){
             am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR*3, pi);
         }
         else{
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC,AlarmManager.INTERVAL_HOUR*3,pi);
+            //am.setExactAndAllowWhileIdle(AlarmManager.RTC,150000,pi);
+            am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR*3 ,pi);
         }
 
     }

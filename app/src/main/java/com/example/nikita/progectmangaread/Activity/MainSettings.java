@@ -27,14 +27,7 @@ import java.io.File;
 
 public class MainSettings extends BaseActivity implements DialogPath.NoticeDialogListener  {
     private TextView path;
-    public static final String APP_SETTINGS = "globalSettings";
-    public static final String APP_SETTINGS_WIFI = "WiFi";
-    public static final String APP_SETTINGS_PATH = "path";
-    public static final String APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE = "downloadComp";
-    public static final String APP_SETTINGS_NOTIFICATION_VIBRATION = "vibration";
-    public static final String APP_SETTINGS_NOTIFICATION_SOUNG = "soung";
-    public static final String APP_SETTINGS_NOTIFICATION_NEW_CHAPTER = "notificationNewChapter";
-    public static final String APP_SETTINGS_NOTIFICATION_TIME_DOWNLOAD = "notificationTime";
+
     private SharedPreferences.Editor editor;
 
 
@@ -44,23 +37,23 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.setting_main_fragment, frameLayout);
 
-        SharedPreferences mSettings = getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, Context.MODE_PRIVATE);
         editor = mSettings.edit();
 
         path = (TextView) findViewById(R.id.textSettingSystemDirectoryPath);
 
-        path.setText(mSettings.getString(APP_SETTINGS_PATH, getFilesDir().getAbsolutePath()));
+        path.setText(mSettings.getString(TopManga.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath()));
 
         Switch WiFi = (Switch) findViewById(R.id.settings_wifi);
-        WiFi.setChecked(mSettings.getBoolean(APP_SETTINGS_WIFI, true));
+        WiFi.setChecked(mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI, true));
         Switch NotificationAll = (Switch) findViewById(R.id.switch_all_notification);
-        NotificationAll.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, true)));
+        NotificationAll.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, true)));
         Switch vibration = (Switch) findViewById(R.id.switch_download_vibration);
-        vibration.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_VIBRATION, true)));
+        vibration.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_VIBRATION, true)));
         Switch soung = (Switch) findViewById(R.id.switch_download_soung);
-        soung.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_SOUNG, true)));
+        soung.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_SOUNG, true)));
         Switch chapterNew = (Switch) findViewById(R.id.switch_chapter_new);
-        chapterNew.setChecked((mSettings.getBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, true)));
+        chapterNew.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, true)));
 
      //   setSize();
     }
@@ -80,7 +73,7 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
                 .putExtra("inp", path));
         Toast.makeText(this, "Перенос файлов", Toast.LENGTH_SHORT).show();
         this.path.setText(path);
-        editor.putString(APP_SETTINGS_PATH, path);
+        editor.putString(TopManga.APP_SETTINGS_PATH, path);
         editor.commit();
       //  setSize();
     }
@@ -92,31 +85,31 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
 
     public void NotificationNewChapter(View view) {
         Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_NOTIFICATION_NEW_CHAPTER,aSwitch.isChecked());
+        editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_NEW_CHAPTER,aSwitch.isChecked());
         editor.commit();
     }
 
     public void NotificationVibration(View view) {
         Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_NOTIFICATION_VIBRATION,aSwitch.isChecked());
+        editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_VIBRATION,aSwitch.isChecked());
         editor.commit();
     }
 
     public void NotificationSoung(View view) {
         Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_NOTIFICATION_SOUNG,aSwitch.isChecked());
+        editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_SOUNG,aSwitch.isChecked());
         editor.commit();
     }
 
     public void AllNotification(View view) {
         Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,aSwitch.isChecked());
+        editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,aSwitch.isChecked());
         editor.commit();
     }
 
     public void WiFi(View view) {
         Switch aSwitch = (Switch) view;
-        editor.putBoolean(APP_SETTINGS_WIFI,aSwitch.isChecked());
+        editor.putBoolean(TopManga.APP_SETTINGS_WIFI,aSwitch.isChecked());
         editor.commit();
     }
 

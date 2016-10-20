@@ -99,10 +99,11 @@ public class DescriptionMang extends BaseActivity {
             mang.setURL_site(intent.getStringExtra("Url_site"));
             mang.setURL_img(intent.getStringExtra("Url_img"));
             read = intent.getBooleanExtra("read", false);
+          //  getSupportActionBar().setTitle(mang.getName_characher()); // set the top title
             parsAndSettings();
         }
         downloadChapter = false;
-        //dataRecovery();
+        dataRecovery();
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -192,7 +193,6 @@ public class DescriptionMang extends BaseActivity {
     //Процедура востановление
     private void dataRecovery(){
         saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
-
         if (saveFragment != null){
             classTransportForList = saveFragment.getClassTransportForList();
             descriptionMang = saveFragment.getClassDescriptionMang();
@@ -207,8 +207,8 @@ public class DescriptionMang extends BaseActivity {
                 fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
             }
             //Посылаем данные в фрагменты
-            //EventBus.getDefault().post(classTransportForList);
-           // EventBus.getDefault().post(descriptionMang);
+            EventBus.getDefault().post(classTransportForList);
+            EventBus.getDefault().post(descriptionMang);
         }
         else {
             saveFragment = new fragmentSaveDescriptionMang();
@@ -285,12 +285,19 @@ public class DescriptionMang extends BaseActivity {
         fab3.setClickable(false);
 
     }
-
+    //Востанавливаем данные
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        dataRecovery();
+        super.onRestoreInstanceState(savedInstanceState);
+       // Log.d(LOG_TAG, "onRestoreInstanceState");
+    }
+    //Сохраняем данные
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-//        saveFragment.setClassDescriptionMang(descriptionMang);
-//        saveFragment.setClassTransportForList(classTransportForList);
-//        saveFragment.setMang(mang);
+        saveFragment.setClassDescriptionMang(descriptionMang);
+        saveFragment.setClassTransportForList(classTransportForList);
+        saveFragment.setMang(mang);
         super.onSaveInstanceState(outState);
     }
     // Получаем событие, что был клик на экран и это не фабкнопка
@@ -348,7 +355,6 @@ public class DescriptionMang extends BaseActivity {
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();
             startActivity(intent);
-
         }
     }
 
@@ -602,7 +608,7 @@ public class DescriptionMang extends BaseActivity {
             if (list == null)
                 list = new ArrayList<>();
             try {
-                doc = Jsoup.connect("http://readmanga.me/list/like"+mang.getURL_characher().substring(mang.getURL_characher().lastIndexOf("/"))).userAgent("Mozilla")
+                doc = Jsoup.connect(mang.getURL_site()+"/list/like"+mang.getURL_characher().substring(mang.getURL_characher().lastIndexOf("/"))).userAgent("Mozilla")
                         .timeout(3000)
                         .get();
                 //вытаскиваем первую таблицу со связаной мангой

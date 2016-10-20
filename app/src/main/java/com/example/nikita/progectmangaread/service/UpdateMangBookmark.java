@@ -20,6 +20,7 @@ import com.example.nikita.progectmangaread.Activity.Bookmark;
 import com.example.nikita.progectmangaread.Activity.DownloadChapter;
 import com.example.nikita.progectmangaread.Activity.MainSettings;
 import com.example.nikita.progectmangaread.Activity.ShowDownloaded;
+import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
@@ -65,7 +66,6 @@ public class UpdateMangBookmark extends Service {
             } catch (NumberFormatException e) {
                 if (!nameUp.equals("Манга"))
                     nameMang += nameUp+" ";
-
             }
         }
         return nameMang;
@@ -125,15 +125,15 @@ public class UpdateMangBookmark extends Service {
                 else {
                     if (!nameMangUpdate.isEmpty())
                         sendNotif();
-                    else
-                        sendNotifDebag();
+                  /*  else
+                        sendNotifDebag();*/
                 }
                 numberSite = 1;
             }else {
                 if (!nameMangUpdate.isEmpty())
                     sendNotif();
-                else
-                    sendNotifDebag();
+              /*  else
+                    sendNotifDebag();*/
             }
         }
 
@@ -153,7 +153,7 @@ public class UpdateMangBookmark extends Service {
 
         // Moves the expanded layout object into the notification object.
         mBuilder.setStyle(inboxStyle);
-
+        mBuilder.setWhen(System.currentTimeMillis());
         int notifyID = 1;
         mNotificationManager.notify(
                 notifyID,
@@ -171,7 +171,7 @@ public class UpdateMangBookmark extends Service {
 
         // Moves the expanded layout object into the notification object.
         mBuilder.setStyle(inboxStyle);
-
+        mBuilder.setWhen(System.currentTimeMillis());
         int notifyID = 1;
         mNotificationManager.notify(
                 notifyID,
@@ -182,7 +182,7 @@ public class UpdateMangBookmark extends Service {
         super.onCreate();
         nameMang = new ArrayList<>();
         nameMangUpdate = new ArrayList<>();
-        mSettings = getSharedPreferences(MainSettings.APP_SETTINGS, MODE_PRIVATE);
+        mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
         numberOfMang = new ArrayList<>();
         numberOfMang.add(0);
@@ -254,7 +254,7 @@ public class UpdateMangBookmark extends Service {
                     }
                 }
                 lastData = newData;
-                boolean wifi = mSettings.getBoolean(MainSettings.APP_SETTINGS_WIFI,false);
+                boolean wifi = mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI,false);
                 if (wifi){
                     ConnectivityManager connManager = (ConnectivityManager) getSystemService(UpdateMangBookmark.CONNECTIVITY_SERVICE);
                     NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -307,7 +307,7 @@ public class UpdateMangBookmark extends Service {
         private boolean not_net;
 
         //конструктор потока
-        protected ParsUpdateMang(AsyncTaskLisen addImg,String URL) {
+        ParsUpdateMang(AsyncTaskLisen addImg, String URL) {
             asyncTask = addImg;
             this.URL = URL;
         }
