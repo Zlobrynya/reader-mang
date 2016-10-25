@@ -206,6 +206,10 @@ public class DescriptionMang extends BaseActivity {
                 bookmark = true;
                 fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
             }
+            //Если ничего не сохранено то закрываем активити
+            if (descriptionMang == null){
+                this.finish();
+            }
             //Посылаем данные в фрагменты
             EventBus.getDefault().post(classTransportForList);
             EventBus.getDefault().post(descriptionMang);
@@ -288,7 +292,11 @@ public class DescriptionMang extends BaseActivity {
     //Востанавливаем данные
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        dataRecovery();
+        if (savedInstanceState != null){
+            dataRecovery();
+        }else{
+            this.finish();
+        }
         super.onRestoreInstanceState(savedInstanceState);
        // Log.d(LOG_TAG, "onRestoreInstanceState");
     }
@@ -617,11 +625,10 @@ public class DescriptionMang extends BaseActivity {
                 //Crashlytics.log("Description Mang, отсутствуе похожие манги");
                 //перемещаемся на след.таблицу с похожей мангой
                 parsRelated();
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 //e.printStackTrace();+
-                //Crashlytics.log("Description Mang, отсутствуе похожие манги");
-                Log.i("Log","work");
-            } catch (NullPointerException ignored){
+                Crashlytics.logException(e);
+                //Log.i("Log","work");
             }
 
             return null;

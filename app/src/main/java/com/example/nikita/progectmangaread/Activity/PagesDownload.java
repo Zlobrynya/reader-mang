@@ -35,6 +35,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.ThreadManager;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
@@ -151,16 +152,21 @@ public class PagesDownload extends AppCompatActivity {
         AsyncTaskLisen addImg = new AsyncTaskLisen() {
             @Override
             public void onEnd() {
-                GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
-                threadManager = new ThreadManager(urlPage);
-                if (pageNumber > urlPage.size()){
-                    pageNumber = 1;
+                try{
+                    GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
+                    threadManager = new ThreadManager(urlPage);
+                    if (pageNumber > urlPage.size()){
+                        pageNumber = 1;
+                    }
+                    if (pageNumber == urlPage.size() && urlPage.size() != 1){
+                        pageNumber = urlPage.size()-1;
+                    }
+                    pager.setAdapter(adapter);
+                    pager.setCurrentItem(pageNumber);
+                }catch (IllegalStateException e){
+                    Crashlytics.logException(e);
                 }
-                if (pageNumber == urlPage.size() && urlPage.size() != 1){
-                    pageNumber = urlPage.size()-1;
-                }
-                pager.setAdapter(adapter);
-                pager.setCurrentItem(pageNumber);
+
             }
 
             @Override

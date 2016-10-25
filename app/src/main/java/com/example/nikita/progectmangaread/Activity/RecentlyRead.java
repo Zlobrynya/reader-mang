@@ -38,7 +38,7 @@ public class RecentlyRead extends BaseActivity{
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
         StickyListHeadersListView listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
-        adapter = new AdapterRecentlyRead(this,R.layout.list_heads,list);
+        adapter = new AdapterRecentlyRead(this,R.layout.list_view,list);
         listView.setAdapter(adapter);
         getSupportActionBar().setTitle("Recently Read"); // set the top title
 

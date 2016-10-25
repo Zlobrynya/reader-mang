@@ -9,14 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.nikita.progectmangaread.Activity.Bookmark;
 import com.example.nikita.progectmangaread.Activity.DescriptionMang;
-import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterBookmark;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
@@ -43,7 +38,7 @@ public class fragmentBookmark extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.list_heads, null);
+        View v = inflater.inflate(R.layout.list_view, null);
         list = new ArrayList<>();
         classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
         listView = (ListView) v.findViewById(R.id.listView);
@@ -121,7 +116,7 @@ public class fragmentBookmark extends Fragment {
             cursor.moveToNext();
         }
         cursor.close();
-        AdapterBookmark adapter = new AdapterBookmark(getActivity(), R.layout.list_heads, list);
+        AdapterBookmark adapter = new AdapterBookmark(getActivity(), R.layout.list_view, list);
         listView.setAdapter(adapter);
     }
 

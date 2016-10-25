@@ -98,13 +98,15 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
             @Override
             public void onClick(View v) {
                 int poss = (int) v.getTag();
-                ClassDataBaseViewedHead classDataBaseViewedHead = new ClassDataBaseViewedHead(context);
-                classDataBaseViewedHead.setData(item.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
-                item.remove(poss);
-              // classDataBaseViewedHead.closeDataBase();
-                notifyDataSetChanged();
-                Toast.makeText(context, "Delete: " + item.get(poss).getNameMang(),
-                        Toast.LENGTH_SHORT).show();
+                if (item.size() >= poss){
+                    ClassDataBaseViewedHead classDataBaseViewedHead = new ClassDataBaseViewedHead(context);
+                    classDataBaseViewedHead.setData(item.get(poss).getNameMang(), "0", ClassDataBaseViewedHead.NOTEBOOK);
+                    item.remove(poss);
+                    // classDataBaseViewedHead.closeDataBase();
+                    notifyDataSetChanged();
+                    Toast.makeText(context, "Delete: " + item.get(poss).getNameMang(),
+                            Toast.LENGTH_SHORT).show();
+                }
                 //  Toast.makeText(TravelBite.this, "test", Toast.LENGTH_SHORT).show();
             }
         });

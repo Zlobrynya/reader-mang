@@ -49,7 +49,7 @@ public class fragmentGenres extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.list_heads, null);
+        v = inflater.inflate(R.layout.list_view, null);
         gr = (ListView) v.findViewById(R.id.listView);
         gr.setAdapter(myAdap);
         gr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,7 +69,8 @@ public class fragmentGenres extends Fragment {
         this.classTransport.setClassMang(event);
         int id = 0;
         if (classTransport.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
-        else if (classTransport.getClassMang().getURL().contains("mintmanga")) id = R.raw.search_adultmanga;
+        else if (classTransport.getClassMang().getURL().contains("mintmanga")) id = R.raw.search_mint_manga;
+        else if (classTransport.getClassMang().getURL().contains("selfmanga")) id = R.raw.search_self_manga;
 
         list.clear();
         //считываем с ресурсов

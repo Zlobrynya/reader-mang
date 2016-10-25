@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.R;
 
@@ -27,9 +28,13 @@ public class fragmentLoad_page0 extends Fragment{
                              Bundle savedInstanceState) {
     /* Inflate the layout for this ffragment */
         View view = inflater.inflate(R.layout.fragment_load, container, false);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_load, new fragmentTopMang());
-        transaction.commit();
+        try {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_load, new fragmentTopMang());
+            transaction.commit();
+        }catch (IllegalStateException e){
+            Crashlytics.logException(e);
+        }
         return view;
     }
 

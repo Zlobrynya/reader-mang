@@ -12,11 +12,8 @@
     <genres post="el_1349" list="josei">дзёсэй</genres>
     <genres post="el_1332" list="doujinshi">додзинси</genres>
     <genres post="el_1310" list="drama">драма</genres>
-    <genres post="el_5229" list="game">игра</genres>
     <genres post="el_1311" list="historical">история</genres>
-    <genres post="el_1351" list="cyberpunk">киберпанк</genres>
     <genres post="el_1328" list="comedy">комедия</genres>
-    <genres post="el_1318" list="mecha">меха</genres>
     <genres post="el_1324" list="mystery">мистика</genres>
     <genres post="el_1325" list="sci_fi">научная фантастика</genres>
     <genres post="el_1327" list="natural">повседневность</genres>
@@ -25,7 +22,6 @@
     <genres post="el_1335" list="psychological">психология</genres>
     <genres post="el_1313" list="romance">романтика</genres>
     <genres post="el_1316" list="samurai">самурайский боевик</genres>
-    <genres post="el_1350" list="supernatural">сверхъестественное</genres>
     <genres post="el_1314" list="shoujo">сёдзё</genres>
     <genres post="el_1320" list="shoujo_ai">сёдзё-ай</genres>
     <genres post="el_1326" list="shounen">сёнэн</genres>
@@ -38,26 +34,14 @@
     <genres post="el_1331" list="fantastic">фантастика</genres>
     <genres post="el_1323" list="fantasy">фэнтези</genres>
     <genres post="el_1319" list="school">школа</genres>
-    <genres post="el_1340" list="erotica">эротика</genres>
     <genres post="el_1354" list="ecchi">этти</genres>
-    <genres post="el_1315" list="yuri">юри</genres>
-    <genres post="el_1336" list="yaoi">яой</genres>
-    <genres post="el_4614">В цвете</genres>
+    <genres post="el_4983">Журнал</genres>
     <genres post="el_1355">Веб</genres>
     <genres post="el_2741">Ёнкома</genres>
-    <genres post="el_1903">Комикс западный</genres>
-    <genres post="el_2173">Комикс русский</genres>
-    <genres post="el_1873">Манхва</genres>
-    <genres post="el_1875">Маньхуа</genres>
-    <genres post="el_1874">Не Яой</genres>
     <genres post="el_1348">Сборник</genres>
-    <genres post="el_3969">NC-17</genres>
-    <genres post="el_3968">R</genres>
-    <genres post="el_3990">R18+</genres>
     <genres post="s_high_rate">Высокий рейтинг</genres>
     <genres post="s_single">Сингл</genres>
     <genres post="s_mature">Для взрослых</genres>
     <genres post="s_completed">Завершенная</genres>
-    <genres post="s_translated">Переведено</genres>
     <genres post="s_many_chapters">Длинная</genres>
 </recipe>
