@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.fragment;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,10 +19,8 @@ import de.greenrobot.event.EventBus;
  * Created by Nikita on 25.02.2016.
  */
 public class fragmentLoad_page0 extends Fragment{
-    public ClassTransport transport;
     private final String PROBLEM = "ProblemTime";
-
-
+    fragmentTopMang topMang;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,8 +28,9 @@ public class fragmentLoad_page0 extends Fragment{
     /* Inflate the layout for this ffragment */
         View view = inflater.inflate(R.layout.fragment_load, container, false);
         try {
+            topMang = new fragmentTopMang();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_load, new fragmentTopMang());
+            transaction.add(R.id.fragment_load,topMang,"TopManga");
             transaction.commit();
         }catch (IllegalStateException e){
             Crashlytics.logException(e);
@@ -49,15 +49,20 @@ public class fragmentLoad_page0 extends Fragment{
      public void onEvent(ClassTransport event) {
         if (event != null){
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		/*
-		 * When this container ffragment is created, we fill it with our first
-		 * "real" ffragment
-		 */
-            fragmentTopMang frag = new fragmentTopMang();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//            transaction.replace(R.id.fragment_load, frag,"SearchAndGenres");
+            fragmentTopMang frag = (fragmentTopMang) fragmentManager.findFragmentByTag("SearchAndGenres");
+            if (frag == null){
+                frag = new fragmentTopMang();
+            }
+            frag.clearData();
             frag.add(event);
-            transaction.replace(R.id.fragment_load, frag);
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.addToBackStack(null);
+            transaction.replace(R.id.fragment_load, frag,"SearchAndGenres");
+          //  transaction.addToBackStack(null);
+          //  transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                transaction.addToBackStack(null);
+            }
             transaction.commit();
         }
      }

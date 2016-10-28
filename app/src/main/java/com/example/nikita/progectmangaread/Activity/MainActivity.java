@@ -9,26 +9,35 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.nikita.progectmangaread.AdapterPMR.AdapterListSite;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
+
+import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
 public class MainActivity extends BaseActivity {
     private Intent newInten;
     private ClassMang clManga;
+    private AdapterListSite adapter;
 
     String[] namesSite = { "ReadManga", "MintManga","SelfManga"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("ReadManga");
+        strings.add("MintManga");
+        strings.add("SelfManga");
         getLayoutInflater().inflate(R.layout.list_view, frameLayout);
         ListView listView = (ListView) findViewById(R.id.listView);
         // создаем адаптер
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                R.layout.text_view, namesSite);
+        adapter = new AdapterListSite(this,R.layout.item_list_site,strings);
+
         listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

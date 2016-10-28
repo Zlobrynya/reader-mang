@@ -93,7 +93,7 @@ public class fragmentGenres extends Fragment {
         Document doc = Jsoup.parse(outputStream.toString(), "", Parser.xmlParser());
         for (Element e : doc.select("genres")) {
             String str = e.attr("list");
-            if (str == "") break;
+            if (str.isEmpty()) break;
             ClassForList a = new ClassForList(str,e.text());
             list.add(a);
         }

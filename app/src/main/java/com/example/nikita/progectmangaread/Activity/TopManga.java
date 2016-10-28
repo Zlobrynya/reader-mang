@@ -120,9 +120,7 @@ public class TopManga extends BaseActivity {
         HEIGHT_WIND = displaymetrics.heightPixels;
         WIDTH_WIND = displaymetrics.widthPixels;
 
-        FloatingActionButton up = (FloatingActionButton) findViewById(R.id.skip_to_top);
-
-
+       // FloatingActionButton up = (FloatingActionButton) findViewById(R.id.skip_to_top);
 
         //костыль для того что бы пославть EventBuss после создания фрагментов
         new Handler().postDelayed(new Runnable() {

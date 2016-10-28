@@ -62,9 +62,7 @@ public class fragmentDescriptionList extends Fragment {
        // Log.i(PROBLEM, "Start fragmentDescriptionList")
         try {
             EventBus.getDefault().register(this);
-        }catch (EventBusException ignored){
-
-        }
+        }catch (EventBusException ignored){}
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -34,6 +34,7 @@ public class fragmentDescriptionMang extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(PROBLEM, "Create fragmentDescriptionMang");
+        EventBus.getDefault().register(this);
 
     }
 
@@ -95,14 +96,13 @@ public class fragmentDescriptionMang extends Fragment {
 
     @Override
     public void onResume() {
-        EventBus.getDefault().register(this);
         super.onResume();
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onPause();
+        super.onDestroy();
     }
 
     //фабричный метод для ViewPage

@@ -60,6 +60,20 @@ public class fragmentTopMang extends Fragment {
     private int resultPost;  // 0 - глав стр 1 - результат поиска 2 - по жанрам
     private ClassMainTop mainTop;
 
+
+    public void clearData() {
+        classMang = null;
+        mainTop = null;
+        doc = null;
+        if (list != null){
+            list.clear();
+            myAdap.notifyDataSetChanged();
+        }
+        kol = page = firstItem = 0;
+    }
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,6 +236,8 @@ public class fragmentTopMang extends Fragment {
                 doc = null;
             }
         }
+        if (event == null)
+            return;
         classMang = event;
         //создание базы данных
         String nameTable = classMang.getURL().replace(".me", " ");
@@ -242,6 +258,8 @@ public class fragmentTopMang extends Fragment {
         parssate(kol);
      //   Log.i(PROBLEM, "add(ClassTransport ev)");
     }
+
+
 
     @Override
     public void onStart() {

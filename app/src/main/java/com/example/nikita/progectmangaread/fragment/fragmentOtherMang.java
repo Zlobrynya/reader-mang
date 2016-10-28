@@ -36,6 +36,7 @@ public class fragmentOtherMang extends Fragment {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
         adapterOtherMang = new AdapterOtherMang(getActivity(), R.layout.other_manga, list);
+        EventBus.getDefault().register(this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,14 +67,13 @@ public class fragmentOtherMang extends Fragment {
 
     @Override
     public void onResume() {
-        EventBus.getDefault().register(this);
         super.onResume();
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onPause();
+        super.onDestroy();
     }
 
     public void onEvent(ArrayList<ClassOtherMang> event) {

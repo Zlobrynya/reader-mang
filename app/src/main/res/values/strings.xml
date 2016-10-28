@@ -34,4 +34,8 @@
     <string name="auto_brightness">Автонастройка</string>
     <string name="next_skip_chapter">Следующая галава</string>
     <string name="previous_chapter">Предыдущая глава</string>
+    <string name="info_readmanga">"На нашем сайте размещена самая большая коллекция манги в Рунете. Отсутвует взрослая манга."</string>
+    <string name="info_mintmanga">"На сайте размещена только манга для взрослых, в которой присутствуют элементы насилия и эротика."</string>
+    <string name="info_selfmanga">"На сайте размещается только русская авторская манга и журналы о манге."</string>
+
 </resources>
