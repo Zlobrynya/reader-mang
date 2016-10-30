@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.greenrobot.event.EventBus;
-import de.greenrobot.event.EventBusException;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -58,11 +57,11 @@ public class fragmentDescriptionList extends Fragment {
         StickyListHeadersListView listView = (StickyListHeadersListView) v.findViewById(R.id.listRecentlyRead);
         listView.setAdapter(myAdap);
         final ClassForList classForList = new ClassForList();
-        classForList.setName_chapter("GG");
+        classForList.setNameChapter("GG");
        // Log.i(PROBLEM, "Start fragmentDescriptionList")
-        try {
+      /*  try {
             EventBus.getDefault().register(this);
-        }catch (EventBusException ignored){}
+        }catch (EventBusException ignored){}*/
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -75,7 +74,7 @@ public class fragmentDescriptionList extends Fragment {
                 myAdap.notifyDataSetChanged();
 
                 //высчитываем hashCode строки
-                String numberChapter = String.valueOf(classForList1.getName_chapter().hashCode());
+                String numberChapter = String.valueOf(classForList1.getNameChapter().hashCode());
 
                 classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
 
@@ -96,44 +95,6 @@ public class fragmentDescriptionList extends Fragment {
         return v;
     }
 
-    private String getNumberChapter(String nameChapter){
-        String[] strings = nameChapter.split(" ");
-        String numberChapter = "";
-        int kolInt = 0;
-        for (int i = 1; i < strings.length; i++) {
-            try {
-                int num = Integer.parseInt(strings[i]);
-                if (kolInt == 1) {
-                    numberChapter += num;
-                    kolInt++;
-                }
-                if (i+1<strings.length)
-                    if(strings[i+1].contains("-") || strings[i+1].contains("Экстр") && kolInt == 0){
-                        numberChapter += num;
-                        kolInt++;
-                    }
-                if (kolInt == 2)
-                    break;
-                //   Log.i(strLog, "number " + numberChapter);
-            } catch (NumberFormatException e) {
-                if (strings[i].contains("-") && !numberChapter.contains("-"))
-                    numberChapter += " - ";
-                if (strings[i].contains("Экстр")) {
-                    if (i + 1 < strings.length)
-                        numberChapter += strings[i] + " " + strings[i + 1];
-                    else
-                        numberChapter += " " + strings[i];
-                }
-                if (strings[i].contains("Сингл")){
-                    numberChapter = strings[i];
-                    break;
-                }
-                // Log.i(strLog, "Error number " + numberChapter);
-            }
-        }
-        return numberChapter;
-    }
-
     //"Посылка" с fragmentPageDowland, что надо переключить главу
     public void onEvent(java.lang.Integer event){
         ClassForList classForList1 = list.get(event);
@@ -143,7 +104,7 @@ public class fragmentDescriptionList extends Fragment {
         list.set(event, classForList1);
         myAdap.notifyDataSetChanged();
         if (!readDownloaded){
-            classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getName_chapter().hashCode()));
+            classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getNameChapter().hashCode()));
             classForList1.setDownload(false);
         }
         else
@@ -160,8 +121,8 @@ public class fragmentDescriptionList extends Fragment {
                 classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.NOTEBOOK);
                 String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.LAST_CHAPTER);
                 if (lastChapter.contains("null")){
-                    classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURL_chapter());
-                    classDataBaseViewedHead.setData(nameMang, list.get(list.size() - 1).getName_chapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURLChapter());
+                    classDataBaseViewedHead.setData(nameMang, list.get(list.size() - 1).getNameChapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
                 }
             }else {
                 classDataBaseViewedHead.setData(nameMang, String.valueOf(0), ClassDataBaseViewedHead.NOTEBOOK);
@@ -182,8 +143,8 @@ public class fragmentDescriptionList extends Fragment {
                     classDataBaseListMang.addBasaData(event.getMainClassTop(), -1);
                 }
                 for (ClassForList b: event.getClassForList()){
-                    if (!b.getURL_chapter().contains("?mature=1")){
-                        b.setURL_chapter(b.getURL_chapter() + "?mature=1");
+                    if (!b.getURLChapter().contains("?mature=1")){
+                        b.setURL_chapter(b.getURLChapter() + "?mature=1");
                     }
                     list.add(b);
                 }
@@ -203,11 +164,13 @@ public class fragmentDescriptionList extends Fragment {
     @Override
     public void onStart() {
         Log.i(strLog,"Start");
+        EventBus.getDefault().register(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
+        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
@@ -215,7 +178,7 @@ public class fragmentDescriptionList extends Fragment {
     public void onDestroy(){
        /* if (classDataBaseViewedHead != null)
             classDataBaseViewedHead.closeDataBase();*/
-        EventBus.getDefault().unregister(this);
+      //  EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -257,7 +220,7 @@ public class fragmentDescriptionList extends Fragment {
                 //Список глав переводим в ХэшКод
                 for (int i = 0; i < list.size(); i++) {
                     ClassForList classForList = list.get(i);
-                    hashCodeHead.put(i,classForList.getName_chapter().hashCode());
+                    hashCodeHead.put(i,classForList.getNameChapter().hashCode());
                 }
                 //Сортировка HashMap
                 ValueComparatorMap valueComparatorMap = new ValueComparatorMap(hashCodeHead);

@@ -37,5 +37,7 @@
     <string name="info_readmanga">"На нашем сайте размещена самая большая коллекция манги в Рунете. Отсутвует взрослая манга."</string>
     <string name="info_mintmanga">"На сайте размещена только манга для взрослых, в которой присутствуют элементы насилия и эротика."</string>
     <string name="info_selfmanga">"На сайте размещается только русская авторская манга и журналы о манге."</string>
+    <string name="selection_site">Выберите сайты в настройках приложения.</string>
+    <string name="mang_not_found">Манга не найдена.</string>
 
 </resources>

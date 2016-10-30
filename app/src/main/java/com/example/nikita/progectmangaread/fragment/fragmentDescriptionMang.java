@@ -35,7 +35,6 @@ public class fragmentDescriptionMang extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(PROBLEM, "Create fragmentDescriptionMang");
         EventBus.getDefault().register(this);
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

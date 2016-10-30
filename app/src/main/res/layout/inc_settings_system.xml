@@ -10,22 +10,6 @@
         android:layout_height="1dp"
         android:background="@color/divider" />
 
-    <Switch
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Скачивание и оповещение об обновлении только через Wi-Fi"
-        android:layout_marginTop="16dip"
-        android:layout_marginBottom="16dip"
-        android:layout_marginLeft="16dip"
-        android:id="@+id/settings_wifi"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:onClick="WiFi"/>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@color/divider" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,7 +76,7 @@
             android:text= "Очистить "
             android:layout_marginLeft="5dip"
             android:textColor="@android:color/background_dark"
-            android:id="@+id/textSettingSystemClearAll"
+            android:id="@+id/text_setting_system_clear_all"
             android:clickable="false" />
         <TextView
             android:layout_width="wrap_content"
@@ -103,6 +87,26 @@
             android:layout_marginLeft="15dip"
             android:id="@+id/text_setting_system_clear_size" />
     </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+
+    <TextView
+        style="@style/linear_layout_settings_text"
+        android:background="@drawable/style_linear_layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text= "Сайты манг"
+        android:layout_marginLeft="5dip"
+        android:textColor="@android:color/background_dark"
+        android:id="@+id/text_selection_manga_site"
+        android:clickable="false"
+        android:onClick="selectionMangaSite"/>
+
 
     <View
         android:layout_width="wrap_content"

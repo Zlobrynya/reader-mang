@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
-import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 
 import java.util.ArrayList;
 
@@ -80,14 +79,14 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
         }
 
         //set header text as first char in name
-        String headerText = "Tom: " + getNumberChapter(item.get(position).getName_chapter());
+        String headerText = "Tom: " + getNumberChapter(item.get(position).getNameChapter());
         holder.text.setText(headerText);
         return convertView;
     }
 
     @Override
     public long getHeaderId(int position) {
-        return Long.parseLong(getNumberChapter(item.get(position).getName_chapter()));
+        return Long.parseLong(getNumberChapter(item.get(position).getNameChapter()));
     }
 
     @NonNull
@@ -112,7 +111,7 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
             if (m1.getCheck())
                 holder.checkBox.setChecked(true);
             else holder.checkBox.setChecked(false);
-            holder.tv.setText(m1.getName_chapter());
+            holder.tv.setText(m1.getNameChapter());
             if (m1.getCheckDownload()){
                 if (holder.imageView != null){
                     holder.imageView.setImageResource(R.drawable.ic_save_black_24dp);

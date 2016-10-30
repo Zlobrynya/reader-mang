@@ -212,7 +212,7 @@ public class UpdateMangBookmark extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.i("service","onStartCommand");
+      //  Log.i("service","onStartCommand");
         if (!nameMang.isEmpty())
             nameMang.clear();
 
@@ -254,7 +254,8 @@ public class UpdateMangBookmark extends Service {
                     }
                 }
                 lastData = newData;
-                boolean wifi = mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI,false);
+                startPars();
+                /*boolean wifi = mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI,false);
                 if (wifi){
                     ConnectivityManager connManager = (ConnectivityManager) getSystemService(UpdateMangBookmark.CONNECTIVITY_SERVICE);
                     NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -262,8 +263,7 @@ public class UpdateMangBookmark extends Service {
                         startPars();
                     }
                 }else {
-                    startPars();
-                }
+                }*/
             }catch (NullPointerException | ParseException e){
                 e.printStackTrace();
             }

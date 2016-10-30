@@ -72,6 +72,11 @@
             android:name=".Activity.MainSettings"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".Activity.SelectionMangSite"
+            android:launchMode="singleTask">
+        </activity>
+
         <service
             android:name=".service.ServiceDownChapter"
             android:enabled="true"

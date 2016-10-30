@@ -57,7 +57,7 @@ public class fragmentGenres extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 ClassForList classForList1 = list.get(position);
-                genres = classForList1.getURL_chapter();
+                genres = classForList1.getURLChapter();
                 postRequest();
             }
         });

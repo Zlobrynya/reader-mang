@@ -1,9 +1,6 @@
 package com.example.nikita.progectmangaread.AdapterPMR;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +53,7 @@ public class AdapterList extends ArrayAdapter<ClassForList> {
             if (m1.getCheck())
                 holder.checkBox.setChecked(true);
             else holder.checkBox.setChecked(false);
-            holder.tv.setText(m1.getName_chapter());
+            holder.tv.setText(m1.getNameChapter());
             if (m1.getCheckDownload()){
                 if (holder.imageView != null)
                     //@android:drawable/ic_menu_save

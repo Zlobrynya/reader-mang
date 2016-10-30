@@ -2,11 +2,8 @@ package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -72,7 +69,7 @@ public class DownloadChapter extends AppCompatActivity {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (wifi){
+                /*if (wifi){
                     ConnectivityManager connManager = (ConnectivityManager) getSystemService(DownloadChapter.CONNECTIVITY_SERVICE);
                     NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
@@ -82,9 +79,9 @@ public class DownloadChapter extends AppCompatActivity {
                     }else {
                         Toast.makeText(DownloadChapter.this, "\t\t\tНет подключения к WiFi.\nДля того что бы скачать через мобильный интернет, выключите в настройках скачивание только по WiFi.", Toast.LENGTH_SHORT).show();
                     }
-                }else {
+                }else {*/
                     download();
-                }
+               // }
 
             }
         });
@@ -99,10 +96,10 @@ public class DownloadChapter extends AppCompatActivity {
         for (ClassForList classForList : list) {
             if (classForList.getCheck() && !classForList.getCheckDownload()) {
                 int numbr = list.indexOf(classForList);
-                String s[] = classForList.getURL_chapter().split("/");
+                String s[] = classForList.getURLChapter().split("/");
                 nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
-                chapter += classForList.getURL_chapter() + "?mature=1,";
-                nameChapter += classForList.getName_chapter() + ",";
+                chapter += classForList.getURLChapter() + "?mature=1,";
+                nameChapter += classForList.getNameChapter() + ",";
                 classForList.setCheckDownload(true);
                 list.set(numbr, classForList);
             }
@@ -146,15 +143,15 @@ public class DownloadChapter extends AppCompatActivity {
     }
 
     @Override
-    public void onPause() {
+    public void onStop() {
         EventBus.getDefault().unregister(this);
-        super.onPause();
+        super.onStop();
     }
 
     @Override
-    public void onResume() {
+    public void onStart() {
         EventBus.getDefault().register(this);
-        super.onResume();
+        super.onStart();
     }
 
     public void onEvent(ClassTransportForList event){
@@ -164,7 +161,7 @@ public class DownloadChapter extends AppCompatActivity {
             for (ClassForList b : arrayList) {
                 if (b.getCheck())
                     b.setCheck(false);
-                b.setURL_chapter(b.getURL_chapter().replace("?mature=1", ""));
+                b.setURL_chapter(b.getURLChapter().replace("?mature=1", ""));
                 list.add(b);
             }
             myAdap.notifyDataSetChanged();

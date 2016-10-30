@@ -109,7 +109,7 @@ public class ShowDownloaded extends BaseActivity {
         for (int i = 0; i < names.length; i++){
             try {
                 ClassForList forList = new ClassForList();
-                forList.setName_chapter(names[i]);
+                forList.setNameChapter(names[i]);
                 forList.setURL_chapter(urls[i]);
                 forLists.add(forList);
             }catch (ArrayIndexOutOfBoundsException e){

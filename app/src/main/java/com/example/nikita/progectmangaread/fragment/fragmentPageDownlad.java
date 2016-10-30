@@ -118,7 +118,7 @@ public class fragmentPageDownlad extends Fragment{
             }
         });*/
         idPage = getArguments().getInt("imageId");
-        final String url = getArguments().getString("String");
+        //final String url = getArguments().getString("String");
         //Настройки прогресс бара
         progress.setVisibility(View.VISIBLE);
         progress.setIndeterminate(false);
@@ -182,7 +182,7 @@ public class fragmentPageDownlad extends Fragment{
         }
     }*/
 
-        // Принимает евенты о скачивании от CacheFile и ThreadManager
+    // Принимает евенты о скачивании от CacheFile и ThreadManager
     // разделение в строке идет: / от CacheFile, если не чего делить то выводим на экран изображение
     public void onEvent(String event){
         String[] strings = event.split("/");

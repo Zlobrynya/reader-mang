@@ -1,6 +1,7 @@
 package com.example.nikita.progectmangaread.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterListSite;
 import com.example.nikita.progectmangaread.R;
@@ -27,12 +29,18 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
+
+        SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
+
         ArrayList<String> strings = new ArrayList<>();
-        strings.add("ReadManga");
-        strings.add("MintManga");
-        strings.add("SelfManga");
-        getLayoutInflater().inflate(R.layout.list_view, frameLayout);
-        ListView listView = (ListView) findViewById(R.id.listView);
+        if (mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_READMANG,true))
+            strings.add("ReadManga");
+        if (mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false))
+            strings.add("MintManga");
+        if (mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,true))
+            strings.add("SelfManga");
+        getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
+        ListView listView = (ListView) findViewById(R.id.main_site_list);
         // создаем адаптер
         adapter = new AdapterListSite(this,R.layout.item_list_site,strings);
 
@@ -54,6 +62,10 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        if (strings.isEmpty()){
+            TextView textView = (TextView) findViewById(R.id.main_text_info);
+            textView.setVisibility(View.VISIBLE);
+        }
         newInten = new Intent(MainActivity.this,TopManga.class);
     }
 

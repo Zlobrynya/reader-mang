@@ -65,17 +65,14 @@ public class AdapterListSite extends ArrayAdapter<String> {
             public void onClick(View v) {
                 String strMessege = "null";
                 int position = (int) v.getTag();
-                switch (position){
-                    case 0:
-                        strMessege = v.getContext().getString(R.string.info_readmanga);
-                        break;
-                    case 1:
-                        strMessege = v.getContext().getString(R.string.info_mintmanga);
-                        break;
-                    case 2:
-                        strMessege = v.getContext().getString(R.string.info_selfmanga);
-                        break;
-                }
+                String nameSite = strings.get(position);
+                if (nameSite.contains("Read"))
+                    strMessege = v.getContext().getString(R.string.info_readmanga);
+                else if (nameSite.contains("Mint"))
+                    strMessege = v.getContext().getString(R.string.info_mintmanga);
+                else if (nameSite.contains("Self"))
+                    strMessege = v.getContext().getString(R.string.info_selfmanga);
+                else strMessege = "Magic";
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 

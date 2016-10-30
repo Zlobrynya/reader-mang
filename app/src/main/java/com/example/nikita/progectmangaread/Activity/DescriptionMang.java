@@ -64,10 +64,12 @@ public class DescriptionMang extends BaseActivity {
     private Animation hide_fab;
     private boolean visF = false;
     private boolean bookmark = false;
+    private ViewPager pager;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private fragmentSaveDescriptionMang saveFragment;
     private ClassDescriptionMang descriptionMang;
     private ClassTransportForList classTransportForList;
+    private ArrayList<ClassOtherMang> ClassOtherManglist;
 
     private final String strLog = "DescripotionMang";
 
@@ -77,7 +79,7 @@ public class DescriptionMang extends BaseActivity {
         getLayoutInflater().inflate(R.layout.description_mang, frameLayout);
 
      //   Log.i(PROBLEM, "Description start");
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_lastChapter);
@@ -210,9 +212,6 @@ public class DescriptionMang extends BaseActivity {
             if (descriptionMang == null){
                 this.finish();
             }
-            //Посылаем данные в фрагменты
-            EventBus.getDefault().post(classTransportForList);
-            EventBus.getDefault().post(descriptionMang);
         }
         else {
             saveFragment = new fragmentSaveDescriptionMang();
@@ -229,9 +228,21 @@ public class DescriptionMang extends BaseActivity {
     }
 
     @Override
-    public void onStart() {
-        Log.i(strLog,"Start");
-        super.onStart();
+    public void onResume() {
+       // Log.i(strLog,"Start");
+
+        //Посылаем данные в фрагменты
+        if (classTransportForList != null){
+            EventBus.getDefault().post(classTransportForList);
+        }
+        if (descriptionMang != null){
+            EventBus.getDefault().post(descriptionMang);
+        }
+        if (ClassOtherManglist != null){
+            EventBus.getDefault().post(ClassOtherManglist);
+        }
+        pager.setCurrentItem(1);
+        super.onResume();
     }
 
     @Override
@@ -243,13 +254,13 @@ public class DescriptionMang extends BaseActivity {
     }
 
     @Override
-    public void onResume() {
+    public void onStart() {
         //Вроде это должно востанавливать данные если они стерты
         // не тестированно, так что хз, востановит ли?
         if (mang == null){
             dataRecovery();
         }
-        super.onResume();
+        super.onStart();
     }
 
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
@@ -342,27 +353,28 @@ public class DescriptionMang extends BaseActivity {
         if (event.getNumberChapter() >= 0){
             Intent intent = new Intent(this, PagesDownload.class);
             if (!event.getDownload()){
-                intent.putExtra("URL", mang.getURL_site() + event.getURL_chapter());
+                intent.putExtra("URL", mang.getURL_site() + event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.LAST_CHAPTER);
                 String helpVar = "";
-                if (lastChapter.contains(event.getURL_chapter())){
+                if (lastChapter.contains(event.getURLChapter())){
                     helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE);
                 }
-                classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + event.getURL_chapter());
+                classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + event.getURLChapter());
                 if (helpVar.isEmpty()) helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
                 intent.putExtra("Chapter", mang.getName_characher());
             }else {
-                intent.putExtra("URL", event.getURL_chapter());
+                intent.putExtra("URL", event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 intent.putExtra("Download",true);
                 intent.putExtra("NumberPage", "1");
-                intent.putExtra("Chapter", event.getName_chapter());
+                intent.putExtra("Chapter", event.getNameChapter());
             }
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();
             startActivity(intent);
+            EventBus.getDefault().cancelEventDelivery(event);
         }
     }
 
@@ -379,7 +391,7 @@ public class DescriptionMang extends BaseActivity {
                 //numberChapter = arList.size()-1;
                 if (string.contains("null")){
                     ClassForList classForList = arList.get(numberChapter);
-                    string = mang.getURL_site()+classForList.getURL_chapter();
+                    string = mang.getURL_site()+classForList.getURLChapter();
                     classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),ClassDataBaseViewedHead.VIEWED_HEAD);
                 }
             }
@@ -416,7 +428,7 @@ public class DescriptionMang extends BaseActivity {
         if (string.contains("null")) return arList.size()-1;
 
         for (ClassForList c : arList){
-            String name = c.getURL_chapter();
+            String name = c.getURLChapter();
             Log.i("Number chapter",name);
             if (string.contains(name)) {
                 Log.i("Number chapter", String.valueOf(kol));
@@ -587,8 +599,8 @@ public class DescriptionMang extends BaseActivity {
             String URL = el2.attr("href");
             classForList.setURL_chapter(URL);
             URL = el2.select("a").text();
-            classForList.setName_chapter(URL);
-            if (!classForList.getName_chapter().isEmpty()) arList.add(classForList);
+            classForList.setNameChapter(URL);
+            if (!classForList.getNameChapter().isEmpty()) arList.add(classForList);
             el = el.nextElementSibling();
         }
 
@@ -610,11 +622,10 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public class ParsSimilarAndRelatedMang extends AsyncTask<Void,Void,Void>{
-        private ArrayList<ClassOtherMang> list;
         @Override
         protected Void doInBackground(Void... params) {
-            if (list == null)
-                list = new ArrayList<>();
+            if (ClassOtherManglist == null)
+                ClassOtherManglist = new ArrayList<>();
             try {
                 doc = Jsoup.connect(mang.getURL_site()+"/list/like"+mang.getURL_characher().substring(mang.getURL_characher().lastIndexOf("/"))).userAgent("Mozilla")
                         .timeout(3000)
@@ -662,7 +673,7 @@ public class DescriptionMang extends BaseActivity {
                             classOtherMang.setURL_img(element.attr("rel"));
                             classOtherMang.setNameCategory(category); //тег что это связаное произведение
                             classOtherMang.setUrlSite(mang.getURL_site());
-                            list.add(classOtherMang);
+                            ClassOtherManglist.add(classOtherMang);
                         }
                         el = el.nextElementSibling();
                     }else break;
@@ -688,7 +699,7 @@ public class DescriptionMang extends BaseActivity {
                         classOtherMang.setURL_img(elements.attr("src"));
                         classOtherMang.setNameCategory("related"); //тег что это связаное произведение
                         classOtherMang.setUrlSite(mang.getURL_site());
-                        list.add(classOtherMang);
+                        ClassOtherManglist.add(classOtherMang);
                     }
                     el = el.nextElementSibling();
                 }while (el != null);
@@ -699,7 +710,7 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            EventBus.getDefault().post(list);
+            EventBus.getDefault().post(ClassOtherManglist);
         }
     }
 }

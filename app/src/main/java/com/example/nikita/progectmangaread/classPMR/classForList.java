@@ -20,15 +20,15 @@ public class ClassForList {
     }
     public void setURL_chapter(String URL_chapter) { this.URL_chapter = URL_chapter; }
     public void setCheck(boolean check) { this.check = check; }
-    public void setName_chapter(String name_chapter) { this.Name_chapter = name_chapter; }
+    public void setNameChapter(String name_chapter) { this.Name_chapter = name_chapter; }
     public void setNumberChapter(int numberChapter) { this.numberChapter = numberChapter; }
     public void setDownload(boolean download){ this.download = download; }
     public void setCheckDownload(boolean check) { this.checkDownload = check; }
     public void setNewChapter(boolean newChapter) { this.newChapter = newChapter; }
 
-    public String getURL_chapter() { return URL_chapter; }
+    public String getURLChapter() { return URL_chapter; }
     public boolean getCheck() { return check;}
-    public String getName_chapter() { return Name_chapter; }
+    public String getNameChapter() { return Name_chapter; }
     public int getNumberChapter() { return numberChapter; }
     public boolean getDownload() { return download; }
     public boolean getCheckDownload() { return checkDownload; }

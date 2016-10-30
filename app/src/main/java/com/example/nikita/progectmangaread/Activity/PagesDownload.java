@@ -323,16 +323,16 @@ public class PagesDownload extends AppCompatActivity {
 
 
     @Override
-    public void onStart() {
+    public void onResume() {
         EventBus.getDefault().register(this);
-        super.onStart();
+        super.onResume();
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         Log.i(strLog, "Stop");
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onPause();
     }
 
     @Override

@@ -36,7 +36,6 @@ public class fragmentOtherMang extends Fragment {
         super.onCreate(savedInstanceState);
         list = new ArrayList<>();
         adapterOtherMang = new AdapterOtherMang(getActivity(), R.layout.other_manga, list);
-        EventBus.getDefault().register(this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,20 +65,21 @@ public class fragmentOtherMang extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         EventBus.getDefault().unregister(this);
-        super.onDestroy();
+        super.onStop();
     }
 
     public void onEvent(ArrayList<ClassOtherMang> event) {
         list.addAll(event);
         adapterOtherMang.notifyDataSetChanged();
-        EventBus.getDefault().cancelEventDelivery(event) ;
+     //   EventBus.getDefault().cancelEventDelivery(event) ;
     }
 
     //фабричный метод для ViewPage

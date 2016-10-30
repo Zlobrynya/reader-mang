@@ -52,8 +52,12 @@ public class TopManga extends BaseActivity {
     public static final String APP_SETTINGS_NOTIFICATION_VIBRATION = "vibration";
     public static final String APP_SETTINGS_NOTIFICATION_SOUNG = "soung";
     public static final String APP_SETTINGS_NOTIFICATION_NEW_CHAPTER = "notificationNewChapter";
+    public static final String APP_SETTINGS_SITE_READMANG = "siteReadMangAdd";
+    public static final String APP_SETTINGS_SITE_SELFMANG = "siteSelfMangAdd";
+    public static final String APP_SETTINGS_SITE_MINTMANG = "siteMintMangAdd";
 
-    //
+
+    //Глобал настройки
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private static final String APP_PREFERENCES_IMG_URL = "imgURL";
@@ -106,11 +110,14 @@ public class TopManga extends BaseActivity {
             editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_VIBRATION,true);
             editor.putBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,true);
             editor.putBoolean(TopManga.APP_SETTINGS_WIFI,true);
+            editor.putBoolean(TopManga.APP_SETTINGS_SITE_READMANG,true);
+            editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false);
+            editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,true);
             editor.commit();
         }
 
         if (!isMyServiceRunning(UpdateMangBookmark.class)){
-            Log.i("Service","start");
+          //  Log.i("Service","start");
             AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
             alarm.SetAlarm(this,"");
         }
@@ -150,19 +157,11 @@ public class TopManga extends BaseActivity {
         super.onStop();
     }
 
-   /* public void onEvent(ClassMainTop event){
-        Toast toast = Toast.makeText(this,
-                event.getURL_characher(), Toast.LENGTH_SHORT);
-        toast.show();
-        classTop = event;
-        Log.i(PROBLEM, "event Top");
-    }*/
-
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i("Service",serviceClass.getName());
+                //Log.i("Service",serviceClass.getName());
                 return true;
             }
         }

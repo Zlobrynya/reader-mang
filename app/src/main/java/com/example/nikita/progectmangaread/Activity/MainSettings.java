@@ -44,8 +44,8 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
 
         path.setText(mSettings.getString(TopManga.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath()));
 
-        Switch WiFi = (Switch) findViewById(R.id.settings_wifi);
-        WiFi.setChecked(mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI, true));
+       /* Switch WiFi = (Switch) findViewById(R.id.settings_wifi);
+        WiFi.setChecked(mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI, true));*/
         Switch NotificationAll = (Switch) findViewById(R.id.switch_all_notification);
         NotificationAll.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE, true)));
         Switch vibration = (Switch) findViewById(R.id.switch_download_vibration);
@@ -141,5 +141,9 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(this);
         downloadMang.clearAll();
         Toast.makeText(this, "Очистка загруженной манги завершена.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void selectionMangaSite(View view) {
+        startActivity(new Intent(MainSettings.this,SelectionMangSite.class));
     }
 }

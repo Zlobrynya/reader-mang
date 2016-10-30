@@ -50,6 +50,9 @@ public class RecentlyRead extends BaseActivity{
         if (url.contains("mintmanga")){
             url = "mintmanga";
         }
+        if (url.contains("selfmanga")){
+            url = "selfmanga";
+        }
         if (!url.isEmpty()) initializationRR();
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -98,6 +101,9 @@ public class RecentlyRead extends BaseActivity{
             }
             if (list.get(pos).getURLchapter().contains("mintmanga")){
                 classTop.setURL_site("http://mintmanga.com");
+            }
+            if (list.get(pos).getURLchapter().contains("selfmang")){
+                classTop.setURL_site("http://selfmang.ru");
             }
             //
             classTop.setURL_img(list.get(pos).getURL_img());

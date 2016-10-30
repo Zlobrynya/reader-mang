@@ -67,7 +67,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("POST", "!!CREATE!!SEARCH");
+       // Log.i("POST", "!!CREATE!!SEARCH");
         v = inflater.inflate(R.layout.search_and_genres_fragment, null);
         ListView gr = (ListView) v.findViewById(R.id.listSearch);
         gr.setAdapter(myAdap);
@@ -187,7 +187,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
             String in;
             if (a.getCheck()) in = "in";
             else in="";
-            request += "&"+ a.getURL_chapter() + "="+in;
+            request += "&"+ a.getURLChapter() + "="+in;
         }
         Log.i("POST", classMang.getClassMang().getURL()+request);
         classMang.setURL_Search(request);

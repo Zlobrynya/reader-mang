@@ -93,6 +93,9 @@ public class fragmentBookmark extends Fragment {
             if (list.get(pos).getURLchapter().contains("mintmanga")) {
                 classTop.setURL_site("http://mintmanga.com");
             }
+            if (list.get(pos).getURLchapter().contains("selfmanga")) {
+                classTop.setURL_site("http://selfmanga.ru");
+            }
             //
             classTop.setURL_img(list.get(pos).getURL_img());
             classTop.setURL_characher(list.get(pos).getURLchapter());

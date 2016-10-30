@@ -220,9 +220,11 @@ public class ClassDataBaseViewedHead {
             if (!query.isEmpty()){
                 //Посмотреть что за SuppressLint
                 @SuppressLint("Recycle") Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
-                return cursor.getColumnCount() > 0;
+               // Log.i("Zap", String.valueOf(cursor.getCount()));
+                return cursor.getCount() > 0;
             }
         }catch (SQLException e){
+            e.printStackTrace();
             return false;
         }
         return false;

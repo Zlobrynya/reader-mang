@@ -1,23 +1,16 @@
 package com.example.nikita.progectmangaread.Activity;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
-import com.example.nikita.progectmangaread.service.ServiceDownChapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class DeleteChapter extends DownloadChapter {
     private String name;
@@ -41,10 +34,10 @@ public class DeleteChapter extends DownloadChapter {
                 String notDeleteName = "";
                 for (ClassForList classForList : list) {
                     if (classForList.getCheck())
-                        nameDir += classForList.getURL_chapter()+",";
+                        nameDir += classForList.getURLChapter()+",";
                     else {
-                        notDeleteDir += classForList.getURL_chapter()+",";
-                        notDeleteName += classForList.getName_chapter()+",";
+                        notDeleteDir += classForList.getURLChapter()+",";
+                        notDeleteName += classForList.getNameChapter()+",";
                     }
                 }
                 if (!nameDir.isEmpty()) {
@@ -54,7 +47,7 @@ public class DeleteChapter extends DownloadChapter {
                         CacheFile file = new CacheFile(getCacheDir(), s);
                         file.deleteDirectory();
                         for (ClassForList classForList : list)
-                            if (classForList.getURL_chapter().equals(s))
+                            if (classForList.getURLChapter().equals(s))
                                 ints.add(list.indexOf(classForList));
                     }
                     for (int i = 0; i < ints.size();i++){

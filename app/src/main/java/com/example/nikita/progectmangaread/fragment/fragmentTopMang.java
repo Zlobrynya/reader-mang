@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.Activity.DescriptionMang;
@@ -91,7 +92,7 @@ public class fragmentTopMang extends Fragment {
         height = TopManga.HEIGHT_WIND/sizeCalculate(TopManga.HEIGHT_WIND);
         width = TopManga.WIDTH_WIND/sizeCalculate(TopManga.WIDTH_WIND);
 
-        Log.i("W,H TemplePase",height + " " + width);
+       // Log.i("W,H TemplePase",height + " " + width);
 
         //создаем адаптер для GriedView
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
@@ -223,7 +224,10 @@ public class fragmentTopMang extends Fragment {
 
         @Override
         public void onEnd(int number) {
-
+            if (list.isEmpty() ){
+                TextView textView = (TextView) getActivity().findViewById(R.id.text_top_mang_info);
+                textView.setVisibility(View.VISIBLE);
+            }
         }
     };
 
@@ -379,6 +383,7 @@ public class fragmentTopMang extends Fragment {
                         myAdap.notifyDataSetChanged();
 
                     }catch (IndexOutOfBoundsException e){
+                        //
                         Log.i("Temple Pase: Error: ",e.toString());
                         Log.i("Temple Pase: Size list: ", String.valueOf(list.size()));
                         Log.i("Temple Pase: Kol: ", String.valueOf(kol));
@@ -389,7 +394,7 @@ public class fragmentTopMang extends Fragment {
             }else {
                 Toast.makeText(fragmentTopMang.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
-
+            if (lisens != null) lisens.onEnd(1);
         }
     }
 
