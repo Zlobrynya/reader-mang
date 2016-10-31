@@ -39,5 +39,7 @@
     <string name="info_selfmanga">"На сайте размещается только русская авторская манга и журналы о манге."</string>
     <string name="selection_site">Выберите сайты в настройках приложения.</string>
     <string name="mang_not_found">Манга не найдена.</string>
+    <string name="not_recentle_read">Нет просмотреных манг.</string>
+    <string name="not_other_mang">Не найдено похожих манг.</string>
 
 </resources>

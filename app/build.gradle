@@ -47,8 +47,8 @@ dependencies {
     compile 'rapid.decoder:png-decoder:0.3.0'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile project(':androidlibmagick')
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta2'
 }

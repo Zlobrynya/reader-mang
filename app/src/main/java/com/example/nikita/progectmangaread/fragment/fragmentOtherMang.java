@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.Activity.DescriptionMang;
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterOtherMang;
@@ -30,6 +31,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class fragmentOtherMang extends Fragment {
     private AdapterOtherMang adapterOtherMang;
     private ArrayList<ClassOtherMang> list;
+    private TextView textView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class fragmentOtherMang extends Fragment {
         View v = inflater.inflate(R.layout.sticky_list, null);
         StickyListHeadersListView listView = (StickyListHeadersListView) v.findViewById(R.id.listRecentlyRead);
         listView.setAdapter(adapterOtherMang);
+        textView= (TextView) v.findViewById(R.id.text_sticky_list);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -79,6 +82,10 @@ public class fragmentOtherMang extends Fragment {
     public void onEvent(ArrayList<ClassOtherMang> event) {
         list.addAll(event);
         adapterOtherMang.notifyDataSetChanged();
+        if (list.isEmpty()){
+            textView.setText(R.string.not_other_mang);
+            textView.setVisibility(View.VISIBLE);
+        }
      //   EventBus.getDefault().cancelEventDelivery(event) ;
     }
 

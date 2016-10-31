@@ -79,8 +79,8 @@ public class AdapterBookmark extends ArrayAdapter<ClassRecentlyRead> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.bookmark, null);
             holder.img = (ImageView) v.findViewById(R.id.imageView_notebook);
-            holder.img.setMinimumWidth(TopManga.WIDTH_WIND / 4);
-            holder.img.setMinimumHeight(TopManga.HEIGHT_WIND / 5);
+            holder.img.getLayoutParams().width = TopManga.WIDTH_WIND / 4;
+            holder.img.getLayoutParams().height = TopManga.HEIGHT_WIND / 5;
             holder.buttonDelete = (ImageButton) v.findViewById(R.id.imageButton_delete);
             holder.nameMang = (TextView) v.findViewById(R.id.textView_name_notebook);
             v.setTag(holder);

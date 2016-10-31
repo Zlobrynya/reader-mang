@@ -76,10 +76,8 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.layout_from_graund_view, null);
             holder.img = (ImageView)v.findViewById(R.id.imageView1);
-
             holder.img.getLayoutParams().width = w;
             holder.img.getLayoutParams().height = h;
-
             holder.tv = (TextView) v.findViewById(R.id.textMang);
             v.setTag(holder);
         }

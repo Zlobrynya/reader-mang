@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterRecentlyRead;
@@ -29,6 +30,7 @@ public class RecentlyRead extends BaseActivity{
     private static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private String url;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class RecentlyRead extends BaseActivity{
         adapter = new AdapterRecentlyRead(this,R.layout.list_view,list);
         listView.setAdapter(adapter);
         getSupportActionBar().setTitle("Recently Read"); // set the top title
+        textView= (TextView) findViewById(R.id.text_sticky_list);
 
         url = mSettings.getString(APP_PREFERENCES_URL, "");
         //ViewedHead.db
@@ -130,6 +133,10 @@ public class RecentlyRead extends BaseActivity{
             cursor.moveToNext();
         }
         cursor.close();
+        if (list.isEmpty()){
+            textView.setText(R.string.not_recentle_read);
+            textView.setVisibility(View.VISIBLE);
+        }
         adapter.notifyDataSetChanged();
     }
 

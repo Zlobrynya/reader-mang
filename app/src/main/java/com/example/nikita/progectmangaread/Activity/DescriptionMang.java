@@ -528,6 +528,7 @@ public class DescriptionMang extends BaseActivity {
 
                 for (int i = 0; i < 7;i++){
                     el = el.nextElementSibling();
+                    if (el == null) break;
                     String helpVar = el.text();
                     if (helpVar.contains("Жанры")){
                         helpVar = "";
@@ -550,12 +551,14 @@ public class DescriptionMang extends BaseActivity {
                      ClassDescriptionMang.setTranslate("Перевод: завершен");
                  }
                 //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
-                Elements el2 = doc.select("[itemprop = description]");
-                ClassDescriptionMang.setDescription(el2.attr("content"));
+                Elements el2 = doc.select("[class = manga-description]");
+                //ClassDescriptionMang.setDescription(el2.attr("content"));
+                ClassDescriptionMang.setDescription(el2.text());
             } catch (IOException e) {
                // e.printStackTrace();
                 not_net = true;
             }catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }

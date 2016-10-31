@@ -76,8 +76,8 @@ public class AdapterRecentlyRead extends ArrayAdapter<ClassRecentlyRead> impleme
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.recently_read, null);
             holder.img = (ImageView) v.findViewById(R.id.imageNameMangRR);
-            holder.img.setMinimumWidth(TopManga.WIDTH_WIND / 4);
-            holder.img.setMinimumHeight(TopManga.HEIGHT_WIND / 5);
+            holder.img.getLayoutParams().width = TopManga.WIDTH_WIND / 4;
+            holder.img.getLayoutParams().height = TopManga.HEIGHT_WIND / 5;
             holder.nameChapter = (TextView) v.findViewById(R.id.textViewNameChapterRR);
             holder.nameMang = (TextView) v.findViewById(R.id.textViewNameMangRR);
             v.setTag(holder);

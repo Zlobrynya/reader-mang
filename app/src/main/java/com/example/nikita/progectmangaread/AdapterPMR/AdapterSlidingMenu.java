@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.R;
 
 import java.util.ArrayList;
@@ -62,8 +63,8 @@ public class AdapterSlidingMenu extends BaseAdapter {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.item_sliding_menu, null);
             holder.img = (ImageView)v.findViewById(R.id.imageView2);
-            holder.img.setMinimumHeight(10);
-            holder.img.setMinimumWidth(10);
+            holder.img.getLayoutParams().width = TopManga.WIDTH_WIND / 4;
+            holder.img.getLayoutParams().height = TopManga.HEIGHT_WIND / 5;
             holder.tv = (TextView) v.findViewById(R.id.textView);
             v.setTag(holder);
         }
