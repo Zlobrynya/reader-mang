@@ -24,7 +24,9 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Nikita on 10.03.2016.
@@ -184,6 +186,7 @@ public class fragmentPageDownlad extends Fragment{
 
     // Принимает евенты о скачивании от CacheFile и ThreadManager
     // разделение в строке идет: / от CacheFile, если не чего делить то выводим на экран изображение
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(String event){
         String[] strings = event.split("/");
         if (strings.length == 2){

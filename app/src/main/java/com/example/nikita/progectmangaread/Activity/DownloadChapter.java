@@ -22,7 +22,9 @@ import com.example.nikita.progectmangaread.service.ServiceDownChapter;
 import java.io.File;
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class DownloadChapter extends AppCompatActivity {
     protected ArrayList<ClassForList> list;
@@ -154,6 +156,7 @@ public class DownloadChapter extends AppCompatActivity {
         super.onStart();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassTransportForList event){
         if (!event.getName().isEmpty()) {
             list.clear();

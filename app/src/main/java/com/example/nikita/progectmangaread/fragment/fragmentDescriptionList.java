@@ -17,6 +17,7 @@ import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
+import com.example.nikita.progectmangaread.classPMR.ClassMainTop;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
 import java.text.SimpleDateFormat;
@@ -28,7 +29,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -42,6 +46,7 @@ public class fragmentDescriptionList extends Fragment {
     private String nameMang;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private boolean readDownloaded;
+    private ClassMainTop mainTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,9 +80,16 @@ public class fragmentDescriptionList extends Fragment {
 
                 //высчитываем hashCode строки
                 String numberChapter = String.valueOf(classForList1.getNameChapter().hashCode());
-
+               /* String locNameChar = nameMang;
+                locNameChar = locNameChar.replace(")","").replace("(",",");
+                if (locNameChar.split(",").length > 1){
+                    locNameChar = locNameChar.split(",")[1];
+                }
+                locNameChar = "%(" + locNameChar + ")%";*/
                 classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
 
+             //   String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mainTop.getNameCharacher(),ClassDataBaseViewedHead.LAST_CHAPTER);
+                classDataBaseViewedHead.editLastChapter(nameMang, mainTop.getUrlSite() + classForList1.getURLChapter());
                 //Получаем дату когда тыкнули главу и загрузили в бд
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -88,7 +100,7 @@ public class fragmentDescriptionList extends Fragment {
                 if (readDownloaded)
                     classForList1.setDownload(true);
 
-                EventBus.getDefault().post(classForList1);
+                EventBus.getDefault().postSticky(classForList1);
             }
         });
      //   Log.i(PROBLEM, "End Start fragmentDescriptionList");
@@ -96,50 +108,57 @@ public class fragmentDescriptionList extends Fragment {
     }
 
     //"Посылка" с fragmentPageDowland, что надо переключить главу
+    @Subscribe(sticky = true,threadMode = ThreadMode.BACKGROUND)
     public void onEvent(java.lang.Integer event){
         ClassForList classForList1 = list.get(event);
         classForList1.setNumberChapter(event);
         if (!classForList1.getCheck())
             classForList1.setCheck(true);
         list.set(event, classForList1);
-        myAdap.notifyDataSetChanged();
         if (!readDownloaded){
             classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getNameChapter().hashCode()));
             classForList1.setDownload(false);
         }
         else
             classForList1.setDownload(true);
-        EventBus.getDefault().post(classForList1);
+        //удалем sticky евент, что бы заново сюда не попадать
+        EventBus.getDefault().removeStickyEvent(event);
+        EventBus.getDefault().postSticky(classForList1);
     }
 
-
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(java.lang.String event){
         if (event.contains("notebook")){
-            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NOTEBOOK));
+            String locNameChar = nameMang;
+            locNameChar = locNameChar.replace(")","").replace(" ","").replace("(",",").split(",")[1];
+            locNameChar = "%(" + locNameChar + ")%";
+
+            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(locNameChar, ClassDataBaseViewedHead.NOTEBOOK));
             if (notebook == 0){
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.NOTEBOOK);
+                classDataBaseViewedHead.setData(locNameChar, String.valueOf(1), ClassDataBaseViewedHead.NOTEBOOK);
                 String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.LAST_CHAPTER);
                 if (lastChapter.contains("null")){
-                    classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURLChapter());
-                    classDataBaseViewedHead.setData(nameMang, list.get(list.size() - 1).getNameChapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    classDataBaseViewedHead.editLastChapter(locNameChar, list.get(list.size() - 1).getURLChapter());
+                    classDataBaseViewedHead.setData(locNameChar, list.get(list.size() - 1).getNameChapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
                 }
             }else {
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(0), ClassDataBaseViewedHead.NOTEBOOK);
+                classDataBaseViewedHead.setData(locNameChar, String.valueOf(0), ClassDataBaseViewedHead.NOTEBOOK);
             }
         }
     }
 
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassTransportForList event) {
-        Log.i(strLog, "event ClassTransportForList");
+       // Log.i(strLog, "event ClassTransportForList");
         if (!event.getName().isEmpty() && list.isEmpty()){
             //list.clear();
             nameMang = event.getName();
+            mainTop = event.getMainClassTop();
             //Проверка откуда пришел евент
-            if (event.getMainClassTop() != null){
-                ClassDataBaseListMang classDataBaseListMang = new ClassDataBaseListMang(getActivity(), event.getMainClassTop().getURL_site());
-                if (!classDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getName_characher())){
+            if (mainTop != null){
+                ClassDataBaseListMang classDataBaseListMang = new ClassDataBaseListMang(getActivity(), event.getMainClassTop().getUrlSite());
+                if (!classDataBaseListMang.thereIsInTheDatabase(event.getMainClassTop().getNameCharacher())){
                     classDataBaseListMang.addBasaData(event.getMainClassTop(), -1);
                 }
                 for (ClassForList b: event.getClassForList()){
@@ -163,8 +182,9 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onStart() {
-        Log.i(strLog,"Start");
+       // Log.i(strLog,"Start");
         EventBus.getDefault().register(this);
+        myAdap.notifyDataSetChanged();
         super.onStart();
     }
 
@@ -178,7 +198,7 @@ public class fragmentDescriptionList extends Fragment {
     public void onDestroy(){
        /* if (classDataBaseViewedHead != null)
             classDataBaseViewedHead.closeDataBase();*/
-      //  EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

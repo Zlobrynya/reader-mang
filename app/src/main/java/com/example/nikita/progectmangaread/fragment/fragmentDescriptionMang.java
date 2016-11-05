@@ -16,7 +16,9 @@ import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
 import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Nikita on 03.02.2016.
@@ -55,7 +57,7 @@ public class fragmentDescriptionMang extends Fragment {
         Log.i(PROBLEM, "End Start fragmentDescriptionMang");
         return v;
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassDescriptionMang event) {
         if (this.getArguments().getInt("num") == 1){
             if (v != null) {

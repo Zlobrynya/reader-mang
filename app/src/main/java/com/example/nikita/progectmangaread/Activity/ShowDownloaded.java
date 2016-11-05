@@ -20,7 +20,7 @@ import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 public class ShowDownloaded extends BaseActivity {
     private AdapterBookmark adapter;

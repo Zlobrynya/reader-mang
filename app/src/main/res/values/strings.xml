@@ -41,5 +41,6 @@
     <string name="mang_not_found">Манга не найдена.</string>
     <string name="not_recentle_read">Нет просмотреных манг.</string>
     <string name="not_other_mang">Не найдено похожих манг.</string>
+    <string name="open_browser">Открыть в браузере</string>
 
 </resources>

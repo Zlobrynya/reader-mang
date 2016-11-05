@@ -62,16 +62,16 @@ public class ClassDataBaseListMang {
     public void addBasaData(ClassMainTop a, int number){
         String query,name;
         name = "\"";
-        name += a.getName_characher().replace('"', ' ') + "\"";
+        name += a.getNameCharacher().replace('"', ' ') + "\"";
         query = "SELECT " +  NAME_MANG + " FROM " + nameTable + " WHERE " +  NAME_MANG + "=" +
                 name;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() == 0){
             ContentValues newValues = new ContentValues();
             // Задайте значения для каждого столбца
-            newValues.put( NAME_MANG, a.getName_characher().replace('"', ' '));
-            newValues.put( URL_CHAPTER, a.getURL_characher());
-            newValues.put( URL_IMG, a.getURL_img());
+            newValues.put( NAME_MANG, a.getNameCharacher().replace('"', ' '));
+            newValues.put( URL_CHAPTER, a.getURLCharacher());
+            newValues.put( URL_IMG, a.getUrlImg());
             newValues.put( TOP,number);
             // Вставляем данные в таблицу
             mSqLiteDatabase.insert(nameTable, null, newValues);
@@ -88,9 +88,9 @@ public class ClassDataBaseListMang {
         if (cursor.getCount() != 0){
             ClassMainTop a = new ClassMainTop();
             cursor.moveToFirst();
-            a.setURL_img(cursor.getString(cursor.getColumnIndex(URL_IMG)));
-            a.setName_characher(cursor.getString(cursor.getColumnIndex(NAME_MANG)));
-            a.setURL_characher(cursor.getString(cursor.getColumnIndex(URL_CHAPTER)));
+            a.setUrlImg(cursor.getString(cursor.getColumnIndex(URL_IMG)));
+            a.setNameCharacher(cursor.getString(cursor.getColumnIndex(NAME_MANG)));
+            a.setUrlCharacher(cursor.getString(cursor.getColumnIndex(URL_CHAPTER)));
             cursor.close();
             return a;
         }

@@ -13,7 +13,9 @@ import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.R;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Nikita on 25.02.2016.
@@ -46,6 +48,7 @@ public class fragmentLoad_page0 extends Fragment{
         return fragment;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
      public void onEvent(ClassTransport event) {
         if (event != null){
             FragmentTransaction transaction = getFragmentManager().beginTransaction();

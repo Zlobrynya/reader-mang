@@ -18,7 +18,10 @@ import com.example.nikita.progectmangaread.classPMR.ClassOtherMang;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -58,6 +61,7 @@ public class fragmentOtherMang extends Fragment {
                     intent.putExtra("Url_img", mainTop.getURL_img());
                     intent.putExtra("Name_ch", mainTop.getNameMang());
                     intent.putExtra("Url_site", mainTop.getUrlSite());
+                    intent.putExtra("other", true);
                     startActivity(intent);
                     Log.v("long clicked", "pos: " + position);
                 }
@@ -79,6 +83,7 @@ public class fragmentOtherMang extends Fragment {
         super.onStop();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ArrayList<ClassOtherMang> event) {
         list.addAll(event);
         adapterOtherMang.notifyDataSetChanged();

@@ -5,7 +5,7 @@ package com.example.nikita.progectmangaread.classPMR;
  */
 public class ClassForList {
     private String URL_chapter;
-    private String Name_chapter;
+    private String nameChapter;
     private boolean check,download,checkDownload,newChapter;
     private int numberChapter;
 
@@ -16,11 +16,12 @@ public class ClassForList {
     public ClassForList(String URL_chapter, String name_chapter) {
         check = download = false;
         this.URL_chapter = URL_chapter;
-        this.Name_chapter = name_chapter;
+        this.nameChapter = name_chapter;
     }
+
     public void setURL_chapter(String URL_chapter) { this.URL_chapter = URL_chapter; }
     public void setCheck(boolean check) { this.check = check; }
-    public void setNameChapter(String name_chapter) { this.Name_chapter = name_chapter; }
+    public void setNameChapter(String name_chapter) { this.nameChapter = name_chapter; }
     public void setNumberChapter(int numberChapter) { this.numberChapter = numberChapter; }
     public void setDownload(boolean download){ this.download = download; }
     public void setCheckDownload(boolean check) { this.checkDownload = check; }
@@ -28,7 +29,7 @@ public class ClassForList {
 
     public String getURLChapter() { return URL_chapter; }
     public boolean getCheck() { return check;}
-    public String getNameChapter() { return Name_chapter; }
+    public String getNameChapter() { return nameChapter; }
     public int getNumberChapter() { return numberChapter; }
     public boolean getDownload() { return download; }
     public boolean getCheckDownload() { return checkDownload; }

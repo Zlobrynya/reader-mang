@@ -44,6 +44,8 @@ import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.fragment.fragmentNextPrevChapter;
 import com.example.nikita.progectmangaread.fragment.fragmentPageDownlad;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -54,7 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 
 /**
@@ -115,29 +117,31 @@ public class PagesDownload extends AppCompatActivity {
 
             public void onPageSelected(int position) {
                 if (urlPage.size() != 0) {
-                    if (position > 0 && position <= urlPage.size() && !download)
+                    if (position > 0 && position <= urlPage.size() && !download){
                         threadManager.setPriorityImg(position-1);
+                        pageNumber = position;
+                        classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), ClassDataBaseViewedHead.LAST_PAGE);
+                        return;
+                    }
                     if (position == 0) {
-                        //по идеи это глава которая была раньше, но так, как лист идет сверху вниз (от самой последней в
-                        //      самую старую, (потом это переделать))
-                        EventBus.getDefault().post(chapterNumber + 1);
+                        EventBus.getDefault().postSticky(chapterNumber + 1);
                         activity.finish();
                     }
                     //для манги где всего 1 картинка на главу
                     if (urlPage.size() == 1) {
                         if (position > urlPage.size()) {
-                            EventBus.getDefault().post(chapterNumber - 1);
+                            EventBus.getDefault().postSticky(chapterNumber - 1);
                             activity.finish();
                         }
                     } else {
                         if (position == urlPage.size() + 1) {
-                            EventBus.getDefault().post(chapterNumber - 1);
+                            EventBus.getDefault().postSticky(chapterNumber - 1);
                             activity.finish();
                         }
                     }
-                    pageNumber = position;
-                    if (!download)
-                        classDataBaseViewedHead.setData(nameMang, String.valueOf(pageNumber), ClassDataBaseViewedHead.LAST_PAGE);
+
+                    classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.LAST_PAGE);
+
                 }
             }
 
@@ -174,6 +178,7 @@ public class PagesDownload extends AppCompatActivity {
 
             }
         };
+
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
@@ -235,10 +240,10 @@ public class PagesDownload extends AppCompatActivity {
             threadManager.setPriorityImg(pageNumber-1);
             EventBus.getDefault().post(pageNumber-1+"/reload");
         }else if (id == R.id.next_page_skip){
-            EventBus.getDefault().post(chapterNumber - 1);
+            EventBus.getDefault().postSticky(chapterNumber - 1);
             this.finish();
         }else if (id == R.id.previous_page_skip){
-            EventBus.getDefault().post(chapterNumber + 1);
+            EventBus.getDefault().postSticky(chapterNumber + 1);
             this.finish();
         }
 
@@ -305,10 +310,12 @@ public class PagesDownload extends AppCompatActivity {
         yourDialogSeekBar.setOnSeekBarChangeListener(yourSeekBarListener);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(java.lang.Short event){
         chapterNumber = event;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(java.lang.String event){
         //Если декодирование сфейлилось то запускаем перезагрузку изображдения
         if (event.contains("FailGetImg")){

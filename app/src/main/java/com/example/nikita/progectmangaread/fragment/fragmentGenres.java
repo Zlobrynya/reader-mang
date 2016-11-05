@@ -15,6 +15,8 @@ import com.example.nikita.progectmangaread.classPMR.ClassForList;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Nikita on 04.03.2016.
@@ -65,6 +67,7 @@ public class fragmentGenres extends Fragment {
         return v ;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassMang event){
         this.classTransport.setClassMang(event);
         int id = 0;

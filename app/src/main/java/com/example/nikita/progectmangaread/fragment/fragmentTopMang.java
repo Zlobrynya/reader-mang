@@ -1,5 +1,6 @@
 package com.example.nikita.progectmangaread.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,8 @@ import com.example.nikita.progectmangaread.classPMR.ClassTransport;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.Activity.TopManga;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,7 +39,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Nikita on 13.01.2016.
@@ -121,10 +124,10 @@ public class fragmentTopMang extends Fragment {
                 mainTop = list.get(position);
                 //отправляем в DescriptionMang
                 Intent intent = new Intent(getActivity(),DescriptionMang.class);
-                intent.putExtra("URL_ch",mainTop.getURL_characher());
-                intent.putExtra("Url_img",mainTop.getURL_img());
-                intent.putExtra("Name_ch",mainTop.getName_characher());
-                intent.putExtra("Url_site",mainTop.getURL_site());
+                intent.putExtra("URL_ch",mainTop.getURLCharacher());
+                intent.putExtra("Url_img",mainTop.getUrlImg());
+                intent.putExtra("Name_ch",mainTop.getNameCharacher());
+                intent.putExtra("Url_site",mainTop.getUrlSite());
                 startActivity(intent);
             //    Log.i(PROBLEM, "click item");
             }
@@ -231,6 +234,7 @@ public class fragmentTopMang extends Fragment {
         }
     };
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassMang event){
         if (classMang != null){
             if (!event.getURL().contains(classMang.getURL())){
@@ -306,7 +310,7 @@ public class fragmentTopMang extends Fragment {
 
     //Перенос возможен в отдельный пакет.
     public class Pars extends AsyncTask<Void,Void,Void> {
-        private String name_char,URL2;
+        private String nameChar,URL2;
         private ClassMang classMang;
         private AsyncTaskLisen lisens;
         private String imgSrc;
@@ -318,7 +322,7 @@ public class fragmentTopMang extends Fragment {
             this.lisens = callback;
             this.kol = kol;
             this.classMang = classMang;
-            URL2 = name_char = imgSrc = "";
+            URL2 = nameChar = imgSrc = "";
         }
 
         @Override
@@ -354,7 +358,7 @@ public class fragmentTopMang extends Fragment {
                 el2 = el.select(classMang.getImgURL());
 
                 imgSrc = el2.attr("src");
-                name_char = el2.attr("title");
+                nameChar = el2.attr("title");
                 if (kol_mang == 69 && resultPost != 1) doc = null;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -367,18 +371,21 @@ public class fragmentTopMang extends Fragment {
             return null;
         }
 
+        @SuppressLint("LongLogTag")
         @Override
         protected void onPostExecute(Void result){
             //добавляем в лист и обновление
             if (!not_net){
-                if (kol >= 0 && !URL2.isEmpty() && !name_char.isEmpty() && !classMang.getURL().isEmpty()) {
-                    ClassMainTop a = new ClassMainTop(URL2,name_char,imgSrc,classMang.getURL());
+                if (kol >= 0 && !URL2.isEmpty() && !nameChar.isEmpty() && !classMang.getURL().isEmpty()) {
+                   /* String locNameChar = nameChar;
+                    locNameChar = locNameChar.replace(")","").replace(" ","").replace("(",",");*/
+                    ClassMainTop classMainTop = new ClassMainTop(URL2, nameChar,imgSrc,classMang.getURL());
                     Log.i("Temple Pase: Kol parse: ", String.valueOf(kol));
                     try {
                         if (list.size() <= kol)
-                            list.add(a);
+                            list.add(classMainTop);
                         if (resultPost == 0) {
-                            classDataBaseListMang.addBasaData(a, kol);
+                            classDataBaseListMang.addBasaData(classMainTop, kol);
                         }
                         myAdap.notifyDataSetChanged();
 
@@ -405,7 +412,7 @@ public class fragmentTopMang extends Fragment {
             int numberItem = 0;
             while (!classDataBaseListMang.download_the_html(kol)){
                 ClassMainTop classTop = classDataBaseListMang.getMainClassTop(kol);
-                classTop.setURL_site(classMang.getURL());
+                classTop.setUrlSite(classMang.getURL());
                 list.add(classTop);
                 kol++;
                 numberItem++;

@@ -10,6 +10,9 @@ import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import com.example.nikita.progectmangaread.classPMR.ClassForList;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 
 public class DeleteChapter extends DownloadChapter {
@@ -67,6 +70,8 @@ public class DeleteChapter extends DownloadChapter {
             }
         });
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassTransportForList event){
         if (!event.getName().isEmpty()){
             list.clear();

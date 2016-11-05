@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import magick.ColorspaceType;
 import magick.ImageInfo;
 import magick.MagickException;

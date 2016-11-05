@@ -27,7 +27,10 @@ import com.example.nikita.progectmangaread.fragment.fragmentSearchAndGenres;
 import com.example.nikita.progectmangaread.service.AlarmManagerBroadcastReceiver;
 import com.example.nikita.progectmangaread.service.UpdateMangBookmark;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -168,7 +171,7 @@ public class TopManga extends BaseActivity {
         return false;
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassMang event){
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(APP_PREFERENCES_URL,event.getURL());
@@ -217,6 +220,7 @@ public class TopManga extends BaseActivity {
         }, 2000);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ClassTransport event) {
         pager.setCurrentItem(1);
     }

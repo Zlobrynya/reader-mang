@@ -28,6 +28,7 @@ public class ClassDataBaseViewedHead {
 
 
     public ClassDataBaseViewedHead(Context context){
+        //тут косяк NullPointerException
         mDatabaseHelper = new DatabaseHelper(context);
         mSqLiteDatabase = mDatabaseHelper.getWritableDatabase();
         String DATABASE_CREATE_SCRIPT = "create table if not exists "
@@ -58,7 +59,7 @@ public class ClassDataBaseViewedHead {
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
-        query = "SELECT " +  NAME_MANG + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + "=" +
+        query = "SELECT " +  NAME_MANG + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + " LIKE " +
                 name;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() == 0){
@@ -85,7 +86,7 @@ public class ClassDataBaseViewedHead {
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
-        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + "=" +
+        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + " LIKE " +
                 name;
         String data = null;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
@@ -108,16 +109,16 @@ public class ClassDataBaseViewedHead {
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
-        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + "=" +
+        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + " LIKE " +
                 name;
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() != 0){
             cursor.moveToFirst();
             ContentValues cv = new ContentValues();
             cv.put( LAST_CHAPTER, thisURL);
-            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + "=" + name,null);
+            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + " LIKE " + name,null);
             cv.put( LAST_PAGE, "1");
-            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + "=" + name,null);
+            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + " LIKE " + name,null);
         }
     }
 
@@ -125,8 +126,9 @@ public class ClassDataBaseViewedHead {
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
-        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + "=" +
+        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + " LIKE " +
                 name;
+       // Log.i("qqql",query);
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() != 0){
             cursor.moveToFirst();
@@ -143,7 +145,7 @@ public class ClassDataBaseViewedHead {
             }
             ContentValues cv = new ContentValues();
             cv.put( VIEWED_HEAD, viewedHead);
-            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + "=" + name, null);
+            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + " LIKE " + name, null);
         }
     }
 
@@ -151,15 +153,14 @@ public class ClassDataBaseViewedHead {
         String query,name;
         name = "\"";
         name += nameMang.replace('"', ' ') + "\"";
-        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + "=" +
+        query = "SELECT " + "*" + " FROM " +  DATABASE_TABLE + " WHERE " +  NAME_MANG + " LIKE " +
                 name;
-
         Cursor cursor = mSqLiteDatabase.rawQuery(query, null);
         if (cursor.getCount() != 0){
             cursor.moveToFirst();
             ContentValues cv = new ContentValues();
             cv.put(where, data);
-            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + "=" + name,null);
+            mSqLiteDatabase.update("ViewedHead", cv,  NAME_MANG + " LIKE " + name,null);
         }
         cursor.close();
     }
@@ -168,7 +169,7 @@ public class ClassDataBaseViewedHead {
         String query;
         query = "SELECT " + NameTable + ".*" + ", "+ LAST_CHAPTER + ", "+ NAME_LAST_CHAPTER + ", "+ LAST_PAGE + ", "+ DATA + " " +
                 "FROM ViewedHead" +
-                " INNER JOIN " + NameTable + " ON "+ NAME_MANG + " = " + NameTable+"."+ ClassDataBaseListMang.NAME_MANG + " ORDER BY date(" + DATA + ") DESC";
+                " INNER JOIN " + NameTable + " ON "+ NAME_MANG + " = " + NameTable +"."+ ClassDataBaseListMang.NAME_MANG + " ORDER BY date(" + DATA + ") DESC";
         Log.i("BD Viewed",query);
 
         return mSqLiteDatabase.rawQuery(query, null);

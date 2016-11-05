@@ -89,10 +89,10 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
             //если нет то ничего не трогаем если да то грузим изображение
             //исправляет "баг" мерцание
             if (holder.img.getTag() == null ||
-                    !holder.img.getTag().equals(m1.getURL_img())) {
-                ImageLoader.getInstance().displayImage(m1.getURL_img(), holder.img, options);
-                holder.img.setTag(m1.getURL_img());
-                holder.tv.setText(m1.getName_characher());
+                    !holder.img.getTag().equals(m1.getUrlImg())) {
+                ImageLoader.getInstance().displayImage(m1.getUrlImg(), holder.img, options);
+                holder.img.setTag(m1.getUrlImg());
+                holder.tv.setText(m1.getNameCharacher());
             }
         }
         return v;

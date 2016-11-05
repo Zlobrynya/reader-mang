@@ -51,10 +51,10 @@ public class fragmentBookmark extends Fragment {
                 Intent intent = new Intent(getActivity(), DescriptionMang.class);
                 ClassMainTop mainTop = getClassMainTop(position);
                 if (mainTop != null) {
-                    intent.putExtra("URL_ch", mainTop.getURL_characher());
-                    intent.putExtra("Url_img", mainTop.getURL_img());
-                    intent.putExtra("Name_ch", mainTop.getName_characher());
-                    intent.putExtra("Url_site", mainTop.getURL_site());
+                    intent.putExtra("URL_ch", mainTop.getURLCharacher());
+                    intent.putExtra("Url_img", mainTop.getUrlImg());
+                    intent.putExtra("Name_ch", mainTop.getNameCharacher());
+                    intent.putExtra("Url_site", mainTop.getUrlSite());
                     startActivity(intent);
                     Log.v("long clicked", "pos: " + position);
                 }
@@ -68,10 +68,10 @@ public class fragmentBookmark extends Fragment {
                 Intent intent = new Intent(getActivity(), DescriptionMang.class);
                 ClassMainTop mainTop = getClassMainTop(position);
                 if (mainTop != null) {
-                    intent.putExtra("URL_ch", mainTop.getURL_characher());
-                    intent.putExtra("Url_img", mainTop.getURL_img());
-                    intent.putExtra("Name_ch", mainTop.getName_characher());
-                    intent.putExtra("Url_site", mainTop.getURL_site());
+                    intent.putExtra("URL_ch", mainTop.getURLCharacher());
+                    intent.putExtra("Url_img", mainTop.getUrlImg());
+                    intent.putExtra("Name_ch", mainTop.getNameCharacher());
+                    intent.putExtra("Url_site", mainTop.getUrlSite());
                     intent.putExtra("read", true);
                     startActivity(intent);
                     Log.v("long clicked", "pos: " + position);
@@ -85,20 +85,20 @@ public class fragmentBookmark extends Fragment {
     private ClassMainTop getClassMainTop(int pos) {
         if (pos > -1) {
             ClassMainTop classTop = new ClassMainTop();
-            classTop.setName_characher(list.get(pos).getNameMang());
+            classTop.setNameCharacher(list.get(pos).getNameMang());
             //Костыли
             if (list.get(pos).getURLchapter().contains("readmang")) {
-                classTop.setURL_site("http://readmanga.me");
+                classTop.setUrlSite("http://readmanga.me");
             }
             if (list.get(pos).getURLchapter().contains("mintmanga")) {
-                classTop.setURL_site("http://mintmanga.com");
+                classTop.setUrlSite("http://mintmanga.com");
             }
             if (list.get(pos).getURLchapter().contains("selfmanga")) {
-                classTop.setURL_site("http://selfmanga.ru");
+                classTop.setUrlSite("http://selfmanga.ru");
             }
             //
-            classTop.setURL_img(list.get(pos).getURL_img());
-            classTop.setURL_characher(list.get(pos).getURLchapter());
+            classTop.setUrlImg(list.get(pos).getURL_img());
+            classTop.setUrlCharacher(list.get(pos).getURLchapter());
             return classTop;
         }
         return null;

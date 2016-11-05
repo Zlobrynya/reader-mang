@@ -31,6 +31,9 @@ import com.example.nikita.progectmangaread.fragment.fragmentDescriptionMang;
 import com.example.nikita.progectmangaread.fragment.fragmentOtherMang;
 import com.example.nikita.progectmangaread.fragment.fragmentSaveDescriptionMang;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -40,8 +43,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by Nikita on 01.02.2016.
@@ -63,6 +64,7 @@ public class DescriptionMang extends BaseActivity {
     private Animation show_fab;
     private Animation hide_fab;
     private boolean visF = false;
+    private boolean otherMang = false;
     private boolean bookmark = false;
     private ViewPager pager;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
@@ -96,12 +98,14 @@ public class DescriptionMang extends BaseActivity {
         final Intent intent = getIntent();
         if (intent.getStringExtra("URL_ch") != null){
             mang = new ClassMainTop();
-            mang.setURL_characher(intent.getStringExtra("URL_ch"));
-            mang.setName_characher(intent.getStringExtra("Name_ch"));
-            mang.setURL_site(intent.getStringExtra("Url_site"));
-            mang.setURL_img(intent.getStringExtra("Url_img"));
+            mang.setUrlCharacher(intent.getStringExtra("URL_ch"));
+            mang.setNameCharacher(intent.getStringExtra("Name_ch"));
+            mang.setUrlSite(intent.getStringExtra("Url_site"));
+            mang.setUrlImg(intent.getStringExtra("Url_img"));
             read = intent.getBooleanExtra("read", false);
-          //  getSupportActionBar().setTitle(mang.getName_characher()); // set the top title
+            otherMang = intent.getBooleanExtra("other", false);
+
+            //  getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
             parsAndSettings();
         }
         downloadChapter = false;
@@ -163,23 +167,23 @@ public class DescriptionMang extends BaseActivity {
             @Override
             public void onClick(View view) {
                 ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DescriptionMang.this);
-                classDataBaseDownloadMang.addBasaData(mang.getName_characher());
+                classDataBaseDownloadMang.addBasaData(mang.getNameCharacher());
                 //добавляем в бд описание манги и т.п.
-                classDataBaseDownloadMang.setData(mang.getName_characher(), mang.getURL_characher(), ClassDataBaseDownloadMang.URL_MANG);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getRank(), ClassDataBaseDownloadMang.RATING);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getCategory(), ClassDataBaseDownloadMang.CATEGORY);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getDescription(), ClassDataBaseDownloadMang.DESCRIPTION);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getGenre(), ClassDataBaseDownloadMang.GENRES);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getNameAuthor(), ClassDataBaseDownloadMang.AUTHOR);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getToms(), ClassDataBaseDownloadMang.TOMS);
-                classDataBaseDownloadMang.setData(mang.getName_characher(), descriptionMang.getTranslate(), ClassDataBaseDownloadMang.TRANSLATION);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), mang.getURLCharacher(), ClassDataBaseDownloadMang.URL_MANG);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getRank(), ClassDataBaseDownloadMang.RATING);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getCategory(), ClassDataBaseDownloadMang.CATEGORY);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getDescription(), ClassDataBaseDownloadMang.DESCRIPTION);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getGenre(), ClassDataBaseDownloadMang.GENRES);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getNameAuthor(), ClassDataBaseDownloadMang.AUTHOR);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getToms(), ClassDataBaseDownloadMang.TOMS);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getTranslate(), ClassDataBaseDownloadMang.TRANSLATION);
               //  classDataBaseDownloadMang.closeDataBase();
 
                 Intent newInten = new Intent(DescriptionMang.this, DownloadChapter.class);
-                newInten.putExtra("mang", mang.getURL_characher());
-                newInten.putExtra("site", mang.getURL_site());
-                newInten.putExtra("Name", mang.getName_characher());
-                newInten.putExtra("image",mang.getURL_img());
+                newInten.putExtra("mang", mang.getURLCharacher());
+                newInten.putExtra("site", mang.getUrlSite());
+                newInten.putExtra("Name", mang.getNameCharacher());
+                newInten.putExtra("image",mang.getUrlImg());
                 CacheFile file = new CacheFile(getCacheDir(), "pageCache");
                 file.clearCache();
                 startActivity(newInten);
@@ -188,9 +192,10 @@ public class DescriptionMang extends BaseActivity {
         });
 
        // Log.i(PROBLEM, "End onCreate");
-        EventBus.getDefault().register(this);
-
+     //   EventBus.getDefault().register(this);
     }
+
+
 
     //Процедура востановление
     private void dataRecovery(){
@@ -199,9 +204,9 @@ public class DescriptionMang extends BaseActivity {
             classTransportForList = saveFragment.getClassTransportForList();
             descriptionMang = saveFragment.getClassDescriptionMang();
             mang = saveFragment.getMang();
-            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-        //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-            if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
+        //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
+            if (classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
                 fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
                 bookmark = false;
             }else {
@@ -223,13 +228,22 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onDestroy(){
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onPause(){
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     @Override
     public void onResume() {
        // Log.i(strLog,"Start");
+
+        EventBus.getDefault().register(this);
 
         //Посылаем данные в фрагменты
         if (classTransportForList != null){
@@ -319,8 +333,10 @@ public class DescriptionMang extends BaseActivity {
         saveFragment.setMang(mang);
         super.onSaveInstanceState(outState);
     }
+
     // Получаем событие, что был клик на экран и это не фабкнопка
     // И если кнопки показаны, то их закрываем
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(String event){
         if (event.contains("Click")){
             if (visF){
@@ -330,40 +346,38 @@ public class DescriptionMang extends BaseActivity {
         }
     }
 
-    //ПОЛУЧАЕМ с топлиста
     public void parsAndSettings(){
        // mang = event;
         Pars pars = new Pars(addImg, mang);
         pars.execute();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
-        getSupportActionBar().setTitle(mang.getName_characher()); // set the top title
-        classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getName_characher());
-        if (classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
+        getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
+        classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
+        if (classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
             fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
             bookmark = false;
         }else {
             bookmark = true;
             fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
         }
-        if (read) startLastChapter();
+        if (read && !otherMang)
+            startLastChapter();
     }
 
+    //ThreadMode.BACKGROUND ??
+    @Subscribe(sticky = true,threadMode = ThreadMode.BACKGROUND)
     public void onEvent(ClassForList event){
         //узнаем нужно ли запускать активити
         if (event.getNumberChapter() >= 0){
             Intent intent = new Intent(this, PagesDownload.class);
             if (!event.getDownload()){
-                intent.putExtra("URL", mang.getURL_site() + event.getURLChapter());
+                intent.putExtra("URL", mang.getUrlSite() + event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
-                String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(),ClassDataBaseViewedHead.LAST_CHAPTER);
                 String helpVar = "";
-                if (lastChapter.contains(event.getURLChapter())){
-                    helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE);
-                }
-                classDataBaseViewedHead.editLastChapter(mang.getName_characher(), mang.getURL_site() + event.getURLChapter());
+                helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE);
                 if (helpVar.isEmpty()) helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
-                intent.putExtra("Chapter", mang.getName_characher());
+                intent.putExtra("Chapter", mang.getNameCharacher());
             }else {
                 intent.putExtra("URL", event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
@@ -374,7 +388,7 @@ public class DescriptionMang extends BaseActivity {
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();
             startActivity(intent);
-            EventBus.getDefault().cancelEventDelivery(event);
+            EventBus.getDefault().removeStickyEvent(event);
         }
     }
 
@@ -384,32 +398,32 @@ public class DescriptionMang extends BaseActivity {
     }
 
     private void startLastChapter(){
-        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_CHAPTER);
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_CHAPTER);
         try {
             int numberChapter = numberLastChapter();
             if (!read){
                 //numberChapter = arList.size()-1;
                 if (string.contains("null")){
                     ClassForList classForList = arList.get(numberChapter);
-                    string = mang.getURL_site()+classForList.getURLChapter();
-                    classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(numberChapter),ClassDataBaseViewedHead.VIEWED_HEAD);
+                    string = mang.getUrlSite()+classForList.getURLChapter();
+                    classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(numberChapter),ClassDataBaseViewedHead.VIEWED_HEAD);
                 }
             }
             //Получаем дату и пишем в БД
             Calendar c = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = df.format(c.getTime());
-            classDataBaseViewedHead.setData(mang.getName_characher(), formattedDate,ClassDataBaseViewedHead.DATA);
+            classDataBaseViewedHead.setData(mang.getNameCharacher(), formattedDate,ClassDataBaseViewedHead.DATA);
 
-            if (!string.contains(mang.getURL_site())){
-                string = mang.getURL_site() + string;
+            if (!string.contains(mang.getUrlSite())){
+                string = mang.getUrlSite() + string;
             }
 
             Intent intent = new Intent(this, PagesDownload.class);
             intent.putExtra("URL",string);
             intent.putExtra("NumberChapter", numberChapter);
-            intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_PAGE));
-            intent.putExtra("Chapter", mang.getName_characher());
+            intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE));
+            intent.putExtra("Chapter", mang.getNameCharacher());
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();
             startActivity(intent);
@@ -421,7 +435,7 @@ public class DescriptionMang extends BaseActivity {
     }
 
     private int numberLastChapter() throws ArrayIndexOutOfBoundsException{
-        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getName_characher(), ClassDataBaseViewedHead.LAST_CHAPTER);
+        String string = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_CHAPTER);
        // Log.i("Number chapter", string);
         Short kol = 0;
         //Проверка на первый раз, если так то выдаем самую последнюю главу в списке
@@ -443,11 +457,11 @@ public class DescriptionMang extends BaseActivity {
 
     //Открываем сылку в браузере
     public void openURL(View view) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mang.getURL_characher()));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mang.getURLCharacher()));
         startActivity(browserIntent);
     }
 
-    public class adapterFragment  extends FragmentPagerAdapter{
+    public class adapterFragment  extends FragmentPagerAdapter {
         int kol;
 
         adapterFragment(FragmentManager mgr, int kol) {
@@ -491,14 +505,14 @@ public class DescriptionMang extends BaseActivity {
         private AsyncTaskLisen lisens;
         private ClassDescriptionMang ClassDescriptionMang;
         private boolean not_net; //отвечает за проверку подклчение
-
+        private String name;
         //конструктор потока
         Pars(AsyncTaskLisen callback, ClassMainTop mang) {
             this.mang = mang;
             this.lisens = callback;
             ClassDescriptionMang = new ClassDescriptionMang();
-            ClassDescriptionMang.setNameMang(mang.getName_characher());
-            ClassDescriptionMang.setImg_url(mang.getURL_img());
+            ClassDescriptionMang.setNameMang(mang.getNameCharacher());
+            ClassDescriptionMang.setImg_url(mang.getUrlImg());
             not_net = false;
         }
 
@@ -509,13 +523,18 @@ public class DescriptionMang extends BaseActivity {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                if (doc == null) doc = Jsoup.connect(mang.getURL_characher()).userAgent("Mozilla")
+                if (doc == null) doc = Jsoup.connect(mang.getURLCharacher()).userAgent("Mozilla")
                         .timeout(3000)
                         .get();
+                //если пришли со вкладки "другие манги" нужно достать имя манги на русском для бд
+
 
                 Element el = doc.select("[class = small smallText rate_info]").first();
                 ClassDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
-
+                if (otherMang){
+                    el = doc.select("[class = name]").first();
+                    name = el.text();
+                }
                 //считываем тома
                 el = doc.select("[class = subject-meta col-sm-7]").first();
                 //Получаем количетво томов
@@ -555,10 +574,11 @@ public class DescriptionMang extends BaseActivity {
                 //ClassDescriptionMang.setDescription(el2.attr("content"));
                 ClassDescriptionMang.setDescription(el2.text());
             } catch (IOException e) {
-               // e.printStackTrace();
+                e.printStackTrace();
+             //   Log.i("Site",e.getMessage());
                 not_net = true;
             }catch (Exception e) {
-                e.printStackTrace();
+              //  e.printStackTrace();
             }
             return null;
         }
@@ -566,6 +586,10 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!not_net){
+                if (otherMang){
+                    mang.setNameCharacher(name+" ("+mang.getNameCharacher()+")");
+                    getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
+                }
                 descriptionMang = ClassDescriptionMang;
                 EventBus.getDefault().post(ClassDescriptionMang);
                 if (lisens != null) lisens.onEnd();
@@ -610,9 +634,9 @@ public class DescriptionMang extends BaseActivity {
         @Override
         protected void onPostExecute(Void result){
             if (!arList.isEmpty()){
-                ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getName_characher(),mang);
+                ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getNameCharacher(),mang);
                 classTransportForList = transportForList;
-              // classDataBaseViewedHead.setData(mang.getName_characher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
+              // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
                 EventBus.getDefault().post(transportForList);
                 if (read){
                     numberLastChapter();
@@ -630,7 +654,7 @@ public class DescriptionMang extends BaseActivity {
             if (ClassOtherManglist == null)
                 ClassOtherManglist = new ArrayList<>();
             try {
-                doc = Jsoup.connect(mang.getURL_site()+"/list/like"+mang.getURL_characher().substring(mang.getURL_characher().lastIndexOf("/"))).userAgent("Mozilla")
+                doc = Jsoup.connect(mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/"))).userAgent("Mozilla")
                         .timeout(3000)
                         .get();
                 //вытаскиваем первую таблицу со связаной мангой
@@ -667,7 +691,7 @@ public class DescriptionMang extends BaseActivity {
                         Elements elements = el.select("td");
                         element = elements.select("[class = manga-link]").first();
                         if (element != null){
-                            classOtherMang.setURLchapter(mang.getURL_site() + element.attr("href"));
+                            classOtherMang.setURLchapter(mang.getUrlSite() + element.attr("href"));
                             classOtherMang.setNameMang(element.text());
                             element = elements.select("[class = screenshot]").first();
                            /* if (element.select("sup") != null){
@@ -675,7 +699,7 @@ public class DescriptionMang extends BaseActivity {
                             }*/
                             classOtherMang.setURL_img(element.attr("rel"));
                             classOtherMang.setNameCategory(category); //тег что это связаное произведение
-                            classOtherMang.setUrlSite(mang.getURL_site());
+                            classOtherMang.setUrlSite(mang.getUrlSite());
                             ClassOtherManglist.add(classOtherMang);
                         }
                         el = el.nextElementSibling();
@@ -692,7 +716,7 @@ public class DescriptionMang extends BaseActivity {
                     ClassOtherMang classOtherMang = new ClassOtherMang();
                     Elements elements = el.select("a");
                     if (elements != null){
-                        classOtherMang.setURLchapter(mang.getURL_site() + elements.attr("href"));
+                        classOtherMang.setURLchapter(mang.getUrlSite() + elements.attr("href"));
                         //
                         elements = el.select("img");
                     /* if (element.select("sup") != null){
@@ -701,7 +725,7 @@ public class DescriptionMang extends BaseActivity {
                         classOtherMang.setNameMang(elements.attr("title"));
                         classOtherMang.setURL_img(elements.attr("src"));
                         classOtherMang.setNameCategory("related"); //тег что это связаное произведение
-                        classOtherMang.setUrlSite(mang.getURL_site());
+                        classOtherMang.setUrlSite(mang.getUrlSite());
                         ClassOtherManglist.add(classOtherMang);
                     }
                     el = el.nextElementSibling();

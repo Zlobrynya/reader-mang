@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Nikita on 13.03.2016.
@@ -112,7 +112,7 @@ public class CacheFile {
 
     public String getFile(String nameCache) throws FileNotFoundException,EOFException {
         File f = new File(dirFile, nameCache);
-        Log.i("File",f.getPath());
+      //  Log.i("File",f.getPath());
         //InputStream in = new FileInputStream(f);
         return f.getPath();
     }
@@ -141,8 +141,8 @@ public class CacheFile {
 
     //return false - если не остановили поток, return true - если поток остановлен
     public boolean stopAsyncTask() {
-        if (downlandImage != null && total < 30) {
-            Log.i("CacheFile: ", "AsyncTask " + numberImg + " stop");
+        if (downlandImage != null && total < 20) {
+           // Log.i("CacheFile: ", "AsyncTask " + numberImg + " stop");
             downlandImage.cancel(true);
             File f = new File(dirFile, String.valueOf(numberImg));
             if (f.exists()) {
@@ -160,14 +160,14 @@ public class CacheFile {
 
     private class DownlandImage extends AsyncTask<String,Integer,Void> {
         private int lenghtOfFile;
-        private boolean compress;
-
+       // private boolean compress;
+        private boolean error = false;
 
         @Override
         protected Void doInBackground(String... params) {
             try {
                 total = 0;
-                compress = false;
+             //   compress = false;
                 Log.i("Threads","CacheFile"+params[1]);
                 //продумать поименование файлов
                 File f = new File(dirFile, params[1]);
@@ -188,24 +188,26 @@ public class CacheFile {
                     //InputStream is=conn.getInputStream();
                     InputStream is = new BufferedInputStream(imageUrl.openStream(), 8192);
 
-                    if (params[0].contains("gif") || params[0].contains("jpg")){
+                 /*   if (params[0].contains("gif") || params[0].contains("jpg")){
                         compress = true;
                        /* ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
                         BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, byteOutputStream);
                         OutputStream os = new FileOutputStream(f);
                         byte[] mbitmapdata = byteOutputStream.toByteArray();
                         lenghtOfFile = mbitmapdata.length;
-                        CopyStream(new ByteArrayInputStream(mbitmapdata), os);*/
-                    }
+                        CopyStream(new ByteArrayInputStream(mbitmapdata), os); *|/
+                    }*/
                     OutputStream os = new FileOutputStream(f);
                     CopyStream(is, os);
                     conn.disconnect();
-                    if (compress)
-                        compressPng(f,os);
+                    //Изменил для теста
+                   // if (compress)
+                   //     compressPng(f,os);
                     os.close();
                 }
 
             }catch (IOException e) {
+                error = true;
                 e.printStackTrace();
             }
             return null;
@@ -259,7 +261,7 @@ public class CacheFile {
 
         @Override
         protected void onPostExecute(Void result){
-            if (isCancelled()){
+            if (isCancelled() || error){
                 as.onEnd(-1);
             }else {
                 if (as != null)

@@ -6,7 +6,7 @@ import com.example.nikita.progectmangaread.cacheImage.CacheFile;
 import java.io.File;
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Nikita on 07.08.2016.

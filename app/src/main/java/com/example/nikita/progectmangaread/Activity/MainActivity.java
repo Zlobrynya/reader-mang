@@ -17,14 +17,14 @@ import com.example.nikita.progectmangaread.classPMR.ClassMang;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 
 public class MainActivity extends BaseActivity {
     private Intent newInten;
     private ClassMang clManga;
     private AdapterListSite adapter;
+    private ArrayList<String> strings;
 
-    String[] namesSite = { "ReadManga", "MintManga","SelfManga"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity {
 
         SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
-        ArrayList<String> strings = new ArrayList<>();
+        strings = new ArrayList<>();
         if (mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_READMANG,true))
             strings.add("ReadManga");
         if (mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false))
@@ -49,17 +49,13 @@ public class MainActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        readManga();
-                        break;
-                    case 1:
-                        mintManga();
-                        break;
-                    case 2:
-                        selfManga();
-                        break;
-                }
+                String nameSite = strings.get(position);
+                if (nameSite.contains("Read"))
+                    readManga();
+                else if (nameSite.contains("Mint"))
+                    mintManga();
+                else if (nameSite.contains("Self"))
+                    selfManga();
             }
         });
         if (strings.isEmpty()){
