@@ -82,14 +82,8 @@
             android:enabled="true"
             android:exported="false" />
 
-
         <service
             android:name=".service.UpdateMangBookmark"
-            android:enabled="true"
-            android:exported="false"/>
-
-        <service
-            android:name=".service.MoveFile"
             android:enabled="true"
             android:exported="false"/>
 

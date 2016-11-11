@@ -57,7 +57,7 @@ public class fragmentDescriptionMang extends Fragment {
         Log.i(PROBLEM, "End Start fragmentDescriptionMang");
         return v;
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onEvent(ClassDescriptionMang event) {
         if (this.getArguments().getInt("num") == 1){
             if (v != null) {
@@ -92,7 +92,7 @@ public class fragmentDescriptionMang extends Fragment {
             }
         }
         //Отмена евента, что бы он дальше не шел
-        //EventBus.getDefault().cancelEventDelivery(event);
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override

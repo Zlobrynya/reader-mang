@@ -8,6 +8,8 @@ import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
 import com.example.nikita.progectmangaread.classPMR.ClassOtherMang;
 import com.example.nikita.progectmangaread.classPMR.ClassTransportForList;
 
+import java.util.ArrayList;
+
 /**
  * Created by Nikita on 13.07.2016.
  * Фрагмент для сохранения данных при повороте,активити DescriptionMang
@@ -17,7 +19,7 @@ public class fragmentSaveDescriptionMang extends Fragment {
     private ClassTransportForList classTransportForList;
     private ClassDescriptionMang ClassDescriptionMang;
     private ClassMainTop mang;
-    private ClassOtherMang classOtherMang;
+    private ArrayList<ClassOtherMang> classOtherMang;
 
     @Override
     public void onCreate(Bundle saveInstanceState){
@@ -33,11 +35,11 @@ public class fragmentSaveDescriptionMang extends Fragment {
         this.ClassDescriptionMang = ClassDescriptionMang;
     }
 
-    public void setClassOtherMang(ClassOtherMang classOtherMang){
-
+    public void setClassOtherMang(ArrayList<ClassOtherMang> classOtherMang){
+        this.classOtherMang = classOtherMang;
     }
 
-    public ClassOtherMang getClassOtherMang() {
+    public ArrayList<ClassOtherMang> getClassOtherMang() {
         return classOtherMang;
     }
 

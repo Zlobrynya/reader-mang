@@ -364,7 +364,7 @@ public class fragmentTopMang extends Fragment {
                 e.printStackTrace();
                 not_net = true;
             }catch (Exception e) {
-                System.out.println("Не грузит страницу либо больше нечего грузить");
+                //System.out.println("Не грузит страницу либо больше нечего грузить");
                 e.printStackTrace();
                 stopLoad = true;
             }
@@ -399,7 +399,11 @@ public class fragmentTopMang extends Fragment {
                     if (lisens != null) lisens.onEnd();
                 }
             }else {
-                Toast.makeText(fragmentTopMang.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
+                try{
+                    Toast.makeText(fragmentTopMang.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
+                }catch (NullPointerException e){
+
+                }
             }
             if (lisens != null) lisens.onEnd(1);
         }

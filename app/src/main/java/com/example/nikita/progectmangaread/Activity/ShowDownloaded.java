@@ -90,7 +90,7 @@ public class ShowDownloaded extends BaseActivity {
             classDescriptionMang.setRank(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.RATING));
             classDescriptionMang.setToms(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TOMS));
             classDescriptionMang.setTranslate(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TRANSLATION));
-            EventBus.getDefault().post(classDescriptionMang);
+            EventBus.getDefault().postSticky(classDescriptionMang);
             EventBus.getDefault().post(creatureClassTransportForList());
         }
         if (delete){

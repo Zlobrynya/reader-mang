@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -37,6 +38,7 @@ public class fragmentPageDownlad extends Fragment{
     private SubsamplingScaleImageView image;
     private ProgressBar progress;
     private final String strLog = "fragmentPageDownload";
+    private TextView textView;
 
     public static fragmentPageDownlad getInstance(int imageId,String url) {
         final fragmentPageDownlad instance = new fragmentPageDownlad();
@@ -66,6 +68,7 @@ public class fragmentPageDownlad extends Fragment{
         public void onReady() {
             Log.i("Image", "ready");
             progress.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
         }
 
         @Override
@@ -78,6 +81,7 @@ public class fragmentPageDownlad extends Fragment{
 
             Log.i("Image","Load");
             progress.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
         }
 
         @Override
@@ -87,7 +91,7 @@ public class fragmentPageDownlad extends Fragment{
 
         @Override
         public void onImageLoadError(Exception e) {
-
+            EventBus.getDefault().post("FailGetImg/"+idPage);
         }
 
         @Override
@@ -102,7 +106,7 @@ public class fragmentPageDownlad extends Fragment{
 
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);
-
+        textView = (TextView) v.findViewById(R.id.text_view_fullscreen);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
@@ -113,6 +117,7 @@ public class fragmentPageDownlad extends Fragment{
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
         image.setOnImageEventListener(d);
+        image.setDebug(true);
       /*  image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,9 +127,10 @@ public class fragmentPageDownlad extends Fragment{
         idPage = getArguments().getInt("imageId");
         //final String url = getArguments().getString("String");
         //Настройки прогресс бара
-        progress.setVisibility(View.VISIBLE);
+      /*  progress.setVisibility(View.VISIBLE);
         progress.setIndeterminate(false);
-        progress.setMax(110);
+        progress.setProgress(0);
+        progress.setMax(110);*/
 
         image.setVisibility(View.GONE);
         //установка на сколько приближается при двойном тапе
@@ -143,13 +149,19 @@ public class fragmentPageDownlad extends Fragment{
         return v;
     }
 
+
+
     private void showImageView(){
         try {
             if (image != null) {
-                if (!image.isReady() || !image.isShown()){
-                    progress.setProgress(100);
-                    image.setImage(ImageSource.uri(file.getFile(String.valueOf(idPage))));
-                    image.setVisibility(View.VISIBLE);
+                if (file.checkFile(String.valueOf(idPage))){
+                    if (!image.isReady() || !image.isShown()){
+                        Log.i("ImageStart","ImageStart "+idPage);
+                        image.destroyDrawingCache();
+                        image.setImage(ImageSource.uri(file.getFile(String.valueOf(idPage))));
+                        image.setVisibility(View.VISIBLE);
+                       // progress.setVisibility(View.GONE);
+                    }
                 }
             }
         } catch (EOFException e){
@@ -195,9 +207,9 @@ public class fragmentPageDownlad extends Fragment{
                     image.setVisibility(View.GONE);
                     progress.setVisibility(View.VISIBLE);
                     progress.setProgress(0);
-                }else if (Integer.parseInt(strings[1]) == 100){
+                }else if (strings[1].contains("Start")){
                     showImageView();
-                }progress.setProgress(Integer.parseInt(strings[1]));
+                }
 
             }
         }

@@ -38,10 +38,10 @@ public class ClassDataBaseListMang {
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
- /*   public void closeDataBase(){
+    public void closeDataBase(){
         if (mSqLiteDatabase.isOpen())
             mSqLiteDatabase.close();
-    }*/
+    }
 
     public boolean thereIsInTheDatabase(String nameMang){
         String query,name;

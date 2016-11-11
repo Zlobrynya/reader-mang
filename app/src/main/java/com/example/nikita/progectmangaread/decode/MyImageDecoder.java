@@ -30,6 +30,9 @@ public class MyImageDecoder implements ImageDecoder {
         Bitmap bitmap;
         Log.i("Decode: ","Decode norm");
         bitmap = BitmapDecoder.from(context, uri).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
+      //  String[] stringss = uri.getPath().split("/");
+      //  Log.i("DecideFail",stringss[stringss.length-1]);
+
         if (bitmap == null){
             try {
                 Log.i("Decode: ","Decode magic");
@@ -42,12 +45,11 @@ public class MyImageDecoder implements ImageDecoder {
 
                 bitmap = BitmapDecoder.from(MagickBitmap.ToBitmap(image)).useBuiltInDecoder(false).config(Bitmap.Config.RGB_565).decode();
 
-            } catch (MagickException e) {
-                Log.e("MagickException", e.getMessage());
-            } catch (NullPointerException e){
+            } catch (Exception e) {
                 //Полсылаем сигнал, что декодирование сфейлилось и надо бы перезаписать
                 String[] strings = uri.getPath().split("/");
-                EventBus.getDefault().post("DecodeFail/"+strings[strings.length]);
+                EventBus.getDefault().post("DecodeFail/"+strings[strings.length-1]);
+                Log.i("DecideFail","PostEvent");
             }
         }
         //Log.i("ImageDecoder", String.valueOf(bitmap.getHeight()));

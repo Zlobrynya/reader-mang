@@ -89,7 +89,8 @@ public class fragmentDescriptionList extends Fragment {
                 classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
 
              //   String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mainTop.getNameCharacher(),ClassDataBaseViewedHead.LAST_CHAPTER);
-                classDataBaseViewedHead.editLastChapter(nameMang, mainTop.getUrlSite() + classForList1.getURLChapter());
+                if (mainTop != null)
+                    classDataBaseViewedHead.editLastChapter(nameMang, mainTop.getUrlSite() + classForList1.getURLChapter());
                 //Получаем дату когда тыкнули главу и загрузили в бд
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

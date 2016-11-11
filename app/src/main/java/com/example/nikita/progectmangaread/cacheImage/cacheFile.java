@@ -25,6 +25,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Nikita on 13.03.2016.
@@ -39,6 +41,7 @@ public class CacheFile {
     private int total;
     private int numberImg;
     private boolean download;
+    private int numberPage;
 
     public CacheFile(File dirFile, String nameDir, AsyncTaskLisen as){
         this.dirFile = new File(dirFile,nameDir);
@@ -160,12 +163,15 @@ public class CacheFile {
 
     private class DownlandImage extends AsyncTask<String,Integer,Void> {
         private int lenghtOfFile;
+        private int locNumberPage;
        // private boolean compress;
         private boolean error = false;
 
         @Override
         protected Void doInBackground(String... params) {
             try {
+                String[] strings = params[1].split("/");
+                locNumberPage = Integer.parseInt(strings[strings.length-1]);
                 total = 0;
              //   compress = false;
                 Log.i("Threads","CacheFile"+params[1]);
@@ -179,7 +185,6 @@ public class CacheFile {
                 //Проверка на существование изображения
                 if (!f.exists()){
                     URL imageUrl = new URL(params[0]);
-                    Log.i("File", params[0]);
                     HttpURLConnection conn = (HttpURLConnection)imageUrl.openConnection();
                     conn.setConnectTimeout(30000);
                     conn.setReadTimeout(30000);
@@ -204,6 +209,7 @@ public class CacheFile {
                    // if (compress)
                    //     compressPng(f,os);
                     os.close();
+                    Log.i("File", params[0]+" Complite");
                 }
 
             }catch (IOException e) {
@@ -211,17 +217,6 @@ public class CacheFile {
                 e.printStackTrace();
             }
             return null;
-        }
-
-        //выводим в прогресс бар, сколько скачалось
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-           /* if (progressBar != null)
-                progressBar.setProgress(values[0]);
-            //Log.i("ProgressBar", String.valueOf(values[0]));*/
-            total = values[0];
-            EventBus.getDefault().post(numberImg+"/"+values[0]);
-            super.onProgressUpdate(values);
         }
 
         //Copy inputStream in OutputStream
@@ -239,7 +234,7 @@ public class CacheFile {
                     if(count == -1)
                         break;
                     total += count;
-                    publishProgress((int)((total*100)/lenghtOfFile));
+                   // publishProgress((int)((total*100)/lenghtOfFile));
                     os.write(bytes, 0, count);
                 }
             }
@@ -265,11 +260,11 @@ public class CacheFile {
                 as.onEnd(-1);
             }else {
                 if (as != null)
-                    if (numberImg != -1 && !download)
+                    if (numberImg != -1 && !download){
+                        EventBus.getDefault().post(numberImg+"/Start");
                         as.onEnd(numberImg);
-                    else as.onEnd();
+                    }
             }
         }
     }
-
 }

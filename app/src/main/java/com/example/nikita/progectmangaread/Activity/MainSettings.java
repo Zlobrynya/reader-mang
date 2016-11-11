@@ -3,27 +3,28 @@ package com.example.nikita.progectmangaread.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StatFs;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
-import com.example.nikita.progectmangaread.Dialog.DialogInfo;
 import com.example.nikita.progectmangaread.Dialog.DialogPath;
 import com.example.nikita.progectmangaread.R;
-import com.example.nikita.progectmangaread.service.MoveFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class MainSettings extends BaseActivity implements DialogPath.NoticeDialogListener  {
     private TextView path;
@@ -69,8 +70,8 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
 
     @Override
     public void onDialogClickPath(String path) {
-        startService(new Intent(MainSettings.this, MoveFile.class).putExtra("out", this.path.getText())
-                .putExtra("inp", path));
+        AsyncMoveFile Task = new AsyncMoveFile();
+        Task.execute(String.valueOf(this.path.getText()), path);
         Toast.makeText(this, "Перенос файлов", Toast.LENGTH_SHORT).show();
         this.path.setText(path);
         editor.putString(TopManga.APP_SETTINGS_PATH, path);
@@ -107,12 +108,6 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         editor.commit();
     }
 
-    public void WiFi(View view) {
-        Switch aSwitch = (Switch) view;
-        editor.putBoolean(TopManga.APP_SETTINGS_WIFI,aSwitch.isChecked());
-        editor.commit();
-    }
-
     public void PathDownload(View view) {
         DialogPath dialogPath = new DialogPath();
         dialogPath.show(getFragmentManager(), "Path");
@@ -145,5 +140,79 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
 
     public void selectionMangaSite(View view) {
         startActivity(new Intent(MainSettings.this,SelectionMangSite.class));
+    }
+
+    //Перенос изображений
+    public class AsyncMoveFile extends AsyncTask<String,Void,Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        //params[0] - output, params[1]-input
+        protected Void doInBackground(String... params) {
+            File internalPath = new File(params[0]);
+            File[] dirs= internalPath.listFiles();
+            for(File dir: dirs){
+                File newDir = new File(params[1]+"/"+dir.getName());
+                if (!newDir.exists()){
+                    newDir.mkdir();
+                }
+                File chapters[] = dir.listFiles();
+                for(File chapter: chapters){
+                    File newChapter = new File(params[1]+"/"+dir.getName()+"/"+chapter.getName());
+                    if (!newChapter.exists()){
+                        newChapter.mkdir();
+                    }
+                    File imgs[] = chapter.listFiles();
+                    try{
+                        for(File img: imgs) {
+                            moveFile(img.getPath(),newChapter.getPath()+"/"+img.getName());
+                            img.delete();
+                        }
+                    }catch (NullPointerException e){
+                        e.printStackTrace();
+                    }
+                    chapter.delete();
+                }
+                dir.delete();
+            }
+            return null;
+        }
+
+        private void moveFile(String inputPath, String outputPath) {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+
+                in = new FileInputStream(inputPath);
+                out = new FileOutputStream(outputPath);
+
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                in.close();
+                in = null;
+
+                // write the output file
+                out.flush();
+                out.close();
+                out = null;
+            }
+            catch (FileNotFoundException fnfe1) {
+                Log.e("tag", fnfe1.getMessage());
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+
+        }
     }
 }

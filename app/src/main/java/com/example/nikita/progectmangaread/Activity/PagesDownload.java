@@ -139,9 +139,8 @@ public class PagesDownload extends AppCompatActivity {
                             activity.finish();
                         }
                     }
-
                     classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.LAST_PAGE);
-
+                    EventBus.getDefault().post(position+"/Start");
                 }
             }
 
@@ -195,6 +194,7 @@ public class PagesDownload extends AppCompatActivity {
             pathDir = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
             CacheFile file = new CacheFile(new File(pathDir),URL);
             nameDirectory = URL;
+            classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
             nameChapter = intent.getStringExtra("Chapter");
             for (int i = 0; i < file.getNumberOfFile();i++)
                 urlPage.add(String.valueOf(i));
@@ -240,9 +240,11 @@ public class PagesDownload extends AppCompatActivity {
             threadManager.setPriorityImg(pageNumber-1);
             EventBus.getDefault().post(pageNumber-1+"/reload");
         }else if (id == R.id.next_page_skip){
+            classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.LAST_PAGE);
             EventBus.getDefault().postSticky(chapterNumber - 1);
             this.finish();
         }else if (id == R.id.previous_page_skip){
+            classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.LAST_PAGE);
             EventBus.getDefault().postSticky(chapterNumber + 1);
             this.finish();
         }
@@ -319,15 +321,13 @@ public class PagesDownload extends AppCompatActivity {
     public void onEvent(java.lang.String event){
         //Если декодирование сфейлилось то запускаем перезагрузку изображдения
         if (event.contains("FailGetImg")){
+            Log.i("PageDonwload","FailEventAccepted");
             threadManager.setFalseSaveImg(Integer.parseInt(event.split("/")[1]));
             threadManager.setPriorityImg(Integer.parseInt(event.split("/")[1]));
             EventBus.getDefault().post(event.split("/")[1]+"/reload");
             EventBus.getDefault().cancelEventDelivery(event);
         }
     }
-
-
-
 
     @Override
     public void onResume() {
@@ -441,7 +441,11 @@ public class PagesDownload extends AppCompatActivity {
             //Пост запрос
             try {
                 //Запрос на получение сылок для изображений вот он:
-                if (doc == null) doc = Jsoup.connect(URL).get();
+                if (doc == null)
+                    doc = Jsoup.connect(URL)
+                            .userAgent("Mozilla")
+                            .timeout(60000)
+                            .get();
                 nameChapter = doc.select("[class = pageBlock container]").select("h1").text();
                 //pageBlock container
                 Elements scripts = doc.select("body").select("script");

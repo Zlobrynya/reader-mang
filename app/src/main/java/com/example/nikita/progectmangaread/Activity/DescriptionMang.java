@@ -71,7 +71,7 @@ public class DescriptionMang extends BaseActivity {
     private fragmentSaveDescriptionMang saveFragment;
     private ClassDescriptionMang descriptionMang;
     private ClassTransportForList classTransportForList;
-    private ArrayList<ClassOtherMang> ClassOtherManglist;
+    private ArrayList<ClassOtherMang> classOtherManglist;
 
     private final String strLog = "DescripotionMang";
 
@@ -109,7 +109,7 @@ public class DescriptionMang extends BaseActivity {
             parsAndSettings();
         }
         downloadChapter = false;
-        dataRecovery();
+//        dataRecovery();
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
@@ -190,7 +190,7 @@ public class DescriptionMang extends BaseActivity {
                 downloadChapter = true;
             }
         });
-
+        dataRecovery();
        // Log.i(PROBLEM, "End onCreate");
      //   EventBus.getDefault().register(this);
     }
@@ -204,17 +204,27 @@ public class DescriptionMang extends BaseActivity {
             classTransportForList = saveFragment.getClassTransportForList();
             descriptionMang = saveFragment.getClassDescriptionMang();
             mang = saveFragment.getMang();
-            classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
-        //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
-            if (classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
-                fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
-                bookmark = false;
-            }else {
-                bookmark = true;
-                fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-            }
-            //Если ничего не сохранено то закрываем активити
-            if (descriptionMang == null){
+            classOtherManglist = saveFragment.getClassOtherMang();
+            try {
+                classDataBaseViewedHead = new ClassDataBaseViewedHead(this, mang.getNameCharacher());
+                if (classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
+                    fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
+                    bookmark = false;
+                }else {
+                    bookmark = true;
+                    fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                }
+                EventBus.getDefault().post(descriptionMang);
+                EventBus.getDefault().post(classOtherManglist);
+                EventBus.getDefault().post(classTransportForList);
+
+                //Если ничего не сохранено то закрываем активити
+                if (descriptionMang == null){
+                    this.finish();
+                }
+                //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
+            }catch (NullPointerException e){
+                //  Если после востановления данных вернулся false закрываем активити
                 this.finish();
             }
         }
@@ -252,8 +262,8 @@ public class DescriptionMang extends BaseActivity {
         if (descriptionMang != null){
             EventBus.getDefault().post(descriptionMang);
         }
-        if (ClassOtherManglist != null){
-            EventBus.getDefault().post(ClassOtherManglist);
+        if (classOtherManglist != null){
+            EventBus.getDefault().post(classOtherManglist);
         }
         pager.setCurrentItem(1);
         super.onResume();
@@ -331,6 +341,7 @@ public class DescriptionMang extends BaseActivity {
         saveFragment.setClassDescriptionMang(descriptionMang);
         saveFragment.setClassTransportForList(classTransportForList);
         saveFragment.setMang(mang);
+        saveFragment.setClassOtherMang(classOtherManglist);
         super.onSaveInstanceState(outState);
     }
 
@@ -524,7 +535,7 @@ public class DescriptionMang extends BaseActivity {
             //Document doc;
             try {
                 if (doc == null) doc = Jsoup.connect(mang.getURLCharacher()).userAgent("Mozilla")
-                        .timeout(3000)
+                        .timeout(60000)
                         .get();
                 //если пришли со вкладки "другие манги" нужно достать имя манги на русском для бд
 
@@ -651,8 +662,8 @@ public class DescriptionMang extends BaseActivity {
     public class ParsSimilarAndRelatedMang extends AsyncTask<Void,Void,Void>{
         @Override
         protected Void doInBackground(Void... params) {
-            if (ClassOtherManglist == null)
-                ClassOtherManglist = new ArrayList<>();
+            if (classOtherManglist == null)
+                classOtherManglist = new ArrayList<>();
             try {
                 doc = Jsoup.connect(mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/"))).userAgent("Mozilla")
                         .timeout(3000)
@@ -700,7 +711,7 @@ public class DescriptionMang extends BaseActivity {
                             classOtherMang.setURL_img(element.attr("rel"));
                             classOtherMang.setNameCategory(category); //тег что это связаное произведение
                             classOtherMang.setUrlSite(mang.getUrlSite());
-                            ClassOtherManglist.add(classOtherMang);
+                            classOtherManglist.add(classOtherMang);
                         }
                         el = el.nextElementSibling();
                     }else break;
@@ -726,7 +737,7 @@ public class DescriptionMang extends BaseActivity {
                         classOtherMang.setURL_img(elements.attr("src"));
                         classOtherMang.setNameCategory("related"); //тег что это связаное произведение
                         classOtherMang.setUrlSite(mang.getUrlSite());
-                        ClassOtherManglist.add(classOtherMang);
+                        classOtherManglist.add(classOtherMang);
                     }
                     el = el.nextElementSibling();
                 }while (el != null);
@@ -737,7 +748,7 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            EventBus.getDefault().post(ClassOtherManglist);
+            EventBus.getDefault().post(classOtherManglist);
         }
     }
 }
