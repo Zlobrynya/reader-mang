@@ -63,10 +63,6 @@ public class fragmentDescriptionList extends Fragment {
         listView.setAdapter(myAdap);
         final ClassForList classForList = new ClassForList();
         classForList.setNameChapter("GG");
-       // Log.i(PROBLEM, "Start fragmentDescriptionList")
-      /*  try {
-            EventBus.getDefault().register(this);
-        }catch (EventBusException ignored){}*/
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -78,14 +74,8 @@ public class fragmentDescriptionList extends Fragment {
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
 
-                //высчитываем hashCode строки
+                //высчитываем HASH_CODE строки
                 String numberChapter = String.valueOf(classForList1.getNameChapter().hashCode());
-               /* String locNameChar = nameMang;
-                locNameChar = locNameChar.replace(")","").replace("(",",");
-                if (locNameChar.split(",").length > 1){
-                    locNameChar = locNameChar.split(",")[1];
-                }
-                locNameChar = "%(" + locNameChar + ")%";*/
                 classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
 
              //   String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mainTop.getNameCharacher(),ClassDataBaseViewedHead.LAST_CHAPTER);

@@ -93,6 +93,7 @@ public class DownloadChapter extends AppCompatActivity {
     private void download(){
         String chapter = "";
         String nameChapter = "";
+        String hashCode = "";
         String startStr = urlMang.replace(urlSite, "").replace("/", "");
         String nameDir = "";
         for (ClassForList classForList : list) {
@@ -102,16 +103,20 @@ public class DownloadChapter extends AppCompatActivity {
                 nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
                 chapter += classForList.getURLChapter() + "?mature=1,";
                 nameChapter += classForList.getNameChapter() + ",";
+                hashCode += classForList.getNameChapter().hashCode() + ",";
                 classForList.setCheckDownload(true);
                 list.set(numbr, classForList);
+                myAdap.notifyDataSetChanged();
             }
         }
         if (!nameDir.isEmpty()){
             ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DownloadChapter.this);
             String nameDirFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_DIR) + nameDir;
             String nameChapterFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_CHAPTER) + nameChapter;
+           // String hashCodeFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.HASH_CODE) + hashCode;
             classDataBaseDownloadMang.setData(name, nameDirFromBD, ClassDataBaseDownloadMang.NAME_DIR);
             classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
+           // classDataBaseDownloadMang.setData(name, hashCodeFromBD, ClassDataBaseDownloadMang.HASH_CODE);
             classDataBaseDownloadMang.setData(name, startStr + "/imgGlav", ClassDataBaseDownloadMang.NAME_IMG);
           //  classDataBaseDownloadMang.closeDataBase();
 
@@ -168,9 +173,9 @@ public class DownloadChapter extends AppCompatActivity {
                 list.add(b);
             }
             myAdap.notifyDataSetChanged();
+            EventBus.getDefault().cancelEventDelivery(event);
         }
         //Что бы сигнал дальше не шел
-        EventBus.getDefault().cancelEventDelivery(event);
     }
 
     //Кнопка очистка выбора

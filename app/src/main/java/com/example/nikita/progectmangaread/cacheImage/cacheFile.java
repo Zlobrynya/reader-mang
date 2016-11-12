@@ -163,15 +163,12 @@ public class CacheFile {
 
     private class DownlandImage extends AsyncTask<String,Integer,Void> {
         private int lenghtOfFile;
-        private int locNumberPage;
        // private boolean compress;
         private boolean error = false;
 
         @Override
         protected Void doInBackground(String... params) {
             try {
-                String[] strings = params[1].split("/");
-                locNumberPage = Integer.parseInt(strings[strings.length-1]);
                 total = 0;
              //   compress = false;
                 Log.i("Threads","CacheFile"+params[1]);
@@ -263,7 +260,8 @@ public class CacheFile {
                     if (numberImg != -1 && !download){
                         EventBus.getDefault().post(numberImg+"/Start");
                         as.onEnd(numberImg);
-                    }
+                    }else
+                        as.onEnd();
             }
         }
     }

@@ -24,8 +24,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            if (newVersion == 3 && oldVersion == 2){
-               // db.execSQL("ALTER TABLE ViewedHead ADD COLUMN quantity integer NULL");
+            if (newVersion == 4 && oldVersion == 3){
+                ///fgds
             }
     }
 }

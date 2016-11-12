@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
 import com.example.nikita.progectmangaread.R;
@@ -23,13 +25,18 @@ public class Bookmark extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         nameSite = new ArrayList<>();
-        getLayoutInflater().inflate(R.layout.page_view, frameLayout);
+        getLayoutInflater().inflate(R.layout.page_view_bookmark, frameLayout);
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
         int count = getCountSite();
         if (count > 0){
             adapterFragment adapterPargerFragment = new adapterFragment(getSupportFragmentManager(), count);
-            ViewPager pager = (ViewPager) this.findViewById(R.id.pager);
+            ViewPager pager = (ViewPager) this.findViewById(R.id.pager_bookmark);
             pager.setAdapter(adapterPargerFragment);
+        }else {
+            TextView textView = (TextView) findViewById(R.id.text_view_bookmark);
+            ViewPager pager = (ViewPager) this.findViewById(R.id.pager_bookmark);
+            pager.setVisibility(View.GONE);
+            textView.setVisibility(View.VISIBLE);
         }
     }
 

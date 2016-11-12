@@ -190,7 +190,7 @@ public class DescriptionMang extends BaseActivity {
                 downloadChapter = true;
             }
         });
-        dataRecovery();
+      //  dataRecovery();
        // Log.i(PROBLEM, "End onCreate");
      //   EventBus.getDefault().register(this);
     }
@@ -338,10 +338,14 @@ public class DescriptionMang extends BaseActivity {
     //Сохраняем данные
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        saveFragment.setClassDescriptionMang(descriptionMang);
-        saveFragment.setClassTransportForList(classTransportForList);
-        saveFragment.setMang(mang);
-        saveFragment.setClassOtherMang(classOtherManglist);
+        try {
+            saveFragment.setClassDescriptionMang(descriptionMang);
+            saveFragment.setClassTransportForList(classTransportForList);
+            saveFragment.setMang(mang);
+            saveFragment.setClassOtherMang(classOtherManglist);
+        }catch (NullPointerException ignored){
+
+        }
         super.onSaveInstanceState(outState);
     }
 

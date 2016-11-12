@@ -16,6 +16,7 @@ public class ClassDataBaseDownloadMang {
     public static final String NAME_MANG = "NameMang";
     public static final String DATABASE_TABLE = "DownloadMang";
     public static final String URL_MANG = "Url_mang";
+  //  public static final String HASH_CODE = "Hash_Code";
     public static final String NAME_CHAPTER = "Name_chapter";
     public static final String NAME_DIR = "Name_dir";
     public static final String RATING = "rating";
@@ -34,7 +35,7 @@ public class ClassDataBaseDownloadMang {
                 +  DATABASE_TABLE + " (" + NAME_MANG + " text, " +  URL_MANG + " text, " +
                 NAME_CHAPTER + " text, "+  NAME_DIR+ " text, " + RATING + " text not null, " +
                 TOMS + " text not null, " + TRANSLATION + " text not null, " + AUTHOR + " text not null, " +
-                GENRES + " text not null, " + CATEGORY + " text not null, " + NAME_IMG + " text not null, " + DESCRIPTION + " text);";
+                GENRES + " text not null, " + CATEGORY + " text not null, " + NAME_IMG + " text not null, "/* + HASH_CODE + " text not null, " */+ DESCRIPTION + " text);";
         mSqLiteDatabase.execSQL(DATABASE_CREATE_SCRIPT);
     }
 
@@ -75,6 +76,13 @@ public class ClassDataBaseDownloadMang {
         }
         cursor.close();
         return true;
+    }
+
+    public void deletRow(String nameMang){
+        String name;
+        name = "\"";
+        name += nameMang.replace('"', ' ') + "\"";
+        mSqLiteDatabase.delete(DATABASE_TABLE, NAME_MANG + " = " + name, null);
     }
 
     public void setData(String nameMang, String data,String where){

@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nikita.progectmangaread.AdapterPMR.AdapterBookmark;
+import com.example.nikita.progectmangaread.AdapterPMR.AdapterDownload;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseDownloadMang;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassDescriptionMang;
@@ -34,14 +36,14 @@ public class ShowDownloaded extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.list_view, frameLayout);
+        getLayoutInflater().inflate(R.layout.list_download, frameLayout);
         pos = - 1;
         delete = false;
         list = new ArrayList<>();
         SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
         path = mSettings.getString(TopManga.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath());
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
-        listView = (ListView) this.findViewById(R.id.listView);
+        listView = (ListView) this.findViewById(R.id.list_download);
         getSupportActionBar().setTitle("Download"); // set the top title
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -52,13 +54,13 @@ public class ShowDownloaded extends BaseActivity {
                 pos = position;
             }
         });
-        adapter = new AdapterBookmark(this,R.layout.list_view,list);
+        adapter = new AdapterDownload(this,R.layout.list_view,list);
 
-        initializationDonwload();
+        initializationDownload();
 
     }
 
-    private void initializationDonwload(){
+    private void initializationDownload(){
         Cursor cursor = classDataBaseDownloadMang.getDownloadMang();
         Log.i("Cursor: ", String.valueOf(cursor.getCount()));
         cursor.moveToFirst();
@@ -74,6 +76,10 @@ public class ShowDownloaded extends BaseActivity {
                     cursor.moveToNext();
         }
         cursor.close();
+        if (list.isEmpty()){
+            TextView textView = (TextView) findViewById(R.id.text_view_download);
+            textView.setVisibility(View.VISIBLE);
+        }
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
     }
@@ -124,7 +130,7 @@ public class ShowDownloaded extends BaseActivity {
     }
 
     public void onResume(){
-        initializationDonwload();
+        initializationDownload();
         super.onResume();
     }
 

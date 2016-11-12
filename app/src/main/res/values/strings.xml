@@ -42,5 +42,7 @@
     <string name="not_recentle_read">Нет просмотреных манг.</string>
     <string name="not_other_mang">Не найдено похожих манг.</string>
     <string name="open_browser">Открыть в браузере</string>
+    <string name="not_download_mang">Нет скачаных манг.</string>
+    <string name="not_bookmark_mang">Нет избранных манг.</string>
 
 </resources>
