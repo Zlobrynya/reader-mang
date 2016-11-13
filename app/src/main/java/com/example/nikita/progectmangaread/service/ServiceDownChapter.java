@@ -119,8 +119,8 @@ public class ServiceDownChapter extends Service {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle("Downloaded")
-                .setSmallIcon(R.drawable.launcher);
+                .setContentTitle("Download")
+                .setSmallIcon(R.drawable.ic_file_download_black_24dp);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack

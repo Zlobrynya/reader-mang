@@ -11,7 +11,7 @@
     <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Главы скачаны"
+        android:text="@string/chapter_complite"
         android:layout_marginTop="16dip"
         android:layout_marginBottom="16dip"
         android:layout_marginLeft="16dip"
@@ -22,7 +22,7 @@
     <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Вибрация"
+        android:text="@string/vibration"
         android:layout_marginTop="16dip"
         android:layout_marginBottom="16dip"
         android:layout_marginLeft="16dip"
@@ -33,7 +33,7 @@
     <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Звук"
+        android:text="@string/sound"
         android:layout_marginTop="16dip"
         android:layout_marginBottom="16dip"
         android:layout_marginLeft="16dip"
@@ -45,7 +45,7 @@
     <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Новые главы"
+        android:text="@string/new_chapter"
         android:layout_marginTop="16dip"
         android:layout_marginBottom="16dip"
         android:layout_marginLeft="16dip"

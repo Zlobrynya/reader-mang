@@ -13,16 +13,15 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="descr_read">Читать</string>
     <string name="descr_browser">Открыть в браузере</string>
-    <string name="info_time_notification">Установка времени, когда приложение будет запрашивать список обновлений за день. Это не обновление, а просто оповещение об обновлении манги, которая была добавлена в закладки. Если Вы выключите этот пункт, манга все равно будет обновляться, но об этом не будет оповещении. Рекомендуется ставить промежуток от 23:00–5:00.</string>
     <string name="nav_title_mang">Манга</string>
-    <string name="nav_list_site">List Site</string>
-    <string name="nav_top_mang">Top mang</string>
+    <string name="nav_list_site">Сайты</string>
+    <string name="nav_top_mang">Манга</string>
     <string name="nav_title_person">Персональное</string>
-    <string name="nav_bookmark">Bookmark</string>
-    <string name="nav_recently_read">Recently read</string>
-    <string name="nav_download">Download</string>
+    <string name="nav_bookmark">Избранное</string>
+    <string name="nav_recently_read">Просмотренное</string>
+    <string name="nav_download">Скачанное</string>
     <string name="nav_title_other">Разное</string>
-    <string name="nav_tools">Tools</string>
+    <string name="nav_tools">Настройки</string>
     <string name="search">Поиск</string>
     <string name="reload_page">Перезагрузка страницы</string>
     <string name="sett_brightness">Яркость</string>
@@ -34,7 +33,7 @@
     <string name="auto_brightness">Автонастройка</string>
     <string name="next_skip_chapter">Следующая галава</string>
     <string name="previous_chapter">Предыдущая глава</string>
-    <string name="info_readmanga">"На нашем сайте размещена самая большая коллекция манги в Рунете. Отсутвует взрослая манга."</string>
+    <string name="info_readmanga">"На сайте размещена самая большая коллекция манги в Рунете. Отсутвует взрослая манга."</string>
     <string name="info_mintmanga">"На сайте размещена только манга для взрослых, в которой присутствуют элементы насилия и эротика."</string>
     <string name="info_selfmanga">"На сайте размещается только русская авторская манга и журналы о манге."</string>
     <string name="selection_site">Выберите сайты в настройках приложения.</string>
@@ -44,5 +43,9 @@
     <string name="open_browser">Открыть в браузере</string>
     <string name="not_download_mang">Нет скачаных манг.</string>
     <string name="not_bookmark_mang">Нет избранных манг.</string>
+    <string name="chapter_complite">Главы загружены.</string>
+    <string name="vibration">Вибрация</string>
+    <string name="sound">Звук</string>
+    <string name="new_chapter">Новые главы.</string>
 
 </resources>
