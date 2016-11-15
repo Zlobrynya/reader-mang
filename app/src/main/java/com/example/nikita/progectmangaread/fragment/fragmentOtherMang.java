@@ -49,7 +49,8 @@ public class fragmentOtherMang extends Fragment {
         StickyListHeadersListView listView = (StickyListHeadersListView) v.findViewById(R.id.listRecentlyRead);
         listView.setAdapter(adapterOtherMang);
         textView= (TextView) v.findViewById(R.id.text_sticky_list);
-
+        textView.setText(R.string.not_other_mang);
+        textView.setVisibility(View.VISIBLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -87,9 +88,8 @@ public class fragmentOtherMang extends Fragment {
     public void onEvent(ArrayList<ClassOtherMang> event) {
         list.addAll(event);
         adapterOtherMang.notifyDataSetChanged();
-        if (list.isEmpty()){
-            textView.setText(R.string.not_other_mang);
-            textView.setVisibility(View.VISIBLE);
+        if (!list.isEmpty()){
+            textView.setVisibility(View.GONE);
         }
      //   EventBus.getDefault().cancelEventDelivery(event) ;
     }

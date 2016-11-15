@@ -117,7 +117,7 @@ public class fragmentPageDownlad extends Fragment{
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
         image.setOnImageEventListener(d);
-        image.setDebug(true);
+      // image.setDebug(true);
       /*  image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

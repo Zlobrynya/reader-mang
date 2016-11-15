@@ -106,8 +106,8 @@ public class fragmentDescriptionList extends Fragment {
         if (!classForList1.getCheck())
             classForList1.setCheck(true);
         list.set(event, classForList1);
+        classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getNameChapter().hashCode()));
         if (!readDownloaded){
-            classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getNameChapter().hashCode()));
             classForList1.setDownload(false);
         }
         else
@@ -120,20 +120,20 @@ public class fragmentDescriptionList extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(java.lang.String event){
         if (event.contains("notebook")){
-            String locNameChar = nameMang;
+         /*   String locNameChar = nameMang;
             locNameChar = locNameChar.replace(")","").replace(" ","").replace("(",",").split(",")[1];
-            locNameChar = "%(" + locNameChar + ")%";
+            locNameChar = "%(" + locNameChar + ")%";*/
 
-            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(locNameChar, ClassDataBaseViewedHead.NOTEBOOK));
+            int notebook = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NOTEBOOK));
             if (notebook == 0){
-                classDataBaseViewedHead.setData(locNameChar, String.valueOf(1), ClassDataBaseViewedHead.NOTEBOOK);
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.NOTEBOOK);
                 String lastChapter = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.LAST_CHAPTER);
                 if (lastChapter.contains("null")){
-                    classDataBaseViewedHead.editLastChapter(locNameChar, list.get(list.size() - 1).getURLChapter());
-                    classDataBaseViewedHead.setData(locNameChar, list.get(list.size() - 1).getNameChapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    classDataBaseViewedHead.editLastChapter(nameMang, list.get(list.size() - 1).getURLChapter());
+                    classDataBaseViewedHead.setData(nameMang, list.get(list.size() - 1).getNameChapter(), ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
                 }
             }else {
-                classDataBaseViewedHead.setData(locNameChar, String.valueOf(0), ClassDataBaseViewedHead.NOTEBOOK);
+                classDataBaseViewedHead.setData(nameMang, String.valueOf(0), ClassDataBaseViewedHead.NOTEBOOK);
             }
         }
     }

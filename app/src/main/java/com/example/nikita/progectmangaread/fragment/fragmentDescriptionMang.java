@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -86,6 +87,11 @@ public class fragmentDescriptionMang extends Fragment {
                     imageView.setMinimumWidth(TopManga.WIDTH_WIND / 3);
                 }
                 ImageLoader.getInstance().displayImage(event.getImg_url(), imageView);
+
+                if (event.isDownload()){
+                    Button button = (Button) v.findViewById(R.id.open_browser);
+                    button.setVisibility(View.GONE);
+                }
 
                 constraintLayout.setVisibility(View.VISIBLE);
                 progress.setVisibility(View.INVISIBLE);

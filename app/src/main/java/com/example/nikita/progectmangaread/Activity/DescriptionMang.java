@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -66,10 +67,11 @@ public class DescriptionMang extends BaseActivity {
     private boolean visF = false;
     private boolean otherMang = false;
     private boolean bookmark = false;
+    private boolean showDownload = false;
     private ViewPager pager;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private fragmentSaveDescriptionMang saveFragment;
-    private ClassDescriptionMang descriptionMang;
+    private ClassDescriptionMang classDescriptionMang;
     private ClassTransportForList classTransportForList;
     private ArrayList<ClassOtherMang> classOtherManglist;
 
@@ -96,6 +98,8 @@ public class DescriptionMang extends BaseActivity {
         read = false;
 
         final Intent intent = getIntent();
+        showDownload = intent.getBooleanExtra("Download",false);
+
         if (intent.getStringExtra("URL_ch") != null){
             mang = new ClassMainTop();
             mang.setUrlCharacher(intent.getStringExtra("URL_ch"));
@@ -170,13 +174,13 @@ public class DescriptionMang extends BaseActivity {
                 classDataBaseDownloadMang.addBasaData(mang.getNameCharacher());
                 //добавляем в бд описание манги и т.п.
                 classDataBaseDownloadMang.setData(mang.getNameCharacher(), mang.getURLCharacher(), ClassDataBaseDownloadMang.URL_MANG);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getRank(), ClassDataBaseDownloadMang.RATING);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getCategory(), ClassDataBaseDownloadMang.CATEGORY);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getDescription(), ClassDataBaseDownloadMang.DESCRIPTION);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getGenre(), ClassDataBaseDownloadMang.GENRES);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getNameAuthor(), ClassDataBaseDownloadMang.AUTHOR);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getToms(), ClassDataBaseDownloadMang.TOMS);
-                classDataBaseDownloadMang.setData(mang.getNameCharacher(), descriptionMang.getTranslate(), ClassDataBaseDownloadMang.TRANSLATION);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getRank(), ClassDataBaseDownloadMang.RATING);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getCategory(), ClassDataBaseDownloadMang.CATEGORY);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getDescription(), ClassDataBaseDownloadMang.DESCRIPTION);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getGenre(), ClassDataBaseDownloadMang.GENRES);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getNameAuthor(), ClassDataBaseDownloadMang.AUTHOR);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getToms(), ClassDataBaseDownloadMang.TOMS);
+                classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getTranslate(), ClassDataBaseDownloadMang.TRANSLATION);
               //  classDataBaseDownloadMang.closeDataBase();
 
                 Intent newInten = new Intent(DescriptionMang.this, DownloadChapter.class);
@@ -202,31 +206,34 @@ public class DescriptionMang extends BaseActivity {
         saveFragment = (fragmentSaveDescriptionMang) getFragmentManager().findFragmentByTag("SAVE_FRAGMENT");
         if (saveFragment != null){
             classTransportForList = saveFragment.getClassTransportForList();
-            descriptionMang = saveFragment.getClassDescriptionMang();
-            mang = saveFragment.getMang();
-            classOtherManglist = saveFragment.getClassOtherMang();
-            try {
-                classDataBaseViewedHead = new ClassDataBaseViewedHead(this, mang.getNameCharacher());
-                if (classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
-                    fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
-                    bookmark = false;
-                }else {
-                    bookmark = true;
-                    fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-                }
-                EventBus.getDefault().post(descriptionMang);
-                EventBus.getDefault().post(classOtherManglist);
-                EventBus.getDefault().post(classTransportForList);
+            classDescriptionMang = saveFragment.getClassDescriptionMang();
 
-                //Если ничего не сохранено то закрываем активити
-                if (descriptionMang == null){
+            if (!showDownload){
+                mang = saveFragment.getMang();
+                classOtherManglist = saveFragment.getClassOtherMang();
+                try {
+                    classDataBaseViewedHead = new ClassDataBaseViewedHead(this, mang.getNameCharacher());
+                    if (classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(),ClassDataBaseViewedHead.NOTEBOOK).contains("1")){
+                        fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
+                        bookmark = false;
+                    }else {
+                        bookmark = true;
+                        fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                    }
+                    //Если ничего не сохранено то закрываем активити
+                    if (classDescriptionMang == null){
+                        this.finish();
+                    }
+                    //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
+                }catch (NullPointerException e){
+                    //  Если после востановления данных вернулся false закрываем активити
                     this.finish();
                 }
-                //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
-            }catch (NullPointerException e){
-                //  Если после востановления данных вернулся false закрываем активити
-                this.finish();
+                EventBus.getDefault().post(classOtherManglist);
+
             }
+            EventBus.getDefault().post(classDescriptionMang);
+            EventBus.getDefault().post(classTransportForList);
         }
         else {
             saveFragment = new fragmentSaveDescriptionMang();
@@ -259,8 +266,8 @@ public class DescriptionMang extends BaseActivity {
         if (classTransportForList != null){
             EventBus.getDefault().post(classTransportForList);
         }
-        if (descriptionMang != null){
-            EventBus.getDefault().post(descriptionMang);
+        if (classDescriptionMang != null){
+            EventBus.getDefault().post(classDescriptionMang);
         }
         if (classOtherManglist != null){
             EventBus.getDefault().post(classOtherManglist);
@@ -339,7 +346,7 @@ public class DescriptionMang extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         try {
-            saveFragment.setClassDescriptionMang(descriptionMang);
+            saveFragment.setClassDescriptionMang(classDescriptionMang);
             saveFragment.setClassTransportForList(classTransportForList);
             saveFragment.setMang(mang);
             saveFragment.setClassOtherMang(classOtherManglist);
@@ -377,6 +384,19 @@ public class DescriptionMang extends BaseActivity {
         }
         if (read && !otherMang)
             startLastChapter();
+    }
+
+    //ThreadMode.BACKGROUND ??
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ClassDescriptionMang event){
+        if (classDescriptionMang == null)
+            classDescriptionMang = event;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ClassTransportForList event){
+        if (classTransportForList == null)
+            classTransportForList = event;
     }
 
     //ThreadMode.BACKGROUND ??
@@ -605,7 +625,7 @@ public class DescriptionMang extends BaseActivity {
                     mang.setNameCharacher(name+" ("+mang.getNameCharacher()+")");
                     getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
                 }
-                descriptionMang = ClassDescriptionMang;
+                classDescriptionMang = ClassDescriptionMang;
                 EventBus.getDefault().post(ClassDescriptionMang);
                 if (lisens != null) lisens.onEnd();
                 fab.setVisibility(View.VISIBLE);

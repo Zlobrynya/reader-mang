@@ -177,7 +177,7 @@
                 android:text="@string/open_browser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/openBrowser"
+                android:id="@+id/open_browser"
                 android:onClick="openURL"
                 android:background="@drawable/backgroung_button"
                 android:layout_marginStart="128dp"
@@ -186,7 +186,8 @@
                 android:layout_marginLeft="128dp"
                 android:layout_marginEnd="128dp"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="128dp" />
+                android:layout_marginRight="128dp"
+                android:layout_marginTop="24dp" />
         </android.support.constraint.ConstraintLayout>
 
         <ProgressBar

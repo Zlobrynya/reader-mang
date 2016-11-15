@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 
 public class ClassDescriptionMang {
     private String nameMang,nameAuthor,Rank,toms,genre,description,translate,category,img_url;
+    private boolean download = false;
 
     public ClassDescriptionMang() {
         nameAuthor = nameMang = Rank = toms = genre =  "";
@@ -24,6 +25,7 @@ public class ClassDescriptionMang {
     public void setTranslate(String translate) { this.translate = translate; }
     public void setCategory(String category) { this.category = category; }
     public void setImg_url(String url){ this.img_url = url;}
+    public void setDownload(boolean download) { this.download = download; }
 
     public String getTranslate() {return translate;}
     public String getGenre(){return genre;}
@@ -34,5 +36,6 @@ public class ClassDescriptionMang {
     public String getDescription() {return description;}
     public String getCategory() { return category; }
     public String getImg_url(){ return this.img_url; }
+    public boolean isDownload() { return download; }
 
 }

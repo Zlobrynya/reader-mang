@@ -50,6 +50,7 @@ public class ShowDownloaded extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ShowDownloaded.this, DescriptionMang.class);
+                intent.putExtra("Download",true);
                 startActivity(intent);
                 pos = position;
             }
@@ -96,6 +97,7 @@ public class ShowDownloaded extends BaseActivity {
             classDescriptionMang.setRank(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.RATING));
             classDescriptionMang.setToms(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TOMS));
             classDescriptionMang.setTranslate(classDataBaseDownloadMang.getDataFromDataBase(list.get(pos).getNameMang(), ClassDataBaseDownloadMang.TRANSLATION));
+            classDescriptionMang.setDownload(true);
             EventBus.getDefault().postSticky(classDescriptionMang);
             EventBus.getDefault().post(creatureClassTransportForList());
         }

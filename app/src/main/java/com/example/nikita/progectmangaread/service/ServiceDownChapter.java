@@ -120,7 +120,7 @@ public class ServiceDownChapter extends Service {
 
         mBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Download")
-                .setSmallIcon(R.drawable.ic_file_download_black_24dp);
+                .setSmallIcon(R.drawable.ic_file_download_white_24dp);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack

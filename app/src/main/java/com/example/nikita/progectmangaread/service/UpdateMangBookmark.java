@@ -48,7 +48,6 @@ public class UpdateMangBookmark extends Service {
     private String newData,lastData;
     private int numberSite;
     private HashMap<Integer,ArrayList<String>> nameBookmark;
-    private SharedPreferences mSettings;
 
     //получаем имя манги до цифры тома
     private String getNameMang(String name){
@@ -132,7 +131,7 @@ public class UpdateMangBookmark extends Service {
             }else {
                 if (!nameMangUpdate.isEmpty())
                     sendNotif();
-              /*  else
+               /* else
                     sendNotifDebag();*/
             }
         }
@@ -143,20 +142,20 @@ public class UpdateMangBookmark extends Service {
         }
     };
 
-    void sendNotifDebag() {
+    void sendNotifDebag(ArrayList<String> debugArr,int id,String messege) {
         // то что ниже для расширенного отображения (несколько строк подряд с названиеми глав которые скачались)
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
         // Sets a title for the Inbox in expanded layout
-        inboxStyle.setBigContentTitle("Manga update:");
-        inboxStyle.setSummaryText("Все окей я работаю, прост обновлять нечего.");
-
+        inboxStyle.setBigContentTitle(messege);
+        //inboxStyle.setSummaryText("Все окей я работаю, прост обновлять нечего.");
+        for (String name: debugArr)
+            inboxStyle.addLine(name);
         // Moves the expanded layout object into the notification object.
         mBuilder.setStyle(inboxStyle);
         mBuilder.setWhen(System.currentTimeMillis());
-        int notifyID = 1;
         mNotificationManager.notify(
-                notifyID,
+                id,
                 mBuilder.build());
     }
 
@@ -182,8 +181,6 @@ public class UpdateMangBookmark extends Service {
         super.onCreate();
         nameMang = new ArrayList<>();
         nameMangUpdate = new ArrayList<>();
-        mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
-
         numberOfMang = new ArrayList<>();
         numberOfMang.add(0);
         numberOfMang.add(0);
