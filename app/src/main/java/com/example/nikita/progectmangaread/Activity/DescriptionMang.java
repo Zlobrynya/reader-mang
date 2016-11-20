@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -405,7 +404,7 @@ public class DescriptionMang extends BaseActivity {
         //узнаем нужно ли запускать активити
         if (event.getNumberChapter() >= 0){
             Intent intent = new Intent(this, PagesDownload.class);
-            if (!event.getDownload()){
+            if (!event.isDownload()){
                 intent.putExtra("URL", mang.getUrlSite() + event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 String helpVar = "";

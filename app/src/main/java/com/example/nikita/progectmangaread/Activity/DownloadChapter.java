@@ -59,7 +59,7 @@ public class DownloadChapter extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 ClassForList classForList1 = list.get(position);
-                classForList1.setCheck(!classForList1.getCheck());
+                classForList1.setCheck(!classForList1.isCheck());
                 //Log.i("DownloadChapter", classForList1.getURL_chapter());
                 classForList1.setNumberChapter(position);
                 list.set(position, classForList1);
@@ -97,7 +97,7 @@ public class DownloadChapter extends AppCompatActivity {
         String startStr = urlMang.replace(urlSite, "").replace("/", "");
         String nameDir = "";
         for (ClassForList classForList : list) {
-            if (classForList.getCheck() && !classForList.getCheckDownload()) {
+            if (classForList.isCheck() && !classForList.isCheckDownload()) {
                 int numbr = list.indexOf(classForList);
                 String s[] = classForList.getURLChapter().split("/");
                 nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
@@ -167,7 +167,7 @@ public class DownloadChapter extends AppCompatActivity {
             list.clear();
             ArrayList<ClassForList> arrayList = event.getClassForList();
             for (ClassForList b : arrayList) {
-                if (b.getCheck())
+                if (b.isCheck())
                     b.setCheck(false);
                 b.setURL_chapter(b.getURLChapter().replace("?mature=1", ""));
                 list.add(b);
@@ -182,7 +182,7 @@ public class DownloadChapter extends AppCompatActivity {
     public void ClickDeleteCheck(View view) {
         for (int i = 0; i < list.size();i++){
             ClassForList forList = list.get(i);
-            if (forList.getCheck()){
+            if (forList.isCheck()){
                 forList.setCheck(false);
                 list.set(i, forList);
                 myAdap.notifyDataSetChanged();

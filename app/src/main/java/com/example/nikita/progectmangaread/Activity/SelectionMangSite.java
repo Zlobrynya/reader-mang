@@ -43,14 +43,14 @@ public class SelectionMangSite extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClassForList classForList = list.get(position);
-                classForList.setCheck(!classForList.getCheck());
+                classForList.setCheck(!classForList.isCheck());
                 @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = mSettings.edit();
                 if (classForList.getNameChapter().contains("Read"))
-                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_READMANG,classForList.getCheck());
+                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_READMANG,classForList.isCheck());
                 else if (classForList.getNameChapter().contains("Mint"))
-                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,classForList.getCheck());
+                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,classForList.isCheck());
                 else if (classForList.getNameChapter().contains("Self"))
-                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,classForList.getCheck());
+                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,classForList.isCheck());
                 list.set(position,classForList);
                 myAdap.notifyDataSetChanged();
                 editor.apply();

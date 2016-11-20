@@ -36,7 +36,7 @@ public class DeleteChapter extends DownloadChapter {
                 String notDeleteDir = "";
                 String notDeleteName = "";
                 for (ClassForList classForList : list) {
-                    if (classForList.getCheck())
+                    if (classForList.isCheck())
                         nameDir += classForList.getURLChapter()+",";
                     else {
                         notDeleteDir += classForList.getURLChapter()+",";

@@ -103,7 +103,7 @@ public class fragmentDescriptionList extends Fragment {
     public void onEvent(java.lang.Integer event){
         ClassForList classForList1 = list.get(event);
         classForList1.setNumberChapter(event);
-        if (!classForList1.getCheck())
+        if (!classForList1.isCheck())
             classForList1.setCheck(true);
         list.set(event, classForList1);
         classDataBaseViewedHead.addViewedChapter(nameMang, String.valueOf(classForList1.getNameChapter().hashCode()));
@@ -181,6 +181,7 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onStop() {
+        classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -266,9 +267,9 @@ public class fragmentDescriptionList extends Fragment {
                     for (int i = 0; i < list.size() - quantity; i++) {
                         ClassForList classForList = list.get(i);
                         classForList.setNewChapter(true);
+                        list.set(i,classForList);
                     }
                 }
-                classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
             }
         }
 

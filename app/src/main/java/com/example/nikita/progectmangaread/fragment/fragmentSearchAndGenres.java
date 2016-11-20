@@ -84,7 +84,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
                 editGo.setText("");
                 for (int i = 0; i < list.size(); i++){
                     ClassForList classForList = list.get(i);
-                    if (classForList.getCheck()){
+                    if (classForList.isCheck()){
                         classForList.setCheck(false);
                         list.set(i,classForList);
                         myAdap.notifyDataSetChanged();
@@ -101,7 +101,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 ClassForList classForList1 = list.get(position);
-                if (classForList1.getCheck()) classForList1.setCheck(false);
+                if (classForList1.isCheck()) classForList1.setCheck(false);
                 else classForList1.setCheck(true);
                 list.set(position, classForList1);
                 myAdap.notifyDataSetChanged();
@@ -188,7 +188,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
         }
         for (ClassForList a : list){
             String in;
-            if (a.getCheck()) in = "in";
+            if (a.isCheck()) in = "in";
             else in="";
             request += "&"+ a.getURLChapter() + "="+in;
         }

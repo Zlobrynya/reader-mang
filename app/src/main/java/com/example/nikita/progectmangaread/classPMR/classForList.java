@@ -28,10 +28,10 @@ public class ClassForList {
     public void setNewChapter(boolean newChapter) { this.newChapter = newChapter; }
 
     public String getURLChapter() { return URL_chapter; }
-    public boolean getCheck() { return check;}
+    public boolean isCheck() { return check;}
     public String getNameChapter() { return nameChapter; }
     public int getNumberChapter() { return numberChapter; }
-    public boolean getDownload() { return download; }
-    public boolean getCheckDownload() { return checkDownload; }
-    public boolean getNewChapter() { return  newChapter; }
+    public boolean isDownload() { return download; }
+    public boolean isCheckDownload() { return checkDownload; }
+    public boolean isNewChapter() { return  newChapter; }
 }

@@ -16,6 +16,7 @@ import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassRecentlyRead;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -23,9 +24,11 @@ import java.util.ArrayList;
  */
 
 public class AdapterDownload extends AdapterBookmark {
-    public AdapterDownload(Context context, int resource, ArrayList<ClassRecentlyRead> item) {
-        super(context, resource, item);
+    private String path;
 
+    public AdapterDownload(Context context, int resource, ArrayList<ClassRecentlyRead> item,String path) {
+        super(context, resource, item);
+        this.path = path;
     }
 
     @NonNull
@@ -60,6 +63,11 @@ public class AdapterDownload extends AdapterBookmark {
                 int poss = (int) v.getTag();
                 if (item.size() >= poss){
                     ClassDataBaseDownloadMang classData = new ClassDataBaseDownloadMang(context);
+                    //Есть такая стр в бд naruto/vol72_699,naruto/vol72_698,
+                    String nameDir = classData.getDataFromDataBase(item.get(poss).getNameMang(),ClassDataBaseDownloadMang.NAME_DIR)
+                            .split(",")[0]  //достаем из нее naruto/vol72_699
+                            .split("/")[0]; //потом достаем из naruto/vol72_699 вот это naruto
+                    deleteImn(nameDir);
                     classData.deletRow(item.get(poss).getNameMang());
                     // classDataBaseViewedHead.closeDataBase();
                     Toast.makeText(context, "Delete: " + item.get(poss).getNameMang(),
@@ -71,5 +79,18 @@ public class AdapterDownload extends AdapterBookmark {
             }
         });
         return v;
+    }
+
+    private void deleteImn(String nameDir){
+        File[] dirs= new File(path+"/"+nameDir).listFiles();
+        for(File dir: dirs){
+            File chapters[] = dir.listFiles();
+            if (chapters != null){
+                for(File chapter: chapters){
+                    chapter.delete();
+                }
+            }
+            dir.delete();
+        }
     }
 }

@@ -108,25 +108,23 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
         ClassForList m1 = this.getItem(position);
         //если он есть то получаеи и устанавливаем
         if (m1 != null){
-            if (m1.getCheck())
+            if (m1.isCheck())
                 holder.checkBox.setChecked(true);
             else holder.checkBox.setChecked(false);
             holder.tv.setText(m1.getNameChapter());
-            if (m1.getCheckDownload()){
+            if (m1.isCheckDownload()){
                 if (holder.imageView != null){
                     holder.imageView.setImageResource(R.drawable.ic_save_black_24dp);
                     ColorFilter filter = new LightingColorFilter( Color.GRAY, Color.GRAY );
                     holder.imageView.setColorFilter(filter);
                 }
-            }else {
-                if (m1.getNewChapter()){
+            } else if (m1.isNewChapter()){
                     if (holder.imageView != null){
                         holder.imageView.setImageResource(R.drawable.ic_add_black_24dp);
                         ColorFilter filter = new LightingColorFilter( Color.GRAY, Color.GRAY );
                         holder.imageView.setColorFilter(filter);
                     }
-                }
-            }
+                }else holder.imageView.setVisibility(View.INVISIBLE);
         }
         return v;
     }

@@ -55,7 +55,7 @@ public class ShowDownloaded extends BaseActivity {
                 pos = position;
             }
         });
-        adapter = new AdapterDownload(this,R.layout.list_view,list);
+        adapter = new AdapterDownload(this,R.layout.list_view,list,path);
 
         initializationDownload();
 
