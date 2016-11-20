@@ -112,6 +112,8 @@ public class fragmentDescriptionList extends Fragment {
         }
         else
             classForList1.setDownload(true);
+        if (mainTop != null)
+            classDataBaseViewedHead.editLastChapter(nameMang, mainTop.getUrlSite() + classForList1.getURLChapter());
         //удалем sticky евент, что бы заново сюда не попадать
         EventBus.getDefault().removeStickyEvent(event);
         EventBus.getDefault().postSticky(classForList1);
@@ -181,7 +183,8 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onStop() {
-        classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
+        if (nameMang != null)
+            classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
