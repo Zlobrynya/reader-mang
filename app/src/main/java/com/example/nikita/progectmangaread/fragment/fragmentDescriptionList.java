@@ -183,8 +183,6 @@ public class fragmentDescriptionList extends Fragment {
 
     @Override
     public void onStop() {
-        if (nameMang != null)
-            classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -216,8 +214,7 @@ public class fragmentDescriptionList extends Fragment {
     }
 
     private class TheardCheckHeads extends AsyncTask<Void,Void,Void>{
-        private ArrayList<Integer> hashCodeViewedHead;
-        private ArrayList<Integer> hashCodeDownloadHead;
+        private boolean err = false;
         @Override
         protected Void doInBackground(Void... params) {
             checkChapter();
@@ -225,13 +222,18 @@ public class fragmentDescriptionList extends Fragment {
         }
 
         private void checkChapter() {
-            classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
-            hashCodeViewedHead = new ArrayList<>();
-            hashCodeDownloadHead = new ArrayList<>();
+            try {
+                classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
+            }catch (NullPointerException e){
+                err = true;
+                return;
+            }
+            ArrayList<Integer> hashCodeViewedHead = new ArrayList<>();
+            ArrayList<Integer> hashCodeDownloadHead = new ArrayList<>();
 
             @SuppressLint("UseSparseArrays") HashMap<Integer,Integer> hashCodeHead = new HashMap<>();
             if (classDataBaseViewedHead.addBasaData(nameMang)) {
-                initArray();
+                initArray(hashCodeViewedHead,hashCodeDownloadHead);
                 //Список глав переводим в ХэшКод
                 for (int i = 0; i < list.size(); i++) {
                     ClassForList classForList = list.get(i);
@@ -243,6 +245,7 @@ public class fragmentDescriptionList extends Fragment {
                 integerTreeMap.putAll(hashCodeHead);
                 //Начинаем проходится по элементам
                 for (Map.Entry<Integer,Integer> pair: integerTreeMap.entrySet()) {
+                    // for (int i = 0; i < integerTreeMap.size();i++) {
                     // Log.i("integerTreeMap: ",pair.getKey()+":"+pair.getValue());
                     //сравниваем по ХэшеКоду c прочитынами
                     int key = pair.getKey();
@@ -251,7 +254,7 @@ public class fragmentDescriptionList extends Fragment {
 
                     if (hashCodeViewedHead.size() > 0){
                         if (pair.getValue().equals(hashCodeViewedHead.get(0))){
-                           // Log.i("hashCodeViewedHead: ", String.valueOf(hashCodeViewedHead.get(0)));
+                            // Log.i("hashCodeViewedHead: ", String.valueOf(hashCodeViewedHead.get(0)));
                             classForList.setCheck(true);
                             hashCodeViewedHead.remove(0);
                         }
@@ -265,6 +268,11 @@ public class fragmentDescriptionList extends Fragment {
                     }
                     list.set(key,classForList);
                 }
+
+                if (hashCodeViewedHead.size() > 0){
+                    additionalSearch(integerTreeMap,hashCodeViewedHead);
+                }
+
                 int quantity = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NUMBER_OF_HEADS));
                 if (list.size() - quantity > 0) {
                     for (int i = 0; i < list.size() - quantity; i++) {
@@ -276,8 +284,25 @@ public class fragmentDescriptionList extends Fragment {
             }
         }
 
+        private void additionalSearch(TreeMap<Integer, Integer> integerTreeMap,ArrayList<Integer> hashCode){
+            for (Map.Entry<Integer,Integer> pair: integerTreeMap.entrySet()) {
+                int key = pair.getKey();
+                ClassForList classForList = list.get(key);
+                if (!classForList.isCheck()){
+                    for (Integer hashCodeItem: hashCode){
+                        if (pair.getValue().equals(hashCodeItem)){
+                            classForList.setCheck(true);
+                            hashCode.remove(hashCode.indexOf(hashCodeItem));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
         //Инициализация ArryList для просмотренных и скачиных глав
-        private void initArray(){
+        private void initArray(ArrayList<Integer> hashCodeViewedHead,ArrayList<Integer> hashCodeDownloadHead){
             //Достаем список глав манги которые были прочитаны и сортируем
             String stringHead = classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.VIEWED_HEAD);
             if (!stringHead.contains("null")) {
@@ -329,7 +354,11 @@ public class fragmentDescriptionList extends Fragment {
 
         @Override
         protected void onPostExecute(Void result){
-            myAdap.notifyDataSetChanged();
+            if (!err){
+                if (nameMang != null && classDataBaseViewedHead != null)
+                    classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
+                myAdap.notifyDataSetChanged();
+            }
         }
     }
 }

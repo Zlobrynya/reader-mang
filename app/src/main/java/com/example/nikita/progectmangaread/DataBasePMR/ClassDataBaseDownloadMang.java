@@ -16,7 +16,7 @@ public class ClassDataBaseDownloadMang {
     public static final String NAME_MANG = "NameMang";
     public static final String DATABASE_TABLE = "DownloadMang";
     public static final String URL_MANG = "Url_mang";
-  //  public static final String HASH_CODE = "Hash_Code";
+   // public static final String HASH_CODE = "Hash_Code";
     public static final String NAME_CHAPTER = "Name_chapter";
     public static final String NAME_DIR = "Name_dir";
     public static final String RATING = "rating";
