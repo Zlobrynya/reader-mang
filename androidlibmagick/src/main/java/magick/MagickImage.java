@@ -1442,7 +1442,7 @@ public class MagickImage extends Magick {
 		 * SetImageProfile() adds a named profile to the image. If a profile with
 		 * the same name already exists, it is replaced. This method differs from
 		 * the ProfileImage() method in that it does not apply CMS color profiles.
-		 * @param profileName the profile name, for example icc, exif, and 8bim (8bim is the Photoshop wrapper for iptc profiles).
+		 * @param profileName the profile name, for zlobrynya icc, exif, and 8bim (8bim is the Photoshop wrapper for iptc profiles).
 		 * @param profileData contents of the profile
 		 * @return Returns a true if the profile is successfully set
 		 * @author Jacob Nordfalk

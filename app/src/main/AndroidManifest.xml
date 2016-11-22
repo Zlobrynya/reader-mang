@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto"
-    package="com.example.nikita.progectmangaread">
+    package="com.zlobrynya.project.ereadermanga">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-feature android:name="android.hardware.location.network" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +22,7 @@
         android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activity.TopManga"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.TopManga"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,68 +30,68 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.MainActivity"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".Activity.DescriptionMang"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.DescriptionMang"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".Activity.PagesDownload"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Activity.BaseActivity"
+        <activity android:name="com.zlobrynya.project.ereadermanga.Activity.PagesDownload"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".Activity.RecentlyRead"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="com.zlobrynya.project.ereadermanga.Activity.RecentlyRead"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".Activity.Bookmark"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.Bookmark"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.TopManga"/>
+                android:value="com.zlobrynya.project.ereadermanga.Activity.TopManga"/>
         </activity>
 
-        <activity android:name=".Activity.DownloadChapter" />
+        <activity android:name="com.zlobrynya.project.ereadermanga.Activity.DownloadChapter" />
 
         <activity
-            android:name=".Activity.ShowDownloaded"
-            android:parentActivityName=".Activity.TopManga"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.ShowDownloaded"
+            android:parentActivityName="com.zlobrynya.project.ereadermanga.Activity.TopManga"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.TopManga"/>
+                android:value="com.zlobrynya.project.ereadermanga.Activity.TopManga"/>
         </activity>
 
-        <activity android:name=".Activity.DeleteChapter" />
+        <activity android:name="com.zlobrynya.project.ereadermanga.Activity.DeleteChapter" />
 
         <activity
-            android:name=".Activity.MainSettings"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.MainSettings"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".Activity.SelectionMangSite"
+            android:name="com.zlobrynya.project.ereadermanga.Activity.SelectionMangSite"
             android:launchMode="singleTask">
         </activity>
 
         <service
-            android:name=".service.ServiceDownChapter"
+            android:name="com.zlobrynya.project.ereadermanga.service.ServiceDownChapter"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".service.UpdateMangBookmark"
+            android:name="com.zlobrynya.project.ereadermanga.service.UpdateMangBookmark"
             android:enabled="true"
             android:exported="false"/>
 
-        <receiver android:name=".service.AlarmManagerBroadcastReceiver"/>
+        <receiver android:name="com.zlobrynya.project.ereadermanga.service.AlarmManagerBroadcastReceiver"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b341c54fd73fb2e3d1b1e3571f8c24ffd4a27917" />

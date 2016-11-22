@@ -20,7 +20,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.example.nikita.progectmangaread"
+        applicationId "com.zlobrynya.project.ereadermanga"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
@@ -56,7 +56,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    // compile files('libs/android-support-v7-recyclerview-23.1.1.jar')
     compile project(':cheetah-mobile-3.4.7')
     compile files('libs/applovin-6.3.0.jar')
     compile files('libs/appodeal-1.15.7.jar')

@@ -72,7 +72,7 @@ package fakeawt;
  * therefore initially construct the {@code Rectangle} with a specifically
  * negative width and height or it should use the first point in the set
  * to construct the {@code Rectangle}.
- * For example:
+ * For zlobrynya:
  * <pre>
  *     Rectangle bounds = new Rectangle(0, 0, -1, -1);
  *     for (int i = 0; i < points.length; i++) {
