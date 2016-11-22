@@ -35,6 +35,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.ThreadManager;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
@@ -89,6 +90,10 @@ public class PagesDownload extends AppCompatActivity {
         nameDirectory = "pageCache";
         download = false;
         mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
+
+        String appKey = "fee50c333ff3825fd6ad6d38cff78154de3025546d47a84f";
+        Appodeal.disableLocationPermissionCheck();
+        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER);
 
        /* android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -204,6 +209,7 @@ public class PagesDownload extends AppCompatActivity {
             getSupportActionBar().setTitle(nameChapter); // set the top title
             Log.i("PagesDownload", String.valueOf(file.getNumberOfFile()));
         }
+        Appodeal.show(this, Appodeal.BANNER_BOTTOM);
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

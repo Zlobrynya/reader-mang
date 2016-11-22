@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ProgectMangaRead.iml" filepath="$PROJECT_DIR$/ProgectMangaRead.iml" />
       <module fileurl="file://$PROJECT_DIR$/androidlibmagick/androidlibmagick.iml" filepath="$PROJECT_DIR$/androidlibmagick/androidlibmagick.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cheetah-mobile-3.4.7/cheetah-mobile-3.4.7.iml" filepath="$PROJECT_DIR$/cheetah-mobile-3.4.7/cheetah-mobile-3.4.7.iml" />
     </modules>
   </component>
 </project>

@@ -25,6 +25,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -35,11 +36,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    compile 'org.jsoup:jsoup:1.8.1'
+    compile fileTree(include: ['*.jar', '*.so'], dir: 'libs')
+    compile 'org.jsoup:jsoup:1.10.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'rapid.decoder:library:0.3.0'
@@ -51,4 +53,16 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta2'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    // compile files('libs/android-support-v7-recyclerview-23.1.1.jar')
+    compile project(':cheetah-mobile-3.4.7')
+    compile files('libs/applovin-6.3.0.jar')
+    compile files('libs/appodeal-1.15.7.jar')
+    compile files('libs/chartboost-6.5.1.jar')
+    compile files('libs/yandex-metrica-2.41.jar')
+    compile files('libs/my-target-4.5.10.jar')
+    compile files('libs/unity-ads-2.0.4.jar')
+    compile files('libs/flurry-analytics-6.5.0.jar')
 }

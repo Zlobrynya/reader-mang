@@ -17,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
+//import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
 import com.example.nikita.progectmangaread.R;
 import com.example.nikita.progectmangaread.classPMR.ClassMang;
@@ -87,6 +88,10 @@ public class TopManga extends BaseActivity {
         pager.setAdapter(gg);
         pager.setCurrentItem(1);
         boolean first = mSettings.getBoolean(APP_PREFERENCES_FIRST,true);
+
+        String appKey = "fee50c333ff3825fd6ad6d38cff78154de3025546d47a84f";
+      /*  Appodeal.disableLocationPermissionCheck();
+        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER);*/
 
         if (!first){
             mang = new ClassMang();

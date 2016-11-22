@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':cheetah-mobile-3.4.7'
 include ':androidlibmagick'

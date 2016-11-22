@@ -5,22 +5,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import com.example.nikita.progectmangaread.Activity.Bookmark;
-import com.example.nikita.progectmangaread.Activity.DownloadChapter;
-import com.example.nikita.progectmangaread.Activity.MainSettings;
-import com.example.nikita.progectmangaread.Activity.ShowDownloaded;
-import com.example.nikita.progectmangaread.Activity.TopManga;
 import com.example.nikita.progectmangaread.AsyncTaskLisen;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseListMang;
 import com.example.nikita.progectmangaread.DataBasePMR.ClassDataBaseViewedHead;
@@ -32,7 +25,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
