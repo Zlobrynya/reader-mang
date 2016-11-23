@@ -140,10 +140,6 @@ public class CacheFile {
         if (downlandImage != null && total < 20) {
            // Log.i("CacheFile: ", "AsyncTask " + numberImg + " stop");
             downlandImage.cancel(true);
-            File f = new File(dirFile, String.valueOf(numberImg));
-            if (f.exists()) {
-                f.delete();
-            }
             return true;
         }
         return downlandImage == null || downlandImage.getStatus() != AsyncTask.Status.RUNNING;
@@ -156,7 +152,7 @@ public class CacheFile {
 
     private class DownlandImage extends AsyncTask<String,Integer,Void> {
         private int lenghtOfFile;
-       // private boolean compress;
+        private boolean compress;
         private boolean error = false;
 
         @Override
@@ -183,21 +179,21 @@ public class CacheFile {
                     //InputStream is=conn.getInputStream();
                     InputStream is = new BufferedInputStream(imageUrl.openStream(), 8192);
 
-                 /*   if (params[0].contains("gif") || params[0].contains("jpg")){
+                    if (params[0].contains("gif") || params[0].contains("jpg")){
                         compress = true;
                        /* ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
                         BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, byteOutputStream);
                         OutputStream os = new FileOutputStream(f);
                         byte[] mbitmapdata = byteOutputStream.toByteArray();
                         lenghtOfFile = mbitmapdata.length;
-                        CopyStream(new ByteArrayInputStream(mbitmapdata), os); *|/
-                    }*/
+                        CopyStream(new ByteArrayInputStream(mbitmapdata), os); */
+                    }
                     OutputStream os = new FileOutputStream(f);
                     CopyStream(is, os);
                     conn.disconnect();
                     //Изменил для теста
-                   // if (compress)
-                   //     compressPng(f,os);
+                    if (compress)
+                        compressPng(f,os);
                     os.close();
                     Log.i("File", params[0]+" Complite");
                 }
@@ -247,6 +243,10 @@ public class CacheFile {
         @Override
         protected void onPostExecute(Void result){
             if (isCancelled() || error){
+                File f = new File(dirFile, String.valueOf(numberImg));
+                if (f.exists()) {
+                    f.delete();
+                }
                 as.onEnd(-1);
             }else {
                 if (as != null)

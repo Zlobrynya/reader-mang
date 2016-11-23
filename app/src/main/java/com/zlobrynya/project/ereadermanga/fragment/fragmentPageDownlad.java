@@ -106,13 +106,13 @@ public class fragmentPageDownlad extends Fragment{
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);
         textView = (TextView) v.findViewById(R.id.text_view_fullscreen);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
+        /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
         }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             params.setMargins(0, TopManga.WIDTH_WIND / 2, 0, 0);
         }
-        progress.setLayoutParams(params);
+        progress.setLayoutParams(params);*/
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
         image.setOnImageEventListener(d);

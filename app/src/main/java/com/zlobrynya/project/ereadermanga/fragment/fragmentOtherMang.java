@@ -49,7 +49,8 @@ public class fragmentOtherMang extends Fragment {
         listView.setAdapter(adapterOtherMang);
         textView= (TextView) v.findViewById(R.id.text_sticky_list);
         textView.setText(R.string.not_other_mang);
-        textView.setVisibility(View.VISIBLE);
+        if (list.isEmpty())
+            textView.setVisibility(View.VISIBLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

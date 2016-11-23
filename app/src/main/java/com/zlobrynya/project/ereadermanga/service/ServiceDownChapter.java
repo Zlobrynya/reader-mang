@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.zlobrynya.project.ereadermanga.Activity.ShowDownloaded;
 import com.zlobrynya.project.ereadermanga.AsyncTaskLisen;
+import com.zlobrynya.project.ereadermanga.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.ereadermanga.R;
 import com.zlobrynya.project.ereadermanga.cacheImage.CacheFile;
 
@@ -37,6 +38,7 @@ public class ServiceDownChapter extends Service {
     private NotificationCompat.Builder mBuilder;
     private String path;
     private boolean vibration,notif,sound;
+    private ClassDataBaseDownloadMang classDataBaseDownloadMang;
 
     AsyncTaskLisen receivedAddress = new AsyncTaskLisen() {
         @Override
@@ -55,6 +57,7 @@ public class ServiceDownChapter extends Service {
                     urlPage.clear();
                     new ParsURLPage(receivedAddress).execute();
                 }else {
+                    endNotif();
                     stopSelf();
                     Log.d(LOG_TAG, "stopSelf");
                 }
@@ -73,11 +76,9 @@ public class ServiceDownChapter extends Service {
         }
     };
 
-    //Отправка уведомления
-    void sendNotif() {
+    void endNotif(){
         mBuilder.setNumber(startId)
-                .setContentText(listNameChapter.get(startId))
-                .setProgress(urlPage.size() - 1, numberPage, false);
+                .setContentText(getString(R.string.download_complite));
         int notifyID = 1;
 
         if (numberPage == urlPage.size()-1){
@@ -90,8 +91,21 @@ public class ServiceDownChapter extends Service {
                 mBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
         }else {
             mBuilder.setDefaults(Notification.DEFAULT_LIGHTS);
-
         }
+
+        mNotificationManager.notify(
+                notifyID,
+                mBuilder.build());
+    }
+
+    //Отправка уведомления
+    void sendNotif() {
+        mBuilder.setNumber(startId)
+                .setContentText(listNameChapter.get(startId))
+                .setProgress(urlPage.size() - 1, numberPage, false);
+        int notifyID = 1;
+
+
 
         mNotificationManager.notify(
                 notifyID,

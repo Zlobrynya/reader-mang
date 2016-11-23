@@ -88,7 +88,7 @@ public class PagesDownload extends AppCompatActivity {
 
         String appKey = "82f0440b0751bf450cf8917c3da7a286422c7034cc3ac4b7";
         Appodeal.disableLocationPermissionCheck();
-        Appodeal.setTesting(true);
+        Appodeal.setTesting(true); //Текстовый режим, не забыть выключить его
         Appodeal.initialize(this, appKey, Appodeal.BANNER);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -414,7 +414,7 @@ public class PagesDownload extends AppCompatActivity {
         Log.i("Destroy:", String.valueOf("PageDowland"));
         if (threadManager != null)
                 threadManager.stop();
-        /*if (classDataBaseViewedHead != null)
+      /*  if (classDataBaseViewedHead != null)
             classDataBaseViewedHead.closeDataBase();*/
         super.onDestroy();
     }

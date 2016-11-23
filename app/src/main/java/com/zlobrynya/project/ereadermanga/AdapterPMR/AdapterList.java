@@ -58,7 +58,7 @@ public class AdapterList extends ArrayAdapter<ClassForList> {
                 if (holder.imageView != null)
                     //@android:drawable/ic_menu_save
                     holder.imageView.setImageResource(R.drawable.ic_save_black_24dp);
-            }
+            }else holder.imageView.setImageBitmap(null);
 
         }
 

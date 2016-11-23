@@ -45,7 +45,7 @@ public class DownloadChapter extends AppCompatActivity {
 
         String appKey = "82f0440b0751bf450cf8917c3da7a286422c7034cc3ac4b7";
         Appodeal.disableLocationPermissionCheck();
-        Appodeal.setTesting(true);
+        Appodeal.setTesting(true); //Текстовый режим, не забыть выключить его
         Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -102,13 +102,15 @@ public class DownloadChapter extends AppCompatActivity {
         String hashCode = "";
         String startStr = urlMang.replace(urlSite, "").replace("/", "");
         String nameDir = "";
+       /* for (int item = list.size()-1; item > -1; item--){
+            ClassForList classForList = list.get(item);*/
         for (ClassForList classForList : list) {
             if (classForList.isCheck() && !classForList.isCheckDownload()) {
                 int numbr = list.indexOf(classForList);
                 String s[] = classForList.getURLChapter().split("/");
                 nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
                 chapter += classForList.getURLChapter() + "?mature=1,";
-                nameChapter += classForList.getNameChapter() + ",";
+                nameChapter += classForList.getNameChapter().replace(",","") + ",";
                 hashCode += classForList.getNameChapter().hashCode() + ",";
                 classForList.setCheckDownload(true);
                 list.set(numbr, classForList);
@@ -124,7 +126,7 @@ public class DownloadChapter extends AppCompatActivity {
             classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
            // classDataBaseDownloadMang.setData(name, hashCodeFromBD, ClassDataBaseDownloadMang.HASH_CODE);
             classDataBaseDownloadMang.setData(name, startStr + "/imgGlav", ClassDataBaseDownloadMang.NAME_IMG);
-          //  classDataBaseDownloadMang.closeDataBase();
+
 
             CacheFile fileGlavImageMang = new CacheFile(new File(path), startStr);
             fileGlavImageMang.checkFileAndDownload(urlImageMang, "imgGlav");
