@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto"
     package="com.zlobrynya.project.ereadermanga">
 
@@ -20,7 +21,8 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:name="android.support.multidex.MultiDexApplication"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup">
         <activity
             android:name="com.zlobrynya.project.ereadermanga.Activity.TopManga"
             android:theme="@style/AppTheme.NoActionBar">
@@ -71,6 +73,8 @@
         </activity>
 
         <activity android:name="com.zlobrynya.project.ereadermanga.Activity.DeleteChapter" />
+
+        <activity android:name="com.zlobrynya.project.ereadermanga.Activity.DeleteChapterInList" />
 
         <activity
             android:name="com.zlobrynya.project.ereadermanga.Activity.MainSettings"

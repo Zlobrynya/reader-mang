@@ -23,6 +23,7 @@ public class BaseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         frameLayout = (RelativeLayout)findViewById(R.id.content_frame);
+       // Multidex.install(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

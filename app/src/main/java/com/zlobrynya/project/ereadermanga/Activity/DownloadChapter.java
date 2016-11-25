@@ -51,7 +51,6 @@ public class DownloadChapter extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Download chapter"); // set the top title
 
-        final boolean wifi = mSettings.getBoolean(TopManga.APP_SETTINGS_WIFI,true);
         path = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
 
         Intent intent = getIntent();

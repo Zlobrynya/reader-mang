@@ -145,30 +145,29 @@ public class ServiceDownChapter extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String urlSite = intent.getStringExtra("url_site");
-        String[] chapter = intent.getStringExtra("chapter").split(",");
-        String[] nameDir = intent.getStringExtra("name_dir").split(",");
-        path = intent.getStringExtra("path");
-        notif = intent.getBooleanExtra("notification",false);
-        vibration = intent.getBooleanExtra("vibratyon",false);
-        sound = intent.getBooleanExtra("sound",false);
-        /*if(intent.getBooleanExtra("sound",false)){
-            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            mBuilder.setSound(soundUri);
-        }*/
+        try {
+            String urlSite = intent.getStringExtra("url_site");
+            String[] chapter = intent.getStringExtra("chapter").split(",");
+            String[] nameDir = intent.getStringExtra("name_dir").split(",");
 
-        boolean firstUrl = false;
-        if (urlChapter.isEmpty())
-            firstUrl = true;
+            path = intent.getStringExtra("path");
+            notif = intent.getBooleanExtra("notification",false);
+            vibration = intent.getBooleanExtra("vibratyon",false);
+            sound = intent.getBooleanExtra("sound",false);
+            boolean firstUrl = false;
+            if (urlChapter.isEmpty())
+                firstUrl = true;
 
-        for (String s: chapter)
-            urlChapter.add(urlSite+s);
-        Collections.addAll(listNameMang, nameDir);
+            for (String s: chapter)
+                urlChapter.add(urlSite+s);
+            Collections.addAll(listNameMang, nameDir);
 
-        if (firstUrl)
-            new ParsURLPage(receivedAddress).execute();
+            if (firstUrl)
+                new ParsURLPage(receivedAddress).execute();
 
-        Log.i(LOG_TAG, "d");
+            Log.i(LOG_TAG, "d");
+        }catch (NullPointerException ignored){
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

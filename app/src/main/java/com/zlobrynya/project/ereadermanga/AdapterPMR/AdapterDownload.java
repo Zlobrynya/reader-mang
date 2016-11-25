@@ -1,6 +1,7 @@
 package com.zlobrynya.project.ereadermanga.AdapterPMR;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zlobrynya.project.ereadermanga.Activity.DeleteChapterInList;
 import com.zlobrynya.project.ereadermanga.Activity.TopManga;
 import com.zlobrynya.project.ereadermanga.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.ereadermanga.R;
@@ -33,7 +35,7 @@ public class AdapterDownload extends AdapterBookmark {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         Holder holder = new Holder();
         if (v != null) {
@@ -62,7 +64,7 @@ public class AdapterDownload extends AdapterBookmark {
             public void onClick(View v) {
                 int poss = (int) v.getTag();
                 if (item.size() >= poss){
-                    ClassDataBaseDownloadMang classData = new ClassDataBaseDownloadMang(context);
+                    /*ClassDataBaseDownloadMang classData = new ClassDataBaseDownloadMang(context);
                     //Есть такая стр в бд naruto/vol72_699,naruto/vol72_698,
                     String nameDir = classData.getDataFromDataBase(item.get(poss).getNameMang(),ClassDataBaseDownloadMang.NAME_DIR)
                             .split(",")[0]  //достаем из нее naruto/vol72_699
@@ -73,7 +75,10 @@ public class AdapterDownload extends AdapterBookmark {
                     Toast.makeText(context, "Delete: " + item.get(poss).getNameMang(),
                             Toast.LENGTH_SHORT).show();
                     item.remove(poss);
-                    notifyDataSetChanged();
+                    notifyDataSetChanged();*/
+                    Intent newInten = new Intent(context,DeleteChapterInList.class);
+                    newInten.putExtra("name",item.get(position).getNameMang());
+                    context.startActivity(newInten);
                 }
                 //  Toast.makeText(TravelBite.this, "test", Toast.LENGTH_SHORT).show();
             }

@@ -398,8 +398,7 @@ public class DescriptionMang extends BaseActivity {
             classTransportForList = event;
     }
 
-    //ThreadMode.BACKGROUND ??
-    @Subscribe(sticky = true,threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onEvent(ClassForList event){
         //узнаем нужно ли запускать активити
         if (event.getNumberChapter() >= 0){

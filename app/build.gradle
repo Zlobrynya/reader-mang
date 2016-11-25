@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.22.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -14,6 +14,15 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://github.com/yongjhih/android-gradle-plugin.m2/raw/master/' }
+    }
+    dependencies {
+        classpath 'com.infstory.tools.build:gradle:0.14.3'
+    }
+}
 
 android {
     compileSdkVersion 23
@@ -41,7 +50,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.android.support:multidex:1.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'rapid.decoder:library:0.3.0'
@@ -56,12 +64,13 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:multidex:1.0.1'
     compile project(':cheetah-mobile-3.4.7')
     compile files('libs/applovin-6.3.0.jar')
     compile files('libs/appodeal-1.15.7.jar')
-    compile files('libs/chartboost-6.5.1.jar')
     compile files('libs/yandex-metrica-2.41.jar')
     compile files('libs/my-target-4.5.10.jar')
-    compile files('libs/unity-ads-2.0.4.jar')
     compile files('libs/flurry-analytics-6.5.0.jar')
+    compile files('libs/unity-ads-2.0.4.jar')
+    compile files('libs/chartboost-6.5.1.jar')
 }
