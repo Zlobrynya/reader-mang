@@ -15,6 +15,7 @@ public class ThreadManager {
     private ArrayList<Integer> priorityImg;
     private ArrayList<String> urlPage;
     private CacheFile cacheFile;
+    private boolean start;
 
     private AsyncTaskLisen as = new AsyncTaskLisen() {
         @Override
@@ -52,6 +53,7 @@ public class ThreadManager {
             saveImg.add(false);
             priorityImg.add(i);
         }
+        start = false;
     }
 
     public void stop(){
@@ -77,9 +79,10 @@ public class ThreadManager {
             for (int i = number+2,j = 3; i < priorityImg.size();i++,j++)
                 priorityImg.set(i,j);
         }
-        if(cacheFile.stopAsyncTask()){
+        if(!start){
             as.onEnd(-1);
         }
+        start = true;
     }
 
     public Boolean isImageSave(int number){
