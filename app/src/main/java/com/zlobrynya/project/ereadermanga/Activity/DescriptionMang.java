@@ -34,12 +34,15 @@ import com.zlobrynya.project.ereadermanga.fragment.fragmentSaveDescriptionMang;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -538,7 +541,8 @@ public class DescriptionMang extends BaseActivity {
         private AsyncTaskLisen lisens;
         private ClassDescriptionMang ClassDescriptionMang;
         private boolean not_net; //отвечает за проверку подклчение
-        private String name;
+        private String name,errorMassage;
+
         //конструктор потока
         Pars(AsyncTaskLisen callback, ClassMainTop mang) {
             this.mang = mang;
@@ -547,6 +551,7 @@ public class DescriptionMang extends BaseActivity {
             ClassDescriptionMang.setNameMang(mang.getNameCharacher());
             ClassDescriptionMang.setImg_url(mang.getUrlImg());
             not_net = false;
+            errorMassage = "Ошибка подключения.";
         }
 
         @Override
@@ -556,12 +561,31 @@ public class DescriptionMang extends BaseActivity {
         protected Void doInBackground(Void... params) {
             //Document doc;
             try {
-                if (doc == null) doc = Jsoup.connect(mang.getURLCharacher()).userAgent("Mozilla")
+                if (doc == null){
+                    Connection.Response response = Jsoup.connect(mang.getURLCharacher())
+                            ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
+                            .userAgent("Mozilla")
+                            .timeout(100000)
+                            .ignoreHttpErrors(true)
+                            .execute();
+                    int statusCode = response.statusCode();
+                    if (statusCode == 200){
+                        doc = Jsoup.connect(mang.getURLCharacher())
+                                .userAgent("Mozilla")
+                                .timeout(100000)
+                                .get();
+                    }else {
+                        errorMassage = response.statusMessage() + " : " + response.statusCode();
+                        not_net = true;
+                        return null;
+                    }
+                }
+
+
+            /*    if (doc == null) doc = Jsoup.connect().userAgent("Mozilla")
                         .timeout(60000)
-                        .get();
+                        .get();*/
                 //если пришли со вкладки "другие манги" нужно достать имя манги на русском для бд
-
-
                 Element el = doc.select("[class = small smallText rate_info]").first();
                 ClassDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
                 if (otherMang){
@@ -608,7 +632,8 @@ public class DescriptionMang extends BaseActivity {
                 ClassDescriptionMang.setDescription(el2.text());
             } catch (IOException e) {
                 e.printStackTrace();
-             //   Log.i("Site",e.getMessage());
+                if (!e.getMessage().isEmpty())
+                    errorMassage += " " + e.getMessage();
                 not_net = true;
             }catch (Exception e) {
               //  e.printStackTrace();
@@ -628,7 +653,7 @@ public class DescriptionMang extends BaseActivity {
                 if (lisens != null) lisens.onEnd();
                 fab.setVisibility(View.VISIBLE);
             }else{
-          //      Toast.makeText(DescriptionMang.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DescriptionMang.this, errorMassage, Toast.LENGTH_SHORT).show();
                 DescriptionMang.this.finish();
             }
         }

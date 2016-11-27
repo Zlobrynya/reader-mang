@@ -88,8 +88,9 @@ public class PagesDownload extends AppCompatActivity {
 
         String appKey = "82f0440b0751bf450cf8917c3da7a286422c7034cc3ac4b7";
         Appodeal.disableLocationPermissionCheck();
-        Appodeal.setTesting(true); //Текстовый режим, не забыть выключить его
+       // Appodeal.setTesting(true); //Текстовый режим, не забыть выключить его
         Appodeal.initialize(this, appKey, Appodeal.BANNER);
+        Appodeal.disableNetwork(this, "cheetah");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
