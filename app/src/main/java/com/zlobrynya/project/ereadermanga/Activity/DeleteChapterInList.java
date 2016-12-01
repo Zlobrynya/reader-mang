@@ -108,11 +108,16 @@ public class DeleteChapterInList extends AppCompatActivity {
     }
 
     private void deleteChapter(String nameDir){
-        File dirs= new File(path+"/"+nameDir);
-        for(File chapter: dirs.listFiles()){
-            chapter.delete();
+        try {
+            File dirs= new File(path+"/"+nameDir);
+            for(File chapter: dirs.listFiles()){
+                chapter.delete();
+            }
+            dirs.delete();
+        }catch (NullPointerException ignored){
+
         }
-        dirs.delete();
+
     }
 
     //Кнопка очистка выбора

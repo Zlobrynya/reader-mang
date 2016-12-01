@@ -234,11 +234,14 @@ public class PagesDownload extends AppCompatActivity {
         }else if (id == R.id.sett_page_rotation){
                item = setLockRotate(item);
         }else if (id == R.id.sett_page_reload){
-            CacheFile file = new CacheFile(getCacheDir(), "pageCache");
-            file.deleteFile(String.valueOf(pageNumber-1));
-            threadManager.setFalseSaveImg(pageNumber-1);
-            threadManager.setPriorityImg(pageNumber-1);
-            EventBus.getDefault().post(pageNumber-1+"/reload");
+            if (!download){
+                CacheFile file = new CacheFile(getCacheDir(), "pageCache");
+                file.deleteFile(String.valueOf(pageNumber-1));
+                threadManager.setFalseSaveImg(pageNumber-1);
+                threadManager.setPriorityImg(pageNumber-1);
+                EventBus.getDefault().post(pageNumber-1+"/reload");
+            }else EventBus.getDefault().post(pageNumber-1+"/reloadDown");
+
         }else if (id == R.id.next_page_skip){
             classDataBaseViewedHead.setData(nameMang, String.valueOf(1), ClassDataBaseViewedHead.LAST_PAGE);
             EventBus.getDefault().postSticky(chapterNumber - 1);
@@ -427,7 +430,7 @@ public class PagesDownload extends AppCompatActivity {
         private String html;
         private boolean not_net;
         //конструктор потока
-        protected ParsURLPage(AsyncTaskLisen addImg,String url) {
+        ParsURLPage(AsyncTaskLisen addImg, String url) {
             asyncTask = addImg;
         }
 

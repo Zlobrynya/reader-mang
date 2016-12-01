@@ -205,11 +205,11 @@ public class fragmentPageDownlad extends Fragment{
                 if (strings[1].contains("reload")){
                     image.setVisibility(View.GONE);
                     progress.setVisibility(View.VISIBLE);
-                    progress.setProgress(0);
                 }else if (strings[1].contains("Start")){
                     showImageView();
                 }
-
+                if (strings[1].contains("reloadDown"))
+                    showImageView();
             }
         }
     }

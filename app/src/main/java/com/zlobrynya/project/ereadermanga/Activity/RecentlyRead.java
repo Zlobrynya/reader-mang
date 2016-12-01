@@ -42,7 +42,7 @@ public class RecentlyRead extends BaseActivity{
         StickyListHeadersListView listView = (StickyListHeadersListView) this.findViewById(R.id.listRecentlyRead);
         adapter = new AdapterRecentlyRead(this,R.layout.list_view,list);
         listView.setAdapter(adapter);
-        getSupportActionBar().setTitle("Recently Read"); // set the top title
+        getSupportActionBar().setTitle(R.string.nav_recently_read); // set the top title
         textView= (TextView) findViewById(R.id.text_sticky_list);
 
         url = mSettings.getString(APP_PREFERENCES_URL, "");

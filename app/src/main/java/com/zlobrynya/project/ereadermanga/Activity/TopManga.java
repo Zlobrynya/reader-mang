@@ -213,7 +213,7 @@ public class TopManga extends BaseActivity {
             return;
         }
         doublePressBack = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.enter_back, Toast.LENGTH_SHORT).show();
 
         //таймер для сброса двойного нажатия назад
         new Handler().postDelayed(new Runnable() {

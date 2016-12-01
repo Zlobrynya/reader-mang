@@ -44,7 +44,7 @@ public class ShowDownloaded extends BaseActivity {
         path = mSettings.getString(TopManga.APP_SETTINGS_PATH, getFilesDir().getAbsolutePath());
         classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
         listView = (ListView) this.findViewById(R.id.list_download);
-        getSupportActionBar().setTitle("Download"); // set the top title
+        getSupportActionBar().setTitle(R.string.nav_download); // set the top title
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -429,9 +429,9 @@ public class DescriptionMang extends BaseActivity {
     }
 
     //Процедура для кнопки
-    public void StartRead(View view) {
+   /* public void StartRead(View view) {
         startLastChapter();
-    }
+    }*/
 
     private void startLastChapter(){
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_CHAPTER);
