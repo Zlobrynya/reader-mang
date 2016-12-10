@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 //import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.classPMR.ClassMang;
@@ -87,6 +88,7 @@ public class TopManga extends BaseActivity {
         pager.setAdapter(gg);
         pager.setCurrentItem(1);
         boolean first = mSettings.getBoolean(APP_PREFERENCES_FIRST,true);
+        Appodeal.disableNetwork(this, "cheetah");
 
         if (!first){
             mang = new ClassMang();

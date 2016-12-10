@@ -94,6 +94,11 @@ public class fragmentPageDownlad extends Fragment{
         public void onTileLoadError(Exception e) {
 
         }
+
+        @Override
+        public void onPreviewReleased() {
+
+        }
     };
 
     @Override

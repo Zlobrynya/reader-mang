@@ -179,7 +179,7 @@ public class CacheFile {
                     //InputStream is=conn.getInputStream();
                     InputStream is = new BufferedInputStream(imageUrl.openStream(), 8192);
 
-                    if (params[0].contains("gif") || params[0].contains("jpg")){
+                    if (!params[0].contains("png")){
                         compress = true;
                        /* ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
                         BitmapFactory.decodeStream(is).compress(Bitmap.CompressFormat.PNG, 100, byteOutputStream);
