@@ -123,11 +123,11 @@ public class TopManga extends BaseActivity {
             editor.commit();
         }
 
-        if (!isMyServiceRunning(UpdateMangBookmark.class)){
+       // if (!isMyServiceRunning(UpdateMangBookmark.class)){
           //  Log.i("Service","start");
             AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
             alarm.SetAlarm(this,"");
-        }
+      //  }
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);

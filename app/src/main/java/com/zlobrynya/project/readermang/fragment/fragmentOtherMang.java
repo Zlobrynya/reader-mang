@@ -49,7 +49,8 @@ public class fragmentOtherMang extends Fragment {
         listView.setAdapter(adapterOtherMang);
         textView= (TextView) v.findViewById(R.id.text_sticky_list);
         textView.setText(R.string.not_other_mang);
-        if (list.isEmpty())
+        textView.setVisibility(View.GONE);
+        if (!list.isEmpty())
             textView.setVisibility(View.VISIBLE);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,14 +85,14 @@ public class fragmentOtherMang extends Fragment {
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onEvent(ArrayList<ClassOtherMang> event) {
         list.addAll(event);
-        adapterOtherMang.notifyDataSetChanged();
         if (!list.isEmpty()){
             textView.setVisibility(View.GONE);
         }
-     //   EventBus.getDefault().cancelEventDelivery(event) ;
+        EventBus.getDefault().removeStickyEvent(event) ;
+        adapterOtherMang.notifyDataSetChanged();
     }
 
     //фабричный метод для ViewPage

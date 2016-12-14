@@ -26,6 +26,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 
 public class UpdateMangBookmark extends Service {
     private ArrayList<String> nameMang,nameMangUpdate;
+    // эта переменная для определение день прошел или нет
     private ArrayList<Integer> numberOfMang;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
@@ -68,9 +70,7 @@ public class UpdateMangBookmark extends Service {
             String[] names1 = name1.split(" ");
             String[] names2 = name2.split(" ");
             String locName1 = names1[0]+" "+names1[1];
-            boolean result = locName1.equals((names2[0] + " " + names2[1]));
-            if (result) Log.i("fd","fd");
-            return result;
+            return locName1.equals((names2[0] + " " + names2[1]));
         }else{
             return name1.equals(name2);
         }
@@ -123,7 +123,7 @@ public class UpdateMangBookmark extends Service {
             }else {
                 if (!nameMangUpdate.isEmpty())
                     sendNotif();
-               /* else
+              /*  else
                     sendNotifDebag();*/
             }
         }
@@ -134,20 +134,18 @@ public class UpdateMangBookmark extends Service {
         }
     };
 
-    void sendNotifDebag(ArrayList<String> debugArr,int id,String messege) {
+    void sendNotifDebag() {
         // то что ниже для расширенного отображения (несколько строк подряд с названиеми глав которые скачались)
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
         // Sets a title for the Inbox in expanded layout
-        inboxStyle.setBigContentTitle(messege);
+        inboxStyle.setBigContentTitle("gebug");
         //inboxStyle.setSummaryText("Все окей я работаю, прост обновлять нечего.");
-        for (String name: debugArr)
-            inboxStyle.addLine(name);
         // Moves the expanded layout object into the notification object.
         mBuilder.setStyle(inboxStyle);
         mBuilder.setWhen(System.currentTimeMillis());
         mNotificationManager.notify(
-                id,
+                1,
                 mBuilder.build());
     }
 
@@ -194,7 +192,7 @@ public class UpdateMangBookmark extends Service {
         mBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Manga update")
                 .setContentText("")
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_update_white_36dp)
                 .setContentIntent(resultPendingIntent);;
 
     }
@@ -231,8 +229,8 @@ public class UpdateMangBookmark extends Service {
             nameBookmark.put(1, bookmarkMintManga);
 
             try {
-                newData = intent.getStringExtra("Data");
-
+                Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+                newData = formatter.format(new Date());
                 //Сбрасываем счетчик количества опубликованых манг, когда проходить день
                 if (!lastData.isEmpty()){
                     DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
@@ -310,7 +308,8 @@ public class UpdateMangBookmark extends Service {
         protected Void doInBackground(Void... params) {
             try {
                 //Запрос на получение сылок для изображений:
-                if (doc == null) doc = Jsoup.connect(URL).get();
+                if (doc == null)
+                    doc = Jsoup.connect(URL).get();
 
                 Elements table = doc.select("[class=table table-hover newChapters]").select("tr");
                 for (Element element : table){

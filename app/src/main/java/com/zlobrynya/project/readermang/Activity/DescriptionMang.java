@@ -155,11 +155,11 @@ public class DescriptionMang extends BaseActivity {
             public void onClick(View view) {
                 if (bookmark){
                     fab2.setImageResource(R.drawable.ic_favorite_white_24dp);
-                    Toast.makeText(view.getContext(), "Add bookmark", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Добавлено в избранное.", Toast.LENGTH_SHORT).show();
                     bookmark = false;
                 }else {
                     fab2.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-                    Toast.makeText(view.getContext(), "Delete bookmark", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Удалено из избранного.", Toast.LENGTH_SHORT).show();
                     bookmark = true;
                 }
                 EventBus.getDefault().post("notebook");
@@ -222,18 +222,27 @@ public class DescriptionMang extends BaseActivity {
                     }
                     //Если ничего не сохранено то закрываем активити
                     if (classDescriptionMang == null){
+                        Toast.makeText(this, "Ошибка. Попробуйте зайти в эту мангу заново.", Toast.LENGTH_SHORT).show();
                         this.finish();
                     }
                     //    classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
                 }catch (NullPointerException e){
                     //  Если после востановления данных вернулся false закрываем активити
+                    Toast.makeText(this, "Ошибка. Попробуйте зайти в эту мангу заново.", Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
                 EventBus.getDefault().post(classOtherManglist);
 
             }
-            EventBus.getDefault().post(classDescriptionMang);
-            EventBus.getDefault().post(classTransportForList);
+            //Если ничего не сохранено то закрываем активити
+            if (classDescriptionMang == null){
+                Toast.makeText(this, "Ошибка. Попробуйте зайти в эту мангу заново.", Toast.LENGTH_SHORT).show();
+                this.finish();
+            }
+            if (classDescriptionMang != null)
+                EventBus.getDefault().post(classDescriptionMang);
+            if (classOtherManglist != null)
+                EventBus.getDefault().postSticky(classTransportForList);
         }
         else {
             saveFragment = new fragmentSaveDescriptionMang();
@@ -280,7 +289,7 @@ public class DescriptionMang extends BaseActivity {
     public void onStop() {
         Log.i(strLog,"Stop");
         if (downloadChapter && classTransportForList != null)
-            EventBus.getDefault().post(classTransportForList);
+            EventBus.getDefault().postSticky(classTransportForList);
         super.onStop();
     }
 
@@ -463,7 +472,7 @@ public class DescriptionMang extends BaseActivity {
             startActivity(intent);
         }catch (java.lang.ArrayIndexOutOfBoundsException e){
             Toast toast = Toast.makeText(this,
-                    "В манге нет глав", Toast.LENGTH_SHORT);
+                    "В манге нет глав.", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -693,7 +702,7 @@ public class DescriptionMang extends BaseActivity {
                 ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getNameCharacher(),mang);
                 classTransportForList = transportForList;
               // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
-                EventBus.getDefault().post(transportForList);
+                EventBus.getDefault().postSticky(transportForList);
                 if (read){
                     numberLastChapter();
                     read = false;
@@ -722,6 +731,7 @@ public class DescriptionMang extends BaseActivity {
             } catch (IOException | NullPointerException e) {
                 //e.printStackTrace();+
                 Crashlytics.logException(e);
+                Crashlytics.setString("mangUrl",mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/")));
                 //Log.i("Log","work");
             }
 
@@ -793,7 +803,7 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            EventBus.getDefault().post(classOtherManglist);
+            EventBus.getDefault().postSticky(classOtherManglist);
         }
     }
 }

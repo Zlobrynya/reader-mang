@@ -141,7 +141,7 @@ public class fragmentDescriptionList extends Fragment {
     }
 
     //тут посылка с DescriptionMang, что надо бы добавить в list и обновить адаптер
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onEvent(ClassTransportForList event) {
        // Log.i(strLog, "event ClassTransportForList");
         if (!event.getName().isEmpty() && list.isEmpty()){
@@ -171,6 +171,7 @@ public class fragmentDescriptionList extends Fragment {
             TheardCheckHeads theardCheckHeads = new TheardCheckHeads();
             theardCheckHeads.execute();
         }
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override

@@ -30,11 +30,10 @@ public class AlarmManagerBroadcastReceiver extends WakefulBroadcastReceiver {
 
 
         String msgStr = "";
-        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
-        msgStr = formatter.format(new Date());
+
         //Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 
-        context.startService(new Intent(context.getApplicationContext(), UpdateMangBookmark.class).putExtra("Data", msgStr));
+        context.startService(new Intent(context.getApplicationContext(), UpdateMangBookmark.class));
         //Release the lock
         wl.release();
     }
@@ -48,7 +47,8 @@ public class AlarmManagerBroadcastReceiver extends WakefulBroadcastReceiver {
 
         //раз в 3 часа AlarmManager.INTERVAL_HOUR*3
         if(Build.VERSION.SDK_INT < 23){
-            am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR*3, pi);
+            //AlarmManager.INTERVAL_HOUR*3
+            am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR*3 , pi);
         }
         else{
             //am.setExactAndAllowWhileIdle(AlarmManager.RTC,150000,pi);

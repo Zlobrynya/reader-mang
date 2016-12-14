@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
@@ -82,17 +83,27 @@ public class AdapterMainScreen extends ArrayAdapter<ClassMainTop> {
             v.setTag(holder);
         }
         //получаем класс из позиции
-        ClassMainTop m1 = getItem(position);
-        //если он есть то получаеи и устанавливаем изображение
-        if (m1 != null){
-            //проверка есть ли это изображение и изменилось ли оно
-            //если нет то ничего не трогаем если да то грузим изображение
-            //исправляет "баг" мерцание
-            if (holder.img.getTag() == null ||
-                    !holder.img.getTag().equals(m1.getUrlImg())) {
-                ImageLoader.getInstance().displayImage(m1.getUrlImg(), holder.img, options);
-                holder.img.setTag(m1.getUrlImg());
-                holder.tv.setText(m1.getNameCharacher());
+        try{
+            ClassMainTop m1 = getItem(position);
+            //если он есть то получаеи и устанавливаем изображение
+            if (m1 != null){
+                //проверка есть ли это изображение и изменилось ли оно
+                //если нет то ничего не трогаем если да то грузим изображение
+                //исправляет "баг" мерцание
+                if (holder.img.getTag() == null ||
+                        !holder.img.getTag().equals(m1.getUrlImg())) {
+                    ImageLoader.getInstance().displayImage(m1.getUrlImg(), holder.img, options);
+                    holder.img.setTag(m1.getUrlImg());
+                    holder.tv.setText(m1.getNameCharacher());
+                }
+            }
+        }catch (IndexOutOfBoundsException e){
+            Crashlytics.logException(e);
+            if (getCount() > 0){
+                Crashlytics.setString("site",getItem(0).getUrlSite());
+                Crashlytics.setString("characher",getItem(0).getURLCharacher());
+                Crashlytics.setString("name",getItem(0).getNameCharacher());
+                Crashlytics.setString("Count", String.valueOf(getCount()));
             }
         }
         return v;
