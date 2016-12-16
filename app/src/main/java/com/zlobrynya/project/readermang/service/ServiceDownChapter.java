@@ -62,6 +62,7 @@ public class ServiceDownChapter extends Service {
                 if (bytesAvailable < thresholdStorage){
                     endNotif("Ошибка. Мало памяти для загрузки глав.");
                     stopSelf();
+                    return;
                 }
 
                 startID++;

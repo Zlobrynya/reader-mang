@@ -74,6 +74,7 @@ public class DescriptionMang extends BaseActivity {
     private ClassDescriptionMang classDescriptionMang;
     private ClassTransportForList classTransportForList;
     private ArrayList<ClassOtherMang> classOtherManglist;
+    private final boolean DEBUG = false;
 
     private final String strLog = "DescripotionMang";
 
@@ -287,7 +288,8 @@ public class DescriptionMang extends BaseActivity {
 
     @Override
     public void onStop() {
-        Log.i(strLog,"Stop");
+        if (DEBUG)
+            Log.i(strLog,"Stop");
         if (downloadChapter && classTransportForList != null)
             EventBus.getDefault().postSticky(classTransportForList);
         super.onStop();
@@ -486,9 +488,11 @@ public class DescriptionMang extends BaseActivity {
 
         for (ClassForList c : arList){
             String name = c.getURLChapter();
-            Log.i("Number chapter",name);
+            if (DEBUG)
+                Log.i("Number chapter",name);
             if (string.contains(name)) {
-                Log.i("Number chapter", String.valueOf(kol));
+                if (DEBUG)
+                    Log.i("Number chapter", String.valueOf(kol));
                 //Отправляем в pagesDowload, если было запущено с закладок
                 if (read) EventBus.getDefault().post(kol);
                 return kol;

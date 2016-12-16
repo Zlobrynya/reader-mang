@@ -35,6 +35,7 @@ public class CacheFile {
     private int numberImg;
     private boolean download;
     private int numberPage;
+    private final boolean DEBUG = false;
 
     public CacheFile(File dirFile, String nameDir, AsyncTaskLisen as){
         this.dirFile = new File(dirFile,nameDir);
@@ -160,7 +161,8 @@ public class CacheFile {
             try {
                 total = 0;
              //   compress = false;
-                Log.i("Threads","CacheFile"+params[1]);
+                if (DEBUG)
+                    Log.i("Threads","CacheFile"+params[1]);
                 //продумать поименование файлов
                 File f = new File(dirFile, params[1]);
                 try {
@@ -195,7 +197,8 @@ public class CacheFile {
                     if (compress)
                         compressPng(f,os);
                     os.close();
-                    Log.i("File", params[0]+" Complite");
+                    if (DEBUG)
+                        Log.i("File", params[0]+" Complite");
                 }
 
             }catch (IOException e) {

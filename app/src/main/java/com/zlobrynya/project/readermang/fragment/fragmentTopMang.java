@@ -31,6 +31,7 @@ import com.zlobrynya.project.readermang.Activity.TopManga;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -63,6 +64,7 @@ public class fragmentTopMang extends Fragment {
     private boolean stopLoad,visibleButton;
     private int resultPost;  // 0 - глав стр 1 - результат поиска 2 - по жанрам
     private ClassMainTop mainTop;
+    private final boolean DEBUG = false;
 
 
     public void clearData() {
@@ -210,7 +212,8 @@ public class fragmentTopMang extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) kolSum = kol + 10;
-        Log.i("temp Pase","result");
+        if (DEBUG)
+            Log.i("temp Pase","result");
         //Log.i(PROBLEM, "onActivityCreated");
 
     }
@@ -220,7 +223,8 @@ public class fragmentTopMang extends Fragment {
         @Override
         public void onEnd() {
             if (kol < kolSum && !stopLoad) {
-                Log.i("Lisener", String.valueOf(kol)+" "+kolSum);
+                if (DEBUG)
+                    Log.i("Lisener", String.valueOf(kol)+" "+kolSum);
                 kol++;
                 parssate(kol);
             }
@@ -319,6 +323,7 @@ public class fragmentTopMang extends Fragment {
         private String imgSrc;
         private int kol;
         private boolean not_net;
+        private String errorMassage;
 
         //конструктор потока
         Pars(AsyncTaskLisen callback, int kol, ClassMang classMang) {
@@ -326,6 +331,7 @@ public class fragmentTopMang extends Fragment {
             this.kol = kol;
             this.classMang = classMang;
             URL2 = nameChar = imgSrc = "";
+            errorMassage = "Ошибка подключения.";
         }
 
         @Override
@@ -344,12 +350,26 @@ public class fragmentTopMang extends Fragment {
                     kol_mang = kol - (classMang.getMaxInPage()*page);
                 }else kol_mang = kol;
 
-                if (doc == null) {
+
+                if (doc == null){
                     classMang.editWhere(page);
-                    // Подключаемся и качаем html страницу
-                    doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll()).userAgent("Mozilla")
-                            .timeout(3000)
-                            .get();
+                    Connection.Response response = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
+                            ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
+                            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                            .timeout(100000)
+                            .ignoreHttpErrors(true)
+                            .execute();
+                    int statusCode = response.statusCode();
+                    if (statusCode == 200){
+                        doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
+                                .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                                .timeout(100000)
+                                .get();
+                    }else {
+                        errorMassage = response.statusMessage() + " : " + response.statusCode();
+                        not_net = true;
+                        return null;
+                    }
                 }
 
                 Element el = doc.select(classMang.getNameCell()).first();
@@ -363,12 +383,12 @@ public class fragmentTopMang extends Fragment {
                 imgSrc = el2.attr("src");
                 nameChar = el2.attr("title");
                 if (kol_mang == 69 && resultPost != 1) doc = null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                not_net = true;
-            }catch (Exception e) {
+            } catch (Exception e) {
                 //System.out.println("Не грузит страницу либо больше нечего грузить");
                 e.printStackTrace();
+                not_net = true;
+                if (!e.getMessage().isEmpty())
+                    errorMassage += " " + e.getMessage();
                 stopLoad = true;
             }
             return null;
@@ -383,7 +403,8 @@ public class fragmentTopMang extends Fragment {
                    /* String locNameChar = nameChar;
                     locNameChar = locNameChar.replace(")","").replace(" ","").replace("(",",");*/
                     ClassMainTop classMainTop = new ClassMainTop(URL2, nameChar,imgSrc,classMang.getURL());
-                    Log.i("Temple Pase: Kol parse: ", String.valueOf(kol));
+                    if (DEBUG)
+                        Log.i("Temple Pase: Kol parse: ", String.valueOf(kol));
                     try {
                         if (list.size() <= kol)
                             list.add(classMainTop);
@@ -403,7 +424,7 @@ public class fragmentTopMang extends Fragment {
                 }
             }else {
                 try{
-                    Toast.makeText(fragmentTopMang.this.getContext(), "Что то с инетом", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(fragmentTopMang.this.getContext(), errorMassage, Toast.LENGTH_SHORT).show();
                 }catch (NullPointerException e){
 
                 }
