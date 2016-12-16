@@ -98,19 +98,25 @@ public class DownloadChapter extends AppCompatActivity {
 
     private void download(){
         String chapter = "";
+        String chapterBack = "";
         String nameChapter = "";
         String hashCode = "";
         String startStr = urlMang.replace(urlSite, "").replace("/", "");
         String nameDir = "";
-       /* for (int item = list.size()-1; item > -1; item--){
-            ClassForList classForList = list.get(item);*/
+        String nameDirBack = "";
+
+
         for (ClassForList classForList : list) {
             if (classForList.isCheck() && !classForList.isCheckDownload()) {
+                String locHelper;
                 int numbr = list.indexOf(classForList);
                 String s[] = classForList.getURLChapter().split("/");
                 nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
+                nameDirBack = startStr + "/" + s[2] + "_" + s[3] + "," + nameDirBack;
                 chapter += classForList.getURLChapter() + "?mature=1,";
-                nameChapter += classForList.getNameChapter().replace(",","") + ",";
+                chapterBack = classForList.getURLChapter() + "?mature=1," + chapterBack
+                ;
+                nameChapter = classForList.getNameChapter().replace(",","") + "," + nameChapter;
                 hashCode += classForList.getNameChapter().hashCode() + ",";
                 classForList.setCheckDownload(true);
                 list.set(numbr, classForList);
@@ -122,8 +128,8 @@ public class DownloadChapter extends AppCompatActivity {
             String nameDirFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_DIR) + nameDir;
             String nameChapterFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_CHAPTER) + nameChapter;
            // String hashCodeFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.HASH_CODE) + hashCode;
-            classDataBaseDownloadMang.setData(name, nameDirFromBD, ClassDataBaseDownloadMang.NAME_DIR);
-            classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
+           // classDataBaseDownloadMang.setData(name, nameDirFromBD, ClassDataBaseDownloadMang.NAME_DIR);
+          //  classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
            // classDataBaseDownloadMang.setData(name, hashCodeFromBD, ClassDataBaseDownloadMang.HASH_CODE);
             classDataBaseDownloadMang.setData(name, startStr + "/imgGlav", ClassDataBaseDownloadMang.NAME_IMG);
 
@@ -135,9 +141,11 @@ public class DownloadChapter extends AppCompatActivity {
             //Запуск сервиса
             startService(new Intent(DownloadChapter.this, ServiceDownChapter.class).putExtra("URL_Mang", urlMang)
                     .putExtra("url_site", urlSite)
-                    .putExtra("chapter", chapter)
-                    .putExtra("name_dir", nameDir)
+                    .putExtra("chapter", chapterBack)
+                    .putExtra("chapter_name",nameChapter)
+                    .putExtra("name_dir", nameDirBack)
                     .putExtra("path",path)
+                    .putExtra("name_mang",name)
                     .putExtra("vibratyon",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_VIBRATION,false))
                     .putExtra("sound",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_SOUNG,false))
                     .putExtra("notification",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,false)));

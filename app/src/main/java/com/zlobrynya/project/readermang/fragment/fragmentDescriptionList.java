@@ -238,7 +238,7 @@ public class fragmentDescriptionList extends Fragment {
                 //Список глав переводим в ХэшКод
                 for (int i = 0; i < list.size(); i++) {
                     ClassForList classForList = list.get(i);
-                    hashCodeHead.put(i,classForList.getNameChapter().hashCode());
+                    hashCodeHead.put(i,classForList.getNameChapter().replace(",","").replace("новое","").hashCode());
                 }
                 //Сортировка HashMap
                 ValueComparatorMap valueComparatorMap = new ValueComparatorMap(hashCodeHead);
@@ -275,7 +275,7 @@ public class fragmentDescriptionList extends Fragment {
                 }
 
                 int quantity = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(nameMang, ClassDataBaseViewedHead.NUMBER_OF_HEADS));
-                if (list.size() - quantity > 0) {
+                if ((list.size() - quantity) > 0) {
                     for (int i = 0; i < list.size() - quantity; i++) {
                         ClassForList classForList = list.get(i);
                         classForList.setNewChapter(true);
@@ -356,7 +356,7 @@ public class fragmentDescriptionList extends Fragment {
         @Override
         protected void onPostExecute(Void result){
             if (!err){
-                if (nameMang != null && classDataBaseViewedHead != null)
+                if (nameMang != null && classDataBaseViewedHead != null && !readDownloaded)
                     classDataBaseViewedHead.setData(nameMang, String.valueOf(list.size()), ClassDataBaseViewedHead.NUMBER_OF_HEADS);
                 myAdap.notifyDataSetChanged();
             }

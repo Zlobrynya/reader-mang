@@ -56,7 +56,12 @@ public class RecentlyRead extends BaseActivity{
         if (url.contains("selfmanga")){
             url = "selfmanga";
         }
-        if (!url.isEmpty()) initializationRR();
+        if (!url.isEmpty())
+            initializationRR();
+        else {
+            textView.setText(R.string.not_recentle_read);
+            textView.setVisibility(View.VISIBLE);
+        }
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -143,7 +148,8 @@ public class RecentlyRead extends BaseActivity{
     @Override
     public void onResume() {
         list.clear();
-        initializationRR();
+        if (!url.isEmpty())
+            initializationRR();
         super.onResume();
     }
 

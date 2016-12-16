@@ -123,11 +123,11 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
                 }
             }
             if (m1.isNewChapter()){
-                    if (holder.imageView != null){
-                        holder.imageView.setImageResource(R.drawable.ic_add_black_24dp);
-                        ColorFilter filter = new LightingColorFilter( Color.GRAY, Color.GRAY );
-                        holder.imageView.setColorFilter(filter);
-                    }
+                if (holder.imageView != null){
+                    holder.imageView.setImageResource(R.drawable.ic_add_black_24dp);
+                    ColorFilter filter = new LightingColorFilter( Color.GRAY, Color.GRAY );
+                    holder.imageView.setColorFilter(filter);
+                }
             }
         }
         return v;

@@ -1,5 +1,6 @@
 package com.zlobrynya.project.readermang.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +22,6 @@ import org.greenrobot.eventbus.EventBus;
 public class MainActivity extends BaseActivity {
     private Intent newInten;
     private ClassMang clManga;
-    private AdapterListSite adapter;
     private ArrayList<String> strings;
 
     @Override
@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity {
         getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
         ListView listView = (ListView) findViewById(R.id.main_site_list);
         // создаем адаптер
-        adapter = new AdapterListSite(this,R.layout.item_list_site,strings);
+        AdapterListSite adapter = new AdapterListSite(this, R.layout.item_list_site, strings);
 
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -61,6 +61,10 @@ public class MainActivity extends BaseActivity {
             TextView textView = (TextView) findViewById(R.id.main_text_info);
             textView.setVisibility(View.VISIBLE);
         }
+        SharedPreferences mSettinggs = getSharedPreferences(TopManga.APP_PREFERENCES, MODE_PRIVATE);
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = mSettinggs.edit();
+        editor.putBoolean(TopManga.APP_PREFERENCES_FIRST,false);
+        editor.commit();
         newInten = new Intent(MainActivity.this,TopManga.class);
     }
 

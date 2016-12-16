@@ -45,7 +45,7 @@ public class TopManga extends BaseActivity {
     private ClassMang mang;
     private ViewPager pager;
     private boolean doublePressBack = false;
-
+    private SharedPreferences mSettings;
     public static int HEIGHT_WIND,WIDTH_WIND;
 
     //Для настроек
@@ -62,7 +62,7 @@ public class TopManga extends BaseActivity {
 
 
     //Глобал настройки
-    private static final String APP_PREFERENCES = "settingsListMang";
+    public static final String APP_PREFERENCES = "settingsListMang";
     private static final String APP_PREFERENCES_URL = "URL";
     private static final String APP_PREFERENCES_IMG_URL = "imgURL";
     private static final String APP_PREFERENCES_WHERE = "where";
@@ -71,9 +71,9 @@ public class TopManga extends BaseActivity {
     private static final String APP_PREFERENCES_PATH_2 = "path2";
     private static final String APP_PREFERENCES_NAME_CELL = "nameCell";
     private static final String APP_PREFERENCES_NAME_URL = "nameURL";
-    private static final String APP_PREFERENCES_FIRST = "first";
+    static final String APP_PREFERENCES_FIRST = "first";
     private static final String APP_PREFERENCES_MAX_IN_PAGE = "maxInPage";
-    private SharedPreferences mSettings;
+
 
 
     @Override
@@ -105,8 +105,8 @@ public class TopManga extends BaseActivity {
 
         }else{
             SharedPreferences.Editor editor = mSettings.edit();
-            editor.putBoolean(APP_PREFERENCES_FIRST,false);
-            editor.apply();
+            //editor.putBoolean(APP_PREFERENCES_FIRST,true);
+            //editor.apply();
             Intent newInten = new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(newInten);
             //Настройки по умолчанию
@@ -120,7 +120,7 @@ public class TopManga extends BaseActivity {
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_READMANG,true);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,true);
-            editor.commit();
+            editor.apply();
         }
 
        // if (!isMyServiceRunning(UpdateMangBookmark.class)){

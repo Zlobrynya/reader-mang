@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.StatFs;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.text.format.Formatter;
 import android.util.Log;
 
 import com.zlobrynya.project.readermang.Activity.ShowDownloaded;
@@ -32,41 +34,48 @@ import java.util.Collections;
 public class ServiceDownChapter extends Service {
     private final String LOG_TAG = "Servise Down";
     private ArrayList<String> urlPage,urlChapter,listNameMang,listNameChapter;
-    private int numberPage,startId;
+    private int numberPage, numberChapters;
+    private int startID;
+    private ArrayList<String> nameMang;
     private CacheFile cacheFile;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private String path;
     private boolean vibration,notif,sound;
-    private ClassDataBaseDownloadMang classDataBaseDownloadMang;
+    private Context context;
+    private final long thresholdStorage = 41943040; //40 mb
 
     AsyncTaskLisen receivedAddress = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
             Log.d(LOG_TAG, "Start Dow Pic");
+
             if (numberPage < urlPage.size()){
                 if (notif)
                     sendNotif();
                 cacheFile.loadAndCache(urlPage.get(numberPage), String.valueOf(numberPage));
                 numberPage++;
             }else {
-                startId++;
-                if (startId < urlChapter.size()){
+                //Растчет оставшегося места
+                StatFs stat = new StatFs(path);
+                long bytesAvailable = (long)stat.getBlockSize() *(long)stat.getAvailableBlocks();
+                if (bytesAvailable < thresholdStorage){
+                    endNotif("Ошибка. Мало памяти для загрузки глав.");
+                    stopSelf();
+                }
+
+                startID++;
+                numberChapters++;
+                if (numberChapters < urlChapter.size()){
                     numberPage = 0;
 //                    sendNotif();
                     urlPage.clear();
                     new ParsURLPage(receivedAddress).execute();
                 }else {
-                    endNotif();
+                    endNotif(getString(R.string.download_complite));
                     stopSelf();
                     Log.d(LOG_TAG, "stopSelf");
                 }
-               /* if (vibration){
-                    // Get instance of Vibrator from current Context
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    // Vibrate for 300 milliseconds
-                    v.vibrate(300);
-                }*/
             }
         }
 
@@ -76,9 +85,34 @@ public class ServiceDownChapter extends Service {
         }
     };
 
-    void endNotif(){
-        mBuilder.setNumber(startId)
-                .setContentText(getString(R.string.download_complite));
+    void cleaningDatabase(){
+        int number = 0;
+        for (int j = 0; j < nameMang.size();j++){
+            String nameDirs = "";
+            String nameChapters = "";
+            String locName = nameMang.get(j).split(" ")[0];
+            for (; number < numberChapters;number++){
+                if (listNameChapter.get(number).contains(locName)){
+                    String nameDir = listNameMang.get(number);
+                    nameDirs = nameDir + "," + nameDirs;
+                    String nameChapter = listNameChapter.get(number);
+                    nameChapters = nameChapter.replace(",","").replace("новое","") + "," + nameChapters;
+                }else {
+                    break;
+                }
+            }
+            ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(this);
+            nameDirs = nameDirs + classDataBaseDownloadMang.getDataFromDataBase(nameMang.get(j),ClassDataBaseDownloadMang.NAME_DIR);
+            classDataBaseDownloadMang.setData(nameMang.get(j),nameDirs,ClassDataBaseDownloadMang.NAME_DIR);
+            nameChapters = nameChapters + classDataBaseDownloadMang.getDataFromDataBase(nameMang.get(j),ClassDataBaseDownloadMang.NAME_CHAPTER);
+            classDataBaseDownloadMang.setData(nameMang.get(j),nameChapters,ClassDataBaseDownloadMang.NAME_CHAPTER);
+        }
+    }
+
+
+    void endNotif(String msg){
+        mBuilder.setNumber(startID)
+                .setContentText(msg);
         int notifyID = 1;
 
         if (numberPage == urlPage.size()-1){
@@ -100,12 +134,10 @@ public class ServiceDownChapter extends Service {
 
     //Отправка уведомления
     void sendNotif() {
-        mBuilder.setNumber(startId)
-                .setContentText(listNameChapter.get(startId))
+        mBuilder.setNumber(startID)
+                .setContentText(listNameChapter.get(numberChapters))
                 .setProgress(urlPage.size() - 1, numberPage, false);
         int notifyID = 1;
-
-
 
         mNotificationManager.notify(
                 notifyID,
@@ -120,8 +152,10 @@ public class ServiceDownChapter extends Service {
         listNameChapter = new ArrayList<>();
         cacheFile = new CacheFile();
         numberPage = 0;
-        startId = 0;
-
+        startID = 0;
+        numberChapters = 0;
+        context = this;
+        nameMang = new ArrayList<>();
         //инициализация уведомлений
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -149,7 +183,9 @@ public class ServiceDownChapter extends Service {
             String urlSite = intent.getStringExtra("url_site");
             String[] chapter = intent.getStringExtra("chapter").split(",");
             String[] nameDir = intent.getStringExtra("name_dir").split(",");
+            String[] nameChapters = intent.getStringExtra("chapter_name").split(",");
 
+            nameMang.add(nameMang.size(),intent.getStringExtra("name_mang"));
             path = intent.getStringExtra("path");
             notif = intent.getBooleanExtra("notification",false);
             vibration = intent.getBooleanExtra("vibratyon",false);
@@ -161,17 +197,21 @@ public class ServiceDownChapter extends Service {
             for (String s: chapter)
                 urlChapter.add(urlSite+s);
             Collections.addAll(listNameMang, nameDir);
+            Collections.addAll(listNameChapter, nameChapters);
 
             if (firstUrl)
                 new ParsURLPage(receivedAddress).execute();
 
             Log.i(LOG_TAG, "d");
         }catch (NullPointerException ignored){
+
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
+
     public void onDestroy() {
+        cleaningDatabase();
         super.onDestroy();
         Log.d(LOG_TAG, "onDestroy");
     }
@@ -201,11 +241,11 @@ public class ServiceDownChapter extends Service {
 
         @Override
         protected Void doInBackground(Void... params) {
-            cacheFile.parameterSettingDownloadChapter(new File(path), listNameMang.get(startId), receivedAddress);
+            cacheFile.parameterSettingDownloadChapter(new File(path), listNameMang.get(numberChapters), receivedAddress);
             try {
                 Log.d(LOG_TAG, "Start Dow URL");
                 //Запрос на получение сылок для изображений:
-                if (doc == null) doc = Jsoup.connect(urlChapter.get(startId)).get();
+                if (doc == null) doc = Jsoup.connect(urlChapter.get(numberChapters)).get();
 
                 nameChapter = doc.select("[class = pageBlock container]").select("h1").text();
 
@@ -254,7 +294,6 @@ public class ServiceDownChapter extends Service {
                         urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
                     }
                 }
-                listNameChapter.add(nameChapter);
                 asyncTask.onEnd();
             }
         }
