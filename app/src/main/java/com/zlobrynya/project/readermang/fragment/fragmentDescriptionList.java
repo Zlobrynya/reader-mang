@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.AdapterPMR.AdapterListChapter;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
@@ -76,7 +77,17 @@ public class fragmentDescriptionList extends Fragment {
 
                 //высчитываем HASH_CODE строки
                 String numberChapter = String.valueOf(classForList1.getNameChapter().hashCode());
-                classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
+                try{
+                    classDataBaseViewedHead.addViewedChapter(nameMang, numberChapter);
+                }catch (NullPointerException e){
+                    classDataBaseViewedHead = new ClassDataBaseViewedHead(getActivity());
+                    Crashlytics.logException(e);
+                    Crashlytics.setString("nameMang",nameMang);
+                    if (list != null)
+                        Crashlytics.setString("listSize", String.valueOf(list.size()));
+                    else
+                        Crashlytics.setString("listSize","null");
+                }
 
              //   String lastChapter = classDataBaseViewedHead.getDataFromDataBase(mainTop.getNameCharacher(),ClassDataBaseViewedHead.LAST_CHAPTER);
                 if (mainTop != null)

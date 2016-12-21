@@ -57,6 +57,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     ArrayList<ClassForList> list;
     public AdapterList myAdap;
     public ClassTransport classMang;
+    public boolean DEBUG = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,7 +194,8 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
             else in="";
             request += "&"+ a.getURLChapter() + "="+in;
         }
-        Log.i("POST", classMang.getClassMang().getURL()+request);
+        if (DEBUG)
+            Log.i("POST", classMang.getClassMang().getURL()+request);
         classMang.setURL_Search(request);
         EventBus.getDefault().post(classMang);
     }

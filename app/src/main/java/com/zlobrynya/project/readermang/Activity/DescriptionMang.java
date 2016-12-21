@@ -727,15 +727,26 @@ public class DescriptionMang extends BaseActivity {
                         .timeout(3000)
                         .get();
                 //вытаскиваем первую таблицу со связаной мангой
-                parsSimilar(0);
-                parsSimilar(1);
+                try{
+                    parsSimilar(0);
+                }catch(NullPointerException e){
+                    Crashlytics.logException(e);
+                    Crashlytics.setString("mangUrl",mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/")));
+                    Crashlytics.setString("What","Связаные");
+                }
+                try{
+                    parsSimilar(1);
+                }catch(NullPointerException e){
+                    Crashlytics.logException(e);
+                    Crashlytics.setString("mangUrl",mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/")));
+                    Crashlytics.setString("What","Похожие");
+                }
                 //Crashlytics.log("Description Mang, отсутствуе похожие манги");
                 //перемещаемся на след.таблицу с похожей мангой
                 parsRelated();
             } catch (IOException | NullPointerException e) {
                 //e.printStackTrace();+
-                Crashlytics.logException(e);
-                Crashlytics.setString("mangUrl",mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/")));
+
                 //Log.i("Log","work");
             }
 

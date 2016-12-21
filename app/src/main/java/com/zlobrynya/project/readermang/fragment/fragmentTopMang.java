@@ -19,6 +19,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.Activity.DescriptionMang;
 import com.zlobrynya.project.readermang.AdapterPMR.AdapterMainScreen;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
@@ -37,6 +38,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -383,12 +385,20 @@ public class fragmentTopMang extends Fragment {
                 imgSrc = el2.attr("src");
                 nameChar = el2.attr("title");
                 if (kol_mang == 69 && resultPost != 1) doc = null;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 //System.out.println("Не грузит страницу либо больше нечего грузить");
                 e.printStackTrace();
                 not_net = true;
-                if (!e.getMessage().isEmpty())
-                    errorMassage += " " + e.getMessage();
+                try {
+                    if (!e.getMessage().isEmpty())
+                        errorMassage += " " + e.getMessage();
+                }catch (NullPointerException ei){
+                    ei.printStackTrace();
+                }
+                stopLoad = true;
+            } catch (Exception e){                Crashlytics.setString("mangUrl",classMang.getURL() + classMang.getWhereAll());
+
+                Crashlytics.logException(e);
                 stopLoad = true;
             }
             return null;

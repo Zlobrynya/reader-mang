@@ -463,6 +463,7 @@ public class PagesDownload extends AppCompatActivity {
                 not_net = true;
             } catch (Exception e) {
                 e.printStackTrace();
+                not_net = true;
                 Log.i("pageDowload","Не грузит страницу либо больше нечего грузить");
             }
             return null;
@@ -472,37 +473,43 @@ public class PagesDownload extends AppCompatActivity {
         protected void onPostExecute(Void result){
  //           TextView textView = (TextView) findViewById(R.id.text);
             if (!not_net){
-                StringBuilder secondBuffer = new StringBuilder(html);
-              //  Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
-              //  Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
-                String stringBuffer = "";
-             //   Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
-                stringBuffer = secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
-                stringBuffer = stringBuffer.replace("[","");
-                stringBuffer = stringBuffer.replace("]","");
-                String[] test = stringBuffer.split(",");
+                try{
+                    StringBuilder secondBuffer = new StringBuilder(html);
+                    //  Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
+                    //  Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
+                    String stringBuffer = "";
+                    //   Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
+                    stringBuffer = secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
+                    stringBuffer = stringBuffer.replace("[","");
+                    stringBuffer = stringBuffer.replace("]","");
+                    String[] test = stringBuffer.split(",");
 
-                String[] URLhelp;
-                URLhelp = new String[3];
-                int kol = 0;
-                for(String tt: test){
-                    if (tt.contains("'")){
-                        URLhelp[kol] = tt.substring(tt.indexOf("'")+1,tt.lastIndexOf("'"));
-                        kol++;
-                    }else if (tt.contains("\"")){
-                        URLhelp[2] = tt.substring(tt.indexOf("\"")+1,tt.lastIndexOf("\""));
-                        kol++;
+                    String[] URLhelp;
+                    URLhelp = new String[3];
+                    int kol = 0;
+                    for(String tt: test){
+                        if (tt.contains("'")){
+                            URLhelp[kol] = tt.substring(tt.indexOf("'")+1,tt.lastIndexOf("'"));
+                            kol++;
+                        }else if (tt.contains("\"")){
+                            URLhelp[2] = tt.substring(tt.indexOf("\"")+1,tt.lastIndexOf("\""));
+                            kol++;
+                        }
+                        if (kol == 3){
+                            kol = 0;
+                            urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
+                        }
                     }
-                    if (kol == 3){
-                        kol = 0;
-                        urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
-                    }
+                    progress.setVisibility(View.GONE);
+                    pager.setVisibility(View.VISIBLE);
+                    classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    getSupportActionBar().setTitle(nameChapter); // set the top title
+                    asyncTask.onEnd();
+                }catch (NullPointerException e){
+                    Crashlytics.logException(e);
+                    Crashlytics.setString("mangUrl",URL);
                 }
-                progress.setVisibility(View.GONE);
-                pager.setVisibility(View.VISIBLE);
-                classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
-                getSupportActionBar().setTitle(nameChapter); // set the top title
-                asyncTask.onEnd();
+
             }else{
                 Toast.makeText(PagesDownload.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
             }
