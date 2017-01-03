@@ -23,6 +23,7 @@ import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.Activity.DescriptionMang;
 import com.zlobrynya.project.readermang.AdapterPMR.AdapterMainScreen;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
+import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsTopListRM;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.classPMR.ClassMang;
@@ -38,7 +39,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -56,40 +56,39 @@ import org.greenrobot.eventbus.EventBus;
 
 public class fragmentTopMang extends Fragment {
     private ClassMang classMang;
-    private int firstItem,page;
+    private int firstItem;
     private int kol,kolSum;
-    private Document doc;
     private LinkedList<ClassMainTop> list;
     private AdapterMainScreen myAdap;
     private ClassDataBaseListMang classDataBaseListMang;
     private GridView gr;
-    private boolean stopLoad,visibleButton;
-    private int resultPost;  // 0 - глав стр 1 - результат поиска 2 - по жанрам
+    private boolean visibleButton;
+    private int resultPost = 0;
     private ClassMainTop mainTop;
     private final boolean DEBUG = false;
+    private ParsTopListRM parsTopListRM;
 
 
     public void clearData() {
         classMang = null;
         mainTop = null;
-        doc = null;
         if (list != null){
             list.clear();
             myAdap.notifyDataSetChanged();
         }
-        stopLoad = false;
-        kol = page = firstItem = 0;
+        if (parsTopListRM != null)
+            parsTopListRM.clearData();
+        kol = firstItem = 0;
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         list = new LinkedList<>();
-        stopLoad = false;
         visibleButton = true;
-        kol = page = firstItem = kolSum = 0;
+        kol = firstItem = kolSum = 0;
+        parsTopListRM = new ParsTopListRM(getContext(),list);
+        parsTopListRM.setCallback(addImg);
     }
 
 
@@ -104,6 +103,7 @@ public class fragmentTopMang extends Fragment {
 
         //создаем адаптер для GriedView
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
+        parsTopListRM.setAdapter(myAdap);
 
         if (kolSum == 0){
             switch (sizeCalculate(TopManga.WIDTH_WIND)){
@@ -145,15 +145,14 @@ public class fragmentTopMang extends Fragment {
         upButton.setClickable(false);
         visibleButton = false;
 
-
         gr.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
                 if (firstItem <= firstVisibleItem) {
                     kolSum += 10;
-                    if (kolSum > kol && !stopLoad)
-                        parssate(kol);
+                    if (kolSum > kol && !parsTopListRM.isStopLoad())
+                        parsTopListRM.parssate(kol);
                     if (visibleButton){
                         upButton.setAnimation(fabHide);
                         upButton.setClickable(false);
@@ -183,14 +182,19 @@ public class fragmentTopMang extends Fragment {
             }
         });
 
+        if (resultPost > 0){
+            parsTopListRM.clearData();
+            parsTopListRM.setClassMang(classMang);
+            parsTopListRM.setResultPost(resultPost);
+            parsTopListRM.parssate(kol);
+        }
+
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gr.smoothScrollToPosition(0);
             }
         });
-
-
         return v ;
     }
 
@@ -224,11 +228,11 @@ public class fragmentTopMang extends Fragment {
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
-            if (kol < kolSum && !stopLoad) {
+            if (kol < kolSum && !parsTopListRM.isStopLoad()) {
                 if (DEBUG)
                     Log.i("Lisener", String.valueOf(kol)+" "+kolSum);
                 kol++;
-                parssate(kol);
+                parsTopListRM.parssate(kol);
             }
         }
 
@@ -241,7 +245,6 @@ public class fragmentTopMang extends Fragment {
                 }catch (NullPointerException e){
                     Crashlytics.logException(e);
                 }
-
             }
         }
     };
@@ -254,18 +257,19 @@ public class fragmentTopMang extends Fragment {
             if (!event.getURL().contains(classMang.getURL())){
                 list.clear();
                 kol = 0;
-                page = 0;
-                doc = null;
+                parsTopListRM.clearData();
             }
         }
         if (event == null)
             return;
         classMang = event;
+        parsTopListRM.setClassMang(classMang);
         //создание базы данных
         String nameTable = classMang.getURL().replace(".me", " ");
         nameTable = nameTable.replace("http://"," ");
         nameTable = nameTable.replace(".ru", " ");
         classDataBaseListMang = new ClassDataBaseListMang(getContext(),nameTable);
+        parsTopListRM.setClassDataBaseListMang(classDataBaseListMang);
         InitializationArray array = new InitializationArray();
         array.execute();
         // Log.i(PROBLEM, "onEvent(ClassMang event)");
@@ -277,7 +281,12 @@ public class fragmentTopMang extends Fragment {
         classMang.setWhere(ev.getURL_Search());
         if (ev.getURL_Search().contains("search")) resultPost = 1;
         else resultPost = 2;
-        parssate(kol);
+        if (parsTopListRM != null){
+            parsTopListRM.setResultPost(resultPost);
+            parsTopListRM.setClassMang(classMang);
+            parsTopListRM.parssate(kol);
+        }
+       // parsTopListRM.parssate(kol);
      //   Log.i(PROBLEM, "add(ClassTransport ev)");
     }
 
@@ -315,141 +324,7 @@ public class fragmentTopMang extends Fragment {
         return fragment;
     }
 
-    //метод парсим
-    public void parssate(int kol){
-        //парсим сайт
-        Pars past = new Pars(addImg, kol, classMang);
-        past.execute();
-    }
-
-    //Перенос возможен в отдельный пакет.
-    public class Pars extends AsyncTask<Void,Void,Void> {
-        private String nameChar,URL2;
-        private ClassMang classMang;
-        private AsyncTaskLisen lisens;
-        private String imgSrc;
-        private int kol;
-        private boolean not_net;
-        private String errorMassage;
-
-        //конструктор потока
-        Pars(AsyncTaskLisen callback, int kol, ClassMang classMang) {
-            this.lisens = callback;
-            this.kol = kol;
-            this.classMang = classMang;
-            URL2 = nameChar = imgSrc = "";
-            errorMassage = "Ошибка подключения.";
-        }
-
-        @Override
-        protected  void  onPreExecute(){
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            //Document doc;
-            try {
-                int kol_mang;
-                // Проверка на то что сейчас парсим, если запрос то там без страниц идет
-                if (resultPost != 1){
-                    page = kol / classMang.getMaxInPage();
-                    kol_mang = kol - (classMang.getMaxInPage()*page);
-                }else kol_mang = kol;
-
-
-                if (doc == null){
-                    classMang.editWhere(page);
-                    Connection.Response response = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
-                            ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
-                            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                            .timeout(100000)
-                            .ignoreHttpErrors(true)
-                            .execute();
-                    int statusCode = response.statusCode();
-                    if (statusCode == 200){
-                        doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
-                                .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-                                .timeout(100000)
-                                .get();
-                    }else {
-                        errorMassage = response.statusMessage() + " : " + response.statusCode();
-                        not_net = true;
-                        return null;
-                    }
-                }
-
-                Element el = doc.select(classMang.getNameCell()).first();
-                for (int i = 0; i < kol_mang; i++)
-                    el = el.nextElementSibling();
-                Elements el2 = el.select(classMang.getNameURL());
-
-                URL2 = classMang.getURL() + el2.attr("href");
-                el2 = el.select(classMang.getImgURL());
-
-                imgSrc = el2.attr("src");
-                nameChar = el2.attr("title");
-                if (kol_mang == 69 && resultPost != 1) doc = null;
-            } catch (IOException e) {
-                //System.out.println("Не грузит страницу либо больше нечего грузить");
-                e.printStackTrace();
-                not_net = true;
-                try {
-                    if (!e.getMessage().isEmpty())
-                        errorMassage += " " + e.getMessage();
-                }catch (NullPointerException ei){
-                    ei.printStackTrace();
-                }
-                stopLoad = true;
-            } catch (Exception e){                Crashlytics.setString("mangUrl",classMang.getURL() + classMang.getWhereAll());
-
-                Crashlytics.logException(e);
-                stopLoad = true;
-            }
-            return null;
-        }
-
-        @SuppressLint("LongLogTag")
-        @Override
-        protected void onPostExecute(Void result){
-            //добавляем в лист и обновление
-            if (!not_net){
-                if (kol >= 0 && !URL2.isEmpty() && !nameChar.isEmpty() && !classMang.getURL().isEmpty()) {
-                   /* String locNameChar = nameChar;
-                    locNameChar = locNameChar.replace(")","").replace(" ","").replace("(",",");*/
-                    ClassMainTop classMainTop = new ClassMainTop(URL2, nameChar,imgSrc,classMang.getURL());
-                    if (DEBUG)
-                        Log.i("Temple Pase: Kol parse: ", String.valueOf(kol));
-                    try {
-                        if (list.size() <= kol)
-                            list.add(classMainTop);
-                        if (resultPost == 0) {
-                            classDataBaseListMang.addBasaData(classMainTop, kol);
-                        }
-                        myAdap.notifyDataSetChanged();
-
-                    }catch (IndexOutOfBoundsException e){
-                        //
-                        Log.i("Temple Pase: Error: ",e.toString());
-                        Log.i("Temple Pase: Size list: ", String.valueOf(list.size()));
-                        Log.i("Temple Pase: Kol: ", String.valueOf(kol));
-                    }
-                    //кричим интерфейсу что мы фсе
-                    if (lisens != null) lisens.onEnd();
-                }
-            }else {
-                try{
-                    Toast.makeText(fragmentTopMang.this.getContext(), errorMassage, Toast.LENGTH_SHORT).show();
-                }catch (NullPointerException e){
-
-                }
-            }
-            if (lisens != null) lisens.onEnd(1);
-        }
-    }
-
     private class InitializationArray  extends AsyncTask<Void,Void,Void>{
-
         @Override
         protected Void doInBackground(Void... params) {
             int numberItem = 0;
@@ -467,8 +342,8 @@ public class fragmentTopMang extends Fragment {
                     kolSum = kol + 10;
                 }
             }
-            resultPost = 0;
-            if (kol == 0) parssate(kol);
+            if (kol == 0)
+                parsTopListRM.parssate(kol);
             return null;
         }
 
