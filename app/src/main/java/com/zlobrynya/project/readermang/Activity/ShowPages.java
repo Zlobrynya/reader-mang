@@ -59,7 +59,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by Nikita on 07.03.2016.
  */
 
-public class PagesDownload extends AppCompatActivity {
+public class ShowPages extends AppCompatActivity {
     private ArrayList<String> urlPage;
     private int chapterNumber,pageNumber;
     private TextView textIdPage;
@@ -180,7 +180,7 @@ public class PagesDownload extends AppCompatActivity {
         Intent intent = getIntent();
         URL = intent.getStringExtra("URL");
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
-        pageNumber = Integer.parseInt(intent.getStringExtra("NumberPage"));
+        pageNumber = intent.getIntExtra("NumberPage",1);
         nameMang = intent.getStringExtra("Chapter");
         download = intent.getBooleanExtra("Download",false);
         if (!download){
@@ -201,7 +201,7 @@ public class PagesDownload extends AppCompatActivity {
             pager.setVisibility(View.VISIBLE);
             addImg.onEnd();
             getSupportActionBar().setTitle(nameChapter); // set the top title
-            Log.i("PagesDownload", String.valueOf(file.getNumberOfFile()));
+            Log.i("ShowPages", String.valueOf(file.getNumberOfFile()));
         }
         Appodeal.show(this, Appodeal.BANNER_BOTTOM);
     }
@@ -431,6 +431,7 @@ public class PagesDownload extends AppCompatActivity {
         private boolean not_net;
         //конструктор потока
         ParsURLPage(AsyncTaskLisen addImg, String url) {
+            not_net = false;
             asyncTask = addImg;
         }
 
@@ -472,8 +473,8 @@ public class PagesDownload extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result){
  //           TextView textView = (TextView) findViewById(R.id.text);
-            if (!not_net){
-                try{
+            try{
+                if (!not_net){
                     StringBuilder secondBuffer = new StringBuilder(html);
                     //  Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
                     //  Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
@@ -505,15 +506,16 @@ public class PagesDownload extends AppCompatActivity {
                     classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
                     getSupportActionBar().setTitle(nameChapter); // set the top title
                     asyncTask.onEnd();
-                }catch (NullPointerException e){
-                    Crashlytics.logException(e);
-                    Crashlytics.setString("mangUrl",URL);
+                }else{
+                    Toast.makeText(ShowPages.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
                 }
-
-            }else{
-                Toast.makeText(PagesDownload.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
+            }catch (NullPointerException e){
+                Crashlytics.logException(e);
+                Crashlytics.setString("mangUrl",URL);
+            }catch (Exception e ){
+                Crashlytics.logException(e);
+                Crashlytics.log("mangUrl"+URL);
             }
-
         }
     }
 }

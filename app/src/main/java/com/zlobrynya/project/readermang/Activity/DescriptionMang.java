@@ -232,8 +232,8 @@ public class DescriptionMang extends BaseActivity {
                     Toast.makeText(this, "Ошибка. Попробуйте зайти в эту мангу заново.", Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
-                EventBus.getDefault().post(classOtherManglist);
-
+                if (classOtherManglist != null)
+                    EventBus.getDefault().post(classOtherManglist);
             }
             //Если ничего не сохранено то закрываем активити
             if (classDescriptionMang == null){
@@ -414,7 +414,7 @@ public class DescriptionMang extends BaseActivity {
     public void onEvent(ClassForList event){
         //узнаем нужно ли запускать активити
         if (event.getNumberChapter() >= 0){
-            Intent intent = new Intent(this, PagesDownload.class);
+            Intent intent = new Intent(this, ShowPages.class);
             if (!event.isDownload()){
                 intent.putExtra("URL", mang.getUrlSite() + event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
@@ -464,7 +464,7 @@ public class DescriptionMang extends BaseActivity {
                 string = mang.getUrlSite() + string;
             }
 
-            Intent intent = new Intent(this, PagesDownload.class);
+            Intent intent = new Intent(this, ShowPages.class);
             intent.putExtra("URL",string);
             intent.putExtra("NumberChapter", numberChapter);
             intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE));
@@ -483,8 +483,12 @@ public class DescriptionMang extends BaseActivity {
         String string = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_CHAPTER);
        // Log.i("Number chapter", string);
         Short kol = 0;
+
         //Проверка на первый раз, если так то выдаем самую последнюю главу в списке
-        if (string.contains("null")) return arList.size()-1;
+        if (string == null)
+            return arList.size()-1;
+        if (string.contains("null"))
+            return arList.size()-1;
 
         for (ClassForList c : arList){
             String name = c.getURLChapter();
@@ -643,8 +647,13 @@ public class DescriptionMang extends BaseActivity {
                 ClassDescriptionMang.setDescription(el2.text());
             } catch (IOException e) {
                 e.printStackTrace();
-                if (!e.getMessage().isEmpty())
-                    errorMassage += " " + e.getMessage();
+                try{
+                    if (!e.getMessage().isEmpty())
+                        errorMassage += " " + e.getMessage();
+                }catch (NullPointerException e1){
+
+                }
+
                 not_net = true;
             }catch (Exception e) {
               //  e.printStackTrace();

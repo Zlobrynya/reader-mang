@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.zlobrynya.project.readermang.Activity.PagesDownload;
+import com.zlobrynya.project.readermang.Activity.ShowPages;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
 import com.zlobrynya.project.readermang.decode.MyImageDecoder;
@@ -137,14 +137,14 @@ public class fragmentPageDownlad extends Fragment{
         //установка на сколько приближается при двойном тапе
 
         image.setMinimumDpi(60);
-        file = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory ,null);
+        file = new CacheFile(new File(ShowPages.pathDir), ShowPages.nameDirectory ,null);
         if (file.checkFile(String.valueOf(idPage)))
             showImageView();
-     /*   if (PagesDownload.threadManager.isImageSave(number)){
+     /*   if (ShowPages.threadManager.isImageSave(number)){
             showImageView();
         }*/
 
-        if (!PagesDownload.nameDirectory.contains("pageCache")) {
+        if (!ShowPages.nameDirectory.contains("pageCache")) {
             showImageView();
         }
         return v;

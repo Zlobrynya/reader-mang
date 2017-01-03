@@ -1,6 +1,6 @@
 package com.zlobrynya.project.readermang;
 
-import com.zlobrynya.project.readermang.Activity.PagesDownload;
+import com.zlobrynya.project.readermang.Activity.ShowPages;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class ThreadManager {
         this.urlPage = urlPage;
         saveImg = new ArrayList<>();
         priorityImg = new ArrayList<>();
-        cacheFile = new CacheFile(new File(PagesDownload.pathDir), PagesDownload.nameDirectory,as);
+        cacheFile = new CacheFile(new File(ShowPages.pathDir), ShowPages.nameDirectory,as);
         for(int i = 0; i < urlPage.size();i++){
             saveImg.add(false);
             priorityImg.add(i);

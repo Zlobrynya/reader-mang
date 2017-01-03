@@ -39,7 +39,7 @@
             android:name="com.zlobrynya.project.readermang.Activity.DescriptionMang"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name="com.zlobrynya.project.readermang.Activity.PagesDownload"
+        <activity android:name="com.zlobrynya.project.readermang.Activity.ShowPages"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

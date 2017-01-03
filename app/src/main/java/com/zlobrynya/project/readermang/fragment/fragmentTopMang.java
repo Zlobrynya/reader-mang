@@ -235,8 +235,13 @@ public class fragmentTopMang extends Fragment {
         @Override
         public void onEnd(int number) {
             if (list.isEmpty() ){
-                TextView textView = (TextView) getActivity().findViewById(R.id.text_top_mang_info);
-                textView.setVisibility(View.VISIBLE);
+                try {
+                    TextView textView = (TextView) getActivity().findViewById(R.id.text_top_mang_info);
+                    textView.setVisibility(View.VISIBLE);
+                }catch (NullPointerException e){
+                    Crashlytics.logException(e);
+                }
+
             }
         }
     };
@@ -450,15 +455,17 @@ public class fragmentTopMang extends Fragment {
             int numberItem = 0;
             while (!classDataBaseListMang.download_the_html(kol)){
                 ClassMainTop classTop = classDataBaseListMang.getMainClassTop(kol);
-                classTop.setUrlSite(classMang.getURL());
-                list.add(classTop);
-                kol++;
-                numberItem++;
-                if (numberItem == 5){
-                    publishProgress();
-                    numberItem = 0;
+                if (classTop != null){
+                    classTop.setUrlSite(classMang.getURL());
+                    list.add(classTop);
+                    kol++;
+                    numberItem++;
+                    if (numberItem == 5){
+                        publishProgress();
+                        numberItem = 0;
+                    }
+                    kolSum = kol + 10;
                 }
-                kolSum = kol + 10;
             }
             resultPost = 0;
             if (kol == 0) parssate(kol);
