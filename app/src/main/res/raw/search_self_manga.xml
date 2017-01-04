@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <recipe>
-    <genres post="el_1346" list="action">боевик</genres>
-    <genres post="el_1334" list="martial_arts">боевые искусства</genres>
-    <genres post="el_1339" list="vampires">вампиры</genres>
-    <genres post="el_1333" list="harem">гарем</genres>
-    <genres post="el_1347" list="gender_intriga">гендерная интрига</genres>
-    <genres post="el_1337" list="heroic_fantasy">героическое фэнтези</genres>
-    <genres post="el_1343" list="detective">детектив</genres>
-    <genres post="el_1349" list="josei">дзёсэй</genres>
-    <genres post="el_1332" list="doujinshi">додзинси</genres>
-    <genres post="el_1310" list="drama">драма</genres>
-    <genres post="el_1311" list="historical">история</genres>
-    <genres post="el_1328" list="comedy">комедия</genres>
+    <genres post="el_2155" list="action">боевик</genres>
+    <genres post="el_2153" list="martial_arts">боевые искусства</genres>
+    <genres post="el_2148" list="vampires">вампиры</genres>
+    <genres post="el_2152" list="harem">гарем</genres>
+    <genres post="el_2156" list="gender_intriga">гендерная интрига</genres>
+    <genres post="el_2146" list="heroic_fantasy">героическое фэнтези</genres>
+    <genres post="el_2152" list="detective">детектив</genres>
+    <genres post="el_2158" list="josei">дзёсэй</genres>
+    <genres post="el_2141" list="doujinshi">додзинси</genres>
+    <genres post="el_2118" list="drama">драма</genres>
+    <genres post="el_2119" list="historical">история</genres>
+    <genres post="el_2136" list="comedy">комедия</genres>
     <genres post="el_2147" list="maho_shoujo">махо-сёдзё</genres>
-    <genres post="el_1324" list="mystery">мистика</genres>
-    <genres post="el_1325" list="sci_fi">научная фантастика</genres>
-    <genres post="el_1327" list="natural">повседневность</genres>
-    <genres post="el_1342" list="postapocalypse">постапокалиптика</genres>
-    <genres post="el_1322" list="adventure">приключения</genres>
-    <genres post="el_1335" list="psychological">психология</genres>
-    <genres post="el_1313" list="romance">романтика</genres>
+    <genres post="el_2132" list="mystery">мистика</genres>
+    <genres post="el_2133" list="sci_fi">научная фантастика</genres>
+    <genres post="el_2135" list="natural">повседневность</genres>
+    <genres post="el_2151" list="postapocalypse">постапокалиптика</genres>
+    <genres post="el_2144" list="adventure">приключения</genres>
+    <genres post="el_2121" list="psychological">психология</genres>
+    <genres post="el_2130" list="romance">романтика</genres>
     <genres post="el_2159" list="supernatural">сверхъестественное</genres>
-    <genres post="el_1314" list="shoujo">сёдзё</genres>
-    <genres post="el_1320" list="shoujo_ai">сёдзё-ай</genres>
-    <genres post="el_1326" list="shounen">сёнэн</genres>
-    <genres post="el_1330" list="shounen_ai">сёнэн-ай</genres>
-    <genres post="el_1321" list="sports">спорт</genres>
-    <genres post="el_1329" list="seinen">сэйнэн</genres>
-    <genres post="el_1344" list="tragedy">трагедия</genres>
-    <genres post="el_1341" list="thriller">триллер</genres>
-    <genres post="el_1317" list="horror">ужасы</genres>
-    <genres post="el_1331" list="fantastic">фантастика</genres>
-    <genres post="el_1323" list="fantasy">фэнтези</genres>
-    <genres post="el_1319" list="school">школа</genres>
-    <genres post="el_1354" list="ecchi">этти</genres>
+    <genres post="el_2122" list="shoujo">сёдзё</genres>
+    <genres post="el_2128" list="shoujo_ai">сёдзё-ай</genres>
+    <genres post="el_2134" list="shounen">сёнэн</genres>
+    <genres post="el_2139" list="shounen_ai">сёнэн-ай</genres>
+    <genres post="el_2129" list="sports">спорт</genres>
+    <genres post="el_5838" list="seinen">сэйнэн</genres>
+    <genres post="el_2153" list="tragedy">трагедия</genres>
+    <genres post="el_2150" list="thriller">триллер</genres>
+    <genres post="el_2125" list="horror">ужасы</genres>
+    <genres post="el_2140" list="fantastic">фантастика</genres>
+    <genres post="el_2131" list="fantasy">фэнтези</genres>
+    <genres post="el_2127" list="school">школа</genres>
+    <genres post="el_4982" list="ecchi">этти</genres>
     <genres post="el_4983">Журнал</genres>
-    <genres post="el_1355">Веб</genres>
-    <genres post="el_2741">Ёнкома</genres>
-    <genres post="el_1348">Сборник</genres>
+    <genres post="el_2160">Веб</genres>
+    <genres post="el_2161">Ёнкома</genres>
+    <genres post="el_2157">Сборник</genres>
     <genres post="el_5215">Ранобэ</genres>
     <genres post="s_high_rate">Высокий рейтинг</genres>
     <genres post="s_single">Сингл</genres>
