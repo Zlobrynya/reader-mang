@@ -250,7 +250,8 @@ public class CacheFile {
                 if (f.exists()) {
                     f.delete();
                 }
-                as.onEnd(-1);
+                if (as != null)
+                    as.onEnd(-1);
             }else {
                 if (as != null)
                     if (numberImg != -1 && !download){

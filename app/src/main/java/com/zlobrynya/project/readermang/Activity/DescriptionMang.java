@@ -711,18 +711,32 @@ public class DescriptionMang extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result){
-            if (!arList.isEmpty()){
-                ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getNameCharacher(),mang);
-                classTransportForList = transportForList;
-              // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
-                EventBus.getDefault().postSticky(transportForList);
-                if (read){
-                    numberLastChapter();
-                    read = false;
+            try{
+                if (!arList.isEmpty()){
+                    ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getNameCharacher(),mang);
+                    classTransportForList = transportForList;
+                    // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
+                    EventBus.getDefault().postSticky(transportForList);
+                    if (read){
+                        numberLastChapter();
+                        read = false;
+                    }
+                    ParsSimilarAndRelatedMang parsList = new ParsSimilarAndRelatedMang();
+                    parsList.execute();
                 }
-                ParsSimilarAndRelatedMang parsList = new ParsSimilarAndRelatedMang();
-                parsList.execute();
+            }catch (NullPointerException e){
+                Crashlytics.logException(e);
+                String err = "";
+                //Проверка на то, что вызывает падение
+                if (mang == null)
+                    err = "null";
+                Crashlytics.log("Mang: " + err);
+                if (arList == null)
+                    err = "null";
+                else err = "";
+                Crashlytics.log("arList: " + err);
             }
+
         }
     }
 

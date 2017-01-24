@@ -245,6 +245,9 @@ public class fragmentDescriptionList extends Fragment {
 
             @SuppressLint("UseSparseArrays") HashMap<Integer,Integer> hashCodeHead = new HashMap<>();
             if (classDataBaseViewedHead.addBasaData(nameMang)) {
+                //Если contextа нету сваливаем нафиг, беспонятия как эту ошибку получить.
+                if (getContext() == null)
+                    return;
                 initArray(hashCodeViewedHead,hashCodeDownloadHead);
                 //Список глав переводим в ХэшКод
                 for (int i = 0; i < list.size(); i++) {
@@ -330,6 +333,7 @@ public class fragmentDescriptionList extends Fragment {
                     }
                 });
             }
+
             //Достаем список глав манги которые были скачаны и сортируем
             ClassDataBaseDownloadMang downloadMang = new ClassDataBaseDownloadMang(getContext());
             stringHead =  downloadMang.getDataFromDataBase(nameMang,ClassDataBaseDownloadMang.NAME_CHAPTER);

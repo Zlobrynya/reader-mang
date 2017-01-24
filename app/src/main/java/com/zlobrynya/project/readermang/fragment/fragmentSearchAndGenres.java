@@ -57,7 +57,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     ArrayList<ClassForList> list;
     public AdapterList myAdap;
     public ClassTransport classMang;
-    public boolean DEBUG = true;
+    public boolean DEBUG = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
