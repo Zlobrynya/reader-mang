@@ -56,9 +56,12 @@ public class TopManga extends BaseActivity {
     public static final String APP_SETTINGS_NOTIFICATION_VIBRATION = "vibration";
     public static final String APP_SETTINGS_NOTIFICATION_SOUNG = "soung";
     public static final String APP_SETTINGS_NOTIFICATION_NEW_CHAPTER = "notificationNewChapter";
+    public static final String APP_SETTINGS_SAVE_ZOOM = "saveZoom";
+    public static final String APP_SETTINGS_IMAGE_SCALE = "imageScale";
     public static final String APP_SETTINGS_SITE_READMANG = "siteReadMangAdd";
     public static final String APP_SETTINGS_SITE_SELFMANG = "siteSelfMangAdd";
     public static final String APP_SETTINGS_SITE_MINTMANG = "siteMintMangAdd";
+
 
 
     //Глобал настройки
@@ -101,8 +104,6 @@ public class TopManga extends BaseActivity {
             mang.setWhere(mSettings.getString(APP_PREFERENCES_WHERE, ""));
             mang.setPath(mSettings.getString(APP_PREFERENCES_PATH, ""));
             mang.setPath2(mSettings.getString(APP_PREFERENCES_PATH_2, ""));
-
-
         }else{
             SharedPreferences.Editor editor = mSettings.edit();
             //editor.putBoolean(APP_PREFERENCES_FIRST,true);
@@ -120,6 +121,7 @@ public class TopManga extends BaseActivity {
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_READMANG,true);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,true);
+            editor.putBoolean(TopManga.APP_SETTINGS_SAVE_ZOOM,true);
             editor.apply();
         }
 

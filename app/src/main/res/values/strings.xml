@@ -49,5 +49,6 @@
     <string name="new_chapter">Обновление манг.</string>
     <string name="download_complite">Скачивание завершено.</string>
     <string name="enter_back">Пожалуйста, нажмите \"назад\", чтобы выйти</string>
+    <string name="save_zoom">Сохранять зум при просмотре манги.</string>
 
 </resources>

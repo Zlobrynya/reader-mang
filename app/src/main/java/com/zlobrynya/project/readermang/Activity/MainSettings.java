@@ -55,6 +55,8 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         soung.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_SOUNG, true)));
         Switch chapterNew = (Switch) findViewById(R.id.switch_chapter_new);
         chapterNew.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, true)));
+        Switch saveZoom = (Switch) findViewById(R.id.switch_save_zoom);
+        saveZoom.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_SAVE_ZOOM, true)));
 
      //   setSize();
     }
@@ -140,6 +142,12 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
 
     public void selectionMangaSite(View view) {
         startActivity(new Intent(MainSettings.this,SelectionMangSite.class));
+    }
+
+    public void SystemSaveZoom(View view) {
+        Switch aSwitch = (Switch) view;
+        editor.putBoolean(TopManga.APP_SETTINGS_SAVE_ZOOM,aSwitch.isChecked());
+        editor.commit();
     }
 
     //Перенос изображений

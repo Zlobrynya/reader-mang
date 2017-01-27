@@ -52,6 +52,8 @@
             android:visibility="invisible"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+
+
     </RelativeLayout>
 
 
@@ -112,4 +114,22 @@
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:background="@color/divider" />
+
+    <Switch
+        android:text="@string/save_zoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="10dip"
+        android:onClick="SystemSaveZoom"
+        android:textColor="@android:color/background_dark"
+        android:id="@+id/switch_save_zoom" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
 </LinearLayout>
