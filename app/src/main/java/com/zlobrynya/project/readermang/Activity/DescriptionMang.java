@@ -467,7 +467,8 @@ public class DescriptionMang extends BaseActivity {
             Intent intent = new Intent(this, ShowPages.class);
             intent.putExtra("URL",string);
             intent.putExtra("NumberChapter", numberChapter);
-            intent.putExtra("NumberPage",classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE));
+            int numberPage = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE));
+            intent.putExtra("NumberPage",numberPage);
             intent.putExtra("Chapter", mang.getNameCharacher());
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();

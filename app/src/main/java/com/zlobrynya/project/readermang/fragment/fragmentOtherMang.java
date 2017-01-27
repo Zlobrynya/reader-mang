@@ -87,7 +87,8 @@ public class fragmentOtherMang extends Fragment {
 
     @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void onEvent(ArrayList<ClassOtherMang> event) {
-        list.addAll(event);
+        if (list.isEmpty())
+            list.addAll(event);
         if (!list.isEmpty()){
             textView.setVisibility(View.GONE);
         }

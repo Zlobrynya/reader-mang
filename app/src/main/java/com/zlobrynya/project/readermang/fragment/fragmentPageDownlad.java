@@ -127,7 +127,7 @@ public class fragmentPageDownlad extends Fragment {
         image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (saveZoom) {
+                if (saveZoom && image.isReady()) {
                     Helper helper = new Helper();
                     helper.id = idPage;
                     helper.scale = image.getScale();
