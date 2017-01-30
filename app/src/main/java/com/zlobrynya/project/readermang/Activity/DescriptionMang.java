@@ -2,7 +2,6 @@ package com.zlobrynya.project.readermang.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,10 +14,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.zlobrynya.project.readermang.AsyncTaskLisen;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
+import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsDescriptionMangRM;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
@@ -34,13 +32,8 @@ import com.zlobrynya.project.readermang.fragment.fragmentSaveDescriptionMang;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,6 +67,7 @@ public class DescriptionMang extends BaseActivity {
     private ClassTransportForList classTransportForList;
     private ArrayList<ClassOtherMang> classOtherManglist;
     private final boolean DEBUG = false;
+    private ParsDescriptionMangRM parsDescriptionMangRM;
 
     private final String strLog = "DescripotionMang";
 
@@ -194,6 +188,8 @@ public class DescriptionMang extends BaseActivity {
                 downloadChapter = true;
             }
         });
+
+
       //  dataRecovery();
        // Log.i(PROBLEM, "End onCreate");
      //   EventBus.getDefault().register(this);
@@ -304,18 +300,7 @@ public class DescriptionMang extends BaseActivity {
         super.onStart();
     }
 
-    AsyncTaskLisen addImg = new AsyncTaskLisen() {
-        @Override
-        public void onEnd() {
-            ParsList parsList = new ParsList();
-            parsList.execute();
-        }
 
-        @Override
-        public void onEnd(int number) {
-
-        }
-    };
 
     private void buttonVisible(){
 
@@ -379,9 +364,10 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public void parsAndSettings(){
+        parsDescriptionMangRM = new ParsDescriptionMangRM(this,arList,fab,otherMang);
+        parsDescriptionMangRM.setClass(classDescriptionMang,classTransportForList,classOtherManglist,mang);
        // mang = event;
-        Pars pars = new Pars(addImg, mang);
-        pars.execute();
+        parsDescriptionMangRM.startPars();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());

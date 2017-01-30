@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.Activity.BaseActivity;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
+import com.zlobrynya.project.readermang.ParsSite.ParsDescriptionMang;
 import com.zlobrynya.project.readermang.classPMR.ClassDescriptionMang;
 import com.zlobrynya.project.readermang.classPMR.ClassForList;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
@@ -30,18 +31,29 @@ import java.util.ArrayList;
  * Created by Nikita on 11.01.2017.
  */
 
-public class ParsDescriptionMang {
-    private ClassDescriptionMang classDescriptionMang;
-    private ClassTransportForList classTransportForList;
-    private ArrayList<ClassOtherMang> classOtherManglist;
-    private ClassMainTop mang;
-    private ArrayList<ClassForList> arList;
-    private Document doc;
-    private Context context;
-    private BaseActivity baseActivity;
-    private FloatingActionButton fab;
-    private boolean otherMang = false;
+public class ParsDescriptionMangRM extends ParsDescriptionMang {
 
+    public ParsDescriptionMangRM(BaseActivity baseActivity, ArrayList<ClassForList> arList, FloatingActionButton fab, boolean otherMang){
+        super(baseActivity,arList,fab,otherMang);
+    }
+
+    private AsyncTaskLisen addImg = new AsyncTaskLisen() {
+        @Override
+        public void onEnd() {
+            ParsList parsList = new ParsList();
+            parsList.execute();
+        }
+
+        @Override
+        public void onEnd(int number) {
+
+        }
+    };
+
+    public void startPars(){
+        Pars pars = new Pars(addImg, mang);
+        pars.execute();
+    }
 
     private class Pars extends AsyncTask<Void,Void,Void> {
         private ClassMainTop mang;
@@ -156,7 +168,7 @@ public class ParsDescriptionMang {
                 if (lisens != null) lisens.onEnd();
                 fab.setVisibility(View.VISIBLE);
             }else{
-                Toast.makeText(context, errorMassage, Toast.LENGTH_SHORT).show();
+                Toast.makeText(baseActivity, errorMassage, Toast.LENGTH_SHORT).show();
                 baseActivity.finish();
             }
         }
@@ -200,10 +212,11 @@ public class ParsDescriptionMang {
                 classTransportForList = transportForList;
                 // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
                 EventBus.getDefault().postSticky(transportForList);
-                if (read){
+                // Без понятия, что это
+                /* if (read){
                     numberLastChapter();
                     read = false;
-                }
+                }*/
                 ParsSimilarAndRelatedMang parsList = new ParsSimilarAndRelatedMang();
                 parsList.execute();
             }
