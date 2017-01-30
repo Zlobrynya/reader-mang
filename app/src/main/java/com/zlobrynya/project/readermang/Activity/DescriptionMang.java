@@ -718,10 +718,11 @@ public class DescriptionMang extends BaseActivity {
                     classTransportForList = transportForList;
                     // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
                     EventBus.getDefault().postSticky(transportForList);
-                    if (read){
+                    //Без понятия нафига это
+                    /* if (read){
                         numberLastChapter();
                         read = false;
-                    }
+                    } */
                     ParsSimilarAndRelatedMang parsList = new ParsSimilarAndRelatedMang();
                     parsList.execute();
                 }
