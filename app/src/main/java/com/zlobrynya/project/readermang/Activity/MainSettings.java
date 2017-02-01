@@ -57,8 +57,6 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         chapterNew.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_NEW_CHAPTER, true)));
         Switch saveZoom = (Switch) findViewById(R.id.switch_save_zoom);
         saveZoom.setChecked((mSettings.getBoolean(TopManga.APP_SETTINGS_SAVE_ZOOM, true)));
-
-     //   setSize();
     }
 
     private void setSize(){
@@ -122,16 +120,20 @@ public class MainSettings extends BaseActivity implements DialogPath.NoticeDialo
         File[] dirs= new File((String) path.getText()).listFiles();
         for(File dir: dirs){
             File chapters[] = dir.listFiles();
-            for(File chapter: chapters){
-                File imgs[] = chapter.listFiles();
-                try {
-                    for(File img: imgs) {
-                        img.delete();
+            try {
+                for(File chapter: chapters){
+                    File imgs[] = chapter.listFiles();
+                    try {
+                        for(File img: imgs) {
+                            img.delete();
+                        }
+                    }catch (NullPointerException e){
+                        // Log.i("Settings",e.getMessage());
                     }
-                }catch (NullPointerException e){
-                   // Log.i("Settings",e.getMessage());
+                    chapter.delete();
                 }
-                chapter.delete();
+            }catch (NullPointerException ignored){
+
             }
             dir.delete();
         }
