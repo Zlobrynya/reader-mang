@@ -1,14 +1,14 @@
 package com.zlobrynya.project.readermang.ParsSite.ReadManga;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.zlobrynya.project.readermang.Activity.ShowPages;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
-import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
+import com.zlobrynya.project.readermang.ParsSite.InterParsPageMang;
+import com.zlobrynya.project.readermang.ParsSite.ParsPageMang;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,20 +16,32 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Nikita on 30.01.2017.
  */
 
-public class ParsPageMangRM {
+public class ParsPageMangRM extends ParsPageMang {
+
+    public ParsPageMangRM(String URL, ArrayList<String> urlPage, Context context) {
+        super(URL, urlPage, context);
+    }
+
+    public void startPars(){
+        ParsURLPage par = new ParsURLPage(addImg,URL);
+        par.execute();
+    }
+
     //поток для скачивания сылок для изображений
-    public class ParsURLPage extends AsyncTask<Void,Void,Void> {
+    private class ParsURLPage extends AsyncTask<Void,Void,Void> {
+        private String nameChapter;
         private Document doc;
-        private AsyncTaskLisen asyncTask;
+        private InterParsPageMang asyncTask;
         private String html;
         private boolean not_net;
         //конструктор потока
-        ParsURLPage(AsyncTaskLisen addImg, String url) {
+        ParsURLPage(InterParsPageMang addImg, String url) {
             not_net = false;
             asyncTask = addImg;
         }
@@ -100,13 +112,9 @@ public class ParsPageMangRM {
                             urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
                         }
                     }
-                    progress.setVisibility(View.GONE);
-                    pager.setVisibility(View.VISIBLE);
-                    classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
-                    getSupportActionBar().setTitle(nameChapter); // set the top title
-                    asyncTask.onEnd();
+                    asyncTask.onEnd(nameChapter);
                 }else{
-                    Toast.makeText(ShowPages.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Что то с инетом", Toast.LENGTH_SHORT).show();
                 }
             }catch (NullPointerException e){
                 Crashlytics.logException(e);

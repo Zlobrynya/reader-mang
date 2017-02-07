@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
+import com.zlobrynya.project.readermang.ParsSite.InterParsPageMang;
+import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsPageMangRM;
 import com.zlobrynya.project.readermang.ThreadManager;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
@@ -63,12 +65,12 @@ public class ShowPages extends AppCompatActivity {
     private ArrayList<String> urlPage;
     private int chapterNumber,pageNumber;
     private TextView textIdPage;
-    private String URL,nameMang,nameChapter;
+    private String nameMang;
+    private String nameChapter;
     private ViewPager pager;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ProgressBar progress;
     private boolean download;
-    private SharedPreferences mSettings;
     private PagerTabStrip pagerTabStrip;
     public ThreadManager threadManager;
     public static String nameDirectory,pathDir;
@@ -84,7 +86,7 @@ public class ShowPages extends AppCompatActivity {
         // для скачанной манги
         nameDirectory = "pageCache";
         download = false;
-        mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
+        SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
         String appKey = "cf4c05bf91711b2a7af77d5f837e90dd210ccbf42e1150dc";
         Appodeal.disableLocationPermissionCheck();
@@ -151,10 +153,17 @@ public class ShowPages extends AppCompatActivity {
             }
         });
 
-        AsyncTaskLisen addImg = new AsyncTaskLisen() {
+        InterParsPageMang addImg = new InterParsPageMang() {
             @Override
-            public void onEnd() {
+            public void onEnd(String string) {
                 try{
+                    nameMang = string;
+
+                    progress.setVisibility(View.GONE);
+                    pager.setVisibility(View.VISIBLE);
+                    classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    activity.getSupportActionBar().setTitle(string); // set the top title
+
                     GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
                     threadManager = new ThreadManager(urlPage);
                     if (pageNumber > urlPage.size()){
@@ -168,17 +177,10 @@ public class ShowPages extends AppCompatActivity {
                 }catch (IllegalStateException e){
                     Crashlytics.logException(e);
                 }
-
-            }
-
-            @Override
-            public void onEnd(int number) {
-
             }
         };
-
         Intent intent = getIntent();
-        URL = intent.getStringExtra("URL");
+        String URL = intent.getStringExtra("URL");
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
         pageNumber = intent.getIntExtra("NumberPage",1);
         nameMang = intent.getStringExtra("Chapter");
@@ -187,20 +189,18 @@ public class ShowPages extends AppCompatActivity {
            // file.clearCache();
             pathDir = getCacheDir().getPath();
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-            ParsURLPage par = new ParsURLPage(addImg,URL);
-            par.execute();
+            ParsPageMangRM parsPageMangRM = new ParsPageMangRM(URL,urlPage,getApplicationContext());
+            parsPageMangRM.addInterface(addImg);
+            parsPageMangRM.startPars();
         }else {
             pathDir = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
-            CacheFile file = new CacheFile(new File(pathDir),URL);
+            CacheFile file = new CacheFile(new File(pathDir), URL);
             nameDirectory = URL;
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
             nameChapter = intent.getStringExtra("Chapter");
             for (int i = 0; i < file.getNumberOfFile();i++)
                 urlPage.add(String.valueOf(i));
-            progress.setVisibility(View.GONE);
-            pager.setVisibility(View.VISIBLE);
-            addImg.onEnd();
-            getSupportActionBar().setTitle(nameChapter); // set the top title
+            addImg.onEnd(nameChapter);
             Log.i("ShowPages", String.valueOf(file.getNumberOfFile()));
         }
         Appodeal.show(this, Appodeal.BANNER_BOTTOM);
@@ -410,7 +410,6 @@ public class ShowPages extends AppCompatActivity {
 
             return fragmentNextPrevChapter.getInstance(position,"Magic");
         }
-
     }
 
     @Override
