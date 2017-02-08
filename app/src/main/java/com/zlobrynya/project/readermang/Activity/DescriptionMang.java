@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
 import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsDescriptionMangRM;
@@ -75,7 +76,6 @@ public class DescriptionMang extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.description_mang, frameLayout);
-
      //   Log.i(PROBLEM, "Description start");
         pager = (ViewPager) findViewById(R.id.pager);
         fab = (FloatingActionButton) findViewById(R.id.fab);
