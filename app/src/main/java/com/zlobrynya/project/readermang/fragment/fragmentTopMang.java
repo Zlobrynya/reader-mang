@@ -1,6 +1,5 @@
 package com.zlobrynya.project.readermang.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.FloatingActionButton;
@@ -17,13 +16,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.Activity.DescriptionMang;
 import com.zlobrynya.project.readermang.AdapterPMR.AdapterMainScreen;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
-import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsTopListRM;
+import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsTopList;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.classPMR.ClassMang;
@@ -33,13 +31,7 @@ import com.zlobrynya.project.readermang.Activity.TopManga;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.LinkedList;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,7 +58,7 @@ public class fragmentTopMang extends Fragment {
     private int resultPost = 0;
     private ClassMainTop mainTop;
     private final boolean DEBUG = false;
-    private ParsTopListRM parsTopListRM;
+    private HelperParsTopList parsTopList;
 
 
     public void clearData() {
@@ -76,8 +68,8 @@ public class fragmentTopMang extends Fragment {
             list.clear();
             myAdap.notifyDataSetChanged();
         }
-        if (parsTopListRM != null)
-            parsTopListRM.clearData();
+        if (parsTopList != null)
+            parsTopList.clearData();
         kol = firstItem = 0;
     }
 
@@ -87,8 +79,8 @@ public class fragmentTopMang extends Fragment {
         list = new LinkedList<>();
         visibleButton = true;
         kol = firstItem = kolSum = 0;
-        parsTopListRM = new ParsTopListRM(getContext(),list);
-        parsTopListRM.setCallback(addImg);
+        parsTopList = new HelperParsTopList(getContext(),list);
+        parsTopList.setCallback(addImg);
     }
 
 
@@ -103,7 +95,7 @@ public class fragmentTopMang extends Fragment {
 
         //создаем адаптер для GriedView
         myAdap = new AdapterMainScreen(getActivity(), R.layout.layout_from_graund_view,list,width,height);
-        parsTopListRM.setAdapter(myAdap);
+        parsTopList.setAdapter(myAdap);
 
         if (kolSum == 0){
             switch (sizeCalculate(TopManga.WIDTH_WIND)){
@@ -151,8 +143,8 @@ public class fragmentTopMang extends Fragment {
                 int firstVisibleItem = gr.getFirstVisiblePosition();
                 if (firstItem <= firstVisibleItem) {
                     kolSum += 10;
-                    if (kolSum > kol && !parsTopListRM.isStopLoad())
-                        parsTopListRM.parssate(kol);
+                    if (kolSum > kol && !parsTopList.isStopLoad())
+                        parsTopList.startPars(kol);
                     if (visibleButton){
                         upButton.setAnimation(fabHide);
                         upButton.setClickable(false);
@@ -183,10 +175,10 @@ public class fragmentTopMang extends Fragment {
         });
 
         if (resultPost > 0){
-            parsTopListRM.clearData();
-            parsTopListRM.setClassMang(classMang);
-            parsTopListRM.setResultPost(resultPost);
-            parsTopListRM.parssate(kol);
+            parsTopList.clearData();
+            parsTopList.setClassMang(classMang);
+            parsTopList.setResultPost(resultPost);
+            parsTopList.startPars(kol);
         }
 
         upButton.setOnClickListener(new View.OnClickListener() {
@@ -228,11 +220,11 @@ public class fragmentTopMang extends Fragment {
     AsyncTaskLisen addImg = new AsyncTaskLisen() {
         @Override
         public void onEnd() {
-            if (kol < kolSum && !parsTopListRM.isStopLoad()) {
+            if (kol < kolSum && !parsTopList.isStopLoad()) {
                 if (DEBUG)
                     Log.i("Lisener", String.valueOf(kol)+" "+kolSum);
                 kol++;
-                parsTopListRM.parssate(kol);
+                parsTopList.startPars(kol);
             }
         }
 
@@ -257,19 +249,19 @@ public class fragmentTopMang extends Fragment {
             if (!event.getURL().contains(classMang.getURL())){
                 list.clear();
                 kol = 0;
-                parsTopListRM.clearData();
+                parsTopList.clearData();
             }
         }
         if (event == null)
             return;
         classMang = event;
-        parsTopListRM.setClassMang(classMang);
+        parsTopList.setClassMang(classMang);
         //создание базы данных
         String nameTable = classMang.getURL().replace(".me", " ");
         nameTable = nameTable.replace("http://"," ");
         nameTable = nameTable.replace(".ru", " ");
         classDataBaseListMang = new ClassDataBaseListMang(getContext(),nameTable);
-        parsTopListRM.setClassDataBaseListMang(classDataBaseListMang);
+        parsTopList.setClassDataBaseListMang(classDataBaseListMang);
         InitializationArray array = new InitializationArray();
         array.execute();
         // Log.i(PROBLEM, "onEvent(ClassMang event)");
@@ -281,15 +273,18 @@ public class fragmentTopMang extends Fragment {
         classMang.setWhere(ev.getURL_Search());
         if (ev.getURL_Search().contains("search")) resultPost = 1;
         else resultPost = 2;
-        if (parsTopListRM != null){
-            parsTopListRM.setResultPost(resultPost);
-            parsTopListRM.setClassMang(classMang);
-            parsTopListRM.parssate(kol);
+        if (parsTopList != null){
+            parsTopList.setResultPost(resultPost);
+            parsTopList.setClassMang(classMang);
+            parsTopList.startPars(kol);
         }
-       // parsTopListRM.parssate(kol);
+       // parsTopList.parssate(kol);
      //   Log.i(PROBLEM, "add(ClassTransport ev)");
     }
 
+    private void startPars(){
+
+    }
 
 
     @Override
@@ -343,7 +338,7 @@ public class fragmentTopMang extends Fragment {
                 }
             }
             if (kol == 0)
-                parsTopListRM.parssate(kol);
+                parsTopList.startPars(kol);
             return null;
         }
 

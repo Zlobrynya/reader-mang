@@ -28,17 +28,17 @@ public class ParsDescriptionMang {
     protected FloatingActionButton fab;
     protected boolean otherMang = false;
 
-    public ParsDescriptionMang(BaseActivity baseActivity, ArrayList<ClassForList> arList, FloatingActionButton fab, boolean otherMang){
+    public ParsDescriptionMang(BaseActivity baseActivity, ArrayList<ClassForList> arList, FloatingActionButton fab, boolean otherMang,ClassMainTop mang){
         this.baseActivity = baseActivity;
         this.arList = arList;
         this.fab = fab;
         this.otherMang = otherMang;
+        this.mang = mang;
     }
 
-    public void setClass(ClassDescriptionMang classDescriptionMang,ClassTransportForList classTransportForList,ArrayList<ClassOtherMang> classOtherManglist,ClassMainTop mang){
+    public void setClass(ClassDescriptionMang classDescriptionMang,ClassTransportForList classTransportForList,ArrayList<ClassOtherMang> classOtherManglist){
         this.classDescriptionMang = classDescriptionMang;
         this.classTransportForList = classTransportForList;
         this.classOtherManglist = classOtherManglist;
-        this.mang = mang;
     }
 }

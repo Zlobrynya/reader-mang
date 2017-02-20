@@ -18,6 +18,8 @@ import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
 import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsDescriptionMangRM;
+import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsDescriptionMang;
+import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsTopList;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
@@ -68,7 +70,6 @@ public class DescriptionMang extends BaseActivity {
     private ClassTransportForList classTransportForList;
     private ArrayList<ClassOtherMang> classOtherManglist;
     private final boolean DEBUG = false;
-    private ParsDescriptionMangRM parsDescriptionMangRM;
 
     private final String strLog = "DescripotionMang";
 
@@ -364,10 +365,10 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public void parsAndSettings(){
-        parsDescriptionMangRM = new ParsDescriptionMangRM(this,arList,fab,otherMang);
-        parsDescriptionMangRM.setClass(classDescriptionMang,classTransportForList,classOtherManglist,mang);
+        HelperParsDescriptionMang helperParsDescriptionMang = new HelperParsDescriptionMang(this,arList,fab,otherMang,mang);
+        helperParsDescriptionMang.setClass(classDescriptionMang,classTransportForList,classOtherManglist);
        // mang = event;
-        parsDescriptionMangRM.startPars();
+        helperParsDescriptionMang.startPars();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());

@@ -1,4 +1,4 @@
-package com.zlobrynya.project.readermang.ParsSite.ReadManga;
+package com.zlobrynya.project.readermang.ParsSite.Mangachan;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,37 +7,33 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.zlobrynya.project.readermang.AdapterPMR.AdapterMainScreen;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
-import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseListMang;
+import com.zlobrynya.project.readermang.ParsSite.ParsPageMang;
 import com.zlobrynya.project.readermang.ParsSite.ParsTopList;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
 import com.zlobrynya.project.readermang.classPMR.ClassMang;
-import com.zlobrynya.project.readermang.fragment.fragmentTopMang;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Created by Nikita on 03.01.2017.
+ * Created by Nikita on 14.02.2017.
  */
 
-public class ParsTopListRM extends ParsTopList {
+public class ParsTopListMC extends ParsTopList {
 
 
-    public ParsTopListRM(Context context, LinkedList<ClassMainTop> list){
-        super(context,list);
+    public ParsTopListMC(Context context, LinkedList<ClassMainTop> list) {
+        super(context, list);
     }
 
-    //метод парсим
-    public void parssate(int kol){
-        //парсим сайт
+    public void parsSite(int kol){
         ParsTopList past = new ParsTopList(callback, kol, classMang);
         past.execute();
     }
@@ -78,7 +74,9 @@ public class ParsTopListRM extends ParsTopList {
                 }else kol_mang = kol;
 
                 if (doc == null){
-                    classMang.editWhere(page);
+                    classMang.editWhere(kol);
+                    //Log.i("Where",classMang.getURL() + classMang.getWhereAll());
+
                     Connection.Response response = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
                             ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
@@ -102,13 +100,21 @@ public class ParsTopListRM extends ParsTopList {
                 for (int i = 0; i < kol_mang; i++)
                     el = el.nextElementSibling();
                 Elements el2 = el.select(classMang.getNameURL());
+                Log.i("kol_mang", String.valueOf(kol_mang));
 
                 URL2 = classMang.getURL() + el2.attr("href");
-                el2 = el.select(classMang.getImgURL());
+                nameChar = el2.text();
+               // Log.i("NameURL",classMang.getNameURL());
+               // Log.i("el2.attr()",classMang.getURL() + el2.attr("href"));
 
+                el2 = el.select(classMang.getImgURL());
                 imgSrc = el2.attr("src");
-                nameChar = el2.attr("title");
-                if (kol_mang == 69 && resultPost != 1) doc = null;
+                if (!imgSrc.contains("mangachan")){
+                    imgSrc = "http://mangachan.ru" + imgSrc;
+                }
+              //  Log.i("imgSrc",imgSrc);
+               // Log.i("nameChar",nameChar);
+                if (kol_mang == 9 && resultPost != 1) doc = null;
             } catch (IOException e) {
                 //System.out.println("Не грузит страницу либо больше нечего грузить");
                 e.printStackTrace();
