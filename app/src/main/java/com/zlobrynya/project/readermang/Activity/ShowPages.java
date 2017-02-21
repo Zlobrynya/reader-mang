@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -33,9 +32,8 @@ import android.widget.Toast;
 import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.ParsSite.InterParsPageMang;
-import com.zlobrynya.project.readermang.ParsSite.ReadManga.ParsPageMangRM;
+import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsPageMang;
 import com.zlobrynya.project.readermang.ThreadManager;
-import com.zlobrynya.project.readermang.AsyncTaskLisen;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
@@ -44,14 +42,8 @@ import com.zlobrynya.project.readermang.fragment.fragmentPageDownlad;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,8 +55,8 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ShowPages extends AppCompatActivity {
     private ArrayList<String> urlPage;
-    private int chapterNumber,pageNumber;
-    private TextView textIdPage;
+    private int chapterNumber;
+    private int pageNumber;
     private String nameMang;
     private String nameChapter;
     private ViewPager pager;
@@ -73,7 +65,8 @@ public class ShowPages extends AppCompatActivity {
     private boolean download;
     private PagerTabStrip pagerTabStrip;
     public ThreadManager threadManager;
-    public static String nameDirectory,pathDir;
+    public static String nameDirectory;
+    public static String pathDir;
     private final String strLog = "DownloadChapter";
 
 
@@ -157,12 +150,14 @@ public class ShowPages extends AppCompatActivity {
             @Override
             public void onEnd(String string) {
                 try{
-                    nameMang = string;
+                    if (!string.isEmpty()){
+                        nameChapter = string;
+                    }
 
                     progress.setVisibility(View.GONE);
                     pager.setVisibility(View.VISIBLE);
                     classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
-                    activity.getSupportActionBar().setTitle(string); // set the top title
+                    activity.getSupportActionBar().setTitle(nameChapter); // set the top title
 
                     GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
                     threadManager = new ThreadManager(urlPage);
@@ -183,15 +178,16 @@ public class ShowPages extends AppCompatActivity {
         String URL = intent.getStringExtra("URL");
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
         pageNumber = intent.getIntExtra("NumberPage",1);
-        nameMang = intent.getStringExtra("Chapter");
+        nameMang = intent.getStringExtra("Manga");
         download = intent.getBooleanExtra("Download",false);
         if (!download){
            // file.clearCache();
             pathDir = getCacheDir().getPath();
+            nameChapter = intent.getStringExtra("Chapter");
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-            ParsPageMangRM parsPageMangRM = new ParsPageMangRM(URL,urlPage,getApplicationContext());
-            parsPageMangRM.addInterface(addImg);
-            parsPageMangRM.startPars();
+            HelperParsPageMang parsPageMang = new HelperParsPageMang(URL,urlPage,getApplicationContext());
+            parsPageMang.addInterface(addImg);
+            parsPageMang.startPars();
         }else {
             pathDir = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
             CacheFile file = new CacheFile(new File(pathDir), URL);

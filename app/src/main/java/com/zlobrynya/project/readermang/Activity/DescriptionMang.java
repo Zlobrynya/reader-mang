@@ -406,12 +406,15 @@ public class DescriptionMang extends BaseActivity {
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 String helpVar = "";
                 helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE);
-                if (helpVar.isEmpty()) helpVar = "1";
+                if (helpVar.isEmpty())
+                    helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
-                intent.putExtra("Chapter", mang.getNameCharacher());
+                intent.putExtra("Manga", mang.getNameCharacher());
+                intent.putExtra("Chapter", event.getNameChapter());
             }else {
                 intent.putExtra("URL", event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
+               // intent.putExtra("NameChapter", event.getNameChapter());
                 intent.putExtra("Download",true);
                 intent.putExtra("NumberPage", "1");
                 intent.putExtra("Chapter", event.getNameChapter());
