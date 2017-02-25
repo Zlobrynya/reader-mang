@@ -45,13 +45,6 @@ public class fragmentPageDownlad extends Fragment{
         return instance;
     }
 
-    @Override
-    public void onDestroy() {
-        Log.i("fragmentPageDownload:", "Destroy: " + String.valueOf(getArguments().get("imageId")));
-        if (file != null)
-            file.stopAsyncTask();
-        super.onDestroy();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,30 +101,12 @@ public class fragmentPageDownlad extends Fragment{
         image = (SubsamplingScaleImageView)v.findViewById(R.id.imageView);
         progress = (ProgressBar) v.findViewById(R.id.loading);
         textView = (TextView) v.findViewById(R.id.text_view_fullscreen);
-        /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progress.getLayoutParams();
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            params.setMargins(0, TopManga.HEIGHT_WIND / 2, 0, 0);
-        }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            params.setMargins(0, TopManga.WIDTH_WIND / 2, 0, 0);
-        }
-        progress.setLayoutParams(params);*/
+
         image.setBitmapDecoderClass(MyImageDecoder.class);
         image.setRegionDecoderClass(MyImageRegionDecoder.class);
         image.setOnImageEventListener(d);
-      // image.setDebug(true);
-      /*  image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post("CkickImage");
-            }
-        });*/
+
         idPage = getArguments().getInt("imageId");
-        //final String url = getArguments().getString("String");
-        //Настройки прогресс бара
-      /*  progress.setVisibility(View.VISIBLE);
-        progress.setIndeterminate(false);
-        progress.setProgress(0);
-        progress.setMax(110);*/
 
         image.setVisibility(View.GONE);
         //установка на сколько приближается при двойном тапе
@@ -188,6 +163,14 @@ public class fragmentPageDownlad extends Fragment{
     public void onResume() {
         showImageView();
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i("fragmentPageDownload:", "Destroy: " + String.valueOf(getArguments().get("imageId")));
+        if (file != null)
+            file.stopAsyncTask();
+        super.onDestroy();
     }
 
 

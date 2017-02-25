@@ -41,11 +41,13 @@ public class ParsPageMangMC extends ParsPageMang {
         private InterParsPageMang asyncTask;
         private String html;
         private boolean not_net;
+        private String URL;
 
         //конструктор потока
         ParsURLPage(InterParsPageMang addImg, String url) {
             not_net = false;
             asyncTask = addImg;
+            this.URL = url;
         }
 
         @Override
@@ -58,7 +60,7 @@ public class ParsPageMangMC extends ParsPageMang {
             //Пост запрос
             try {
                 if (doc == null) {
-                    Connection.Response response = Jsoup.connect("http://mangachan.me/online/291222-girl-the-wilds_v2_ch260.html")
+                    Connection.Response response = Jsoup.connect(URL)
                             ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                             .timeout(100000)
@@ -66,7 +68,7 @@ public class ParsPageMangMC extends ParsPageMang {
                             .execute();
                     int statusCode = response.statusCode();
                     if (statusCode == 200) {
-                        doc = Jsoup.connect("http://mangachan.me/online/291222-girl-the-wilds_v2_ch260.html")
+                        doc = Jsoup.connect(URL)
                                 .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                                 .timeout(100000)
                                 .get();
@@ -85,12 +87,12 @@ public class ParsPageMangMC extends ParsPageMang {
                             html = html.substring(index);
                             Log.i("length", String.valueOf(html.length()));
                             index = html.indexOf("\n");
-                            html = html.substring(10,index);
+                            html = html.substring(10,index-2);
                             Log.i("length", String.valueOf(html.length()));
                             break;
                         }
                     }
-                    Log.i("JSON",html);
+                   // Log.i("JSON",html);
                     String[] url = html.split(",");
                     for (String anUrl : url) {
                         urlPage.add(anUrl.replace("\"","").replace("\"",""));

@@ -221,7 +221,7 @@ public class fragmentTopMang extends Fragment {
         @Override
         public void onEnd() {
             if (kol < kolSum && !parsTopList.isStopLoad()) {
-                if (DEBUG)
+              //  if (DEBUG)
                     Log.i("Lisener", String.valueOf(kol)+" "+kolSum);
                 kol++;
                 parsTopList.startPars(kol);
@@ -270,7 +270,8 @@ public class fragmentTopMang extends Fragment {
     //Для фрагментов
     public void add(ClassTransport ev) {
         classMang = ev.getClassMang();
-        classMang.setWhere(ev.getURL_Search());
+       /** if (!ev.getURL_Search().isEmpty())
+            classMang.setWhere(ev.getURL_Search());*/
         if (ev.getURL_Search().contains("search")) resultPost = 1;
         else resultPost = 2;
         if (parsTopList != null){

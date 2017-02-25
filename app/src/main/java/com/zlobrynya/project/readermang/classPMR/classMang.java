@@ -56,12 +56,12 @@ public class ClassMang {
     public void setPath(String path) {this.path = path; }
     public void setPath2(String path) {path2 = path;}
 
-    public void editWhere(int amt){
+   /* public void editWhere(int amt){
         numberPage = amt;
         if (path2.isEmpty()) {
             this.whereAll = where + amt + path;
         }else {
             this.whereAll = where + path + (amt*maxInPage) + path2;
         }
-    }
+    }*/
 }

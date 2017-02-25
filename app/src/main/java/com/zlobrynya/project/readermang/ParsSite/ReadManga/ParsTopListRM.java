@@ -78,8 +78,7 @@ public class ParsTopListRM extends ParsTopList {
                 }else kol_mang = kol;
 
                 if (doc == null){
-                    classMang.editWhere(page);
-                    Connection.Response response = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
+                    Connection.Response response = Jsoup.connect(classMang.getURL() + getWhere(page))
                             ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                             .timeout(100000)
@@ -87,7 +86,7 @@ public class ParsTopListRM extends ParsTopList {
                             .execute();
                     int statusCode = response.statusCode();
                     if (statusCode == 200){
-                        doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
+                        doc = Jsoup.connect(classMang.getURL() + getWhere(page))
                                 .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                                 .timeout(100000)
                                 .get();
@@ -127,6 +126,15 @@ public class ParsTopListRM extends ParsTopList {
             }
             return null;
         }
+
+        private String getWhere(int amt){
+            if (classMang.getPath2().isEmpty()) {
+                return classMang.getWhere() + amt + classMang.getPath();
+            }else {
+                return classMang.getWhere() + classMang.getPath() + (amt*classMang.getMaxInPage()) + classMang.getPath2();
+            }
+        }
+
 
         @SuppressLint("LongLogTag")
         @Override

@@ -2,6 +2,7 @@ package com.zlobrynya.project.readermang.ParsSite.Mangachan;
 
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -98,6 +99,7 @@ public class ParsDescriptionMangMC extends ParsDescriptionMang {
                     }
                 }
 
+                Log.i("URL",mang.getURLCharacher());
                 Element el;
 
                 //если пришли со вкладки "другие манги" нужно достать имя манги на русском для бд
@@ -190,16 +192,23 @@ public class ParsDescriptionMangMC extends ParsDescriptionMang {
 
         void parsList(){
             Element el2 = el.select("tr").first();
+            el2 = el2.nextElementSibling();
+            el2 = el2.nextElementSibling();
+            Log.i("URl","START");
             if (el2 != null){
                 do {
-                    Element el3 = el2.select("[class = manga]").first();
+                    Element el3 = el2.select("[class = manga] a").first();
                     ClassForList classForList = new ClassForList();
                     classForList.setNumberChapter(-1);
-                    String URL = el2.attr("href");
+                    String URL = el3.attr("href");
+                    Log.i("URl",URL);
                     classForList.setURL_chapter(URL);
                     URL = el2.select("a").text();
+                    Log.i("URl",URL);
+                    Log.i("URl","---");
                     classForList.setNameChapter(URL);
-                    if (!classForList.getNameChapter().isEmpty()) arList.add(classForList);
+                    if (!classForList.getNameChapter().isEmpty())
+                        arList.add(classForList);
                     el2 = el2.nextElementSibling();
                 }while (el2 != null);
                 el = el.nextElementSibling();

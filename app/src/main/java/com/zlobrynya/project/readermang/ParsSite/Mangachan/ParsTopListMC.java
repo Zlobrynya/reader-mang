@@ -27,10 +27,11 @@ import java.util.LinkedList;
  */
 
 public class ParsTopListMC extends ParsTopList {
-
+    private boolean endDownload = false;
 
     public ParsTopListMC(Context context, LinkedList<ClassMainTop> list) {
         super(context, list);
+        page = 1;
     }
 
     public void parsSite(int kol){
@@ -55,6 +56,7 @@ public class ParsTopListMC extends ParsTopList {
             this.classMang = classMang;
             URL2 = nameChar = imgSrc = "";
             errorMassage = "Ошибка подключения.";
+           // this.classMang.setPath2("?offset=");
         }
 
         @Override
@@ -67,17 +69,21 @@ public class ParsTopListMC extends ParsTopList {
             //Document doc;
             try {
                 int kol_mang;
+                boolean nextPage = false;
                 // Проверка на то что сейчас парсим, если запрос то там без страниц идет
-                if (resultPost != 1){
-                    page = kol / classMang.getMaxInPage();
-                    kol_mang = kol - (classMang.getMaxInPage()*page);
-                }else kol_mang = kol;
+                page = (kol / classMang.getMaxInPage());
+                kol_mang = kol - (classMang.getMaxInPage()*page);
 
                 if (doc == null){
-                    classMang.editWhere(kol);
-                    //Log.i("Where",classMang.getURL() + classMang.getWhereAll());
+                    String url = "";
+                    if (resultPost == 1){
+                        url = getWhere(page+1);
+                        nextPage = true;
+                    }
+                    else url = getWhere(kol);
+                    Log.i("Where",classMang.getURL() + url);
 
-                    Connection.Response response = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
+                    Connection.Response response = Jsoup.connect(classMang.getURL() + url)
                             ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
                             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                             .timeout(100000)
@@ -85,7 +91,7 @@ public class ParsTopListMC extends ParsTopList {
                             .execute();
                     int statusCode = response.statusCode();
                     if (statusCode == 200){
-                        doc = Jsoup.connect(classMang.getURL() + classMang.getWhereAll())
+                        doc = Jsoup.connect(classMang.getURL() + url)
                                 .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                                 .timeout(100000)
                                 .get();
@@ -100,9 +106,12 @@ public class ParsTopListMC extends ParsTopList {
                 for (int i = 0; i < kol_mang; i++)
                     el = el.nextElementSibling();
                 Elements el2 = el.select(classMang.getNameURL());
-                Log.i("kol_mang", String.valueOf(kol_mang));
+                //Log.i("kol_mang", String.valueOf(kol_mang));
 
-                URL2 = classMang.getURL() + el2.attr("href");
+                URL2 = el2.attr("href");
+                if (!URL2.contains("mangachan"))
+                    URL2 = classMang.getURL() + URL2;
+
                 nameChar = el2.text();
                // Log.i("NameURL",classMang.getNameURL());
                // Log.i("el2.attr()",classMang.getURL() + el2.attr("href"));
@@ -112,9 +121,15 @@ public class ParsTopListMC extends ParsTopList {
                 if (!imgSrc.contains("mangachan")){
                     imgSrc = "http://mangachan.ru" + imgSrc;
                 }
+
+                if (list.size() >= 10){
+                    if (nextPage){
+                        endDownload = reiteration(nameChar);
+                    }
+                }
               //  Log.i("imgSrc",imgSrc);
                // Log.i("nameChar",nameChar);
-                if (kol_mang == 9 && resultPost != 1) doc = null;
+                if (kol_mang == 9) doc = null;
             } catch (IOException e) {
                 //System.out.println("Не грузит страницу либо больше нечего грузить");
                 e.printStackTrace();
@@ -134,12 +149,28 @@ public class ParsTopListMC extends ParsTopList {
             return null;
         }
 
+        private boolean reiteration(String name){
+            return list.get(list.size()-10).getNameCharacher().contains(name);
+        }
+
+        private String getWhere(int amt){
+            if (classMang.getPath2().isEmpty()) {
+                return classMang.getWhere() + amt + classMang.getPath();
+            }else {
+                return classMang.getWhere() + classMang.getPath() + amt + classMang.getPath2();
+            }
+        }
+
         @SuppressLint("LongLogTag")
         @Override
         protected void onPostExecute(Void result){
-            //добавляем в лист и обновление
+            //добавляем в лист и обновление/*
+          /*  if (endDownload){
+                stopLoad = true;
+                return;
+            }*/
             if (!not_net){
-                if (kol >= 0 && !URL2.isEmpty() && !nameChar.isEmpty() && !classMang.getURL().isEmpty()) {
+                if (kol >= 0 && !URL2.isEmpty() && !nameChar.isEmpty() && !classMang.getURL().isEmpty() && !endDownload) {
                    /* String locNameChar = nameChar;
                     locNameChar = locNameChar.replace(")","").replace(" ","").replace("(",",");*/
                     ClassMainTop classMainTop = new ClassMainTop(URL2, nameChar,imgSrc,classMang.getURL());

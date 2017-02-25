@@ -96,7 +96,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void mangaChan(){
-        clManga= new ClassMang("http://mangachan.me","[class=manga_images] img[src]","[class=manga_row1] [class=title_link]","[class=content_row]",10);
+        //[class=title_link]
+        clManga= new ClassMang("http://mangachan.me","[class=manga_images] img[src]","[class=manga_row1] h2 a","[class=content_row]",10);
         clManga.setWhereAll("/mostfavorites?offset=","",0);
         clManga.setPath2("");
         newInten.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
