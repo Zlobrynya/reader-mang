@@ -66,6 +66,8 @@ public class AdapterListSite extends ArrayAdapter<String> {
                     strMessege = v.getContext().getString(R.string.info_mintmanga);
                 else if (nameSite.contains("Self"))
                     strMessege = v.getContext().getString(R.string.info_selfmanga);
+                else if (nameSite.contains("chan"))
+                    strMessege = v.getContext().getString(R.string.info_mangachan);
                 else strMessege = "Magic";
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());

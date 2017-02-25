@@ -47,6 +47,8 @@ public class UpdateMangBookmark extends Service {
     private String getNameMang(String name){
         String nameMang = "";
         int number = 0;
+        if (name == null)
+            return "";
         String[] names = name.split(" ");
         for (String nameUp: names) {
             try {

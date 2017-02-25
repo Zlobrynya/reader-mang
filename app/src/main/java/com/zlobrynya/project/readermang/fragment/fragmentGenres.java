@@ -25,6 +25,8 @@ import org.jsoup.parser.Parser;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.greenrobot.eventbus.EventBus;
@@ -74,6 +76,7 @@ public class fragmentGenres extends Fragment {
         if (classTransport.getClassMang().getURL().contains("readmanga")) id = R.raw.search_read_manga;
         else if (classTransport.getClassMang().getURL().contains("mintmanga")) id = R.raw.search_mint_manga;
         else if (classTransport.getClassMang().getURL().contains("selfmanga")) id = R.raw.search_self_manga;
+        else if (classTransport.getClassMang().getURL().contains("chan")) id = R.raw.search_manga_chan;
         else return;
 
         list.clear();
@@ -131,9 +134,27 @@ public class fragmentGenres extends Fragment {
     }
 
     private void postRequest(){
-        String request = "/list/genre/" + genres;
+        String request = null;
+        try {
+            request = getRequest(genres);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         Log.i("POST", classTransport.getClassMang().getURL()+request);
-        classTransport.setURL_Search(request);
+        classTransport.getClassMang().setWhere(request);
+        classTransport.getClassMang().setPath("");
+        classTransport.getClassMang().setPath2("");
+        classTransport.setURL_Search("");
         EventBus.getDefault().post(classTransport);
     }
+
+    private String getRequest(String genres) throws UnsupportedEncodingException {
+        if (classTransport.getClassMang().getURL().contains("chan")){
+            return "/tags/" +  URLEncoder.encode(genres, "UTF-8") + "&n=favdesc?offset=";
+        }else {
+            return "/list/genre/" + genres;
+        }
+    }
+
+
 }

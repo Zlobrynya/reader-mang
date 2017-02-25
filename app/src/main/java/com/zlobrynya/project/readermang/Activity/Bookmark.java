@@ -54,6 +54,10 @@ public class Bookmark extends BaseActivity {
             nameSite.add("selfmanga");
             count++;
         }
+        if (classDataBaseViewedHead.whetherThereIsABookmarkInSite("mangachan")) {
+            nameSite.add("mangachan");
+            count++;
+        }
         return count;
     }
 

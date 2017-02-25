@@ -37,6 +37,7 @@ public class SelectionMangSite extends AppCompatActivity {
         setSitToList("ReadManga");
         setSitToList("MintManga");
         setSitToList("SelfManga");
+        setSitToList("Mangachan");
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(myAdap);
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -51,6 +52,8 @@ public class SelectionMangSite extends AppCompatActivity {
                     editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,classForList.isCheck());
                 else if (classForList.getNameChapter().contains("Self"))
                     editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,classForList.isCheck());
+                else if (classForList.getNameChapter().contains("chan"))
+                    editor.putBoolean(TopManga.APP_SETTINGS_SITE_MANGACHAN,classForList.isCheck());
                 list.set(position,classForList);
                 myAdap.notifyDataSetChanged();
                 editor.apply();
@@ -67,6 +70,8 @@ public class SelectionMangSite extends AppCompatActivity {
             forList.setCheck(mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false));
         else if (name.contains("Self"))
             forList.setCheck(mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,true));
+        else if (name.contains("chan"))
+            forList.setCheck(mSettings.getBoolean(TopManga.APP_SETTINGS_SITE_MANGACHAN,false));
         list.add(forList);
     }
 

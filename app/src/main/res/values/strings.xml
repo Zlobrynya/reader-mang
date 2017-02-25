@@ -31,11 +31,12 @@
     <string name="title_permission">Получение прав.</string>
     <string name="info_prermission">Для работы этой функции требуются права.</string>
     <string name="auto_brightness">Автонастройка</string>
-    <string name="next_skip_chapter">Следующая галава</string>
+    <string name="next_skip_chapter">Следующая глава</string>
     <string name="previous_chapter">Предыдущая глава</string>
     <string name="info_readmanga">"На сайте размещена самая большая коллекция манги в Рунете. Отсутвует взрослая манга."</string>
     <string name="info_mintmanga">"На сайте размещена только манга для взрослых."</string>
     <string name="info_selfmanga">"На сайте размещается только русская авторская манга и журналы о манге."</string>
+    <string name="info_mangachan">"На сайте размещен большой качественный каталог. Присутствует взрослая манга."</string>
     <string name="selection_site">Выберите сайты в настройках приложения.</string>
     <string name="mang_not_found">Манга не найдена.</string>
     <string name="not_recentle_read">Нет просмотреных манг.</string>

@@ -56,6 +56,9 @@ public class RecentlyRead extends BaseActivity{
         if (url.contains("selfmanga")){
             url = "selfmanga";
         }
+        if (url.contains("mangachan")){
+            url = "mangachan";
+        }
         if (!url.isEmpty())
             initializationRR();
         else {
@@ -113,6 +116,10 @@ public class RecentlyRead extends BaseActivity{
             if (list.get(pos).getURLchapter().contains("selfmang")){
                 classTop.setUrlSite("http://selfmang.ru");
             }
+            if (list.get(pos).getURLchapter().contains("mangachan")){
+                classTop.setUrlSite("http://mangachan.me");
+            }
+
             //
             classTop.setUrlImg(list.get(pos).getURL_img());
             classTop.setUrlCharacher(list.get(pos).getURLchapter());

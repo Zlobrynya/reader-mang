@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
+import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.AdapterPMR.AdapterList;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.readermang.R;
@@ -43,12 +44,6 @@ public class DownloadChapter extends AppCompatActivity {
         listView.setAdapter(myAdap);
         mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
-        String appKey = "cf4c05bf91711b2a7af77d5f837e90dd210ccbf42e1150dc";
-        Appodeal.disableLocationPermissionCheck();
-     //   Appodeal.setTesting(true); //Текстовый режим, не забыть выключить его
-        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL);
-        Appodeal.disableNetwork(this, "cheetah");
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Download chapter"); // set the top title
 
@@ -77,20 +72,7 @@ public class DownloadChapter extends AppCompatActivity {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*if (wifi){
-                    ConnectivityManager connManager = (ConnectivityManager) getSystemService(DownloadChapter.CONNECTIVITY_SERVICE);
-                    NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-                    if (mWifi.isConnected()) {
-                        download();
-                        Log.i("WiFi","Connect");
-                    }else {
-                        Toast.makeText(DownloadChapter.this, "\t\t\tНет подключения к WiFi.\nДля того что бы скачать через мобильный интернет, выключите в настройках скачивание только по WiFi.", Toast.LENGTH_SHORT).show();
-                    }
-                }else {*/
                     download();
-               // }
-
             }
         });
     }
@@ -106,27 +88,49 @@ public class DownloadChapter extends AppCompatActivity {
         String nameDirBack = "";
 
 
-        for (ClassForList classForList : list) {
-            if (classForList.isCheck() && !classForList.isCheckDownload()) {
-                String locHelper;
-                int numbr = list.indexOf(classForList);
-                String s[] = classForList.getURLChapter().split("/");
-                nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
-                nameDirBack = startStr + "/" + s[2] + "_" + s[3] + "," + nameDirBack;
-                chapter += classForList.getURLChapter() + "?mature=1,";
-                chapterBack = classForList.getURLChapter() + "?mature=1," + chapterBack
-                ;
-                nameChapter = classForList.getNameChapter().replace(",","") + "," + nameChapter;
-                hashCode += classForList.getNameChapter().hashCode() + ",";
-                classForList.setCheckDownload(true);
-                list.set(numbr, classForList);
-                myAdap.notifyDataSetChanged();
+        if (urlMang.contains("chan")){
+            for (ClassForList classForList : list) {
+                if (classForList.isCheck() && !classForList.isCheckDownload()) {
+                    try{
+                        int numbr = list.indexOf(classForList);
+                        String s[] = classForList.getURLChapter().split("_");
+                        nameDirBack = startStr + "/" + s[s.length-2] + "_" + s[s.length-1] + "," + nameDirBack;
+                        chapterBack = classForList.getURLChapter() + "?mature=1," + chapterBack;
+                        nameChapter = classForList.getNameChapter().replace(",","") + "," + nameChapter;
+                        hashCode += classForList.getNameChapter().hashCode() + ",";
+                        classForList.setCheckDownload(true);
+                        list.set(numbr, classForList);
+                        myAdap.notifyDataSetChanged();
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        Crashlytics.logException(e);
+                        Toast.makeText(this,"Произошла ошибка.",Toast.LENGTH_SHORT);
+                        Crashlytics.log("mangUrl: " + classForList.getURLChapter());
+                    }
+
+                }
+            }
+        }else {
+            for (ClassForList classForList : list) {
+                if (classForList.isCheck() && !classForList.isCheckDownload()) {
+                    int numbr = list.indexOf(classForList);
+                    String s[] = classForList.getURLChapter().split("/");
+                  //  nameDir += startStr + "/" + s[2] + "_" + s[3] + ",";
+                    nameDirBack = startStr + "/" + s[2] + "_" + s[3] + "," + nameDirBack;
+                  //  chapter += classForList.getURLChapter() + "?mature=1,";
+                    chapterBack = classForList.getURLChapter() + "?mature=1," + chapterBack;
+                    nameChapter = classForList.getNameChapter().replace(",","") + "," + nameChapter;
+                    hashCode += classForList.getNameChapter().hashCode() + ",";
+                    classForList.setCheckDownload(true);
+                    list.set(numbr, classForList);
+                    myAdap.notifyDataSetChanged();
+                }
             }
         }
-        if (!nameDir.isEmpty()){
+
+        if (!nameDirBack.isEmpty()){
             ClassDataBaseDownloadMang classDataBaseDownloadMang = new ClassDataBaseDownloadMang(DownloadChapter.this);
-            String nameDirFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_DIR) + nameDir;
-            String nameChapterFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_CHAPTER) + nameChapter;
+           // String nameDirFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_DIR) + nameDir;
+           // String nameChapterFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.NAME_CHAPTER) + nameChapter;
            // String hashCodeFromBD = classDataBaseDownloadMang.getDataFromDataBase(name, ClassDataBaseDownloadMang.HASH_CODE) + hashCode;
            // classDataBaseDownloadMang.setData(name, nameDirFromBD, ClassDataBaseDownloadMang.NAME_DIR);
           //  classDataBaseDownloadMang.setData(name, nameChapterFromBD, ClassDataBaseDownloadMang.NAME_CHAPTER);
@@ -151,7 +155,6 @@ public class DownloadChapter extends AppCompatActivity {
                     .putExtra("notification",mSettings.getBoolean(TopManga.APP_SETTINGS_NOTIFICATION_DOWNLOAD_COMPLITE,false)));
 
             Toast.makeText(DownloadChapter.this, "Mang download.", Toast.LENGTH_SHORT).show();
-            Appodeal.show(this, Appodeal.INTERSTITIAL);
         }
     }
 

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,12 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
         String numberChapter = "";
         for (int i = 1; i < strings.length; i++) {
             try {
-                int num = Integer.parseInt(strings[i]);
+                String buf = strings[i];
+                if (buf.contains("v")){
+                    buf = buf.replace("  ","");
+                    buf = buf.replace("v","");
+                }
+                int num = Integer.parseInt(buf);
                 if (i+1<strings.length)
                     if(strings[i+1].contains("-") || strings[i+1].contains("Экстр")){
                         numberChapter += num;
@@ -57,7 +63,7 @@ public class AdapterListChapter extends ArrayAdapter<ClassForList> implements St
                     }
                 //   Log.i(strLog, "number " + numberChapter);
             } catch (NumberFormatException e) {
-                // Log.i(strLog, "Error number " + numberChapter);
+               // Log.i("Buf", "Error number " + numberChapter);
             }
         }
         if (numberChapter.isEmpty())

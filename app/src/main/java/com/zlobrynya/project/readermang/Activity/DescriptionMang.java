@@ -19,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.AsyncTaskLisen;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
+import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsDescriptionMang;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
 import com.zlobrynya.project.readermang.classPMR.ClassMainTop;
@@ -175,6 +176,8 @@ public class DescriptionMang extends BaseActivity {
                 classDataBaseDownloadMang.addBasaData(mang.getNameCharacher());
                 //добавляем в бд описание манги и т.п.
                 classDataBaseDownloadMang.setData(mang.getNameCharacher(), mang.getURLCharacher(), ClassDataBaseDownloadMang.URL_MANG);
+                if (classDescriptionMang.getRank() == null)
+                    classDescriptionMang.setRank("");
                 classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getRank(), ClassDataBaseDownloadMang.RATING);
                 classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getCategory(), ClassDataBaseDownloadMang.CATEGORY);
                 classDataBaseDownloadMang.setData(mang.getNameCharacher(), classDescriptionMang.getDescription(), ClassDataBaseDownloadMang.DESCRIPTION);
@@ -305,18 +308,7 @@ public class DescriptionMang extends BaseActivity {
         super.onStart();
     }
 
-    AsyncTaskLisen addImg = new AsyncTaskLisen() {
-        @Override
-        public void onEnd() {
-            ParsList parsList = new ParsList();
-            parsList.execute();
-        }
 
-        @Override
-        public void onEnd(int number) {
-
-        }
-    };
 
     private void buttonVisible(){
 
@@ -380,9 +372,11 @@ public class DescriptionMang extends BaseActivity {
     }
 
     public void parsAndSettings(){
+        HelperParsDescriptionMang helperParsDescriptionMang = new HelperParsDescriptionMang(this,arList,fab,otherMang,mang);
+
+        helperParsDescriptionMang.setClass(classDescriptionMang,classTransportForList,classOtherManglist);
        // mang = event;
-        Pars pars = new Pars(addImg, mang);
-        pars.execute();
+        helperParsDescriptionMang.startPars();
         //ActionBar actionBar = getSupportActionBar(); // or getActionBar();
         getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
         classDataBaseViewedHead = new ClassDataBaseViewedHead(this,mang.getNameCharacher());
@@ -420,15 +414,20 @@ public class DescriptionMang extends BaseActivity {
                 intent.putExtra("NumberChapter", event.getNumberChapter());
                 String helpVar = "";
                 helpVar = classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE);
-                if (helpVar.isEmpty()) helpVar = "1";
+                if (helpVar.isEmpty())
+                    helpVar = "1";
                 intent.putExtra("NumberPage",helpVar);
-                intent.putExtra("Chapter", mang.getNameCharacher());
+                intent.putExtra("Manga", mang.getNameCharacher());
+                intent.putExtra("Chapter", event.getNameChapter());
             }else {
                 intent.putExtra("URL", event.getURLChapter());
                 intent.putExtra("NumberChapter", event.getNumberChapter());
+               // intent.putExtra("NameChapter", event.getNameChapter());
                 intent.putExtra("Download",true);
                 intent.putExtra("NumberPage", "1");
                 intent.putExtra("Chapter", event.getNameChapter());
+                intent.putExtra("Manga", event.getNameChapter());
+
             }
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();
@@ -460,8 +459,15 @@ public class DescriptionMang extends BaseActivity {
             String formattedDate = df.format(c.getTime());
             classDataBaseViewedHead.setData(mang.getNameCharacher(), formattedDate,ClassDataBaseViewedHead.DATA);
 
-            if (!string.contains(mang.getUrlSite())){
-                string = mang.getUrlSite() + string;
+            try {
+                if (!string.contains(mang.getUrlSite())){
+                    string = mang.getUrlSite() + string;
+                }
+            }catch (NullPointerException e){
+                Toast toast = Toast.makeText(this,
+                        "Возникла непредвиденная ошибка.", Toast.LENGTH_SHORT);
+                toast.show();
+                return;
             }
 
             Intent intent = new Intent(this, ShowPages.class);
@@ -470,6 +476,7 @@ public class DescriptionMang extends BaseActivity {
             int numberPage = Integer.parseInt(classDataBaseViewedHead.getDataFromDataBase(mang.getNameCharacher(), ClassDataBaseViewedHead.LAST_PAGE));
             intent.putExtra("NumberPage",numberPage);
             intent.putExtra("Chapter", mang.getNameCharacher());
+            intent.putExtra("Manga", mang.getNameCharacher());
             CacheFile file = new CacheFile(getCacheDir(), "pageCache");
             file.clearCache();
             startActivity(intent);
@@ -552,298 +559,5 @@ public class DescriptionMang extends BaseActivity {
         }
     }
 
-    public class Pars extends AsyncTask<Void,Void,Void> {
-        private ClassMainTop mang;
-        private AsyncTaskLisen lisens;
-        private ClassDescriptionMang ClassDescriptionMang;
-        private boolean not_net; //отвечает за проверку подклчение
-        private String name,errorMassage;
 
-        //конструктор потока
-        Pars(AsyncTaskLisen callback, ClassMainTop mang) {
-            this.mang = mang;
-            this.lisens = callback;
-            ClassDescriptionMang = new ClassDescriptionMang();
-            ClassDescriptionMang.setNameMang(mang.getNameCharacher());
-            ClassDescriptionMang.setImg_url(mang.getUrlImg());
-            not_net = false;
-            errorMassage = "Ошибка подключения.";
-        }
-
-        @Override
-        protected  void  onPreExecute(){ super.onPreExecute(); }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            //Document doc;
-            try {
-                if (doc == null){
-                    Connection.Response response = Jsoup.connect(mang.getURLCharacher())
-                            ///5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.2
-                            .userAgent("Mozilla")
-                            .timeout(100000)
-                            .ignoreHttpErrors(true)
-                            .execute();
-                    int statusCode = response.statusCode();
-                    if (statusCode == 200){
-                        doc = Jsoup.connect(mang.getURLCharacher())
-                                .userAgent("Mozilla")
-                                .timeout(100000)
-                                .get();
-                    }else {
-                        errorMassage = response.statusMessage() + " : " + response.statusCode();
-                        not_net = true;
-                        return null;
-                    }
-                }
-
-
-            /*    if (doc == null) doc = Jsoup.connect().userAgent("Mozilla")
-                        .timeout(60000)
-                        .get();*/
-                //если пришли со вкладки "другие манги" нужно достать имя манги на русском для бд
-                Element el = doc.select("[class = small smallText rate_info]").first();
-                ClassDescriptionMang.setRank("Рейтинг:" + el.select("b").first().text());
-                if (otherMang){
-                    el = doc.select("[class = name]").first();
-                    name = el.text();
-                }
-                //считываем тома
-                el = doc.select("[class = subject-meta col-sm-7]").first();
-                //Получаем количетво томов
-                el = el.select("p").first();
-                ClassDescriptionMang.setToms(el.select("p").first().text());
-           /*     el = el.nextElementSibling();
-                el = el.nextElementSibling();
-                //считываем
-                ClassDescriptionMang.setTranslate(el.select("p").text());*/
-
-                for (int i = 0; i < 7;i++){
-                    el = el.nextElementSibling();
-                    if (el == null) break;
-                    String helpVar = el.text();
-                    if (helpVar.contains("Жанры")){
-                        helpVar = "";
-                        Elements elements = el.select("[class ^= elem_]");
-                        for (Element element: elements){
-                            helpVar += element.text();
-                        }
-                        ClassDescriptionMang.setGenre(helpVar);
-                    }else if (helpVar.contains("Автор")){
-                        ClassDescriptionMang.setNameAuthor(el.text());
-                    }else if (helpVar.contains("Категор")){
-                        ClassDescriptionMang.setCategory(el.text());
-                    }else if (helpVar.contains("Перевод:")){
-                        ClassDescriptionMang.setTranslate(el.text());
-                    }else if (helpVar.contains("Год")){
-                        break;
-                    }
-                }
-                 if (ClassDescriptionMang.getTranslate().isEmpty()){
-                     ClassDescriptionMang.setTranslate("Перевод: завершен");
-                 }
-                //описание выбора http://jsoup.org/apidocs/org/jsoup/select/Selector.html
-                Elements el2 = doc.select("[class = manga-description]");
-                //ClassDescriptionMang.setDescription(el2.attr("content"));
-                ClassDescriptionMang.setDescription(el2.text());
-            } catch (IOException e) {
-                e.printStackTrace();
-                try{
-                    if (!e.getMessage().isEmpty())
-                        errorMassage += " " + e.getMessage();
-                }catch (NullPointerException e1){
-
-                }
-
-                not_net = true;
-            }catch (Exception e) {
-              //  e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            if (!not_net){
-                if (otherMang){
-                    mang.setNameCharacher(name+" ("+mang.getNameCharacher()+")");
-                    getSupportActionBar().setTitle(mang.getNameCharacher()); // set the top title
-                }
-                classDescriptionMang = ClassDescriptionMang;
-                EventBus.getDefault().post(ClassDescriptionMang);
-                if (lisens != null) lisens.onEnd();
-                fab.setVisibility(View.VISIBLE);
-            }else{
-                Toast.makeText(DescriptionMang.this, errorMassage, Toast.LENGTH_SHORT).show();
-                DescriptionMang.this.finish();
-            }
-        }
-    }
-
-    public class ParsList extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                el = doc.select("[class = table table-hover]").first();
-                if (el != null){
-                    el = el.select("tbody").first();
-                    el = el.select("tr").first();
-                    do {
-                        parsList();
-                    }while (el != null);
-                }
-            }catch (NullPointerException e){
-               // Log.getStackTraceString(e);
-            }
-            return null;
-        }
-
-        void parsList(){
-            ClassForList classForList = new ClassForList();
-            classForList.setNumberChapter(-1);
-            Elements el2 = el.select("a");
-            String URL = el2.attr("href");
-            classForList.setURL_chapter(URL);
-            URL = el2.select("a").text();
-            classForList.setNameChapter(URL);
-            if (!classForList.getNameChapter().isEmpty()) arList.add(classForList);
-            el = el.nextElementSibling();
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            try{
-                if (!arList.isEmpty()){
-                    ClassTransportForList transportForList = new ClassTransportForList(arList,mang.getNameCharacher(),mang);
-                    classTransportForList = transportForList;
-                    // classDataBaseViewedHead.setData(mang.getNameCharacher(), String.valueOf(arList.size()),ClassDataBaseViewedHead.QUANTITY);
-                    EventBus.getDefault().postSticky(transportForList);
-                    //Без понятия нафига это
-                    /* if (read){
-                        numberLastChapter();
-                        read = false;
-                    } */
-                    ParsSimilarAndRelatedMang parsList = new ParsSimilarAndRelatedMang();
-                    parsList.execute();
-                }
-            }catch (NullPointerException e){
-                Crashlytics.logException(e);
-                String err = "";
-                //Проверка на то, что вызывает падение
-                if (mang == null)
-                    err = "null";
-                Crashlytics.log("Mang: " + err);
-                if (arList == null)
-                    err = "null";
-                else err = "";
-                Crashlytics.log("arList: " + err);
-            }
-
-        }
-    }
-
-    public class ParsSimilarAndRelatedMang extends AsyncTask<Void,Void,Void>{
-        @Override
-        protected Void doInBackground(Void... params) {
-            if (classOtherManglist == null)
-                classOtherManglist = new ArrayList<>();
-            try {
-                doc = Jsoup.connect(mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/"))).userAgent("Mozilla")
-                        .timeout(3000)
-                        .get();
-                //вытаскиваем первую таблицу со связаной мангой
-                try{
-                    parsSimilar(0);
-                }catch(NullPointerException e){
-                    Crashlytics.logException(e);
-                    Crashlytics.setString("mangUrl",mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/")));
-                    Crashlytics.setString("What","Связаные");
-                }
-                try{
-                    parsSimilar(1);
-                }catch(NullPointerException e){
-                    Crashlytics.logException(e);
-                    Crashlytics.setString("mangUrl",mang.getUrlSite()+"/list/like"+mang.getURLCharacher().substring(mang.getURLCharacher().lastIndexOf("/")));
-                    Crashlytics.setString("What","Похожие");
-                }
-                //Crashlytics.log("Description Mang, отсутствуе похожие манги");
-                //перемещаемся на след.таблицу с похожей мангой
-                parsRelated();
-            } catch (IOException | NullPointerException e) {
-                //e.printStackTrace();+
-
-                //Log.i("Log","work");
-            }
-
-            return null;
-        }
-
-        void parsSimilar(int number){
-            String category = "similar";
-            Element element = doc.select("h2").first();
-            if (number == 0 && element.text().contains("Похожее"))
-                return;
-            el = doc.select("[class = table table-hover]").select("tr").first();
-                if (number > 0){
-                    el = doc.select("[class = table table-hover]").last();
-                    el = el.select("tr").first();
-                    category = "related";
-                }
-
-            if (el != null){
-                do {
-                    if (!el.text().contains("Аниме")){
-                        ClassOtherMang classOtherMang = new ClassOtherMang();
-                        Elements elements = el.select("td");
-                        element = elements.select("[class = manga-link]").first();
-                        if (element != null){
-                            classOtherMang.setURLchapter(mang.getUrlSite() + element.attr("href"));
-                            classOtherMang.setNameMang(element.text());
-                            element = elements.select("[class = screenshot]").first();
-                           /* if (element.select("sup") != null){
-                                element = element.nextElementSibling();
-                            }*/
-                            classOtherMang.setURL_img(element.attr("rel"));
-                            classOtherMang.setNameCategory(category); //тег что это связаное произведение
-                            classOtherMang.setUrlSite(mang.getUrlSite());
-                            classOtherManglist.add(classOtherMang);
-                        }
-                        el = el.nextElementSibling();
-                    }else break;
-                }while (el != null);
-            }
-        }
-
-        void parsRelated(){
-            //tiles row
-            el = doc.select("[class = tiles row]").select("[class = tile col-sm-6]").first();
-            try{
-                do {
-                    ClassOtherMang classOtherMang = new ClassOtherMang();
-                    Elements elements = el.select("a");
-                    if (elements != null){
-                        classOtherMang.setURLchapter(mang.getUrlSite() + elements.attr("href"));
-                        //
-                        elements = el.select("img");
-                    /* if (element.select("sup") != null){
-                               element = element.nextElementSibling();
-                           }*/
-                        classOtherMang.setNameMang(elements.attr("title"));
-                        classOtherMang.setURL_img(elements.attr("src"));
-                        classOtherMang.setNameCategory("related"); //тег что это связаное произведение
-                        classOtherMang.setUrlSite(mang.getUrlSite());
-                        classOtherManglist.add(classOtherMang);
-                    }
-                    el = el.nextElementSibling();
-                }while (el != null);
-            }catch (NullPointerException ignored){
-
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
-            EventBus.getDefault().postSticky(classOtherManglist);
-        }
-    }
 }

@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 /**
  * Created by Nikita on 10.03.2016.
  */
-public class fragmentPageDownlad extends Fragment {
+public class fragmentPageDownlad extends Fragment{
     private int idPage;
     private CacheFile file;
     private SubsamplingScaleImageView image;
@@ -114,6 +114,7 @@ public class fragmentPageDownlad extends Fragment {
 
         SharedPreferences mSettings = getActivity().getSharedPreferences(TopManga.APP_SETTINGS, Context.MODE_PRIVATE);
 
+
         saveZoom = mSettings.getBoolean(TopManga.APP_SETTINGS_SAVE_ZOOM, true);
 
         image = (SubsamplingScaleImageView) v.findViewById(R.id.imageView);
@@ -127,16 +128,20 @@ public class fragmentPageDownlad extends Fragment {
         image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (saveZoom && image.isReady()) {
-                    Helper helper = new Helper();
-                    helper.id = idPage;
-                    helper.scale = image.getScale();
-                    EventBus.getDefault().post(helper);
-                    if (image.getScale() > 2){
-                        image.setDoubleTapZoomScale(image.getScale());
+                try {
+                    if (saveZoom && image.isReady()) {
+                        Helper helper = new Helper();
+                        helper.id = idPage;
+                        helper.scale = image.getScale();
+                        EventBus.getDefault().post(helper);
+                        if (image.getScale() > 2){
+                            image.setDoubleTapZoomScale(image.getScale());
+                        }
                     }
+                    return image.onTouchEvent(motionEvent);
+                }catch (IllegalArgumentException e){
+                    return true;
                 }
-                return image.onTouchEvent(motionEvent);
             }
         });
 
@@ -172,12 +177,7 @@ public class fragmentPageDownlad extends Fragment {
                         image.destroyDrawingCache();
                         image.setImage(ImageSource.uri(file.getFile(String.valueOf(idPage))));
                         image.setVisibility(View.VISIBLE);
-                        // progress.setVisibility(View.GONE);
-                      /*  if (saveZoom) {
-                            SharedPreferences mSettings = getActivity().getSharedPreferences(TopManga.APP_SETTINGS, Context.MODE_PRIVATE);
-                            float scale = mSettings.getFloat(TopManga.APP_SETTINGS_IMAGE_SCALE, 150);
-                            image.setScaleAndCenter(scale, new PointF(10, image.getWidth() - 50));
-                        }*/
+                       // progress.setVisibility(View.GONE);
                     }
                 }
             }
@@ -205,6 +205,7 @@ public class fragmentPageDownlad extends Fragment {
         showImageView();
         super.onResume();
     }
+
 
    /* public void onEvent(Byte event) {
         if (event == number){

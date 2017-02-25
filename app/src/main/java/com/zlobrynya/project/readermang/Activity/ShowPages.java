@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -32,8 +31,9 @@ import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
+import com.zlobrynya.project.readermang.ParsSite.InterParsPageMang;
+import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsPageMang;
 import com.zlobrynya.project.readermang.ThreadManager;
-import com.zlobrynya.project.readermang.AsyncTaskLisen;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseViewedHead;
 import com.zlobrynya.project.readermang.R;
 import com.zlobrynya.project.readermang.cacheImage.CacheFile;
@@ -42,14 +42,8 @@ import com.zlobrynya.project.readermang.fragment.fragmentPageDownlad;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,17 +55,18 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ShowPages extends AppCompatActivity {
     private ArrayList<String> urlPage;
-    private int chapterNumber,pageNumber;
-    private TextView textIdPage;
-    private String URL,nameMang,nameChapter;
+    private int chapterNumber;
+    private int pageNumber;
+    private String nameMang;
+    private String nameChapter;
     private ViewPager pager;
     private ClassDataBaseViewedHead classDataBaseViewedHead;
     private ProgressBar progress;
     private boolean download;
-    private SharedPreferences mSettings;
     private PagerTabStrip pagerTabStrip;
     public ThreadManager threadManager;
-    public static String nameDirectory,pathDir;
+    public static String nameDirectory;
+    public static String pathDir;
     private final String strLog = "DownloadChapter";
 
 
@@ -80,17 +75,11 @@ public class ShowPages extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pageview_image);
-        //Имя где будут искаться страницы манги. pageCache - для онлайн посмотра остальное
+        // Имя где будут искаться страницы манги. pageCache - для онлайн посмотра остальное
         // для скачанной манги
         nameDirectory = "pageCache";
         download = false;
-        mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
-
-        String appKey = "cf4c05bf91711b2a7af77d5f837e90dd210ccbf42e1150dc";
-        Appodeal.disableLocationPermissionCheck();
-       // Appodeal.setTesting(true); //Текстовый режим, не забыть выключить его
-        Appodeal.initialize(this, appKey, Appodeal.BANNER);
-        Appodeal.disableNetwork(this, "cheetah");
+        SharedPreferences mSettings = getSharedPreferences(TopManga.APP_SETTINGS, MODE_PRIVATE);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -151,10 +140,19 @@ public class ShowPages extends AppCompatActivity {
             }
         });
 
-        AsyncTaskLisen addImg = new AsyncTaskLisen() {
+        InterParsPageMang addImg = new InterParsPageMang() {
             @Override
-            public void onEnd() {
+            public void onEnd(String string) {
                 try{
+                    if (!string.isEmpty()){
+                        nameChapter = string;
+                    }
+
+                    progress.setVisibility(View.GONE);
+                    pager.setVisibility(View.VISIBLE);
+                    classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
+                    activity.getSupportActionBar().setTitle(nameChapter); // set the top title
+
                     GalleryAdapter adapter = new GalleryAdapter(getSupportFragmentManager());
                     threadManager = new ThreadManager(urlPage);
                     if (pageNumber > urlPage.size()){
@@ -168,42 +166,37 @@ public class ShowPages extends AppCompatActivity {
                 }catch (IllegalStateException e){
                     Crashlytics.logException(e);
                 }
-
-            }
-
-            @Override
-            public void onEnd(int number) {
-
             }
         };
-
         Intent intent = getIntent();
-        URL = intent.getStringExtra("URL");
+        String URL = intent.getStringExtra("URL");
         chapterNumber = intent.getIntExtra("NumberChapter", 0);
         pageNumber = intent.getIntExtra("NumberPage",1);
-        nameMang = intent.getStringExtra("Chapter");
+        nameMang = intent.getStringExtra("Manga");
         download = intent.getBooleanExtra("Download",false);
         if (!download){
            // file.clearCache();
             pathDir = getCacheDir().getPath();
+            nameChapter = intent.getStringExtra("Chapter");
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
-            ParsURLPage par = new ParsURLPage(addImg,URL);
-            par.execute();
+            if (URL == null){
+                Toast.makeText(this, "Произошла ошибка.", Toast.LENGTH_SHORT).show();
+                this.finish();
+            }
+            HelperParsPageMang parsPageMang = new HelperParsPageMang(URL,urlPage,getApplicationContext());
+            parsPageMang.addInterface(addImg);
+            parsPageMang.startPars();
         }else {
             pathDir = mSettings.getString(TopManga.APP_SETTINGS_PATH,getFilesDir().getAbsolutePath());
-            CacheFile file = new CacheFile(new File(pathDir),URL);
+            CacheFile file = new CacheFile(new File(pathDir), URL);
             nameDirectory = URL;
             classDataBaseViewedHead = new ClassDataBaseViewedHead(this);
             nameChapter = intent.getStringExtra("Chapter");
             for (int i = 0; i < file.getNumberOfFile();i++)
                 urlPage.add(String.valueOf(i));
-            progress.setVisibility(View.GONE);
-            pager.setVisibility(View.VISIBLE);
-            addImg.onEnd();
-            getSupportActionBar().setTitle(nameChapter); // set the top title
+            addImg.onEnd(nameChapter);
             Log.i("ShowPages", String.valueOf(file.getNumberOfFile()));
         }
-        Appodeal.show(this, Appodeal.BANNER_BOTTOM);
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -410,7 +403,6 @@ public class ShowPages extends AppCompatActivity {
 
             return fragmentNextPrevChapter.getInstance(position,"Magic");
         }
-
     }
 
     @Override
@@ -423,99 +415,5 @@ public class ShowPages extends AppCompatActivity {
         super.onDestroy();
     }
 
-    //поток для скачивания сылок для изображений
-    public class ParsURLPage extends AsyncTask<Void,Void,Void> {
-        private Document doc;
-        private AsyncTaskLisen asyncTask;
-        private String html;
-        private boolean not_net;
-        //конструктор потока
-        ParsURLPage(AsyncTaskLisen addImg, String url) {
-            not_net = false;
-            asyncTask = addImg;
-        }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            //Пост запрос
-            try {
-                //Запрос на получение сылок для изображений вот он:
-                if (doc == null)
-                    doc = Jsoup.connect(URL)
-                            .userAgent("Mozilla")
-                            .timeout(60000)
-                            .get();
-                nameChapter = doc.select("[class = pageBlock container]").select("h1").text();
-                //pageBlock container
-                Elements scripts = doc.select("body").select("script");
-                for (Element script : scripts){
-                    if (script.data().contains("transl_next_page")){
-                        html = script.data();
-                        break;
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                not_net = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                not_net = true;
-                Log.i("pageDowload","Не грузит страницу либо больше нечего грузить");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result){
- //           TextView textView = (TextView) findViewById(R.id.text);
-            try{
-                if (!not_net){
-                    StringBuilder secondBuffer = new StringBuilder(html);
-                    //  Log.i("Strign firdt: ", String.valueOf(secondBuffer.lastIndexOf("init")));
-                    //  Log.i("Strign false: ", String.valueOf(secondBuffer.lastIndexOf("false")));
-                    String stringBuffer = "";
-                    //   Log.i("Strign firdt: ", secondBuffer.substring(secondBuffer.indexOf("init"), secondBuffer.lastIndexOf("false")));
-                    stringBuffer = secondBuffer.substring(secondBuffer.indexOf("init") + 6, secondBuffer.lastIndexOf("false") - 4);
-                    stringBuffer = stringBuffer.replace("[","");
-                    stringBuffer = stringBuffer.replace("]","");
-                    String[] test = stringBuffer.split(",");
-
-                    String[] URLhelp;
-                    URLhelp = new String[3];
-                    int kol = 0;
-                    for(String tt: test){
-                        if (tt.contains("'")){
-                            URLhelp[kol] = tt.substring(tt.indexOf("'")+1,tt.lastIndexOf("'"));
-                            kol++;
-                        }else if (tt.contains("\"")){
-                            URLhelp[2] = tt.substring(tt.indexOf("\"")+1,tt.lastIndexOf("\""));
-                            kol++;
-                        }
-                        if (kol == 3){
-                            kol = 0;
-                            urlPage.add(URLhelp[1] + URLhelp[0] + URLhelp[2]);
-                        }
-                    }
-                    progress.setVisibility(View.GONE);
-                    pager.setVisibility(View.VISIBLE);
-                    classDataBaseViewedHead.setData(nameMang, nameChapter, ClassDataBaseViewedHead.NAME_LAST_CHAPTER);
-                    getSupportActionBar().setTitle(nameChapter); // set the top title
-                    asyncTask.onEnd();
-                }else{
-                    Toast.makeText(ShowPages.this, "Что то с инетом", Toast.LENGTH_SHORT).show();
-                }
-            }catch (NullPointerException e){
-                Crashlytics.logException(e);
-                Crashlytics.setString("mangUrl",URL);
-            }catch (Exception e ){
-                Crashlytics.logException(e);
-                Crashlytics.log("mangUrl"+URL);
-            }
-        }
-    }
 }

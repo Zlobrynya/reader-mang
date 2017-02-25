@@ -136,7 +136,7 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
             }
             outputStream.close();
             XmlFileInputStream.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
         //Парсим то что скачали с файла
@@ -183,22 +183,43 @@ public class fragmentSearchAndGenres extends Fragment implements View.OnClickLis
     private void postRequest(){
         EditText text = (EditText) this.v.findViewById(R.id.editText);
         String request = null;
-        try {
-            request = "/search?q=" + URLEncoder.encode(text.getText().toString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        for (ClassForList a : list){
-            String in;
-            if (a.isCheck()) in = "in";
-            else in="";
-            request += "&"+ a.getURLChapter() + "="+in;
-        }
+        setRequest(text.getText().toString());
         if (DEBUG)
             Log.i("POST", classMang.getClassMang().getURL()+request);
-        classMang.setURL_Search(request);
+        //classMang.setURL_Search(request);
         EventBus.getDefault().post(classMang);
     }
+
+    private void setRequest(String text){
+        String request = null;
+        if (classMang.getClassMang().getURL().contains("chan")){
+            try {
+                request = "&full_search=0&result_from=1&result_num=10&story=" + URLEncoder.encode(text, "UTF-8");
+                classMang.getClassMang().setPath("?do=search&subaction=search&search_start=");
+                classMang.getClassMang().setPath2(request);
+                classMang.getClassMang().setWhere("");
+                //classMang.getClassMang().editWhere(1);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }else {
+            try {
+                request = "/search?q=" + URLEncoder.encode(text, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            for (ClassForList a : list){
+                String in;
+                if (a.isCheck()) in = "in";
+                else in="";
+                request += "&"+ a.getURLChapter() + "="+in;
+                classMang.getClassMang().setWhere(request);
+
+            }
+        }
+        classMang.setURL_Search("search");
+    }
+
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

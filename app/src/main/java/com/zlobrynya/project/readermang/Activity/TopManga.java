@@ -61,6 +61,7 @@ public class TopManga extends BaseActivity {
     public static final String APP_SETTINGS_SITE_READMANG = "siteReadMangAdd";
     public static final String APP_SETTINGS_SITE_SELFMANG = "siteSelfMangAdd";
     public static final String APP_SETTINGS_SITE_MINTMANG = "siteMintMangAdd";
+    public static final String APP_SETTINGS_SITE_MANGACHAN = "siteMangChanAdd";
 
 
 
@@ -120,6 +121,7 @@ public class TopManga extends BaseActivity {
             editor.putBoolean(TopManga.APP_SETTINGS_WIFI,true);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_READMANG,true);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_MINTMANG,false);
+            editor.putBoolean(TopManga.APP_SETTINGS_SITE_MANGACHAN,false);
             editor.putBoolean(TopManga.APP_SETTINGS_SITE_SELFMANG,true);
             editor.putBoolean(TopManga.APP_SETTINGS_SAVE_ZOOM,true);
             editor.apply();
@@ -261,14 +263,18 @@ public class TopManga extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    return fragmentGenres.newInstance(position);
-                case 1:
-                    return fragmentLoad_page0.newInstance(position);
-                case 2:{
-                    return fragmentSearchAndGenres.newInstance(position);
+            try {
+                switch (position){
+                    case 0:
+                        return fragmentGenres.newInstance(position);
+                    case 1:
+                        return fragmentLoad_page0.newInstance(position);
+                    case 2:{
+                        return fragmentSearchAndGenres.newInstance(position);
+                    }
                 }
+            }catch (java.lang.IllegalStateException e){
+                return null;
             }
             return null;
         }
