@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="@string/nav_title_mang">
+            <menu>
+                <item
+                    android:id="@+id/nav_list_Site"
+                    android:icon="@drawable/ic_dns_black_24dp"
+                    android:title="@string/nav_list_site" />
+                <item
+                    android:id="@+id/nav_top_mang"
+                    android:icon="@drawable/ic_chrome_reader_mode_black_24dp"
+                    android:title="@string/nav_top_mang" />
+            </menu>
+        </item>
+
+        <item android:title="@string/nav_title_person">
+            <menu>
+                <item
+                    android:id="@+id/nav_bookmark"
+                    android:icon="@drawable/ic_book_black_24dp"
+                    android:title="@string/nav_bookmark" />
+                <item
+                    android:id="@+id/nav_recently_read"
+                    android:icon="@drawable/ic_schedule_black_24dp"
+                    android:title="@string/nav_recently_read" />
+                <item
+                    android:id="@+id/nav_download_chapter"
+                    android:icon="@drawable/ic_save_black_24dp"
+                    android:title="@string/nav_download" />
+            </menu>
+        </item>
+
+        <item android:title="@string/nav_title_other">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_settings_black_24dp"
+                    android:title="@string/nav_tools" />
+            </menu>
+        </item>
+    </group>
+
+</menu>

@@ -1,15 +1,40 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.22.0'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://github.com/yongjhih/android-gradle-plugin.m2/raw/master/' }
+    }
+    dependencies {
+        classpath 'com.infstory.tools.build:gradle:0.14.3'
+    }
+}
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
-        applicationId "com.example.nikita.progectmangaread"
+        applicationId "com.zlobrynya.project.readermang"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 14
+        versionName "1.1.1"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -20,11 +45,22 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'org.jsoup:jsoup:1.8.1'
+    compile fileTree(include: ['*.jar', '*.so'], dir: 'libs')
+    compile 'org.jsoup:jsoup:1.10.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.android.support:design:23.1.1'
+    compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.diegocarloslima:byakugallery:0.1.+@aar'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
+    compile 'rapid.decoder:library:0.3.0'
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
+    compile project(':androidlibmagick')
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+        transitive = true;
+    }
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta2'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:multidex:1.0.1'
 }

@@ -7,12 +7,32 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="MyTheme" parent="Theme.AppCompat">
-        ...
+
+    <style name="AppTheme.PageDownload" parent="android:Theme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
-    <style name="MyTheme.NoActionBar">
+
+    <style name="AppTheme.NoActionBar">
         <!-- Both of these are needed -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MenuSectionHeader">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/menu_section_header</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:colorBackground">@color/primary_light</item>
+    </style>
+
+    <style name="linear_layout_settings_text" >
+        <item name="android:layout_width" >match_parent</item>
+        <item name="android:layout_height" >wrap_content</item>
+        <item name="android:textColor" >#ffffff</item>
     </style>
 </resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/chapter_complite"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switch_all_notification"
+        android:onClick="AllNotification"/>
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/vibration"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:id="@+id/switch_download_vibration"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:onClick="NotificationVibration"/>
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sound"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switch_download_soung"
+        android:onClick="NotificationSoung"/>
+
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_chapter"
+        android:layout_marginTop="16dip"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="16dip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/switch_chapter_new"
+        android:onClick="NotificationNewChapter"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+</LinearLayout>

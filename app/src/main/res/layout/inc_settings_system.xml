@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clickable="true"
+        style="@style/linear_layout_settings_text"
+        android:onClick="PathDownload"
+        android:background="@drawable/style_linear_layout_button">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text= "Место хранения данных"
+                android:layout_marginLeft="5dip"
+                android:textColor="@android:color/background_dark"
+                android:clickable="false" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:layout_marginLeft="15dip"
+                android:textColor="@android:color/background_dark"
+                android:id="@+id/textSettingSystemDirectoryPath" />
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_dialog_info"
+            android:id="@+id/settings_button_info_path"
+            android:layout_alignParentTop="true"
+            android:onClick="clickInfoPath"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:onClick="ClearAll"
+        style="@style/linear_layout_settings_text"
+        android:background="@drawable/style_linear_layout_button">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text= "Очистить "
+            android:layout_marginLeft="5dip"
+            android:textColor="@android:color/background_dark"
+            android:id="@+id/text_setting_system_clear_all"
+            android:clickable="false" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:textColor="@android:color/background_dark"
+            android:layout_marginLeft="15dip"
+            android:id="@+id/text_setting_system_clear_size" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+
+    <TextView
+        style="@style/linear_layout_settings_text"
+        android:background="@drawable/style_linear_layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text= "Сайты манг"
+        android:layout_marginLeft="5dip"
+        android:textColor="@android:color/background_dark"
+        android:id="@+id/text_selection_manga_site"
+        android:clickable="false"
+        android:onClick="selectionMangaSite"/>
+
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <Switch
+        android:text="@string/save_zoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="10dip"
+        android:onClick="SystemSaveZoom"
+        android:textColor="@android:color/background_dark"
+        android:id="@+id/switch_save_zoom" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+</LinearLayout>

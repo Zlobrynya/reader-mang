@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/bno_bookmark"
+        android:visible="true"
+        android:title=""
+        android:icon="@drawable/ic_more_vert_black_24dp"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/sett_page_reload"
+                android:icon="@drawable/ic_autorenew_black_24dp"
+                android:title="@string/reload_page"
+                app:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/sett_brightness"
+                android:icon="@drawable/ic_wb_sunny_black_24dp"
+                android:title="@string/sett_brightness"
+                app:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/sett_page_rotation"
+                android:icon="@drawable/ic_screen_lock_rotation_black_24dp"
+                android:title="@string/sett_rotation_lock"
+                app:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/next_page_skip"
+                android:icon="@drawable/ic_skip_next_black_24dp"
+                android:title="@string/next_skip_chapter"
+                app:showAsAction="always|withText"/>
+            <item
+                android:id="@+id/previous_page_skip"
+                android:icon="@drawable/ic_skip_previous_black_24dp"
+                android:title="@string/previous_chapter"
+                app:showAsAction="always|withText"/>
+        </menu>
+    </item>
+</menu>
