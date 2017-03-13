@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.AdapterPMR.AdapterList;
 import com.zlobrynya.project.readermang.DataBasePMR.ClassDataBaseDownloadMang;

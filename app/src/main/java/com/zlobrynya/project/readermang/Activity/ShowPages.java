@@ -29,7 +29,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appodeal.ads.Appodeal;
 import com.crashlytics.android.Crashlytics;
 import com.zlobrynya.project.readermang.ParsSite.InterParsPageMang;
 import com.zlobrynya.project.readermang.ParsSite.tools.HelperParsPageMang;
